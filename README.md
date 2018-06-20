@@ -1,0 +1,114 @@
+# Kconfig hardened check
+
+## Motivation
+
+There are plenty of Linux kernel hardening config options. A lot of them are
+not enabled by the major distros. We have to enable these options ourselves to
+make our systems more secure.
+
+But nobody likes checking configs manually. So let the computers do their job!
+
+__kconfig-hardened-check.py__ helps me to check the Linux kernel Kconfig option list
+against my hardening preferences for `x86_64`, which are based on the
+[KSPP recommended settings][1]
+
+Please don't cry if my Python code looks like C. I'm just a kernel developer.
+
+## Script output examples
+
+### Usage
+```
+#./kconfig-hardened-check.py
+Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
+ -p, --print
+	print hardening preferences
+ -c <config_file>, --config=<config_file>
+	check the config_file against these preferences
+```
+
+### Script output for `Ubuntu 18.04 (Bionic Beaver)` kernel config
+```
+./kconfig-hardened-check.py -c ubuntu-bionic-generic.config
+[+] Checking "ubuntu-bionic-generic.config" against hardening preferences...
+  option name                            | desired val | decision |       reason       ||    check result    
+  ===========================================================================================================
+  CONFIG_BUG                             |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_PAGE_TABLE_ISOLATION            |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_RETPOLINE                       |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_X86_64                          |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_STRICT_KERNEL_RWX               |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_STRICT_MODULE_RWX               |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_DEBUG_WX                        |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_RANDOMIZE_BASE                  |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_RANDOMIZE_MEMORY                |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_CC_STACKPROTECTOR_STRONG        |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_VMAP_STACK                      |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_THREAD_INFO_IN_TASK             |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_SCHED_STACK_END_CHECK           |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_SLUB_DEBUG                      |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_SLAB_FREELIST_HARDENED          |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_SLAB_FREELIST_RANDOM            |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_HARDENED_USERCOPY               |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_FORTIFY_SOURCE                  |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_STRICT_DEVMEM                   |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_SYN_COOKIES                     |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_SECCOMP                         |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_SECCOMP_FILTER                  |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_MODULE_SIG                      |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_MODULE_SIG_ALL                  |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_MODULE_SIG_SHA512               |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_DEFAULT_MMAP_MIN_ADDR           |    65536    | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_BUG_ON_DATA_CORRUPTION          |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_PAGE_POISONING                  |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_GCC_PLUGINS                     |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_GCC_PLUGIN_RANDSTRUCT           |      y      |   kspp   |  self_protection   ||  FAIL: not found   
+  CONFIG_GCC_PLUGIN_STRUCTLEAK           |      y      |   kspp   |  self_protection   ||  FAIL: not found   
+  CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL |      y      |   kspp   |  self_protection   ||  FAIL: not found   
+  CONFIG_GCC_PLUGIN_LATENT_ENTROPY       |      y      |   kspp   |  self_protection   ||  FAIL: not found   
+  CONFIG_IO_STRICT_DEVMEM                |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_REFCOUNT_FULL                   |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_DEBUG_LIST                      |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_DEBUG_SG                        |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_DEBUG_CREDENTIALS               |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_DEBUG_NOTIFIERS                 |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_MODULE_SIG_FORCE                |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
+  CONFIG_HARDENED_USERCOPY_FALLBACK      | is not set  |   kspp   |  self_protection   ||  FAIL: not found   
+  CONFIG_GCC_PLUGIN_STACKLEAK            |      y      |    my    |  self_protection   ||  FAIL: not found   
+  CONFIG_SLUB_DEBUG_ON                   |      y      |    my    |  self_protection   || FAIL: "is not set" 
+  CONFIG_SECURITY_DMESG_RESTRICT         |      y      |    my    |  self_protection   || FAIL: "is not set" 
+  CONFIG_STATIC_USERMODEHELPER           |      y      |    my    |  self_protection   || FAIL: "is not set" 
+  CONFIG_SECURITY                        |      y      | ubuntu18 |  security_policy   ||         OK         
+  CONFIG_SECURITY_YAMA                   |      y      | ubuntu18 |  security_policy   ||         OK         
+  CONFIG_SECURITY_SELINUX_DISABLE        | is not set  | ubuntu18 |  security_policy   ||         OK         
+  CONFIG_ACPI_CUSTOM_METHOD              | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_COMPAT_BRK                      | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_DEVKMEM                         | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_COMPAT_VDSO                     | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_LEGACY_VSYSCALL_NONE            |      y      |   kspp   | cut_attack_surface || FAIL: "is not set" 
+  CONFIG_BINFMT_MISC                     | is not set  |   kspp   | cut_attack_surface ||     FAIL: "m"      
+  CONFIG_INET_DIAG                       | is not set  |   kspp   | cut_attack_surface ||     FAIL: "m"      
+  CONFIG_KEXEC                           | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_PROC_KCORE                      | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_LEGACY_PTYS                     | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_IA32_EMULATION                  | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_X86_X32                         | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_MODIFY_LDT_SYSCALL              | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_KEXEC_FILE                      | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_LIVEPATCH                       | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_NAMESPACES                      | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_IP_DCCP                         | is not set  |    my    | cut_attack_surface ||     FAIL: "m"      
+  CONFIG_FTRACE                          | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_KPROBES                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_PROFILING                       | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_UPROBES                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_BPF_SYSCALL                     | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_LKDTM                           |      m      |    my    |    feature_test    || FAIL: "is not set" 
+
+[-] config check is NOT PASSED: 39 errors
+```
+
+__Go and fix them all!__
+
+[1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
+
