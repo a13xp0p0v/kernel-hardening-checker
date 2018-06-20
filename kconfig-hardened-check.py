@@ -96,6 +96,7 @@ def construct_opt_list():
     opt_list.append([Opt('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('USER_NS',              'is not set', 'my', 'cut_attack_surface'), '']) # user.max_user_namespaces=0
     opt_list.append([Opt('IP_DCCP',              'is not set', 'my', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('IP_SCTP',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('FTRACE',               'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('KPROBES',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('PROFILING',            'is not set', 'my', 'cut_attack_surface'), ''])

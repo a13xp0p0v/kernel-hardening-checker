@@ -97,6 +97,7 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_LIVEPATCH                       | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_USER_NS                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_IP_DCCP                         | is not set  |    my    | cut_attack_surface ||     FAIL: "m"      
+  CONFIG_IP_SCTP                         | is not set  |    my    | cut_attack_surface ||     FAIL: "m"      
   CONFIG_FTRACE                          | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_KPROBES                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_PROFILING                       | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
@@ -105,7 +106,7 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_BPF_SYSCALL                     | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_LKDTM                           |      m      |    my    |    feature_test    || FAIL: "is not set" 
 
-[-] config check is NOT PASSED: 39 errors
+[-] config check is NOT PASSED: 40 errors
 ```
 
 __Go and fix them all!__
