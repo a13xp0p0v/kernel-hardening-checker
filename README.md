@@ -95,7 +95,7 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_MODIFY_LDT_SYSCALL              | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
   CONFIG_KEXEC_FILE                      | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_LIVEPATCH                       | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
-  CONFIG_NAMESPACES                      | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_USER_NS                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_IP_DCCP                         | is not set  |    my    | cut_attack_surface ||     FAIL: "m"      
   CONFIG_FTRACE                          | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_KPROBES                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
