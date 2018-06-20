@@ -17,17 +17,38 @@
 #    kernel.kptr_restrict=1
 
 import sys
-from collections import namedtuple
 from argparse import ArgumentParser
+from collections import OrderedDict
 import re
 
 debug_mode = False  # set it to True to print the unknown options from the config
 error_count = 0
 opt_list = []
 
-Opt = namedtuple('Opt', ['name', 'state', 'decision', 'reason'])
 
-def construct_opt_list():
+class Opt:
+    def __init__(self, name, expected, decision, reason):
+        self.name = name
+        self.expected = expected
+        self.decision = decision
+        self.reason = reason
+        self.state = None
+
+    def check(self):
+        global error_count
+        # check parsed state against expected state
+        if self.expected == self.state:
+            return True, 'OK'
+        if self.expected == 'is not set' and self.state == 'not found':
+            return True, 'OK: not found'
+        error_count += 1
+        return False, 'FAIL: "' + self.state + '"'
+
+    def __repr__(self):
+        return '{} = {}'.format(self.name, self.state)
+
+
+def construct_opt_checks():
     opt_list.append([Opt('BUG',                     'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('PAGE_TABLE_ISOLATION',    'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('RETPOLINE',               'y', 'ubuntu18', 'self_protection'), ''])
@@ -132,12 +153,12 @@ def construct_opt_list():
     opt_list.append([Opt('LKDTM',    'm', 'my', 'feature_test'), ''])
 
 
-def print_opt_list():
+def print_opt_checks():
     print('[+] Printing kernel hardening preferences...')
     print('  {:<39}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'))
     print('  ======================================================================================')
     for o in opt_list:
-        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(o[0].name, o[0].state, o[0].decision, o[0].reason))
+        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(o[0].name, o[0].expected, o[0].decision, o[0].reason))
     print()
 
 
@@ -147,71 +168,59 @@ def print_check_results():
     print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^20}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
     print('  ===========================================================================================================')
     for o in opt_list:
-        if o[1] == '':
-            if o[0].state == 'is not set':
-                o[1] = 'OK: not found'
-            else:
-                error_count += 1
-                o[1] = 'FAIL: not found'
-        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^20}'.format(o[0].name, o[0].state, o[0].decision, o[0].reason, o[1]))
+        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^20}'.format(o[0].name, o[0].expected, o[0].decision, o[0].reason, o[1]))
     print()
 
 
-def check_state(option):
-    global error_count
-    found = False
+def get_option_state(options, name):
+    return options[name] if name in options else 'not found'
 
+
+def check_state(options):
     for o in opt_list:
-        if option[0] == o[0].name:
-            found = True
-
-            if o[1] != '':
-                sys.exit('[!] BUG: CONFIG_{} was found more than once'.format(o[0].name))
-
-            if option[1] == o[0].state:
-                o[1] = 'OK'
-            else:
-                o[1] = 'FAIL: "' + option[1] + '"'
-                error_count += 1
-
-    if not found and debug_mode:
-        print("DEBUG: dunno about option {} ".format(option))
-
-
-def check_on(line):
-    if line[:7] != 'CONFIG_':
-        sys.exit('[!] BUG: bad enabled config option "{}"'.format(line))
-
-    line_parts = line[7:].split('=')
-    check_state(line_parts)
-
-
-def check_off(line):
-    if line[:9] != '# CONFIG_':
-        sys.exit('[!] BUG: bad disabled config option "{}"'.format(line))
-
-    line_parts = line[9:].split(' ', 1)
-
-    if line_parts[1] != 'is not set':
-        sys.exit('[!] BUG: bad disabled config option "{}"'.format(line))
-
-    check_state(line_parts)
+        opt = o[0]
+        if o[1] != '':
+            sys.exit('[!] BUG: CONFIG_{} was found more than once'.format(o[0].name))
+        opt.state = get_option_state(options, opt.name)
+        _, o[1] = opt.check()
 
 
 def check_config_file(fname):
-    f = open(fname, 'r')
-
-    print('[+] Checking "{}" against hardening preferences...'.format(fname))
-    for line in f:
+    with open(fname, 'r') as f:
+        parsed_options = OrderedDict()
         opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
         opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
-        if opt_is_on.match(line):
-            check_on(line[:-1]) # drop newline
-        if opt_is_off.match(line):
-            check_off(line[:-1]) # ditto
 
-    print_check_results()
-    f.close()
+        print('[+] Checking "{}" against hardening preferences...'.format(fname))
+        for line in f.readlines():
+            line = line.strip()
+
+            if opt_is_on.match(line):
+                if line[:7] != 'CONFIG_':
+                    sys.exit('[!] BUG: bad enabled config option "{}"'.format(line))
+
+                config, value = line[7:].split('=', 1)
+                parsed_options[config] = value
+            elif opt_is_off.match(line):
+                if line[:9] != '# CONFIG_':
+                    sys.exit('[!] BUG: bad disabled config option "{}"'.format(line))
+
+                config, value = line[9:].split(' ', 1)
+                if value != 'is not set':
+                    sys.exit('[!] BUG: bad disabled config option "{}"'.format(line))
+
+                if config in parsed_options:
+                    sys.exit('[!] ERROR: config option "{}" exists multiple times'.format(line))
+
+                parsed_options[config] = value
+
+        check_state(parsed_options)
+        print_check_results()
+
+        if debug_mode:
+            opt_list_names = [opt[0].name for opt in opt_list]
+            for option in filter(lambda option: option not in opt_list_names, parsed_options.keys()):
+                print("DEBUG: dunno about option {} ".format(option))
 
 
 if __name__ == '__main__':
@@ -221,10 +230,10 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action='store_true', help='enable internal debug mode')
     args = parser.parse_args()
 
-    construct_opt_list()
+    construct_opt_checks()
 
     if args.print:
-        print_opt_list()
+        print_opt_checks()
         sys.exit(0)
 
     if args.debug:
