@@ -84,6 +84,20 @@ class OR:
         return False, self.result
 
 
+class AND(OR):
+    def __init__(self, *opts):
+        super().__init__(*opts)
+
+    def check(self):
+        for opt in self.opts:
+            result, msg = opt.check()
+            if not result:
+                self.result = 'FAIL: (CONFIG_{} {})"'.format(opt.name, opt.state)
+                return False, self.result
+        self.result = 'OK'
+        return result, self.result
+
+
 def construct_opt_checks():
     opt_list.append(OptCheck('BUG',                     'y', 'ubuntu18', 'self_protection'))
     opt_list.append(OptCheck('PAGE_TABLE_ISOLATION',    'y', 'ubuntu18', 'self_protection'))
