@@ -99,6 +99,8 @@ class AND(OR):
 
 
 def construct_opt_checks():
+    devmem_not_set = OptCheck('DEVMEM',                 'is not set', 'kspp', 'cut_attack_surface')
+
     opt_list.append(OptCheck('BUG',                     'y', 'ubuntu18', 'self_protection'))
     opt_list.append(OptCheck('PAGE_TABLE_ISOLATION',    'y', 'ubuntu18', 'self_protection'))
     opt_list.append(OptCheck('RETPOLINE',               'y', 'ubuntu18', 'self_protection'))
@@ -152,7 +154,7 @@ def construct_opt_checks():
 
     opt_list.append(OptCheck('SECCOMP',              'y', 'ubuntu18', 'cut_attack_surface'))
     opt_list.append(OptCheck('SECCOMP_FILTER',       'y', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('STRICT_DEVMEM',        'y', 'ubuntu18', 'cut_attack_surface'))
+    opt_list.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'ubuntu18', 'cut_attack_surface'), devmem_not_set))
     opt_list.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'ubuntu18', 'cut_attack_surface'))
     opt_list.append(OptCheck('COMPAT_BRK',           'is not set', 'ubuntu18', 'cut_attack_surface'))
     opt_list.append(OptCheck('DEVKMEM',              'is not set', 'ubuntu18', 'cut_attack_surface'))
@@ -162,7 +164,7 @@ def construct_opt_checks():
     opt_list.append(OptCheck('PAGE_OWNER',           'is not set', 'ubuntu18', 'cut_attack_surface'))
     opt_list.append(OptCheck('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'))
 
-    opt_list.append(OptCheck('IO_STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'))
+    opt_list.append(OR(OptCheck('IO_STRICT_DEVMEM',  'y', 'kspp', 'cut_attack_surface'), devmem_not_set))
     opt_list.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
     opt_list.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
     opt_list.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
