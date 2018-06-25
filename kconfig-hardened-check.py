@@ -49,6 +49,41 @@ class OptCheck:
         return '{} = {}'.format(self.name, self.state)
 
 
+class OR:
+    def __init__(self, *opts):
+        self.opts = opts
+        self.result = None
+
+    @property
+    def name(self):
+        return self.opts[0].name
+
+    @property
+    def expected(self):
+        return self.opts[0].expected
+
+    @property
+    def state(self):
+        return self.opts[0].state
+
+    @property
+    def decision(self):
+        return self.opts[0].decision
+
+    @property
+    def reason(self):
+        return self.opts[0].reason
+
+    def check(self):
+        for opt in self.opts:
+            result, msg = opt.check()
+            if result:
+                self.result = 'OK (CONFIG_{} {})'.format(opt.name, opt.state)
+                return result, self.result
+        self.result = 'FAIL: "{}"'.format(self.opts[0].state)
+        return False, self.result
+
+
 def construct_opt_checks():
     opt_list.append(OptCheck('BUG',                     'y', 'ubuntu18', 'self_protection'))
     opt_list.append(OptCheck('PAGE_TABLE_ISOLATION',    'y', 'ubuntu18', 'self_protection'))
@@ -179,7 +214,11 @@ def check_state(options):
     for opt in opt_list:
         if opt.result:
             sys.exit('[!] BUG: CONFIG_{} was found more than once'.format(opt.name))
-        opt.state = get_option_state(options, opt.name)
+        if hasattr(opt, 'opts'):
+            for o in opt.opts:
+                o.state = get_option_state(options, o.name)
+        else:
+            opt.state = get_option_state(options, opt.name)
         opt.check()
 
 
