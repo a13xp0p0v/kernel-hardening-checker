@@ -51,13 +51,10 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_SLAB_FREELIST_RANDOM            |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_HARDENED_USERCOPY               |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_FORTIFY_SOURCE                  |      y      | ubuntu18 |  self_protection   ||         OK         
-  CONFIG_STRICT_DEVMEM                   |      y      | ubuntu18 |  self_protection   ||         OK         
-  CONFIG_SYN_COOKIES                     |      y      | ubuntu18 |  self_protection   ||         OK         
-  CONFIG_SECCOMP                         |      y      | ubuntu18 |  self_protection   ||         OK         
-  CONFIG_SECCOMP_FILTER                  |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_MODULE_SIG                      |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_MODULE_SIG_ALL                  |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_MODULE_SIG_SHA512               |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_SYN_COOKIES                     |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_DEFAULT_MMAP_MIN_ADDR           |    65536    | ubuntu18 |  self_protection   ||         OK         
   CONFIG_BUG_ON_DATA_CORRUPTION          |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
   CONFIG_PAGE_POISONING                  |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
@@ -66,7 +63,6 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_GCC_PLUGIN_STRUCTLEAK           |      y      |   kspp   |  self_protection   ||  FAIL: not found   
   CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL |      y      |   kspp   |  self_protection   ||  FAIL: not found   
   CONFIG_GCC_PLUGIN_LATENT_ENTROPY       |      y      |   kspp   |  self_protection   ||  FAIL: not found   
-  CONFIG_IO_STRICT_DEVMEM                |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
   CONFIG_REFCOUNT_FULL                   |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
   CONFIG_DEBUG_LIST                      |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
   CONFIG_DEBUG_SG                        |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
@@ -83,10 +79,14 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_SECURITY                        |      y      | ubuntu18 |  security_policy   ||         OK         
   CONFIG_SECURITY_YAMA                   |      y      | ubuntu18 |  security_policy   ||         OK         
   CONFIG_SECURITY_SELINUX_DISABLE        | is not set  | ubuntu18 |  security_policy   ||         OK         
+  CONFIG_SECCOMP                         |      y      | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_SECCOMP_FILTER                  |      y      | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_STRICT_DEVMEM                   |      y      | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_ACPI_CUSTOM_METHOD              | is not set  | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_COMPAT_BRK                      | is not set  | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_DEVKMEM                         | is not set  | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_COMPAT_VDSO                     | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_IO_STRICT_DEVMEM                |      y      |   kspp   | cut_attack_surface || FAIL: "is not set" 
   CONFIG_LEGACY_VSYSCALL_NONE            |      y      |   kspp   | cut_attack_surface || FAIL: "is not set" 
   CONFIG_BINFMT_MISC                     | is not set  |   kspp   | cut_attack_surface ||     FAIL: "m"      
   CONFIG_INET_DIAG                       | is not set  |   kspp   | cut_attack_surface ||     FAIL: "m"      

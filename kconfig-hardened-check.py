@@ -46,13 +46,10 @@ def construct_opt_list():
     opt_list.append([Opt('SLAB_FREELIST_RANDOM',    'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('HARDENED_USERCOPY',       'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('FORTIFY_SOURCE',          'y', 'ubuntu18', 'self_protection'), ''])
-    opt_list.append([Opt('STRICT_DEVMEM',           'y', 'ubuntu18', 'self_protection'), ''])
-    opt_list.append([Opt('SYN_COOKIES',             'y', 'ubuntu18', 'self_protection'), ''])
-    opt_list.append([Opt('SECCOMP',                 'y', 'ubuntu18', 'self_protection'), ''])
-    opt_list.append([Opt('SECCOMP_FILTER',          'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('MODULE_SIG',              'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('MODULE_SIG_ALL',          'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('MODULE_SIG_SHA512',       'y', 'ubuntu18', 'self_protection'), ''])
+    opt_list.append([Opt('SYN_COOKIES',             'y', 'ubuntu18', 'self_protection'), '']) # another reason?
     opt_list.append([Opt('DEFAULT_MMAP_MIN_ADDR',   '65536', 'ubuntu18', 'self_protection'), ''])
 
     opt_list.append([Opt('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'), ''])
@@ -62,7 +59,6 @@ def construct_opt_list():
     opt_list.append([Opt('GCC_PLUGIN_STRUCTLEAK',            'y', 'kspp', 'self_protection'), ''])
     opt_list.append([Opt('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL',  'y', 'kspp', 'self_protection'), ''])
     opt_list.append([Opt('GCC_PLUGIN_LATENT_ENTROPY',        'y', 'kspp', 'self_protection'), ''])
-    opt_list.append([Opt('IO_STRICT_DEVMEM',                 'y', 'kspp', 'self_protection'), ''])
     opt_list.append([Opt('REFCOUNT_FULL',                    'y', 'kspp', 'self_protection'), ''])
     opt_list.append([Opt('DEBUG_LIST',                       'y', 'kspp', 'self_protection'), ''])
     opt_list.append([Opt('DEBUG_SG',                         'y', 'kspp', 'self_protection'), ''])
@@ -82,11 +78,15 @@ def construct_opt_list():
     opt_list.append([Opt('SECURITY_YAMA',               'y', 'ubuntu18', 'security_policy'), ''])
     opt_list.append([Opt('SECURITY_SELINUX_DISABLE',    'is not set', 'ubuntu18', 'security_policy'), ''])
 
+    opt_list.append([Opt('SECCOMP',              'y', 'ubuntu18', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('SECCOMP_FILTER',       'y', 'ubuntu18', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('STRICT_DEVMEM',        'y', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('ACPI_CUSTOM_METHOD',   'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('COMPAT_BRK',           'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('DEVKMEM',              'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('COMPAT_VDSO',          'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
 
+    opt_list.append([Opt('IO_STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'), ''])
     opt_list.append([Opt('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface'), '']) # 'vsyscall=none'
     opt_list.append([Opt('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'), ''])
     opt_list.append([Opt('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'), ''])
