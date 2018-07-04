@@ -41,6 +41,7 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_DEBUG_WX                        |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_RANDOMIZE_BASE                  |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_RANDOMIZE_MEMORY                |      y      | ubuntu18 |  self_protection   ||         OK         
+  CONFIG_CC_STACKPROTECTOR               |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_CC_STACKPROTECTOR_STRONG        |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_VMAP_STACK                      |      y      | ubuntu18 |  self_protection   ||         OK         
   CONFIG_THREAD_INFO_IN_TASK             |      y      | ubuntu18 |  self_protection   ||         OK         
@@ -77,6 +78,8 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_SLUB_DEBUG_ON                   |      y      |    my    |  self_protection   || FAIL: "is not set" 
   CONFIG_SECURITY_DMESG_RESTRICT         |      y      |    my    |  self_protection   || FAIL: "is not set" 
   CONFIG_STATIC_USERMODEHELPER           |      y      |    my    |  self_protection   || FAIL: "is not set" 
+  CONFIG_PAGE_POISONING_NO_SANITY        | is not set  |    my    |  self_protection   ||  FAIL: not found   
+  CONFIG_PAGE_POISONING_ZERO             | is not set  |    my    |  self_protection   ||  FAIL: not found   
   CONFIG_SECURITY                        |      y      | ubuntu18 |  security_policy   ||         OK         
   CONFIG_SECURITY_YAMA                   |      y      | ubuntu18 |  security_policy   ||         OK         
   CONFIG_SECURITY_SELINUX_DISABLE        | is not set  | ubuntu18 |  security_policy   ||         OK         
@@ -93,6 +96,7 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_IA32_EMULATION                  | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
   CONFIG_X86_X32                         | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
   CONFIG_MODIFY_LDT_SYSCALL              | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_HIBERNATION                     | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
   CONFIG_KEXEC_FILE                      | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_LIVEPATCH                       | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_USER_NS                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
@@ -104,9 +108,10 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_UPROBES                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_BPF_SYSCALL                     | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||     FAIL: "28"     
   CONFIG_LKDTM                           |      m      |    my    |    feature_test    || FAIL: "is not set" 
 
-[-] config check is NOT PASSED: 40 errors
+[-] config check is NOT PASSED: 44 errors
 ```
 
 __Go and fix them all!__

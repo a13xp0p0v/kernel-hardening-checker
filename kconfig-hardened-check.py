@@ -36,6 +36,7 @@ def construct_opt_list():
     opt_list.append([Opt('DEBUG_WX',                'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('RANDOMIZE_BASE',          'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('RANDOMIZE_MEMORY',        'y', 'ubuntu18', 'self_protection'), ''])
+    opt_list.append([Opt('CC_STACKPROTECTOR',       'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('CC_STACKPROTECTOR_STRONG','y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('VMAP_STACK',              'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('THREAD_INFO_IN_TASK',     'y', 'ubuntu18', 'self_protection'), ''])
@@ -69,10 +70,13 @@ def construct_opt_list():
     opt_list.append([Opt('DEBUG_NOTIFIERS',                  'y', 'kspp', 'self_protection'), ''])
     opt_list.append([Opt('MODULE_SIG_FORCE',                 'y', 'kspp', 'self_protection'), ''])
     opt_list.append([Opt('HARDENED_USERCOPY_FALLBACK',       'is not set', 'kspp', 'self_protection'), ''])
+
     opt_list.append([Opt('GCC_PLUGIN_STACKLEAK',             'y', 'my', 'self_protection'), ''])
     opt_list.append([Opt('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'), ''])
     opt_list.append([Opt('SECURITY_DMESG_RESTRICT',          'y', 'my', 'self_protection'), ''])
     opt_list.append([Opt('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection'), '']) # breaks systemd?
+    opt_list.append([Opt('PAGE_POISONING_NO_SANITY',         'is not set', 'my', 'self_protection'), ''])
+    opt_list.append([Opt('PAGE_POISONING_ZERO',              'is not set', 'my', 'self_protection'), ''])
 
     opt_list.append([Opt('SECURITY',                    'y', 'ubuntu18', 'security_policy'), ''])
     opt_list.append([Opt('SECURITY_YAMA',               'y', 'ubuntu18', 'security_policy'), ''])
@@ -92,6 +96,8 @@ def construct_opt_list():
     opt_list.append([Opt('IA32_EMULATION',       'is not set', 'kspp', 'cut_attack_surface'), ''])
     opt_list.append([Opt('X86_X32',              'is not set', 'kspp', 'cut_attack_surface'), ''])
     opt_list.append([Opt('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface'), ''])
+
     opt_list.append([Opt('KEXEC_FILE',           'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('USER_NS',              'is not set', 'my', 'cut_attack_surface'), '']) # user.max_user_namespaces=0
@@ -103,6 +109,8 @@ def construct_opt_list():
     opt_list.append([Opt('UPROBES',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('BPF_SYSCALL',          'is not set', 'my', 'cut_attack_surface'), ''])
+
+    opt_list.append([Opt('ARCH_MMAP_RND_BITS',   '32', 'my', 'userspace_protection'), ''])
 
     opt_list.append([Opt('LKDTM',    'm', 'my', 'feature_test'), ''])
 
