@@ -85,6 +85,10 @@ def construct_opt_list():
     opt_list.append([Opt('COMPAT_BRK',           'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('DEVKMEM',              'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('COMPAT_VDSO',          'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('X86_PTDUMP',           'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('ZSMALLOC_STAT',        'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('PAGE_OWNER',           'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
 
     opt_list.append([Opt('IO_STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'), ''])
     opt_list.append([Opt('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface'), '']) # 'vsyscall=none'
@@ -98,15 +102,27 @@ def construct_opt_list():
     opt_list.append([Opt('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'), ''])
     opt_list.append([Opt('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface'), ''])
 
+    opt_list.append([Opt('KPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('UPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('GENERIC_TRACER',          'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('PROC_VMCORE',             'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('PROC_PAGE_MONITOR',       'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('USELIB',                  'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('CHECKPOINT_RESTORE',      'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('USERFAULTFD',             'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('HWPOISON_INJECT',         'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('MEM_SOFT_DIRTY',          'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('DEVPORT',                 'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('DEBUG_FS',                'is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('NOTIFIER_ERROR_INJECTION','is not set', 'grsecurity', 'cut_attack_surface'), ''])
+
     opt_list.append([Opt('KEXEC_FILE',           'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('USER_NS',              'is not set', 'my', 'cut_attack_surface'), '']) # user.max_user_namespaces=0
     opt_list.append([Opt('IP_DCCP',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('IP_SCTP',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('FTRACE',               'is not set', 'my', 'cut_attack_surface'), ''])
-    opt_list.append([Opt('KPROBES',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('PROFILING',            'is not set', 'my', 'cut_attack_surface'), ''])
-    opt_list.append([Opt('UPROBES',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('BPF_SYSCALL',          'is not set', 'my', 'cut_attack_surface'), ''])
 

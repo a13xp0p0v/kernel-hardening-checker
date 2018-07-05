@@ -10,7 +10,8 @@ But nobody likes checking configs manually. So let the computers do their job!
 
 __kconfig-hardened-check.py__ helps me to check the Linux kernel Kconfig option list
 against my hardening preferences for `x86_64`, which are based on the
-[KSPP recommended settings][1]
+[KSPP recommended settings][1] and last public [grsecurity][2] patch (options
+which they disable).
 
 Please don't cry if my Python code looks like C. I'm just a kernel developer.
 
@@ -86,6 +87,10 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_COMPAT_BRK                      | is not set  | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_DEVKMEM                         | is not set  | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_COMPAT_VDSO                     | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_X86_PTDUMP                      | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_ZSMALLOC_STAT                   | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_PAGE_OWNER                      | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_DEBUG_KMEMLEAK                  | is not set  | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_IO_STRICT_DEVMEM                |      y      |   kspp   | cut_attack_surface || FAIL: "is not set" 
   CONFIG_LEGACY_VSYSCALL_NONE            |      y      |   kspp   | cut_attack_surface || FAIL: "is not set" 
   CONFIG_BINFMT_MISC                     | is not set  |   kspp   | cut_attack_surface ||     FAIL: "m"      
@@ -97,24 +102,35 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_X86_X32                         | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
   CONFIG_MODIFY_LDT_SYSCALL              | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
   CONFIG_HIBERNATION                     | is not set  |   kspp   | cut_attack_surface ||     FAIL: "y"      
+  CONFIG_KPROBES                         | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_UPROBES                         | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_GENERIC_TRACER                  | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_PROC_VMCORE                     | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_PROC_PAGE_MONITOR               | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_USELIB                          | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_CHECKPOINT_RESTORE              | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_USERFAULTFD                     | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_HWPOISON_INJECT                 | is not set  |grsecurity| cut_attack_surface ||     FAIL: "m"      
+  CONFIG_MEM_SOFT_DIRTY                  | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_DEVPORT                         | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_DEBUG_FS                        | is not set  |grsecurity| cut_attack_surface ||     FAIL: "y"      
+  CONFIG_NOTIFIER_ERROR_INJECTION        | is not set  |grsecurity| cut_attack_surface ||     FAIL: "m"      
   CONFIG_KEXEC_FILE                      | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_LIVEPATCH                       | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_USER_NS                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_IP_DCCP                         | is not set  |    my    | cut_attack_surface ||     FAIL: "m"      
   CONFIG_IP_SCTP                         | is not set  |    my    | cut_attack_surface ||     FAIL: "m"      
   CONFIG_FTRACE                          | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
-  CONFIG_KPROBES                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_PROFILING                       | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
-  CONFIG_UPROBES                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_BPF_SYSCALL                     | is not set  |    my    | cut_attack_surface ||     FAIL: "y"      
   CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||     FAIL: "28"     
   CONFIG_LKDTM                           |      m      |    my    |    feature_test    || FAIL: "is not set" 
 
-[-] config check is NOT PASSED: 44 errors
+[-] config check is NOT PASSED: 55 errors
 ```
 
 __Go and fix them all!__
 
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
-
+[2]: https://grsecurity.net/
