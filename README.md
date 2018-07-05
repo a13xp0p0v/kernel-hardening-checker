@@ -70,13 +70,13 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_DEBUG_CREDENTIALS               |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
   CONFIG_DEBUG_NOTIFIERS                 |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
   CONFIG_MODULE_SIG_FORCE                |      y      |   kspp   |  self_protection   || FAIL: "is not set" 
-  CONFIG_HARDENED_USERCOPY_FALLBACK      | is not set  |   kspp   |  self_protection   ||  FAIL: not found   
+  CONFIG_HARDENED_USERCOPY_FALLBACK      | is not set  |   kspp   |  self_protection   ||   OK: not found    
   CONFIG_GCC_PLUGIN_STACKLEAK            |      y      |    my    |  self_protection   ||  FAIL: not found   
   CONFIG_SLUB_DEBUG_ON                   |      y      |    my    |  self_protection   || FAIL: "is not set" 
   CONFIG_SECURITY_DMESG_RESTRICT         |      y      |    my    |  self_protection   || FAIL: "is not set" 
   CONFIG_STATIC_USERMODEHELPER           |      y      |    my    |  self_protection   || FAIL: "is not set" 
-  CONFIG_PAGE_POISONING_NO_SANITY        | is not set  |    my    |  self_protection   ||  FAIL: not found   
-  CONFIG_PAGE_POISONING_ZERO             | is not set  |    my    |  self_protection   ||  FAIL: not found   
+  CONFIG_PAGE_POISONING_NO_SANITY        | is not set  |    my    |  self_protection   ||   OK: not found    
+  CONFIG_PAGE_POISONING_ZERO             | is not set  |    my    |  self_protection   ||   OK: not found    
   CONFIG_SECURITY                        |      y      | ubuntu18 |  security_policy   ||         OK         
   CONFIG_SECURITY_YAMA                   |      y      | ubuntu18 |  security_policy   ||         OK         
   CONFIG_SECURITY_SELINUX_DISABLE        | is not set  | ubuntu18 |  security_policy   ||         OK         
@@ -127,7 +127,7 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||     FAIL: "28"     
   CONFIG_LKDTM                           |      m      |    my    |    feature_test    || FAIL: "is not set" 
 
-[-] config check is NOT PASSED: 55 errors
+[-] config check is NOT PASSED: 52 errors
 ```
 
 __Go and fix them all!__

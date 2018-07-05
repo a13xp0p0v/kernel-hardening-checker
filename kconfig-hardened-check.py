@@ -147,8 +147,11 @@ def print_check_results():
     print('  ===========================================================================================================')
     for o in opt_list:
         if o[1] == '':
-            error_count += 1
-            o[1] = 'FAIL: not found'
+            if o[0].state == 'is not set':
+                o[1] = 'OK: not found'
+            else:
+                error_count += 1
+                o[1] = 'FAIL: not found'
         print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^20}'.format(o[0].name, o[0].state, o[0].decision, o[0].reason, o[1]))
     print()
 
