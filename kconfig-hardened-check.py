@@ -16,8 +16,9 @@
 #    pti=on
 #    kernel.kptr_restrict=1
 
-import sys, getopt
+import sys
 from collections import namedtuple
+from argparse import ArgumentParser
 import re
 
 debug_mode = False  # set it to True to print the unknown options from the config
@@ -213,33 +214,28 @@ def check_config_file(fname):
     f.close()
 
 
-def usage(name):
-    print('Usage: {} [-p | -c <config_file>] '.format(name))
-    print(' -p, --print\n\tprint hardening preferences')
-    print(' -c <config_file>, --config=<config_file>\n\tcheck the config_file against these preferences')
-    sys.exit(1)
-
-
-def main(argv):
-    try:
-        opts, args = getopt.getopt(argv[1:], 'pc:', ['print', 'config='])
-    except getopt.GetoptError:
-        usage(argv[0])
-
-    if not opts:
-        usage(argv[0])
+if __name__ == '__main__':
+    parser = ArgumentParser(description='Kconfig hardened check')
+    parser.add_argument('-p', '--print', default=False, action='store_true', help='print hardening preferences')
+    parser.add_argument('-c', '--config', help='check the config_file against these preferences')
+    parser.add_argument('--debug', default=False, action='store_true', help='enable internal debug mode')
+    args = parser.parse_args()
 
     construct_opt_list()
 
-    for opt, arg in opts:
-        if opt in ('-p', '--print'):
-            print_opt_list()
-            sys.exit()
-        elif opt in ('-c', '--config'):
-            check_config_file(arg)
-            if error_count == 0:
-                print('[+] config check is PASSED')
-            else:
-                sys.exit('[-] config check is NOT PASSED: {} errors'.format(error_count))
+    if args.print:
+        print_opt_list()
+        sys.exit(0)
 
-main(sys.argv)
+    if args.debug:
+        debug_mode = True
+
+    if args.config:
+        check_config_file(args.config)
+        if error_count == 0:
+            print('[+] config check is PASSED')
+            sys.exit(0)
+        else:
+            sys.exit('[-] config check is NOT PASSED: {} errors'.format(error_count))
+
+    parser.print_help()
