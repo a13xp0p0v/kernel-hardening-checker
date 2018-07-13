@@ -216,9 +216,9 @@ def check_config_file(fname):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
-    parser.add_argument('-p', '--print', default=False, action='store_true', help='print hardening preferences')
+    parser.add_argument('-p', '--print', action='store_true', help='print hardening preferences')
     parser.add_argument('-c', '--config', help='check the config_file against these preferences')
-    parser.add_argument('--debug', default=False, action='store_true', help='enable internal debug mode')
+    parser.add_argument('--debug', action='store_true', help='enable internal debug mode')
     args = parser.parse_args()
 
     construct_opt_list()
