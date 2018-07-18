@@ -116,6 +116,7 @@ def construct_opt_list():
     opt_list.append([Opt('DEVPORT',                 'is not set', 'grsecurity', 'cut_attack_surface'), ''])
     opt_list.append([Opt('DEBUG_FS',                'is not set', 'grsecurity', 'cut_attack_surface'), ''])
     opt_list.append([Opt('NOTIFIER_ERROR_INJECTION','is not set', 'grsecurity', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('BINFMT_AOUT',				'is not set', 'grsecurity', 'cut_attack_surface'), ''])
 
     opt_list.append([Opt('KEXEC_FILE',           'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'), ''])
