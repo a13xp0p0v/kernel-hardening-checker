@@ -90,6 +90,7 @@ def construct_opt_list():
     opt_list.append([Opt('ZSMALLOC_STAT',        'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('PAGE_OWNER',           'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('BINFMT_AOUT',          'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
 
     opt_list.append([Opt('IO_STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'), ''])
     opt_list.append([Opt('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface'), '']) # 'vsyscall=none'
@@ -116,7 +117,6 @@ def construct_opt_list():
     opt_list.append([Opt('DEVPORT',                 'is not set', 'grsecurity', 'cut_attack_surface'), ''])
     opt_list.append([Opt('DEBUG_FS',                'is not set', 'grsecurity', 'cut_attack_surface'), ''])
     opt_list.append([Opt('NOTIFIER_ERROR_INJECTION','is not set', 'grsecurity', 'cut_attack_surface'), ''])
-    opt_list.append([Opt('BINFMT_AOUT',				'is not set', 'grsecurity', 'cut_attack_surface'), ''])
 
     opt_list.append([Opt('KEXEC_FILE',           'is not set', 'my', 'cut_attack_surface'), ''])
     opt_list.append([Opt('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'), ''])
