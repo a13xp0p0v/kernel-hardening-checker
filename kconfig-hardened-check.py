@@ -40,21 +40,15 @@ class Opt:
 
         if self.expected == self.state:
             self.result = 'OK'
-            return True, self.result
-
-
-        if self.state is None:
+        elif self.state is None:
             if self.expected == 'is not set':
                 self.result = 'OK: not found'
-                return True, self.result
             else:
                 error_count += 1
                 self.result = 'FAIL: not found'
-                return False, self.result
-
-        error_count += 1
-        self.result = 'FAIL: "' + self.state + '"'
-        return False, self.result
+        else:
+            error_count += 1
+            self.result = 'FAIL: "' + self.state + '"'
 
     def __repr__(self):
         return '{} = {}'.format(self.name, self.state)
