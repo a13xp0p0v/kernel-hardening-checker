@@ -22,7 +22,6 @@ from collections import OrderedDict
 import re
 
 debug_mode = False  # set it to True to print the unknown options from the config
-error_count = 0
 checklist = []
 
 
@@ -36,18 +35,14 @@ class OptCheck:
         self.result = None
 
     def check(self):
-        global error_count
-
         if self.expected == self.state:
             self.result = 'OK'
         elif self.state is None:
             if self.expected == 'is not set':
                 self.result = 'OK: not found'
             else:
-                error_count += 1
                 self.result = 'FAIL: not found'
         else:
-            error_count += 1
             self.result = 'FAIL: "' + self.state + '"'
 
     def __repr__(self):
@@ -169,8 +164,6 @@ def print_opt_checks():
 
 
 def print_check_results():
-    global error_count
-
     print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^20}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
     print('  ===========================================================================================================')
     for opt in checklist:
@@ -242,6 +235,7 @@ if __name__ == '__main__':
 
     if args.config:
         check_config_file(args.config)
+        error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
         if error_count == 0:
             print('[+] config check is PASSED')
             sys.exit(0)
