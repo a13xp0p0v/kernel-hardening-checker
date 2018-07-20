@@ -51,7 +51,7 @@ def construct_opt_list():
     opt_list.append([Opt('MODULE_SIG_ALL',          'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('MODULE_SIG_SHA512',       'y', 'ubuntu18', 'self_protection'), ''])
     opt_list.append([Opt('SYN_COOKIES',             'y', 'ubuntu18', 'self_protection'), '']) # another reason?
-    opt_list.append([Opt('DEFAULT_MMAP_MIN_ADDR',   '65536', 'ubuntu18', 'self_protection'), ''])
+    opt_list.append([Opt('DEFAULT_MMAP_MIN_ADDR',   '65536', 'ubuntu18', 'self_protection'), '']) # 32768 for arm
 
     opt_list.append([Opt('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'), ''])
     opt_list.append([Opt('PAGE_POISONING',                   'y', 'kspp', 'self_protection'), ''])
@@ -90,6 +90,7 @@ def construct_opt_list():
     opt_list.append([Opt('ZSMALLOC_STAT',        'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('PAGE_OWNER',           'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
     opt_list.append([Opt('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
+    opt_list.append([Opt('BINFMT_AOUT',          'is not set', 'ubuntu18', 'cut_attack_surface'), ''])
 
     opt_list.append([Opt('IO_STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'), ''])
     opt_list.append([Opt('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface'), '']) # 'vsyscall=none'
@@ -149,7 +150,7 @@ def print_check_results():
     for o in opt_list:
         if o[1] == '':
             if o[0].state == 'is not set':
-                o[1] = 'OK: not found'
+                o[1] = 'OK'
             else:
                 error_count += 1
                 o[1] = 'FAIL: not found'
