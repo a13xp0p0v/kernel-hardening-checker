@@ -23,7 +23,7 @@ import re
 
 debug_mode = False  # set it to True to print the unknown options from the config
 error_count = 0
-opt_list = []
+checklist = []
 
 
 class OptCheck:
@@ -55,115 +55,115 @@ class OptCheck:
 
 
 def construct_opt_checks():
-    opt_list.append(OptCheck('BUG',                     'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('PAGE_TABLE_ISOLATION',    'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('RETPOLINE',               'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('X86_64',                  'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('STRICT_KERNEL_RWX',       'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('STRICT_MODULE_RWX',       'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('DEBUG_WX',                'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('RANDOMIZE_BASE',          'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('RANDOMIZE_MEMORY',        'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('CC_STACKPROTECTOR',       'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('CC_STACKPROTECTOR_STRONG','y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('VMAP_STACK',              'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('THREAD_INFO_IN_TASK',     'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('SCHED_STACK_END_CHECK',   'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('SLUB_DEBUG',              'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('SLAB_FREELIST_HARDENED',  'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('SLAB_FREELIST_RANDOM',    'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('HARDENED_USERCOPY',       'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('FORTIFY_SOURCE',          'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('MODULE_SIG',              'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('MODULE_SIG_ALL',          'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('MODULE_SIG_SHA512',       'y', 'ubuntu18', 'self_protection'))
-    opt_list.append(OptCheck('SYN_COOKIES',             'y', 'ubuntu18', 'self_protection')) # another reason?
-    opt_list.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',   '65536', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('BUG',                     'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('PAGE_TABLE_ISOLATION',    'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('RETPOLINE',               'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('X86_64',                  'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('STRICT_KERNEL_RWX',       'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('STRICT_MODULE_RWX',       'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('DEBUG_WX',                'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('RANDOMIZE_BASE',          'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('RANDOMIZE_MEMORY',        'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('CC_STACKPROTECTOR',       'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('CC_STACKPROTECTOR_STRONG','y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('VMAP_STACK',              'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('THREAD_INFO_IN_TASK',     'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('SCHED_STACK_END_CHECK',   'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('SLUB_DEBUG',              'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('SLAB_FREELIST_HARDENED',  'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('SLAB_FREELIST_RANDOM',    'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('HARDENED_USERCOPY',       'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('FORTIFY_SOURCE',          'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('MODULE_SIG',              'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('MODULE_SIG_ALL',          'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('MODULE_SIG_SHA512',       'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('SYN_COOKIES',             'y', 'ubuntu18', 'self_protection')) # another reason?
+    checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',   '65536', 'ubuntu18', 'self_protection'))
 
-    opt_list.append(OptCheck('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('PAGE_POISONING',                   'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('GCC_PLUGINS',                      'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('GCC_PLUGIN_RANDSTRUCT',            'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('GCC_PLUGIN_STRUCTLEAK',            'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL',  'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('GCC_PLUGIN_LATENT_ENTROPY',        'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('REFCOUNT_FULL',                    'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('DEBUG_LIST',                       'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('DEBUG_SG',                         'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('DEBUG_CREDENTIALS',                'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('DEBUG_NOTIFIERS',                  'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('MODULE_SIG_FORCE',                 'y', 'kspp', 'self_protection'))
-    opt_list.append(OptCheck('HARDENED_USERCOPY_FALLBACK',       'is not set', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('PAGE_POISONING',                   'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('GCC_PLUGINS',                      'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('GCC_PLUGIN_RANDSTRUCT',            'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('GCC_PLUGIN_STRUCTLEAK',            'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL',  'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('GCC_PLUGIN_LATENT_ENTROPY',        'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('REFCOUNT_FULL',                    'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('DEBUG_LIST',                       'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('DEBUG_SG',                         'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('DEBUG_CREDENTIALS',                'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('DEBUG_NOTIFIERS',                  'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('MODULE_SIG_FORCE',                 'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('HARDENED_USERCOPY_FALLBACK',       'is not set', 'kspp', 'self_protection'))
 
-    opt_list.append(OptCheck('GCC_PLUGIN_STACKLEAK',             'y', 'my', 'self_protection'))
-    opt_list.append(OptCheck('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'))
-    opt_list.append(OptCheck('SECURITY_DMESG_RESTRICT',          'y', 'my', 'self_protection'))
-    opt_list.append(OptCheck('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection')) # breaks systemd?
-    opt_list.append(OptCheck('PAGE_POISONING_NO_SANITY',         'is not set', 'my', 'self_protection'))
-    opt_list.append(OptCheck('PAGE_POISONING_ZERO',              'is not set', 'my', 'self_protection'))
+    checklist.append(OptCheck('GCC_PLUGIN_STACKLEAK',             'y', 'my', 'self_protection'))
+    checklist.append(OptCheck('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'))
+    checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',          'y', 'my', 'self_protection'))
+    checklist.append(OptCheck('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection')) # breaks systemd?
+    checklist.append(OptCheck('PAGE_POISONING_NO_SANITY',         'is not set', 'my', 'self_protection'))
+    checklist.append(OptCheck('PAGE_POISONING_ZERO',              'is not set', 'my', 'self_protection'))
 
-    opt_list.append(OptCheck('SECURITY',                    'y', 'ubuntu18', 'security_policy'))
-    opt_list.append(OptCheck('SECURITY_YAMA',               'y', 'ubuntu18', 'security_policy'))
-    opt_list.append(OptCheck('SECURITY_SELINUX_DISABLE',    'is not set', 'ubuntu18', 'security_policy'))
+    checklist.append(OptCheck('SECURITY',                    'y', 'ubuntu18', 'security_policy'))
+    checklist.append(OptCheck('SECURITY_YAMA',               'y', 'ubuntu18', 'security_policy'))
+    checklist.append(OptCheck('SECURITY_SELINUX_DISABLE',    'is not set', 'ubuntu18', 'security_policy'))
 
-    opt_list.append(OptCheck('SECCOMP',              'y', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('SECCOMP_FILTER',       'y', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('STRICT_DEVMEM',        'y', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('COMPAT_BRK',           'is not set', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('DEVKMEM',              'is not set', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('COMPAT_VDSO',          'is not set', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('X86_PTDUMP',           'is not set', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('ZSMALLOC_STAT',        'is not set', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('PAGE_OWNER',           'is not set', 'ubuntu18', 'cut_attack_surface'))
-    opt_list.append(OptCheck('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('SECCOMP',              'y', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('STRICT_DEVMEM',        'y', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('DEVKMEM',              'is not set', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('COMPAT_VDSO',          'is not set', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('X86_PTDUMP',           'is not set', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('ZSMALLOC_STAT',        'is not set', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('PAGE_OWNER',           'is not set', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OptCheck('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'))
 
-    opt_list.append(OptCheck('IO_STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
-    opt_list.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('KEXEC',                'is not set', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('PROC_KCORE',           'is not set', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('LEGACY_PTYS',          'is not set', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('IA32_EMULATION',       'is not set', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('X86_X32',              'is not set', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'))
-    opt_list.append(OptCheck('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('IO_STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
+    checklist.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('KEXEC',                'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('PROC_KCORE',           'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('LEGACY_PTYS',          'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('IA32_EMULATION',       'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('X86_X32',              'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface'))
 
-    opt_list.append(OptCheck('KPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('UPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('GENERIC_TRACER',          'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('PROC_VMCORE',             'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('PROC_PAGE_MONITOR',       'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('USELIB',                  'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('CHECKPOINT_RESTORE',      'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('USERFAULTFD',             'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('HWPOISON_INJECT',         'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('MEM_SOFT_DIRTY',          'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('DEVPORT',                 'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('DEBUG_FS',                'is not set', 'grsecurity', 'cut_attack_surface'))
-    opt_list.append(OptCheck('NOTIFIER_ERROR_INJECTION','is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('KPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('UPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('GENERIC_TRACER',          'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('PROC_VMCORE',             'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('PROC_PAGE_MONITOR',       'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('USELIB',                  'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('CHECKPOINT_RESTORE',      'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('USERFAULTFD',             'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('HWPOISON_INJECT',         'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('MEM_SOFT_DIRTY',          'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('DEVPORT',                 'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('DEBUG_FS',                'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('NOTIFIER_ERROR_INJECTION','is not set', 'grsecurity', 'cut_attack_surface'))
 
-    opt_list.append(OptCheck('KEXEC_FILE',           'is not set', 'my', 'cut_attack_surface'))
-    opt_list.append(OptCheck('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'))
-    opt_list.append(OptCheck('USER_NS',              'is not set', 'my', 'cut_attack_surface')) # user.max_user_namespaces=0
-    opt_list.append(OptCheck('IP_DCCP',              'is not set', 'my', 'cut_attack_surface'))
-    opt_list.append(OptCheck('IP_SCTP',              'is not set', 'my', 'cut_attack_surface'))
-    opt_list.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface'))
-    opt_list.append(OptCheck('PROFILING',            'is not set', 'my', 'cut_attack_surface'))
-    opt_list.append(OptCheck('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'))
-    opt_list.append(OptCheck('BPF_SYSCALL',          'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('KEXEC_FILE',           'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('USER_NS',              'is not set', 'my', 'cut_attack_surface')) # user.max_user_namespaces=0
+    checklist.append(OptCheck('IP_DCCP',              'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('IP_SCTP',              'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('PROFILING',            'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('BPF_SYSCALL',          'is not set', 'my', 'cut_attack_surface'))
 
-    opt_list.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'my', 'userspace_protection'))
+    checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'my', 'userspace_protection'))
 
-    opt_list.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
+    checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
 def print_opt_checks():
     print('[+] Printing kernel hardening preferences...')
     print('  {:<39}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'))
     print('  ======================================================================================')
-    for opt in opt_list:
+    for opt in checklist:
         print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason))
     print()
 
@@ -173,7 +173,7 @@ def print_check_results():
 
     print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^20}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
     print('  ===========================================================================================================')
-    for opt in opt_list:
+    for opt in checklist:
         print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason, opt.result))
     print()
 
@@ -183,7 +183,7 @@ def get_option_state(options, name):
 
 
 def perform_checks(parsed_options):
-    for opt in opt_list:
+    for opt in checklist:
         opt.state = get_option_state(parsed_options, opt.name)
         opt.check()
 
@@ -216,7 +216,7 @@ def check_config_file(fname):
         perform_checks(parsed_options)
 
         if debug_mode:
-            known_options = [opt.name for opt in opt_list]
+            known_options = [opt.name for opt in checklist]
             for option, value in parsed_options.items():
                 if option not in known_options:
                     print("DEBUG: dunno about option {} ({})".format(option, value))
