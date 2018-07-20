@@ -179,8 +179,6 @@ def get_option_state(options, name):
 def check_state(options):
     for o in opt_list:
         opt = o[0]
-        if o[1] != '':
-            sys.exit('[!] BUG: CONFIG_{} was found more than once'.format(o[0].name))
         opt.state = get_option_state(options, opt.name)
         _, o[1] = opt.check()
 
@@ -196,15 +194,9 @@ def check_config_file(fname):
             line = line.strip()
 
             if opt_is_on.match(line):
-                if line[:7] != 'CONFIG_':
-                    sys.exit('[!] BUG: bad enabled config option "{}"'.format(line))
-
                 config, value = line[7:].split('=', 1)
                 parsed_options[config] = value
             elif opt_is_off.match(line):
-                if line[:9] != '# CONFIG_':
-                    sys.exit('[!] BUG: bad disabled config option "{}"'.format(line))
-
                 config, value = line[9:].split(' ', 1)
                 if value != 'is not set':
                     sys.exit('[!] BUG: bad disabled config option "{}"'.format(line))
