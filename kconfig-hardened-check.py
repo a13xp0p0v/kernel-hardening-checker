@@ -182,10 +182,10 @@ def get_option_state(options, name):
     return options[name] if name in options else None
 
 
-def check_state(options):
+def perform_checks(parsed_options):
     for o in opt_list:
         opt = o[0]
-        opt.state = get_option_state(options, opt.name)
+        opt.state = get_option_state(parsed_options, opt.name)
         _, o[1] = opt.check()
 
 
@@ -214,7 +214,7 @@ def check_config_file(fname):
             if option is not None:
                 parsed_options[option] = value
 
-        check_state(parsed_options)
+        perform_checks(parsed_options)
         print_check_results()
 
         if debug_mode:
