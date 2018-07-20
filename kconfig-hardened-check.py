@@ -217,9 +217,10 @@ def check_config_file(fname):
         perform_checks(parsed_options)
 
         if debug_mode:
-            opt_list_names = [opt[0].name for opt in opt_list]
-            for option in filter(lambda option: option not in opt_list_names, parsed_options.keys()):
-                print("DEBUG: dunno about option {} ".format(option))
+            known_options = [o[0].name for o in opt_list]
+            for option, value in parsed_options.items():
+                if option not in known_options:
+                    print("DEBUG: dunno about option {} ({})".format(option, value))
 
         print_check_results()
 
