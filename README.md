@@ -20,11 +20,16 @@ Please don't cry if my Python code looks like C. I'm just a kernel developer.
 ### Usage
 ```
 #./kconfig-hardened-check.py
-Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
- -p, --print
-	print hardening preferences
- -c <config_file>, --config=<config_file>
-	check the config_file against these preferences
+usage: kconfig-hardened-check.py [-h] [-p] [-c CONFIG] [--debug]
+
+Checks the hardening options in the Linux kernel config
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p, --print           print hardening preferences
+  -c CONFIG, --config CONFIG
+                        check the config_file against these preferences
+  --debug               enable internal debug mode
 ```
 
 ### Script output for `Ubuntu 18.04 (Bionic Beaver)` kernel config
