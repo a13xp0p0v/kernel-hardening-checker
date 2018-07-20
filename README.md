@@ -29,7 +29,7 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
 
 ### Script output for `Ubuntu 18.04 (Bionic Beaver)` kernel config
 ```
-./kconfig-hardened-check.py -c ubuntu-bionic-generic.config
+./kconfig-hardened-check.py -c config_files/ubuntu-bionic-generic.config
 [+] Checking "ubuntu-bionic-generic.config" against hardening preferences...
   option name                            | desired val | decision |       reason       ||    check result    
   ===========================================================================================================
@@ -91,6 +91,7 @@ Usage: ./kconfig-hardened-check.py [-p | -c <config_file>]
   CONFIG_ZSMALLOC_STAT                   | is not set  | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_PAGE_OWNER                      | is not set  | ubuntu18 | cut_attack_surface ||         OK         
   CONFIG_DEBUG_KMEMLEAK                  | is not set  | ubuntu18 | cut_attack_surface ||         OK         
+  CONFIG_BINFMT_AOUT                     | is not set  | ubuntu18 | cut_attack_surface ||   OK: not found    
   CONFIG_IO_STRICT_DEVMEM                |      y      |   kspp   | cut_attack_surface || FAIL: "is not set" 
   CONFIG_LEGACY_VSYSCALL_NONE            |      y      |   kspp   | cut_attack_surface || FAIL: "is not set" 
   CONFIG_BINFMT_MISC                     | is not set  |   kspp   | cut_attack_surface ||     FAIL: "m"      
