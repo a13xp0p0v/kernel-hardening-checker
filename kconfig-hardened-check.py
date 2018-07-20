@@ -198,19 +198,21 @@ def check_config_file(fname):
         print('[+] Checking "{}" against hardening preferences...'.format(fname))
         for line in f.readlines():
             line = line.strip()
+            option = None
+            value = None
 
             if opt_is_on.match(line):
-                config, value = line[7:].split('=', 1)
-                parsed_options[config] = value
+                option, value = line[7:].split('=', 1)
             elif opt_is_off.match(line):
-                config, value = line[9:].split(' ', 1)
+                option, value = line[9:].split(' ', 1)
                 if value != 'is not set':
                     sys.exit('[!] BUG: bad disabled config option "{}"'.format(line))
 
-                if config in parsed_options:
-                    sys.exit('[!] ERROR: config option "{}" exists multiple times'.format(line))
+            if option in parsed_options:
+                sys.exit('[!] ERROR: config option "{}" exists multiple times'.format(line))
 
-                parsed_options[config] = value
+            if option is not None:
+                parsed_options[option] = value
 
         check_state(parsed_options)
         print_check_results()
