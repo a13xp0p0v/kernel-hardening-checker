@@ -36,11 +36,17 @@ class Opt:
 
     def check(self):
         global error_count
-        # check parsed state against expected state
+
         if self.expected == self.state:
             return True, 'OK'
-        if self.expected == 'is not set' and self.state == 'not found':
-            return True, 'OK: not found'
+
+        if self.state is None:
+            if self.expected == 'is not set':
+                return True, 'OK: not found'
+            else:
+                error_count += 1
+                return False, 'FAIL: not found'
+
         error_count += 1
         return False, 'FAIL: "' + self.state + '"'
 
@@ -173,7 +179,7 @@ def print_check_results():
 
 
 def get_option_state(options, name):
-    return options[name] if name in options else 'not found'
+    return options[name] if name in options else None
 
 
 def check_state(options):
