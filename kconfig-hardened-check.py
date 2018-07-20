@@ -206,7 +206,7 @@ def check_config_file(fname):
             elif opt_is_off.match(line):
                 option, value = line[9:].split(' ', 1)
                 if value != 'is not set':
-                    sys.exit('[!] BUG: bad disabled config option "{}"'.format(line))
+                    sys.exit('[!] ERROR: bad disabled config option "{}"'.format(line))
 
             if option in parsed_options:
                 sys.exit('[!] ERROR: config option "{}" exists multiple times'.format(line))
