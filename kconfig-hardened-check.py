@@ -45,11 +45,59 @@ class OptCheck:
         else:
             self.result = 'FAIL: "' + self.state + '"'
 
+        if self.result.startswith('OK'):
+            return True, self.result
+        else:
+            return False, self.result
+
     def __repr__(self):
         return '{} = {}'.format(self.name, self.state)
 
 
+class OR:
+    def __init__(self, *opts):
+        self.opts = opts
+        self.result = None
+
+    # self.opts[0] is the option which this OR-check is about.
+    # Use case: OR(<X_is_hardened>, <X_is_disabled>)
+
+    @property
+    def name(self):
+        return self.opts[0].name
+
+    @property
+    def expected(self):
+        return self.opts[0].expected
+
+    @property
+    def state(self):
+        return self.opts[0].state
+
+    @property
+    def decision(self):
+        return self.opts[0].decision
+
+    @property
+    def reason(self):
+        return self.opts[0].reason
+
+    def check(self):
+        for i, opt in enumerate(self.opts):
+            result, msg = opt.check()
+            if result:
+                if i == 0:
+                    self.result = opt.result
+                else:
+                    self.result = 'CONFIG_{}: {} ("{}")'.format(opt.name, opt.result, opt.expected)
+                return True, self.result
+        self.result = self.opts[0].result
+        return False, self.result
+
+
 def construct_opt_checks():
+    devmem_not_set = OptCheck('DEVMEM',                  'is not set', 'kspp', 'cut_attack_surface')
+
     checklist.append(OptCheck('BUG',                     'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('PAGE_TABLE_ISOLATION',    'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('RETPOLINE',               'y', 'ubuntu18', 'self_protection'))
@@ -103,7 +151,7 @@ def construct_opt_checks():
 
     checklist.append(OptCheck('SECCOMP',              'y', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'ubuntu18', 'cut_attack_surface'))
-    checklist.append(OptCheck('STRICT_DEVMEM',        'y', 'ubuntu18', 'cut_attack_surface'))
+    checklist.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'ubuntu18', 'cut_attack_surface'), devmem_not_set))
     checklist.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('DEVKMEM',              'is not set', 'ubuntu18', 'cut_attack_surface'))
@@ -114,7 +162,7 @@ def construct_opt_checks():
     checklist.append(OptCheck('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('BINFMT_AOUT',          'is not set', 'ubuntu18', 'cut_attack_surface'))
 
-    checklist.append(OptCheck('IO_STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'))
+    checklist.append(OR(OptCheck('IO_STRICT_DEVMEM',  'y', 'kspp', 'cut_attack_surface'), devmem_not_set))
     checklist.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
     checklist.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
@@ -165,10 +213,10 @@ def print_opt_checks():
 
 
 def print_check_results():
-    print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^20}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
-    print('  ===========================================================================================================')
+    print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^28}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
+    print('  ===================================================================================================================')
     for opt in checklist:
-        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason, opt.result))
+        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(opt.name, opt.expected, opt.decision, opt.reason, opt.result))
     print()
 
 
@@ -178,7 +226,11 @@ def get_option_state(options, name):
 
 def perform_checks(parsed_options):
     for opt in checklist:
-        opt.state = get_option_state(parsed_options, opt.name)
+        if hasattr(opt, 'opts'):
+            for o in opt.opts:
+                o.state = get_option_state(parsed_options, o.name)
+        else:
+            opt.state = get_option_state(parsed_options, opt.name)
         opt.check()
 
 
