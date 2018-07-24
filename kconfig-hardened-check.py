@@ -83,12 +83,15 @@ class OR:
         return self.opts[0].reason
 
     def check(self):
-        for opt in self.opts:
+        for i, opt in enumerate(self.opts):
             result, msg = opt.check()
             if result:
-                self.result = 'OK (CONFIG_{} {})'.format(opt.name, opt.state)
-                return result, self.result
-        self.result = 'FAIL: "{}"'.format(self.opts[0].state)
+                if i == 0:
+                    self.result = opt.result
+                else:
+                    self.result = 'CONFIG_{}: {} ("{}")'.format(opt.name, opt.result, opt.expected)
+                return True, self.result
+        self.result = self.opts[0].result
         return False, self.result
 
 
