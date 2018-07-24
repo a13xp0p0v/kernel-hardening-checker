@@ -45,6 +45,11 @@ class OptCheck:
         else:
             self.result = 'FAIL: "' + self.state + '"'
 
+        if self.result.startswith('OK'):
+            return True, self.result
+        else:
+            return False, self.result
+
     def __repr__(self):
         return '{} = {}'.format(self.name, self.state)
 
