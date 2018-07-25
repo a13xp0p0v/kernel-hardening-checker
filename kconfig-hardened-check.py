@@ -96,6 +96,7 @@ class OR:
 
 
 def construct_opt_checks():
+    modules_not_set = OptCheck('MODULES',                'is not set', 'kspp', 'cut_attack_surface')
     devmem_not_set = OptCheck('DEVMEM',                  'is not set', 'kspp', 'cut_attack_surface')
 
     checklist.append(OptCheck('BUG',                     'y', 'ubuntu18', 'self_protection'))
@@ -117,9 +118,9 @@ def construct_opt_checks():
     checklist.append(OptCheck('SLAB_FREELIST_RANDOM',    'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('HARDENED_USERCOPY',       'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('FORTIFY_SOURCE',          'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('MODULE_SIG',              'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('MODULE_SIG_ALL',          'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('MODULE_SIG_SHA512',       'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OR(OptCheck('MODULE_SIG',           'y', 'ubuntu18', 'self_protection'), modules_not_set))
+    checklist.append(OR(OptCheck('MODULE_SIG_ALL',       'y', 'ubuntu18', 'self_protection'), modules_not_set))
+    checklist.append(OR(OptCheck('MODULE_SIG_SHA512',    'y', 'ubuntu18', 'self_protection'), modules_not_set))
     checklist.append(OptCheck('SYN_COOKIES',             'y', 'ubuntu18', 'self_protection')) # another reason?
     checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',   '65536', 'ubuntu18', 'self_protection'))
 
