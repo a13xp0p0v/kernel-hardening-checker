@@ -47,8 +47,7 @@ optional arguments:
   CONFIG_DEBUG_WX                        |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_RANDOMIZE_BASE                  |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_RANDOMIZE_MEMORY                |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_CC_STACKPROTECTOR               |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_CC_STACKPROTECTOR_STRONG        |      y      | ubuntu18 |  self_protection   ||             OK             
+  CONFIG_STACKPROTECTOR_STRONG           |      y      | ubuntu18 |  self_protection   ||CONFIG_CC_STACKPROTECTOR_STRONG: OK ("y")
   CONFIG_VMAP_STACK                      |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_THREAD_INFO_IN_TASK             |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_SCHED_STACK_END_CHECK           |      y      | ubuntu18 |  self_protection   ||             OK             
