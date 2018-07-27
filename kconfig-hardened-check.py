@@ -201,7 +201,7 @@ def construct_opt_checks():
 
     checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'my', 'userspace_protection'))
 
-    checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
+#   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
 def print_opt_checks():
