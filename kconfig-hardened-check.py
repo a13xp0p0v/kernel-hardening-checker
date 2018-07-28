@@ -204,71 +204,73 @@ def construct_opt_checks():
     checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
-def print_opt_checks():
-    print('[+] Printing kernel hardening preferences...')
-    print('  {:<39}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'))
-    print('  ======================================================================================')
-    for opt in checklist:
-        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason))
-    print()
+class Outputter:
+    @staticmethod
+    def print_opt_checks():
+        print('[+] Printing kernel hardening preferences...')
+        print('  {:<39}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'))
+        print('  ======================================================================================')
+        for opt in checklist:
+            print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason))
+        print()
+
+    @staticmethod
+    def print_check_results():
+        print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^28}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
+        print('  ===================================================================================================================')
+        for opt in checklist:
+            print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(opt.name, opt.expected, opt.decision, opt.reason, opt.result))
+        print()
 
 
-def print_check_results():
-    print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^28}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
-    print('  ===================================================================================================================')
-    for opt in checklist:
-        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(opt.name, opt.expected, opt.decision, opt.reason, opt.result))
-    print()
+class Config:
+    def __init__(self, fname):
+        with open(fname, 'r') as f:
+            self.options = OrderedDict()
+            opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
+            opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
 
+            print('[+] Checking "{}" against hardening preferences...'.format(fname))
+            for line in f.readlines():
+                line = line.strip()
+                option = None
+                value = None
 
-def get_option_state(options, name):
-    return options[name] if name in options else None
+                if opt_is_on.match(line):
+                    option, value = line[7:].split('=', 1)
+                elif opt_is_off.match(line):
+                    option, value = line[9:].split(' ', 1)
+                    if value != 'is not set':
+                        sys.exit('[!] ERROR: bad disabled config option "{}"'.format(line))
 
+                if option in self.options:
+                    sys.exit('[!] ERROR: config option "{}" exists multiple times'.format(line))
 
-def perform_checks(parsed_options):
-    for opt in checklist:
-        if hasattr(opt, 'opts'):
-            for o in opt.opts:
-                o.state = get_option_state(parsed_options, o.name)
-        else:
-            opt.state = get_option_state(parsed_options, opt.name)
-        opt.check()
+                if option is not None:
+                    self.options[option] = value
 
+            self.perform_checks()
 
-def check_config_file(fname):
-    with open(fname, 'r') as f:
-        parsed_options = OrderedDict()
-        opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
-        opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
+            if debug_mode:
+                known_options = [opt.name for opt in checklist]
+                for option, value in self.options.items():
+                    if option not in known_options:
+                        print("DEBUG: dunno about option {} ({})".format(option, value))
 
-        print('[+] Checking "{}" against hardening preferences...'.format(fname))
-        for line in f.readlines():
-            line = line.strip()
-            option = None
-            value = None
+    def get_option(self, name):
+        return self.options.get(name, None)
 
-            if opt_is_on.match(line):
-                option, value = line[7:].split('=', 1)
-            elif opt_is_off.match(line):
-                option, value = line[9:].split(' ', 1)
-                if value != 'is not set':
-                    sys.exit('[!] ERROR: bad disabled config option "{}"'.format(line))
+    def perform_checks(self):
+        for opt in checklist:
+            if hasattr(opt, 'opts'):
+                for o in opt.opts:
+                    o.state = self.get_option(o.name)
+            else:
+                opt.state = self.get_option(opt.name)
+            opt.check()
 
-            if option in parsed_options:
-                sys.exit('[!] ERROR: config option "{}" exists multiple times'.format(line))
-
-            if option is not None:
-                parsed_options[option] = value
-
-        perform_checks(parsed_options)
-
-        if debug_mode:
-            known_options = [opt.name for opt in checklist]
-            for option, value in parsed_options.items():
-                if option not in known_options:
-                    print("DEBUG: dunno about option {} ({})".format(option, value))
-
-        print_check_results()
+    def print_result(self):
+        Outputter.print_check_results()
 
 
 if __name__ == '__main__':
@@ -281,14 +283,16 @@ if __name__ == '__main__':
     construct_opt_checks()
 
     if args.print:
-        print_opt_checks()
+        Outputter.print_opt_checks()
         sys.exit(0)
 
     if args.debug:
         debug_mode = True
 
     if args.config:
-        check_config_file(args.config)
+        config = Config(args.config)
+        config.print_result()
+
         error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
         if error_count == 0:
             print('[+] config check is PASSED')
