@@ -209,17 +209,21 @@ class Outputter:
     def print_opt_checks():
         print('[+] Printing kernel hardening preferences...')
         print('  {:<39}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'))
-        print('  ======================================================================================')
+        print('  ' + '=' * 88)
         for opt in checklist:
-            print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason))
+            print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(
+                opt.name, opt.expected, opt.decision, opt.reason)
+            )
         print()
 
     @staticmethod
     def print_check_results():
         print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^28}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
-        print('  ===================================================================================================================')
+        print('  ' + '=' * 117)
         for opt in checklist:
-            print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(opt.name, opt.expected, opt.decision, opt.reason, opt.result))
+            print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
+                opt.name, opt.expected, opt.decision, opt.reason, opt.result)
+            )
         print()
 
 
