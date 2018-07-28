@@ -18,12 +18,8 @@ class Checklist:
         checklist.append(OptCheck('DEBUG_WX',                'y', 'ubuntu18', 'self_protection'))
         checklist.append(OptCheck('RANDOMIZE_BASE',          'y', 'ubuntu18', 'self_protection'))
         checklist.append(OptCheck('RANDOMIZE_MEMORY',        'y', 'ubuntu18', 'self_protection'))
-        checklist.append(
-            OR(
-                OptCheck('STACKPROTECTOR_STRONG','y', 'ubuntu18', 'self_protection'),
-                OptCheck('CC_STACKPROTECTOR_STRONG','y', 'ubuntu18', 'self_protection')
-             )
-        )
+        checklist.append(OR(OptCheck('STACKPROTECTOR_STRONG','y', 'ubuntu18', 'self_protection'),
+                         OptCheck('CC_STACKPROTECTOR_STRONG','y', 'ubuntu18', 'self_protection')))
         checklist.append(OptCheck('VMAP_STACK',              'y', 'ubuntu18', 'self_protection'))
         checklist.append(OptCheck('THREAD_INFO_IN_TASK',     'y', 'ubuntu18', 'self_protection'))
         checklist.append(OptCheck('SCHED_STACK_END_CHECK',   'y', 'ubuntu18', 'self_protection'))
