@@ -44,9 +44,10 @@ if __name__ == '__main__':
 
         error_count = checklist.get_errors_count()
         if error_count == 0:
-            print('[+] config check is PASSED')
+            Outputter.great_config()
             sys.exit(0)
         else:
-            sys.exit('[-] config check is NOT PASSED: {} errors'.format(error_count))
+            Outputter.display_errors_count(error_count)
+            sys.exit(1)
 
     parser.print_help()

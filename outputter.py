@@ -19,3 +19,11 @@ class Outputter:
                 opt.name, opt.expected, opt.decision, opt.reason, opt.result)
             )
         print()
+
+    @staticmethod
+    def great_config():
+        print('[+] config check is PASSED')
+
+    @staticmethod
+    def display_errors_count(error_count):
+        print('[-] config check is NOT PASSED: {} errors'.format(error_count))
