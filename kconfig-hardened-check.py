@@ -95,7 +95,7 @@ class OR:
         return False, self.result
 
 
-def construct_opt_checks():
+def construct_checklist():
     modules_not_set = OptCheck('MODULES',                'is not set', 'kspp', 'cut_attack_surface')
     devmem_not_set = OptCheck('DEVMEM',                  'is not set', 'kspp', 'cut_attack_surface')
 
@@ -204,7 +204,7 @@ def construct_opt_checks():
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
-def print_opt_checks():
+def print_checklist():
     print('[+] Printing kernel hardening preferences...')
     print('  {:<39}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'))
     print('  ======================================================================================')
@@ -278,10 +278,10 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action='store_true', help='enable internal debug mode')
     args = parser.parse_args()
 
-    construct_opt_checks()
+    construct_checklist()
 
     if args.print:
-        print_opt_checks()
+        print_checklist()
         sys.exit(0)
 
     if args.debug:
