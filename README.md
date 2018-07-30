@@ -43,7 +43,6 @@ optional arguments:
   CONFIG_RETPOLINE                       |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_X86_64                          |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_STRICT_KERNEL_RWX               |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_STRICT_MODULE_RWX               |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_DEBUG_WX                        |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_RANDOMIZE_BASE                  |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_RANDOMIZE_MEMORY                |      y      | ubuntu18 |  self_protection   ||             OK             
@@ -56,6 +55,7 @@ optional arguments:
   CONFIG_SLAB_FREELIST_RANDOM            |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_HARDENED_USERCOPY               |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_FORTIFY_SOURCE                  |      y      | ubuntu18 |  self_protection   ||             OK             
+  CONFIG_STRICT_MODULE_RWX               |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_MODULE_SIG                      |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_MODULE_SIG_ALL                  |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_MODULE_SIG_SHA512               |      y      | ubuntu18 |  self_protection   ||             OK             
