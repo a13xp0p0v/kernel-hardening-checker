@@ -234,7 +234,7 @@ def print_check_results():
 
 
 def get_option_state(options, name):
-    return options[name] if name in options else None
+    return options.get(name, None)
 
 
 def perform_checks(parsed_options):
