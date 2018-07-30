@@ -216,10 +216,10 @@ def print_checklist():
     print('[+] Printing kernel hardening preferences...')
     print('  {:<39}|{:^13}|{:^10}|{:^20}'.format(
         'option name', 'desired val', 'decision', 'reason'))
-    print('  ' + '=' * 88)
+    print('  ' + '=' * 86)
     for opt in checklist:
         print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(
-                opt.name, opt.expected, opt.decision, opt.reason))
+            opt.name, opt.expected, opt.decision, opt.reason))
     print()
 
 
