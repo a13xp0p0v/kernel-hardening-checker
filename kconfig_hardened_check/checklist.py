@@ -1,4 +1,4 @@
-from options import OptCheck, OR
+from kconfig_hardened_check.options import OptCheck, OR
 
 
 class Checklist:
@@ -139,4 +139,3 @@ class Checklist:
 
     def get_errors_count(self):
         return len(list(filter(lambda opt: opt.result.startswith('FAIL'), self._checklist)))
-

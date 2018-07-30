@@ -19,9 +19,9 @@
 import sys
 from argparse import ArgumentParser
 
-from checklist import Checklist
-from outputter import Outputter
-from userconfig import UserConfig
+from kconfig_hardened_check.checklist import Checklist
+from kconfig_hardened_check.outputter import Outputter
+from kconfig_hardened_check.userconfig import UserConfig
 
 
 if __name__ == '__main__':
