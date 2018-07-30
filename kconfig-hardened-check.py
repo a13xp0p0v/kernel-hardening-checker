@@ -104,7 +104,6 @@ def construct_checklist():
     checklist.append(OptCheck('RETPOLINE',               'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('X86_64',                  'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('STRICT_KERNEL_RWX',       'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('STRICT_MODULE_RWX',       'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('DEBUG_WX',                'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('RANDOMIZE_BASE',          'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('RANDOMIZE_MEMORY',        'y', 'ubuntu18', 'self_protection'))
@@ -118,6 +117,8 @@ def construct_checklist():
     checklist.append(OptCheck('SLAB_FREELIST_RANDOM',    'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('HARDENED_USERCOPY',       'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('FORTIFY_SOURCE',          'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OR(OptCheck('STRICT_MODULE_RWX',    'y', 'ubuntu18', 'self_protection'), \
+                        OptCheck('DEBUG_SET_MODULE_RONX', 'y', 'before_v4.11', 'self_protection'), modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG',           'y', 'ubuntu18', 'self_protection'), modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG_ALL',       'y', 'ubuntu18', 'self_protection'), modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG_SHA512',    'y', 'ubuntu18', 'self_protection'), modules_not_set))
