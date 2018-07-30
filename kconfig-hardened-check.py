@@ -214,23 +214,27 @@ def construct_checklist():
 
 def print_checklist():
     print('[+] Printing kernel hardening preferences...')
-    print('  {:<39}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'))
-    print('  ======================================================================================')
+    print('  {:<39}|{:^13}|{:^10}|{:^20}'.format(
+        'option name', 'desired val', 'decision', 'reason'))
+    print('  ' + '=' * 88)
     for opt in checklist:
-        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason))
+        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}'.format(
+                opt.name, opt.expected, opt.decision, opt.reason))
     print()
 
 
 def print_check_results():
-    print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^28}'.format('option name', 'desired val', 'decision', 'reason', 'check result'))
-    print('  ===================================================================================================================')
+    print('  {:<39}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
+        'option name', 'desired val', 'decision', 'reason', 'check result'))
+    print('  ' + '=' * 115)
     for opt in checklist:
-        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(opt.name, opt.expected, opt.decision, opt.reason, opt.result))
+        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
+            opt.name, opt.expected, opt.decision, opt.reason, opt.result))
     print()
 
 
 def get_option_state(options, name):
-    return options[name] if name in options else None
+    return options.get(name, None)
 
 
 def perform_checks(parsed_options):
