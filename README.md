@@ -130,9 +130,8 @@ optional arguments:
   CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_BPF_SYSCALL                     | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||         FAIL: "28"         
-  CONFIG_LKDTM                           |      m      |    my    |    feature_test    ||     FAIL: "is not set"     
 
-[-] config check is NOT PASSED: 52 errors
+[-] config check is NOT PASSED: 51 errors
 ```
 
 __Go and fix them all!__
