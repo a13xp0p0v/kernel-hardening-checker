@@ -6,11 +6,9 @@
 
 Alpine Linux:
 https://git.alpinelinux.org/cgit/aports/plain/main/linux-vanilla/config-vanilla.x86_64?h=3.8-stable
-https://git.alpinelinux.org/cgit/aports/plain/main/linux-vanilla/config-vanilla.x86_64
 
 Arch Linux:
-https://git.archlinux.org/svntogit/packages.git/plain/trunk/config?h=packages/linux
-https://git.archlinux.org/svntogit/packages.git/plain/trunk/config.x86_64?h=packages/linux-hardened
+https://git.archlinux.org/svntogit/packages.git/plain/linux-hardened/trunk/config.x86_64
 
 Oracle Linux: Unbreakable Enterprise Kernel (UEK):
 https://raw.githubusercontent.com/oracle/linux-uek/uek5/master/uek-rpm/ol7/config-x86_64
@@ -19,9 +17,7 @@ SUSE Linux Enterprise (SLE):
 https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=SLE15-SP1
 
 openSUSE:
-https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=openSUSE-42.3
-https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=stable
-https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default
+https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=openSUSE-15.0
 
 Pentoo:
-https://github.com/pentoo/pentoo-livecd/tree/master/livecd/amd64/kernel
+https://raw.githubusercontent.com/pentoo/pentoo-livecd/master/livecd/amd64/kernel/config-4.17.11
