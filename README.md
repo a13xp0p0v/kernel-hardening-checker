@@ -134,6 +134,12 @@ optional arguments:
 [-] config check is NOT PASSED: 51 errors
 ```
 
+
+N.B. If `CONFIG_GCC_PLUGIN*` options are automatically disabled during your kernel compilation,
+that means that your gcc doesn't support plugins. For example, if you have `gcc-7` on Ubuntu,
+try to install `gcc-7-plugin-dev` package, it should help.
+
+
 __Go and fix them all!__
 
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
