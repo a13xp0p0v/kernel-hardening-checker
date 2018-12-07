@@ -55,6 +55,7 @@ optional arguments:
   CONFIG_SLAB_FREELIST_RANDOM            |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_HARDENED_USERCOPY               |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_FORTIFY_SOURCE                  |      y      | ubuntu18 |  self_protection   ||             OK             
+  CONFIG_LOCK_DOWN_KERNEL                |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_STRICT_MODULE_RWX               |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_MODULE_SIG                      |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_MODULE_SIG_ALL                  |      y      | ubuntu18 |  self_protection   ||             OK             
@@ -96,6 +97,7 @@ optional arguments:
   CONFIG_PAGE_OWNER                      | is not set  | ubuntu18 | cut_attack_surface ||             OK             
   CONFIG_DEBUG_KMEMLEAK                  | is not set  | ubuntu18 | cut_attack_surface ||             OK             
   CONFIG_BINFMT_AOUT                     | is not set  | ubuntu18 | cut_attack_surface ||       OK: not found        
+  CONFIG_MMIOTRACE_TEST                  | is not set  | ubuntu18 | cut_attack_surface ||             OK             
   CONFIG_IO_STRICT_DEVMEM                |      y      |   kspp   | cut_attack_surface ||     FAIL: "is not set"     
   CONFIG_LEGACY_VSYSCALL_NONE            |      y      |   kspp   | cut_attack_surface ||     FAIL: "is not set"     
   CONFIG_BINFMT_MISC                     | is not set  |   kspp   | cut_attack_surface ||         FAIL: "m"          
@@ -120,18 +122,21 @@ optional arguments:
   CONFIG_DEVPORT                         | is not set  |grsecurity| cut_attack_surface ||         FAIL: "y"          
   CONFIG_DEBUG_FS                        | is not set  |grsecurity| cut_attack_surface ||         FAIL: "y"          
   CONFIG_NOTIFIER_ERROR_INJECTION        | is not set  |grsecurity| cut_attack_surface ||         FAIL: "m"          
+  CONFIG_ACPI_TABLE_UPGRADE              | is not set  | lockdown | cut_attack_surface ||         FAIL: "y"          
+  CONFIG_ACPI_APEI_EINJ                  | is not set  | lockdown | cut_attack_surface ||         FAIL: "m"          
+  CONFIG_PROFILING                       | is not set  | lockdown | cut_attack_surface ||         FAIL: "y"          
+  CONFIG_BPF_SYSCALL                     | is not set  | lockdown | cut_attack_surface ||         FAIL: "y"          
+  CONFIG_MMIOTRACE                       | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_KEXEC_FILE                      | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_LIVEPATCH                       | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_USER_NS                         | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_IP_DCCP                         | is not set  |    my    | cut_attack_surface ||         FAIL: "m"          
   CONFIG_IP_SCTP                         | is not set  |    my    | cut_attack_surface ||         FAIL: "m"          
   CONFIG_FTRACE                          | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
-  CONFIG_PROFILING                       | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
-  CONFIG_BPF_SYSCALL                     | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||         FAIL: "28"         
 
-[-] config check is NOT PASSED: 51 errors
+[-] config check is NOT PASSED: 54 errors
 ```
 
 
