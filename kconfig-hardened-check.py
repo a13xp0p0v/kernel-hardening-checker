@@ -15,6 +15,7 @@
 #    slab_nomerge
 #    pti=on
 #    kernel.kptr_restrict=1
+#    lockdown=1
 
 import sys
 from argparse import ArgumentParser
@@ -118,6 +119,7 @@ def construct_checklist():
     checklist.append(OptCheck('SLAB_FREELIST_RANDOM',        'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('HARDENED_USERCOPY',           'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('FORTIFY_SOURCE',              'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('LOCK_DOWN_KERNEL',            'y', 'ubuntu18', 'self_protection')) # remember about LOCK_DOWN_MANDATORY
     checklist.append(OR(OptCheck('STRICT_MODULE_RWX',        'y', 'ubuntu18', 'self_protection'), \
                         OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'before_v4.11', 'self_protection'), \
                         modules_not_set))
