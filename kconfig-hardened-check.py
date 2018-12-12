@@ -155,6 +155,7 @@ def construct_checklist():
     checklist.append(OptCheck('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'))
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',          'y', 'my', 'self_protection'))
     checklist.append(OptCheck('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection')) # breaks systemd?
+    checklist.append(OptCheck('SECURITY_LOADPIN',                 'y', 'my', 'self_protection'))
     checklist.append(OptCheck('PAGE_POISONING_NO_SANITY',         'is not set', 'my', 'self_protection'))
     checklist.append(OptCheck('PAGE_POISONING_ZERO',              'is not set', 'my', 'self_protection'))
     checklist.append(OptCheck('SLAB_MERGE_DEFAULT',               'is not set', 'my', 'self_protection')) # slab_nomerge
