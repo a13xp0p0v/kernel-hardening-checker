@@ -11,7 +11,7 @@
 
 # N.B Hardening command line parameters:
 #    page_poison=1
-#    slub_debug=P
+#    slub_debug=FZP
 #    slab_nomerge
 #    pti=on
 #    kernel.kptr_restrict=1
