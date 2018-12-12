@@ -108,6 +108,8 @@ def construct_checklist():
     checklist.append(OptCheck('PAGE_TABLE_ISOLATION',        'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('RETPOLINE',                   'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('X86_64',                      'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('X86_SMAP',                    'y', 'ubuntu18', 'self_protection'))
+    checklist.append(OptCheck('X86_INTEL_UMIP',              'y', 'ubuntu18', 'self_protection'))
     checklist.append(OR(OptCheck('STRICT_KERNEL_RWX',        'y', 'ubuntu18', 'self_protection'), \
                         OptCheck('DEBUG_RODATA',             'y', 'before_v4.11', 'self_protection')))
     checklist.append(OptCheck('DEBUG_WX',                    'y', 'ubuntu18', 'self_protection'))
