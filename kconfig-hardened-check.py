@@ -20,6 +20,8 @@
 # N.B. Hardening sysctl's:
 #    net.core.bpf_jit_harden
 #
+#
+# TODO: add hardening preferences for ARM
 
 import sys
 from argparse import ArgumentParser

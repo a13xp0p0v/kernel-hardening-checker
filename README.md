@@ -15,6 +15,8 @@ which they disable).
 
 Please don't cry if my Python code looks like C. I'm just a kernel developer.
 
+__TODO:__ add hardening preferences for ARM.
+
 ## Script output examples
 
 ### Usage
@@ -42,6 +44,8 @@ optional arguments:
   CONFIG_PAGE_TABLE_ISOLATION            |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_RETPOLINE                       |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_X86_64                          |      y      | ubuntu18 |  self_protection   ||             OK             
+  CONFIG_X86_SMAP                        |      y      | ubuntu18 |  self_protection   ||             OK             
+  CONFIG_X86_INTEL_UMIP                  |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_STRICT_KERNEL_RWX               |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_DEBUG_WX                        |      y      | ubuntu18 |  self_protection   ||             OK             
   CONFIG_RANDOMIZE_BASE                  |      y      | ubuntu18 |  self_protection   ||             OK             
@@ -80,8 +84,10 @@ optional arguments:
   CONFIG_SLUB_DEBUG_ON                   |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_SECURITY_DMESG_RESTRICT         |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_STATIC_USERMODEHELPER           |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
+  CONFIG_SECURITY_LOADPIN                |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_PAGE_POISONING_NO_SANITY        | is not set  |    my    |  self_protection   ||       OK: not found        
   CONFIG_PAGE_POISONING_ZERO             | is not set  |    my    |  self_protection   ||       OK: not found        
+  CONFIG_SLAB_MERGE_DEFAULT              | is not set  |    my    |  self_protection   ||         FAIL: "y"          
   CONFIG_SECURITY                        |      y      | ubuntu18 |  security_policy   ||             OK             
   CONFIG_SECURITY_YAMA                   |      y      | ubuntu18 |  security_policy   ||             OK             
   CONFIG_SECURITY_SELINUX_DISABLE        | is not set  | ubuntu18 |  security_policy   ||             OK             
@@ -136,7 +142,7 @@ optional arguments:
   CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||         FAIL: "28"         
 
-[-] config check is NOT PASSED: 54 errors
+[-] config check is NOT PASSED: 56 errors
 ```
 
 
