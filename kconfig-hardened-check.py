@@ -157,6 +157,7 @@ def construct_checklist():
     checklist.append(OptCheck('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection')) # breaks systemd?
     checklist.append(OptCheck('PAGE_POISONING_NO_SANITY',         'is not set', 'my', 'self_protection'))
     checklist.append(OptCheck('PAGE_POISONING_ZERO',              'is not set', 'my', 'self_protection'))
+    checklist.append(OptCheck('SLAB_MERGE_DEFAULT',               'is not set', 'my', 'self_protection')) # slab_nomerge
 
     checklist.append(OptCheck('SECURITY',                    'y', 'ubuntu18', 'security_policy'))
     checklist.append(OptCheck('SECURITY_YAMA',               'y', 'ubuntu18', 'security_policy'))
