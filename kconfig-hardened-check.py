@@ -8,7 +8,7 @@
 #
 # Please don't cry if my Python code looks like C.
 #
-
+#
 # N.B Hardening command line parameters:
 #    page_poison=1
 #    slub_debug=FZP
@@ -16,6 +16,10 @@
 #    pti=on
 #    kernel.kptr_restrict=1
 #    lockdown=1
+#
+# N.B. Hardening sysctl's:
+#    net.core.bpf_jit_harden
+#
 
 import sys
 from argparse import ArgumentParser
