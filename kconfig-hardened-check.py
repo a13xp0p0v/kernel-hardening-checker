@@ -17,6 +17,12 @@
 #    kernel.kptr_restrict=1
 #    lockdown=1
 #
+#    spectre_v2=on
+#    pti=on
+#    spec_store_bypass_disable=on
+#    l1tf=full,force
+#
+#
 # N.B. Hardening sysctl's:
 #    net.core.bpf_jit_harden
 #
