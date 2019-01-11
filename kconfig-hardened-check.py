@@ -25,17 +25,17 @@
 #
 # N.B. Hardening sysctl's:
 #    net.core.bpf_jit_harden
-#
-#
-# TODO: add hardening preferences for ARM
 
 import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
 import re
 
+X86_32 = "x86_32"
 X86_64 = "x86_64"
-SUPPORTED_ARCHS = [ X86_64 ]
+ARM = "arm"
+ARM64 = "arm64"
+SUPPORTED_ARCHS = [ X86_32, X86_64, ARM, ARM64 ]
 
 debug_mode = False  # set it to True to print the unknown options from the config
 checklist = []
@@ -111,31 +111,39 @@ class OR:
         return False, self.result
 
 def detect_arch_and_version(fname):
+    arch = None
+    version = None
+
     with open(fname, 'r') as f:
         prog = re.compile("# Linux/(?P<arch>\w+) (?P<version>\S+) Kernel Configuration")
 
         for line in f.readlines():
             match = prog.match(line)
             if match:
-                return (match.group('arch'), match.group('version'))
+                arch = match.group('arch')
+                version = match.group('version')
+                break
 
-    return (None, None)
+        if arch == 'x86':
+            arch = X86_64
+            f.seek(0)
+            for line in f.readlines():
+                if line.strip().startswith('# CONFIG_64BIT is not set'):
+                    arch = x86_32
+                    break
+        elif arch == 'i386':
+            arch = x86_32
 
-def construct_checklist():
+    return (arch, version)
+
+def construct_checklist(arch):
     modules_not_set = OptCheck('MODULES',                'is not set', 'kspp', 'cut_attack_surface')
     devmem_not_set = OptCheck('DEVMEM',                  'is not set', 'kspp', 'cut_attack_surface') # refers to LOCK_DOWN_KERNEL
 
     checklist.append(OptCheck('BUG',                         'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('PAGE_TABLE_ISOLATION',        'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('RETPOLINE',                   'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('X86_64',                      'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('X86_SMAP',                    'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('X86_INTEL_UMIP',              'y', 'ubuntu18', 'self_protection'))
     checklist.append(OR(OptCheck('STRICT_KERNEL_RWX',        'y', 'ubuntu18', 'self_protection'), \
                         OptCheck('DEBUG_RODATA',             'y', 'before_v4.11', 'self_protection')))
     checklist.append(OptCheck('DEBUG_WX',                    'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('RANDOMIZE_BASE',              'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OptCheck('RANDOMIZE_MEMORY',            'y', 'ubuntu18', 'self_protection'))
     checklist.append(OR(OptCheck('STACKPROTECTOR_STRONG',    'y', 'ubuntu18', 'self_protection'), \
                         OptCheck('CC_STACKPROTECTOR_STRONG', 'y', 'ubuntu18', 'self_protection')))
     checklist.append(OptCheck('VMAP_STACK',                  'y', 'ubuntu18', 'self_protection'))
@@ -157,7 +165,6 @@ def construct_checklist():
     checklist.append(OR(OptCheck('MODULE_SIG_SHA512',        'y', 'ubuntu18', 'self_protection'), \
                         modules_not_set))
     checklist.append(OptCheck('SYN_COOKIES',                 'y', 'ubuntu18', 'self_protection')) # another reason?
-    checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',       '65536', 'ubuntu18', 'self_protection'))
 
     checklist.append(OptCheck('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('PAGE_POISONING',                   'y', 'kspp', 'self_protection'))
@@ -195,7 +202,6 @@ def construct_checklist():
     checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('DEVKMEM',              'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('COMPAT_VDSO',          'is not set', 'ubuntu18', 'cut_attack_surface'))
-    checklist.append(OptCheck('X86_PTDUMP',           'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('ZSMALLOC_STAT',        'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('PAGE_OWNER',           'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'))
@@ -204,15 +210,11 @@ def construct_checklist():
 
     checklist.append(OR(OptCheck('IO_STRICT_DEVMEM',  'y', 'kspp', 'cut_attack_surface'), \
                         devmem_not_set)) # refers to LOCK_DOWN_KERNEL
-    checklist.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
     checklist.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('KEXEC',                'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('PROC_KCORE',           'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('LEGACY_PTYS',          'is not set', 'kspp', 'cut_attack_surface'))
-    checklist.append(OptCheck('IA32_EMULATION',       'is not set', 'kspp', 'cut_attack_surface'))
-    checklist.append(OptCheck('X86_X32',              'is not set', 'kspp', 'cut_attack_surface'))
-    checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
 
     checklist.append(OptCheck('KPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
@@ -243,7 +245,45 @@ def construct_checklist():
     checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'))
 
-    checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'my', 'userspace_protection'))
+    if arch == X86_32:
+        checklist.append(OptCheck('M486',                  'is not set', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('HIGHMEM4G',             'is not set', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('HIGHMEM64G',            'is not set', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('X86_PAE',               'is not set', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR', '65536', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('RANDOMIZE_BASE',        'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('RETPOLINE',             'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('X86_PTDUMP',            'is not set', 'ubuntu18', 'cut_attack_surface'))
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',    '16', 'my', 'userspace_protection'))
+    elif arch == X86_64:
+        checklist.append(OptCheck('X86_64',                'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR', '65536', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('RANDOMIZE_BASE',        'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('RANDOMIZE_MEMORY',      'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('LEGACY_VSYSCALL_NONE',  'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
+        checklist.append(OptCheck('PAGE_TABLE_ISOLATION',  'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('IA32_EMULATION',        'is not set', 'kspp', 'cut_attack_surface'))
+        checklist.append(OptCheck('X86_X32',               'is not set', 'kspp', 'cut_attack_surface'))
+        checklist.append(OptCheck('MODIFY_LDT_SYSCALL',    'is not set', 'kspp', 'cut_attack_surface'))
+        checklist.append(OptCheck('X86_SMAP',              'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('X86_INTEL_UMIP',        'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('RETPOLINE',             'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('X86_PTDUMP',            'is not set', 'ubuntu18', 'cut_attack_surface'))
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',    '32', 'my', 'userspace_protection'))
+    elif arch == ARM:
+        checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR', '32768', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('VMSPLIT_3G',            'y', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('CPU_SW_DOMAIN_PAN',     'y', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('OABI_COMPAT',           'is not set', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('ARM_PTDUMP_DEBUGFS',    'is not set', 'ubuntu18', 'cut_attack_surface'))
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',    '16', 'my', 'userspace_protection'))
+    elif arch == ARM64:
+        checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR', '32768', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('RANDOMIZE_BASE',        'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('ARM64_SW_TTBR0_PAN',    'y', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('UNMAP_KERNEL_AT_EL0',   'y', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('ARM64_PTDUMP_DEBUGFS',  'is not set', 'ubuntu18', 'cut_attack_surface'))
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',    '18', 'my', 'userspace_protection'))
 
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
@@ -345,7 +385,7 @@ if __name__ == '__main__':
     if args.arch not in SUPPORTED_ARCHS:
         print('[!] WARNING: %s is not a supported architecture' % args.arch, file=sys.stderr)
 
-    construct_checklist()
+    construct_checklist(args.arch)
 
     if args.print:
         print_checklist()
