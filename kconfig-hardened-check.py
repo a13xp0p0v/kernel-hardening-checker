@@ -34,6 +34,9 @@ from argparse import ArgumentParser
 from collections import OrderedDict
 import re
 
+X86_64 = "x86_64"
+SUPPORTED_ARCHS = [ X86_64 ]
+
 debug_mode = False  # set it to True to print the unknown options from the config
 checklist = []
 
@@ -338,6 +341,9 @@ if __name__ == '__main__':
             if not kernel_version:
                 sys.exit('[!] ERROR: failed to auto-detect kernel version from kconfig')
             args.kernel_version = kernel_version
+
+    if args.arch not in SUPPORTED_ARCHS:
+        print('[!] WARNING: %s is not a supported architecture' % args.arch, file=sys.stderr)
 
     construct_checklist()
 
