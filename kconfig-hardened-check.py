@@ -29,6 +29,7 @@
 import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
+from distutils.version import LooseVersion
 import re
 
 X86_32 = "x86_32"
@@ -136,16 +137,27 @@ def detect_arch_and_version(fname):
 
     return (arch, version)
 
-def construct_checklist(arch):
+def construct_checklist(arch, version):
+    version = LooseVersion(version)
+
     modules_not_set = OptCheck('MODULES',                'is not set', 'kspp', 'cut_attack_surface')
     devmem_not_set = OptCheck('DEVMEM',                  'is not set', 'kspp', 'cut_attack_surface') # refers to LOCK_DOWN_KERNEL
 
     checklist.append(OptCheck('BUG',                         'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OR(OptCheck('STRICT_KERNEL_RWX',        'y', 'ubuntu18', 'self_protection'), \
-                        OptCheck('DEBUG_RODATA',             'y', 'before_v4.11', 'self_protection')))
+
+    if version < LooseVersion('4.11'):
+        checklist.append(OptCheck('DEBUG_KERNEL',            'y', 'ubuntu18', 'self_protection'))
+        checklist.append(OptCheck('DEBUG_RODATA',            'y', 'ubuntu18', 'self_protection'))
+    else:
+        checklist.append(OptCheck('STRICT_KERNEL_RWX',       'y', 'ubuntu18', 'self_protection'))
+
     checklist.append(OptCheck('DEBUG_WX',                    'y', 'ubuntu18', 'self_protection'))
-    checklist.append(OR(OptCheck('STACKPROTECTOR_STRONG',    'y', 'ubuntu18', 'self_protection'), \
-                        OptCheck('CC_STACKPROTECTOR_STRONG', 'y', 'ubuntu18', 'self_protection')))
+
+    if version < LooseVersion('4.18'):
+        checklist.append(OptCheck('CC_STACKPROTECTOR_STRONG', 'y', 'ubuntu18', 'self_protection'))
+    else:
+        checklist.append(OptCheck('STACKPROTECTOR_STRONG',    'y', 'ubuntu18', 'self_protection'))
+
     checklist.append(OptCheck('VMAP_STACK',                  'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('THREAD_INFO_IN_TASK',         'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('SCHED_STACK_END_CHECK',       'y', 'ubuntu18', 'self_protection'))
@@ -155,9 +167,12 @@ def construct_checklist(arch):
     checklist.append(OptCheck('HARDENED_USERCOPY',           'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('FORTIFY_SOURCE',              'y', 'ubuntu18', 'self_protection'))
     checklist.append(OptCheck('LOCK_DOWN_KERNEL',            'y', 'ubuntu18', 'self_protection')) # remember about LOCK_DOWN_MANDATORY
-    checklist.append(OR(OptCheck('STRICT_MODULE_RWX',        'y', 'ubuntu18', 'self_protection'), \
-                        OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'before_v4.11', 'self_protection'), \
-                        modules_not_set))
+    if version < LooseVersion('4.11'):
+        checklist.append(OR(OptCheck('DEBUG_SET_MODULE_RONX','y', 'ubuntu18', 'self_protection'), \
+                            modules_not_set))
+    else:
+        checklist.append(OR(OptCheck('STRICT_MODULE_RWX',    'y', 'ubuntu18', 'self_protection'), \
+                            modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG',               'y', 'ubuntu18', 'self_protection'), \
                         modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG_ALL',           'y', 'ubuntu18', 'self_protection'), \
@@ -385,7 +400,7 @@ if __name__ == '__main__':
     if args.arch not in SUPPORTED_ARCHS:
         print('[!] WARNING: %s is not a supported architecture' % args.arch, file=sys.stderr)
 
-    construct_checklist(args.arch)
+    construct_checklist(args.arch, args.kernel_version)
 
     if args.print:
         print_checklist()
