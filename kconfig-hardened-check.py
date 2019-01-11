@@ -34,6 +34,9 @@ from argparse import ArgumentParser
 from collections import OrderedDict
 import re
 
+X86_64 = "x86_64"
+SUPPORTED_ARCHS = [ X86_64 ]
+
 debug_mode = False  # set it to True to print the unknown options from the config
 checklist = []
 
@@ -107,6 +110,16 @@ class OR:
         self.result = self.opts[0].result
         return False, self.result
 
+def detect_arch_from_config(fname):
+    with open(fname, 'r') as f:
+        prog = re.compile("# Linux/(?P<arch>\w+) \S+ Kernel Configuration")
+
+        for line in f.readlines():
+            match = prog.match(line)
+            if match:
+                return match.group('arch')
+
+    return None
 
 def construct_checklist():
     modules_not_set = OptCheck('MODULES',                'is not set', 'kspp', 'cut_attack_surface')
@@ -310,8 +323,20 @@ if __name__ == '__main__':
     parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('-p', '--print', action='store_true', help='print hardening preferences')
     parser.add_argument('-c', '--config', help='check the config_file against these preferences')
+    parser.add_argument('-a', '--arch', help='processor architecture (overrides any arch found in config_file)', choices=SUPPORTED_ARCHS)
     parser.add_argument('--debug', action='store_true', help='enable internal debug mode')
     args = parser.parse_args()
+
+    if not args.arch:
+        if not args.config:
+            sys.exit('%s\n[!] ERROR: must specify a kernel config file (-c) or the architecture (-a)' % parser.format_usage())
+
+        args.arch = detect_arch_from_config(args.config)
+        if not args.arch:
+            sys.exit('[!] ERROR: failed to auto-detect processor architecture from kconfig')
+
+    if args.arch not in SUPPORTED_ARCHS:
+        print('[!] WARNING: %s is not a supported architecture' % args.arch, file=sys.stderr)
 
     construct_checklist()
 
