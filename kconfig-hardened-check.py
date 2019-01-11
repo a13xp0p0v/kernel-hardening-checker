@@ -107,6 +107,16 @@ class OR:
         self.result = self.opts[0].result
         return False, self.result
 
+def detect_arch_and_version(fname):
+    with open(fname, 'r') as f:
+        prog = re.compile("# Linux/(?P<arch>\w+) (?P<version>\S+) Kernel Configuration")
+
+        for line in f.readlines():
+            match = prog.match(line)
+            if match:
+                return (match.group('arch'), match.group('version'))
+
+    return (None, None)
 
 def construct_checklist():
     modules_not_set = OptCheck('MODULES',                'is not set', 'kspp', 'cut_attack_surface')
@@ -310,8 +320,24 @@ if __name__ == '__main__':
     parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('-p', '--print', action='store_true', help='print hardening preferences')
     parser.add_argument('-c', '--config', help='check the config_file against these preferences')
+    parser.add_argument('-a', '--arch', help='processor architecture (overrides any arch found in config_file)')
+    parser.add_argument('-k', '--kernel-version', help='kernel version (overrides any version found in config_file)')
     parser.add_argument('--debug', action='store_true', help='enable internal debug mode')
     args = parser.parse_args()
+
+    if not args.config and (not args.arch or not args.kernel_version):
+        sys.exit('[!] ERROR: must specify a kernel config file (-c) or the architecture (-a) and kernel version (-k)')
+
+    if not args.arch or not args.kernel_version:
+        (arch, kernel_version) = detect_arch_and_version(args.config)
+        if not args.arch:
+            if not arch:
+                sys.exit('[!] ERROR: failed to auto-detect processor architecture from kconfig')
+            args.arch = arch
+        if not args.kernel_version:
+            if not kernel_version:
+                sys.exit('[!] ERROR: failed to auto-detect kernel version from kconfig')
+            args.kernel_version = kernel_version
 
     construct_checklist()
 
