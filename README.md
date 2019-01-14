@@ -40,34 +40,30 @@ optional arguments:
 [+] Checking "config_files/ubuntu-bionic-generic.config" against hardening preferences...
   option name                            | desired val | decision |       reason       ||        check result        
   ===================================================================================================================
-  CONFIG_BUG                             |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_PAGE_TABLE_ISOLATION            |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_RETPOLINE                       |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_X86_64                          |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_X86_SMAP                        |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_X86_INTEL_UMIP                  |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_STRICT_KERNEL_RWX               |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_DEBUG_WX                        |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_RANDOMIZE_BASE                  |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_RANDOMIZE_MEMORY                |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_STACKPROTECTOR_STRONG           |      y      | ubuntu18 |  self_protection   ||CONFIG_CC_STACKPROTECTOR_STRONG: OK ("y")
-  CONFIG_VMAP_STACK                      |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_THREAD_INFO_IN_TASK             |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_SCHED_STACK_END_CHECK           |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_SLUB_DEBUG                      |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_SLAB_FREELIST_HARDENED          |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_SLAB_FREELIST_RANDOM            |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_HARDENED_USERCOPY               |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_FORTIFY_SOURCE                  |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_LOCK_DOWN_KERNEL                |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_STRICT_MODULE_RWX               |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_MODULE_SIG                      |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_MODULE_SIG_ALL                  |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_MODULE_SIG_SHA512               |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_SYN_COOKIES                     |      y      | ubuntu18 |  self_protection   ||             OK             
-  CONFIG_DEFAULT_MMAP_MIN_ADDR           |    65536    | ubuntu18 |  self_protection   ||             OK             
+  CONFIG_BUG                             |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_PAGE_TABLE_ISOLATION            |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_RETPOLINE                       |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_X86_64                          |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_X86_SMAP                        |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_X86_INTEL_UMIP                  |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_STRICT_KERNEL_RWX               |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_RANDOMIZE_BASE                  |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_RANDOMIZE_MEMORY                |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_STACKPROTECTOR_STRONG           |      y      |defconfig |  self_protection   ||CONFIG_CC_STACKPROTECTOR_STRONG: OK ("y")
+  CONFIG_VMAP_STACK                      |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_THREAD_INFO_IN_TASK             |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_SLUB_DEBUG                      |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_STRICT_MODULE_RWX               |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_SYN_COOKIES                     |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_BUG_ON_DATA_CORRUPTION          |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
+  CONFIG_DEBUG_WX                        |      y      |   kspp   |  self_protection   ||             OK             
+  CONFIG_SCHED_STACK_END_CHECK           |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_PAGE_POISONING                  |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
+  CONFIG_SLAB_FREELIST_HARDENED          |      y      |   kspp   |  self_protection   ||             OK             
+  CONFIG_SLAB_FREELIST_RANDOM            |      y      |   kspp   |  self_protection   ||             OK             
+  CONFIG_HARDENED_USERCOPY               |      y      |   kspp   |  self_protection   ||             OK             
+  CONFIG_HARDENED_USERCOPY_FALLBACK      | is not set  |   kspp   |  self_protection   ||       OK: not found        
+  CONFIG_FORTIFY_SOURCE                  |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_GCC_PLUGINS                     |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_GCC_PLUGIN_RANDSTRUCT           |      y      |   kspp   |  self_protection   ||      FAIL: not found       
   CONFIG_GCC_PLUGIN_STRUCTLEAK           |      y      |   kspp   |  self_protection   ||      FAIL: not found       
@@ -78,9 +74,13 @@ optional arguments:
   CONFIG_DEBUG_SG                        |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_CREDENTIALS               |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_NOTIFIERS                 |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
+  CONFIG_MODULE_SIG                      |      y      |   kspp   |  self_protection   ||             OK             
+  CONFIG_MODULE_SIG_ALL                  |      y      |   kspp   |  self_protection   ||             OK             
+  CONFIG_MODULE_SIG_SHA512               |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_MODULE_SIG_FORCE                |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
-  CONFIG_HARDENED_USERCOPY_FALLBACK      | is not set  |   kspp   |  self_protection   ||       OK: not found        
+  CONFIG_DEFAULT_MMAP_MIN_ADDR           |    65536    |   kspp   |  self_protection   ||             OK             
   CONFIG_GCC_PLUGIN_STACKLEAK            |      y      |    my    |  self_protection   ||      FAIL: not found       
+  CONFIG_LOCK_DOWN_KERNEL                |      y      |    my    |  self_protection   ||             OK             
   CONFIG_SLUB_DEBUG_ON                   |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_SECURITY_DMESG_RESTRICT         |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_STATIC_USERMODEHELPER           |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
@@ -88,24 +88,18 @@ optional arguments:
   CONFIG_PAGE_POISONING_NO_SANITY        | is not set  |    my    |  self_protection   ||       OK: not found        
   CONFIG_PAGE_POISONING_ZERO             | is not set  |    my    |  self_protection   ||       OK: not found        
   CONFIG_SLAB_MERGE_DEFAULT              | is not set  |    my    |  self_protection   ||         FAIL: "y"          
-  CONFIG_SECURITY                        |      y      | ubuntu18 |  security_policy   ||             OK             
-  CONFIG_SECURITY_YAMA                   |      y      | ubuntu18 |  security_policy   ||             OK             
-  CONFIG_SECURITY_SELINUX_DISABLE        | is not set  | ubuntu18 |  security_policy   ||             OK             
-  CONFIG_SECCOMP                         |      y      | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_SECCOMP_FILTER                  |      y      | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_STRICT_DEVMEM                   |      y      | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_ACPI_CUSTOM_METHOD              | is not set  | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_COMPAT_BRK                      | is not set  | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_DEVKMEM                         | is not set  | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_COMPAT_VDSO                     | is not set  | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_X86_PTDUMP                      | is not set  | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_ZSMALLOC_STAT                   | is not set  | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_PAGE_OWNER                      | is not set  | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_DEBUG_KMEMLEAK                  | is not set  | ubuntu18 | cut_attack_surface ||             OK             
-  CONFIG_BINFMT_AOUT                     | is not set  | ubuntu18 | cut_attack_surface ||       OK: not found        
-  CONFIG_MMIOTRACE_TEST                  | is not set  | ubuntu18 | cut_attack_surface ||             OK             
+  CONFIG_SECURITY                        |      y      |defconfig |  security_policy   ||             OK             
+  CONFIG_SECURITY_YAMA                   |      y      |   kspp   |  security_policy   ||             OK             
+  CONFIG_SECURITY_SELINUX_DISABLE        | is not set  |   kspp   |  security_policy   ||             OK             
+  CONFIG_SECCOMP                         |      y      |defconfig | cut_attack_surface ||             OK             
+  CONFIG_SECCOMP_FILTER                  |      y      |defconfig | cut_attack_surface ||             OK             
+  CONFIG_STRICT_DEVMEM                   |      y      |defconfig | cut_attack_surface ||             OK             
   CONFIG_IO_STRICT_DEVMEM                |      y      |   kspp   | cut_attack_surface ||     FAIL: "is not set"     
   CONFIG_LEGACY_VSYSCALL_NONE            |      y      |   kspp   | cut_attack_surface ||     FAIL: "is not set"     
+  CONFIG_ACPI_CUSTOM_METHOD              | is not set  |   kspp   | cut_attack_surface ||             OK             
+  CONFIG_COMPAT_BRK                      | is not set  |   kspp   | cut_attack_surface ||             OK             
+  CONFIG_DEVKMEM                         | is not set  |   kspp   | cut_attack_surface ||             OK             
+  CONFIG_COMPAT_VDSO                     | is not set  |   kspp   | cut_attack_surface ||             OK             
   CONFIG_BINFMT_MISC                     | is not set  |   kspp   | cut_attack_surface ||         FAIL: "m"          
   CONFIG_INET_DIAG                       | is not set  |   kspp   | cut_attack_surface ||         FAIL: "m"          
   CONFIG_KEXEC                           | is not set  |   kspp   | cut_attack_surface ||         FAIL: "y"          
@@ -115,6 +109,11 @@ optional arguments:
   CONFIG_X86_X32                         | is not set  |   kspp   | cut_attack_surface ||         FAIL: "y"          
   CONFIG_MODIFY_LDT_SYSCALL              | is not set  |   kspp   | cut_attack_surface ||         FAIL: "y"          
   CONFIG_HIBERNATION                     | is not set  |   kspp   | cut_attack_surface ||         FAIL: "y"          
+  CONFIG_X86_PTDUMP                      | is not set  |grsecurity| cut_attack_surface ||             OK             
+  CONFIG_ZSMALLOC_STAT                   | is not set  |grsecurity| cut_attack_surface ||             OK             
+  CONFIG_PAGE_OWNER                      | is not set  |grsecurity| cut_attack_surface ||             OK             
+  CONFIG_DEBUG_KMEMLEAK                  | is not set  |grsecurity| cut_attack_surface ||             OK             
+  CONFIG_BINFMT_AOUT                     | is not set  |grsecurity| cut_attack_surface ||       OK: not found        
   CONFIG_KPROBES                         | is not set  |grsecurity| cut_attack_surface ||         FAIL: "y"          
   CONFIG_UPROBES                         | is not set  |grsecurity| cut_attack_surface ||         FAIL: "y"          
   CONFIG_GENERIC_TRACER                  | is not set  |grsecurity| cut_attack_surface ||         FAIL: "y"          
@@ -132,6 +131,7 @@ optional arguments:
   CONFIG_ACPI_APEI_EINJ                  | is not set  | lockdown | cut_attack_surface ||         FAIL: "m"          
   CONFIG_PROFILING                       | is not set  | lockdown | cut_attack_surface ||         FAIL: "y"          
   CONFIG_BPF_SYSCALL                     | is not set  | lockdown | cut_attack_surface ||         FAIL: "y"          
+  CONFIG_MMIOTRACE_TEST                  | is not set  | lockdown | cut_attack_surface ||             OK             
   CONFIG_MMIOTRACE                       | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_KEXEC_FILE                      | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_LIVEPATCH                       | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
