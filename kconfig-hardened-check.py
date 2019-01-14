@@ -186,11 +186,6 @@ def construct_checklist():
     checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('DEVKMEM',              'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('COMPAT_VDSO',          'is not set', 'kspp', 'cut_attack_surface'))
-    checklist.append(OptCheck('X86_PTDUMP',           'is not set', 'ubuntu18', 'cut_attack_surface'))
-    checklist.append(OptCheck('ZSMALLOC_STAT',        'is not set', 'ubuntu18', 'cut_attack_surface'))
-    checklist.append(OptCheck('PAGE_OWNER',           'is not set', 'ubuntu18', 'cut_attack_surface'))
-    checklist.append(OptCheck('DEBUG_KMEMLEAK',       'is not set', 'ubuntu18', 'cut_attack_surface'))
-    checklist.append(OptCheck('BINFMT_AOUT',          'is not set', 'ubuntu18', 'cut_attack_surface'))
     checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'ubuntu18', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
@@ -202,6 +197,11 @@ def construct_checklist():
     checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
 
+    checklist.append(OptCheck('X86_PTDUMP',              'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('ZSMALLOC_STAT',           'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('PAGE_OWNER',              'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('DEBUG_KMEMLEAK',          'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('BINFMT_AOUT',             'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('KPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('UPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('GENERIC_TRACER',          'is not set', 'grsecurity', 'cut_attack_surface'))
