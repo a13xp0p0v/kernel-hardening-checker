@@ -127,7 +127,6 @@ def construct_checklist():
     checklist.append(OptCheck('VMAP_STACK',                  'y', 'defconfig', 'self_protection'))
     checklist.append(OptCheck('THREAD_INFO_IN_TASK',         'y', 'defconfig', 'self_protection'))
     checklist.append(OptCheck('SLUB_DEBUG',                  'y', 'defconfig', 'self_protection'))
-    checklist.append(OptCheck('LOCK_DOWN_KERNEL',            'y', 'ubuntu18', 'self_protection')) # remember about LOCK_DOWN_MANDATORY
     checklist.append(OR(OptCheck('STRICT_MODULE_RWX',        'y', 'defconfig', 'self_protection'), \
                         OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'defconfig', 'self_protection'), \
                         modules_not_set)) # DEBUG_SET_MODULE_RONX was before v4.11
@@ -162,6 +161,7 @@ def construct_checklist():
     checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '65536', 'kspp', 'self_protection'))
 
     checklist.append(OptCheck('GCC_PLUGIN_STACKLEAK',             'y', 'my', 'self_protection'))
+    checklist.append(OptCheck('LOCK_DOWN_KERNEL',                 'y', 'my', 'self_protection')) # remember about LOCK_DOWN_MANDATORY
     checklist.append(OptCheck('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'))
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',          'y', 'my', 'self_protection'))
     checklist.append(OptCheck('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection')) # breaks systemd?
@@ -186,7 +186,6 @@ def construct_checklist():
     checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('DEVKMEM',              'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('COMPAT_VDSO',          'is not set', 'kspp', 'cut_attack_surface'))
-    checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'ubuntu18', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('KEXEC',                'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
@@ -220,6 +219,7 @@ def construct_checklist():
     checklist.append(OptCheck('ACPI_APEI_EINJ',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('PROFILING',            'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('BPF_SYSCALL',          'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
 
     checklist.append(OptCheck('MMIOTRACE',            'is not set', 'my', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL (permissive)
     checklist.append(OptCheck('KEXEC_FILE',           'is not set', 'my', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL (permissive)
