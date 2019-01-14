@@ -25,9 +25,6 @@
 #
 # N.B. Hardening sysctl's:
 #    net.core.bpf_jit_harden
-#
-#
-# TODO: add hardening preferences for ARM
 
 import sys
 from argparse import ArgumentParser
@@ -36,7 +33,9 @@ import re
 
 X86_32 = "x86_32"
 X86_64 = "x86_64"
-SUPPORTED_ARCHS = [ X86_32, X86_64 ]
+ARM = "arm"
+ARM64 = "arm64"
+SUPPORTED_ARCHS = [ X86_32, X86_64, ARM, ARM64 ]
 
 debug_mode = False  # set it to True to print the unknown options from the config
 checklist = []
@@ -280,6 +279,24 @@ def construct_checklist(arch):
         checklist.append(OptCheck('X86_PTDUMP',            'is not set', 'grsecurity', 'cut_attack_surface'))
 
         checklist.append(OptCheck('ARCH_MMAP_RND_BITS',    '32', 'my', 'userspace_protection'))
+    elif arch == ARM:
+        checklist.append(OptCheck('VMSPLIT_3G',            'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('CPU_SW_DOMAIN_PAN',     'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('OABI_COMPAT',           'is not set', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('ARM_PTDUMP',            'is not set', 'defconfig', 'cut_attack_surface'))
+
+        checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR', '32768', 'kspp', 'self_protection'))
+
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',    '16', 'my', 'userspace_protection'))
+    elif arch == ARM64:
+        checklist.append(OptCheck('RANDOMIZE_BASE',        'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('UNMAP_KERNEL_AT_EL0',   'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('ARM64_PTDUMP',          'is not set', 'defconfig', 'cut_attack_surface'))
+
+        checklist.append(OptCheck('ARM64_SW_TTBR0_PAN',    'y', 'kspp', 'self_protection'))
+        checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR', '32768', 'kspp', 'self_protection'))
+
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',    '18', 'my', 'userspace_protection'))
 
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
@@ -374,7 +391,7 @@ if __name__ == '__main__':
     if args.arch not in SUPPORTED_ARCHS:
         print('[!] WARNING: %s is not a supported architecture' % args.arch, file=sys.stderr)
 
-    construct_checklist()
+    construct_checklist(args.arch)
 
     if args.print:
         print_checklist()
