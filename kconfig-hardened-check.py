@@ -35,6 +35,9 @@ from collections import OrderedDict
 import re
 
 debug_mode = False  # set it to True to print the unknown options from the config
+
+supported_archs = [ 'X86_64' ]
+
 checklist = []
 
 
@@ -108,14 +111,33 @@ class OR:
         return False, self.result
 
 
-def construct_checklist():
+def detect_arch(fname):
+    with open(fname, 'r') as f:
+        arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]*=y")
+        arch = None
+        msg = None
+        print('[+] Trying to detect architecture in "{}"...'.format(fname))
+        for line in f.readlines():
+            if arch_pattern.match(line):
+                option, value = line[7:].split('=', 1)
+                if option in supported_archs:
+                    if not arch:
+                        arch = option
+                    else:
+                        return None, 'more than one supported architecture is detected'
+        if not arch:
+            return None, 'failed to detect architecture'
+        else:
+            return arch, 'OK'
+
+
+def construct_checklist(arch):
     modules_not_set = OptCheck('MODULES',                'is not set', 'kspp', 'cut_attack_surface')
     devmem_not_set = OptCheck('DEVMEM',                  'is not set', 'kspp', 'cut_attack_surface') # refers to LOCK_DOWN_KERNEL
 
     checklist.append(OptCheck('BUG',                         'y', 'defconfig', 'self_protection'))
     checklist.append(OptCheck('PAGE_TABLE_ISOLATION',        'y', 'defconfig', 'self_protection'))
     checklist.append(OptCheck('RETPOLINE',                   'y', 'defconfig', 'self_protection'))
-    checklist.append(OptCheck('X86_64',                      'y', 'defconfig', 'self_protection'))
     checklist.append(OptCheck('X86_SMAP',                    'y', 'defconfig', 'self_protection'))
     checklist.append(OptCheck('X86_INTEL_UMIP',              'y', 'defconfig', 'self_protection'))
     checklist.append(OR(OptCheck('STRICT_KERNEL_RWX',        'y', 'defconfig', 'self_protection'), \
@@ -235,8 +257,8 @@ def construct_checklist():
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
-def print_checklist():
-    print('[+] Printing kernel hardening preferences...')
+def print_checklist(arch):
+    print('[+] Printing kernel hardening preferences for {}...'.format(arch))
     print('  {:<39}|{:^13}|{:^10}|{:^20}'.format(
         'option name', 'desired val', 'decision', 'reason'))
     print('  ' + '=' * 86)
@@ -308,21 +330,25 @@ def check_config_file(fname):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
-    parser.add_argument('-p', '--print', action='store_true', help='print hardening preferences')
-    parser.add_argument('-c', '--config', help='check the config_file against these preferences')
-    parser.add_argument('--debug', action='store_true', help='enable internal debug mode')
+    parser.add_argument('-p', '--print', choices=supported_archs,
+                        help='print hardening preferences for selected architecture')
+    parser.add_argument('-c', '--config',
+                        help='check the config_file against these preferences')
+    parser.add_argument('--debug', action='store_true',
+                        help='enable internal debug mode')
     args = parser.parse_args()
-
-    construct_checklist()
-
-    if args.print:
-        print_checklist()
-        sys.exit(0)
 
     if args.debug:
         debug_mode = True
 
     if args.config:
+        arch, msg = detect_arch(args.config)
+        if not arch:
+            sys.exit('[!] ERROR: {}'.format(msg))
+        else:
+            print('[+] Detected architecture: {}'.format(arch))
+
+        construct_checklist(arch)
         check_config_file(args.config)
         error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
         if error_count == 0:
@@ -330,5 +356,11 @@ if __name__ == '__main__':
             sys.exit(0)
         else:
             sys.exit('[-] config check is NOT PASSED: {} errors'.format(error_count))
+
+    if args.print:
+        arch = args.print
+        construct_checklist(arch)
+        print_checklist(arch)
+        sys.exit(0)
 
     parser.print_help()
