@@ -22,13 +22,14 @@ __TODO:__ add hardening preferences for ARM.
 ### Usage
 ```
 #./kconfig-hardened-check.py
-usage: kconfig-hardened-check.py [-h] [-p] [-c CONFIG] [--debug]
+usage: kconfig-hardened-check.py [-h] [-p {X86_64}] [-c CONFIG] [--debug]
 
 Checks the hardening options in the Linux kernel config
 
 optional arguments:
   -h, --help            show this help message and exit
-  -p, --print           print hardening preferences
+  -p {X86_64}, --print {X86_64}
+                        print hardening preferences for selected architecture
   -c CONFIG, --config CONFIG
                         check the config_file against these preferences
   --debug               enable internal debug mode
@@ -36,14 +37,15 @@ optional arguments:
 
 ### Script output for `Ubuntu 18.04 (Bionic Beaver)` kernel config
 ```
-#./kconfig-hardened-check.py -c config_files/ubuntu-bionic-generic.config
+#./kconfig-hardened-check.py -c config_files/ubuntu-bionic-generic.config 
+[+] Trying to detect architecture in "config_files/ubuntu-bionic-generic.config"...
+[+] Detected architecture: X86_64
 [+] Checking "config_files/ubuntu-bionic-generic.config" against hardening preferences...
   option name                            | desired val | decision |       reason       ||        check result        
   ===================================================================================================================
   CONFIG_BUG                             |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_PAGE_TABLE_ISOLATION            |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_RETPOLINE                       |      y      |defconfig |  self_protection   ||             OK             
-  CONFIG_X86_64                          |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_X86_SMAP                        |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_X86_INTEL_UMIP                  |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STRICT_KERNEL_RWX               |      y      |defconfig |  self_protection   ||             OK             
