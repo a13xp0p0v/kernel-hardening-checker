@@ -22,14 +22,14 @@ __TODO:__ add hardening preferences for ARM.
 ### Usage
 ```
 #./kconfig-hardened-check.py
-usage: kconfig-hardened-check.py [-h] [-p {X86_64,X86_32}] [-c CONFIG]
+usage: kconfig-hardened-check.py [-h] [-p {X86_64,X86_32,ARM64}] [-c CONFIG]
                                  [--debug]
 
 Checks the hardening options in the Linux kernel config
 
 optional arguments:
   -h, --help            show this help message and exit
-  -p {X86_64,X86_32}, --print {X86_64,X86_32}
+  -p {X86_64,X86_32,ARM64}, --print {X86_64,X86_32,ARM64}
                         print hardening preferences for selected architecture
   -c CONFIG, --config CONFIG
                         check the config_file against these preferences
@@ -38,25 +38,25 @@ optional arguments:
 
 ### Script output for `Ubuntu 18.04 (Bionic Beaver)` kernel config
 ```
-#./kconfig-hardened-check.py  -c config_files/distros/ubuntu-bionic-generic.config 
+#./kconfig-hardened-check.py -c config_files/distros/ubuntu-bionic-generic.config
 [+] Trying to detect architecture in "config_files/distros/ubuntu-bionic-generic.config"...
 [+] Detected architecture: X86_64
 [+] Checking "config_files/distros/ubuntu-bionic-generic.config" against hardening preferences...
   option name                            | desired val | decision |       reason       ||        check result        
   ===================================================================================================================
   CONFIG_BUG                             |      y      |defconfig |  self_protection   ||             OK             
-  CONFIG_RETPOLINE                       |      y      |defconfig |  self_protection   ||             OK             
-  CONFIG_X86_SMAP                        |      y      |defconfig |  self_protection   ||             OK             
-  CONFIG_X86_INTEL_UMIP                  |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STRICT_KERNEL_RWX               |      y      |defconfig |  self_protection   ||             OK             
-  CONFIG_RANDOMIZE_BASE                  |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STACKPROTECTOR_STRONG           |      y      |defconfig |  self_protection   ||CONFIG_CC_STACKPROTECTOR_STRONG: OK ("y")
   CONFIG_THREAD_INFO_IN_TASK             |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_SLUB_DEBUG                      |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STRICT_MODULE_RWX               |      y      |defconfig |  self_protection   ||             OK             
-  CONFIG_SYN_COOKIES                     |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_PAGE_TABLE_ISOLATION            |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_RANDOMIZE_MEMORY                |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_RANDOMIZE_BASE                  |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_RETPOLINE                       |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_X86_SMAP                        |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_X86_INTEL_UMIP                  |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_SYN_COOKIES                     |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_VMAP_STACK                      |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_BUG_ON_DATA_CORRUPTION          |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_WX                        |      y      |   kspp   |  self_protection   ||             OK             
@@ -72,7 +72,6 @@ optional arguments:
   CONFIG_GCC_PLUGIN_STRUCTLEAK           |      y      |   kspp   |  self_protection   ||      FAIL: not found       
   CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL |      y      |   kspp   |  self_protection   ||      FAIL: not found       
   CONFIG_GCC_PLUGIN_LATENT_ENTROPY       |      y      |   kspp   |  self_protection   ||      FAIL: not found       
-  CONFIG_REFCOUNT_FULL                   |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_LIST                      |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_SG                        |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_CREDENTIALS               |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
@@ -82,6 +81,7 @@ optional arguments:
   CONFIG_MODULE_SIG_SHA512               |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_MODULE_SIG_FORCE                |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEFAULT_MMAP_MIN_ADDR           |    65536    |   kspp   |  self_protection   ||             OK             
+  CONFIG_REFCOUNT_FULL                   |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_GCC_PLUGIN_STACKLEAK            |      y      |    my    |  self_protection   ||      FAIL: not found       
   CONFIG_LOCK_DOWN_KERNEL                |      y      |    my    |  self_protection   ||             OK             
   CONFIG_SLUB_DEBUG_ON                   |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
