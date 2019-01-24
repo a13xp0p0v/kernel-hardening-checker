@@ -2,7 +2,8 @@
 
 #
 # This script helps me to check the Linux kernel Kconfig option list
-# against my hardening preferences for x86_64. Let the computers do their job!
+# against my hardening preferences for X86_64, ARM64, X86_32, and ARM.
+# Let the computers do their job!
 #
 # Author: Alexander Popov <alex.popov@linux.com>
 #
@@ -25,9 +26,6 @@
 #
 # N.B. Hardening sysctl's:
 #    net.core.bpf_jit_harden
-#
-#
-# TODO: add hardening preferences for ARM
 
 import sys
 from argparse import ArgumentParser

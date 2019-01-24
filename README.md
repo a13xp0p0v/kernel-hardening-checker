@@ -9,31 +9,36 @@ make our systems more secure.
 But nobody likes checking configs manually. So let the computers do their job!
 
 __kconfig-hardened-check.py__ helps me to check the Linux kernel Kconfig option list
-against my hardening preferences for `x86_64`, which are based on the
+against my hardening preferences, which are based on the
 [KSPP recommended settings][1] and last public [grsecurity][2] patch (options
 which they disable).
 
 Please don't cry if my Python code looks like C. I'm just a kernel developer.
 
-__TODO:__ add hardening preferences for ARM.
+## Supported microarchitectures
+
+  - X86_64
+  - X86_32
+  - ARM64
+  - ARM
 
 ## Script output examples
 
 ### Usage
 ```
-#./kconfig-hardened-check.py
-usage: kconfig-hardened-check.py [-h] [-p {X86_64,X86_32,ARM64}] [-c CONFIG]
-                                 [--debug]
+#usage: kconfig-hardened-check.py [-h] [-p {X86_64,X86_32,ARM64,ARM}]
+                                 [-c CONFIG] [--debug]
 
 Checks the hardening options in the Linux kernel config
 
 optional arguments:
   -h, --help            show this help message and exit
-  -p {X86_64,X86_32,ARM64}, --print {X86_64,X86_32,ARM64}
+  -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
                         print hardening preferences for selected architecture
   -c CONFIG, --config CONFIG
                         check the config_file against these preferences
   --debug               enable internal debug mode
+
 ```
 
 ### Script output for `Ubuntu 18.04 (Bionic Beaver)` kernel config
@@ -47,7 +52,6 @@ optional arguments:
   CONFIG_BUG                             |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STRICT_KERNEL_RWX               |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STACKPROTECTOR_STRONG           |      y      |defconfig |  self_protection   ||CONFIG_CC_STACKPROTECTOR_STRONG: OK ("y")
-  CONFIG_THREAD_INFO_IN_TASK             |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_SLUB_DEBUG                      |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STRICT_MODULE_RWX               |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_PAGE_TABLE_ISOLATION            |      y      |defconfig |  self_protection   ||             OK             
@@ -58,6 +62,7 @@ optional arguments:
   CONFIG_X86_INTEL_UMIP                  |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_SYN_COOKIES                     |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_VMAP_STACK                      |      y      |defconfig |  self_protection   ||             OK             
+  CONFIG_THREAD_INFO_IN_TASK             |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_BUG_ON_DATA_CORRUPTION          |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_WX                        |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_SCHED_STACK_END_CHECK           |      y      |   kspp   |  self_protection   ||             OK             
