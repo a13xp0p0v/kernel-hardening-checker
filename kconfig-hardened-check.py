@@ -36,7 +36,7 @@ import re
 
 debug_mode = False  # set it to True to print the unknown options from the config
 
-supported_archs = [ 'X86_64', 'X86_32', 'ARM64' ]
+supported_archs = [ 'X86_64', 'X86_32', 'ARM64', 'ARM' ]
 
 checklist = []
 
@@ -140,7 +140,6 @@ def construct_checklist(arch):
                         OptCheck('DEBUG_RODATA',             'y', 'defconfig', 'self_protection'))) # before v4.11
     checklist.append(OR(OptCheck('STACKPROTECTOR_STRONG',    'y', 'defconfig', 'self_protection'), \
                         OptCheck('CC_STACKPROTECTOR_STRONG', 'y', 'defconfig', 'self_protection')))
-    checklist.append(OptCheck('THREAD_INFO_IN_TASK',         'y', 'defconfig', 'self_protection'))
     checklist.append(OptCheck('SLUB_DEBUG',                  'y', 'defconfig', 'self_protection'))
     checklist.append(OR(OptCheck('STRICT_MODULE_RWX',        'y', 'defconfig', 'self_protection'), \
                         OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'defconfig', 'self_protection'), \
@@ -156,9 +155,15 @@ def construct_checklist(arch):
         checklist.append(OptCheck('SYN_COOKIES',                 'y', 'defconfig', 'self_protection')) # another reason?
     if debug_mode or arch == 'ARM64':
         checklist.append(OptCheck('UNMAP_KERNEL_AT_EL0',         'y', 'defconfig', 'self_protection'))
-        checklist.append(OptCheck('REFCOUNT_FULL',               'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64':
         checklist.append(OptCheck('VMAP_STACK',                  'y', 'defconfig', 'self_protection'))
+    if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+        checklist.append(OptCheck('THREAD_INFO_IN_TASK',         'y', 'defconfig', 'self_protection'))
+    if debug_mode or arch == 'ARM':
+        checklist.append(OptCheck('VMSPLIT_3G',                  'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('CPU_SW_DOMAIN_PAN',           'y', 'defconfig', 'self_protection'))
+    if debug_mode or arch == 'ARM64' or arch == 'ARM':
+        checklist.append(OptCheck('REFCOUNT_FULL',               'y', 'defconfig', 'self_protection'))
 
     checklist.append(OptCheck('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_WX',                         'y', 'kspp', 'self_protection'))
@@ -192,12 +197,14 @@ def construct_checklist(arch):
         checklist.append(OptCheck('HIGHMEM64G',                   'y', 'kspp', 'self_protection'))
         checklist.append(OptCheck('X86_PAE',                      'y', 'kspp', 'self_protection'))
     if debug_mode or arch == 'ARM64':
-        checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',        '32768', 'kspp', 'self_protection'))
         checklist.append(OptCheck('ARM64_SW_TTBR0_PAN',           'y', 'kspp', 'self_protection'))
         checklist.append(OptCheck('RANDOMIZE_BASE',               'y', 'kspp', 'self_protection'))
+    if debug_mode or arch == 'ARM64' or arch == 'ARM':
         checklist.append(OptCheck('SYN_COOKIES',                  'y', 'kspp', 'self_protection')) # another reason?
+        checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',        '32768', 'kspp', 'self_protection'))
 
-    checklist.append(OptCheck('GCC_PLUGIN_STACKLEAK',             'y', 'my', 'self_protection'))
+    if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+        checklist.append(OptCheck('GCC_PLUGIN_STACKLEAK',         'y', 'my', 'self_protection'))
     checklist.append(OptCheck('LOCK_DOWN_KERNEL',                 'y', 'my', 'self_protection')) # remember about LOCK_DOWN_MANDATORY
     checklist.append(OptCheck('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'))
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',          'y', 'my', 'self_protection'))
@@ -209,17 +216,24 @@ def construct_checklist(arch):
     if debug_mode or arch == 'X86_32':
         checklist.append(OptCheck('PAGE_TABLE_ISOLATION',         'y', 'my', 'self_protection'))
 
-    checklist.append(OptCheck('SECURITY',                    'y', 'defconfig', 'security_policy'))
+    if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+        checklist.append(OptCheck('SECURITY',                'y', 'defconfig', 'security_policy'))
+    if debug_mode or arch == 'ARM':
+        checklist.append(OptCheck('SECURITY',                'y', 'kspp', 'security_policy'))
     checklist.append(OptCheck('SECURITY_YAMA',               'y', 'kspp', 'security_policy'))
     checklist.append(OptCheck('SECURITY_SELINUX_DISABLE',    'is not set', 'kspp', 'security_policy'))
 
     checklist.append(OptCheck('SECCOMP',              'y', 'defconfig', 'cut_attack_surface'))
     checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'defconfig', 'cut_attack_surface'))
-    checklist.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'defconfig', 'cut_attack_surface'), \
-                        devmem_not_set)) # refers to LOCK_DOWN_KERNEL
+    if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+        checklist.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'defconfig', 'cut_attack_surface'), \
+                            devmem_not_set)) # refers to LOCK_DOWN_KERNEL
 
     checklist.append(OR(OptCheck('IO_STRICT_DEVMEM',  'y', 'kspp', 'cut_attack_surface'), \
                         devmem_not_set)) # refers to LOCK_DOWN_KERNEL
+    if debug_mode or arch == 'ARM':
+        checklist.append(OR(OptCheck('STRICT_DEVMEM', 'y', 'kspp', 'cut_attack_surface'), \
+                            devmem_not_set)) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('DEVKMEM',              'is not set', 'kspp', 'cut_attack_surface'))
@@ -235,6 +249,8 @@ def construct_checklist(arch):
         checklist.append(OptCheck('IA32_EMULATION',       'is not set', 'kspp', 'cut_attack_surface'))
         checklist.append(OptCheck('X86_X32',              'is not set', 'kspp', 'cut_attack_surface'))
         checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'))
+    if debug_mode or arch == 'ARM':
+        checklist.append(OptCheck('OABI_COMPAT',          'is not set', 'kspp', 'cut_attack_surface'))
 
     checklist.append(OptCheck('X86_PTDUMP',              'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('ZSMALLOC_STAT',           'is not set', 'grsecurity', 'cut_attack_surface'))
@@ -274,7 +290,7 @@ def construct_checklist(arch):
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64':
         checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'my', 'userspace_protection'))
-    if debug_mode or arch == 'X86_32':
+    if debug_mode or arch == 'X86_32' or arch == 'ARM':
         checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '16', 'my', 'userspace_protection'))
 
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
