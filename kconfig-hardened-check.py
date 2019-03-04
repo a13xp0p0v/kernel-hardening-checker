@@ -207,8 +207,9 @@ def construct_checklist(arch):
     checklist.append(OptCheck('LOCK_DOWN_KERNEL',                 'y', 'my', 'self_protection')) # remember about LOCK_DOWN_MANDATORY
     checklist.append(OptCheck('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'))
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',          'y', 'my', 'self_protection'))
-    checklist.append(OptCheck('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection')) # breaks systemd?
-    checklist.append(OptCheck('SECURITY_LOADPIN',                 'y', 'my', 'self_protection'))
+    checklist.append(OptCheck('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection')) # needs userspace support (systemd)
+    checklist.append(OptCheck('SECURITY_LOADPIN',                 'y', 'my', 'self_protection')) # needs userspace support
+    checklist.append(OptCheck('RESET_ATTACK_MITIGATION',          'y', 'my', 'self_protection')) # needs userspace support (systemd)
     checklist.append(OptCheck('PAGE_POISONING_NO_SANITY',         'is not set', 'my', 'self_protection'))
     checklist.append(OptCheck('PAGE_POISONING_ZERO',              'is not set', 'my', 'self_protection'))
     checklist.append(OptCheck('SLAB_MERGE_DEFAULT',               'is not set', 'my', 'self_protection')) # slab_nomerge

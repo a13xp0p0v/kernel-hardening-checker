@@ -93,6 +93,7 @@ optional arguments:
   CONFIG_SECURITY_DMESG_RESTRICT         |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_STATIC_USERMODEHELPER           |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_SECURITY_LOADPIN                |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
+  CONFIG_RESET_ATTACK_MITIGATION         |      y      |    my    |  self_protection   ||             OK             
   CONFIG_PAGE_POISONING_NO_SANITY        | is not set  |    my    |  self_protection   ||       OK: not found        
   CONFIG_PAGE_POISONING_ZERO             | is not set  |    my    |  self_protection   ||       OK: not found        
   CONFIG_SLAB_MERGE_DEFAULT              | is not set  |    my    |  self_protection   ||         FAIL: "y"          
