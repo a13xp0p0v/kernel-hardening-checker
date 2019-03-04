@@ -187,7 +187,8 @@ def construct_checklist(arch):
                         modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG_SHA512',             'y', 'kspp', 'self_protection'), \
                         modules_not_set))
-    checklist.append(OptCheck('MODULE_SIG_FORCE',                 'y', 'kspp', 'self_protection')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OR(OptCheck('MODULE_SIG_FORCE',              'y', 'kspp', 'self_protection'), \
+                        modules_not_set)) # refers to LOCK_DOWN_KERNEL
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',        '65536', 'kspp', 'self_protection'))
         checklist.append(OptCheck('REFCOUNT_FULL',                'y', 'kspp', 'self_protection'))
