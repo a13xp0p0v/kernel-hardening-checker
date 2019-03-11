@@ -51,7 +51,7 @@ optional arguments:
   ===================================================================================================================
   CONFIG_BUG                             |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STRICT_KERNEL_RWX               |      y      |defconfig |  self_protection   ||             OK             
-  CONFIG_STACKPROTECTOR_STRONG           |      y      |defconfig |  self_protection   ||CONFIG_CC_STACKPROTECTOR_STRONG: OK ("y")
+  CONFIG_STACKPROTECTOR_STRONG           |      y      |defconfig |  self_protection   ||OK: CONFIG_CC_STACKPROTECTOR_STRONG "y"
   CONFIG_SLUB_DEBUG                      |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_STRICT_MODULE_RWX               |      y      |defconfig |  self_protection   ||             OK             
   CONFIG_PAGE_TABLE_ISOLATION            |      y      |defconfig |  self_protection   ||             OK             
@@ -103,6 +103,8 @@ optional arguments:
   CONFIG_SECCOMP                         |      y      |defconfig | cut_attack_surface ||             OK             
   CONFIG_SECCOMP_FILTER                  |      y      |defconfig | cut_attack_surface ||             OK             
   CONFIG_STRICT_DEVMEM                   |      y      |defconfig | cut_attack_surface ||             OK             
+  CONFIG_MODULES                         | is not set  |   kspp   | cut_attack_surface ||         FAIL: "y"          
+  CONFIG_DEVMEM                          | is not set  |   kspp   | cut_attack_surface ||         FAIL: "y"          
   CONFIG_IO_STRICT_DEVMEM                |      y      |   kspp   | cut_attack_surface ||     FAIL: "is not set"     
   CONFIG_ACPI_CUSTOM_METHOD              | is not set  |   kspp   | cut_attack_surface ||             OK             
   CONFIG_COMPAT_BRK                      | is not set  |   kspp   | cut_attack_surface ||             OK             
@@ -151,7 +153,7 @@ optional arguments:
   CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||         FAIL: "28"         
 
-[-] config check is NOT PASSED: 56 errors
+[-] config check is NOT PASSED: 58 errors
 ```
 
 __Go and fix them all!__
