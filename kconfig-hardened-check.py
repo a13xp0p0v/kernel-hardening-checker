@@ -103,7 +103,7 @@ class OR:
                 if i == 0:
                     self.result = opt.result
                 else:
-                    self.result = 'CONFIG_{}: {} ("{}")'.format(opt.name, opt.result, opt.expected)
+                    self.result = 'OK: CONFIG_{} "{}"'.format(opt.name, opt.expected)
                 return True, self.result
         self.result = self.opts[0].result
         return False, self.result
