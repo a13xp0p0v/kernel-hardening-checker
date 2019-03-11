@@ -74,7 +74,9 @@ class OR:
         self.result = None
 
     # self.opts[0] is the option which this OR-check is about.
-    # Use case: OR(<X_is_hardened>, <X_is_disabled>)
+    # Use case:
+    #     OR(<X_is_hardened>, <X_is_disabled>)
+    #     OR(<X_is_hardened>, <X_is_hardened_old>)
 
     @property
     def name(self):
