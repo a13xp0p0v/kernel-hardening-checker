@@ -231,6 +231,8 @@ def construct_checklist(arch):
         checklist.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'defconfig', 'cut_attack_surface'), \
                             devmem_not_set)) # refers to LOCK_DOWN_KERNEL
 
+    checklist.append(modules_not_set)
+    checklist.append(devmem_not_set)
     checklist.append(OR(OptCheck('IO_STRICT_DEVMEM',  'y', 'kspp', 'cut_attack_surface'), \
                         devmem_not_set)) # refers to LOCK_DOWN_KERNEL
     if debug_mode or arch == 'ARM':
