@@ -128,8 +128,8 @@ class AND(ComplexOptCheck):
                 self.result = opt.result
                 return ret, self.result
             elif not ret:
-                # The requirement is not met. Skip the check.
-                return False, ''
+                self.result = 'FAIL: CONFIG_{} is needed'.format(opt.name)
+                return False, self.result
 
         sys.exit('[!] ERROR: invalid AND check')
 
@@ -344,9 +344,8 @@ def print_check_results():
         'option name', 'desired val', 'decision', 'reason', 'check result'))
     print('  ' + '=' * 115)
     for opt in checklist:
-        if opt.result:
-            print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
-                opt.name, opt.expected, opt.decision, opt.reason, opt.result))
+        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
+            opt.name, opt.expected, opt.decision, opt.reason, opt.result))
     print()
 
 
@@ -422,8 +421,8 @@ if __name__ == '__main__':
 
         construct_checklist(arch)
         check_config_file(args.config)
-        error_count = len(list(filter(lambda opt: opt.result and opt.result.startswith('FAIL'), checklist)))
-        ok_count = len(list(filter(lambda opt: opt.result and opt.result.startswith('OK'), checklist)))
+        error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
+        ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), checklist)))
         if debug_mode:
             sys.exit(0)
         print('[+] config check is finished: \'OK\' - {} / \'FAIL\' - {}'.format(ok_count, error_count))

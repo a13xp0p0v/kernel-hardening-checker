@@ -95,6 +95,8 @@ optional arguments:
   CONFIG_SECURITY_LOADPIN                |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_RESET_ATTACK_MITIGATION         |      y      |    my    |  self_protection   ||             OK             
   CONFIG_SLAB_MERGE_DEFAULT              | is not set  |    my    |  self_protection   ||         FAIL: "y"          
+  CONFIG_PAGE_POISONING_NO_SANITY        | is not set  |    my    |  self_protection   ||FAIL: CONFIG_PAGE_POISONING is needed
+  CONFIG_PAGE_POISONING_ZERO             | is not set  |    my    |  self_protection   ||FAIL: CONFIG_PAGE_POISONING is needed
   CONFIG_SECURITY                        |      y      |defconfig |  security_policy   ||             OK             
   CONFIG_SECURITY_YAMA                   |      y      |   kspp   |  security_policy   ||             OK             
   CONFIG_SECURITY_SELINUX_DISABLE        | is not set  |   kspp   |  security_policy   ||             OK             
@@ -151,7 +153,7 @@ optional arguments:
   CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||         FAIL: "28"         
 
-[+] config check is finished: 'OK' - 43 / 'FAIL' - 58
+[+] config check is finished: 'OK' - 43 / 'FAIL' - 60
 ```
 
 __Go and fix them all!__
