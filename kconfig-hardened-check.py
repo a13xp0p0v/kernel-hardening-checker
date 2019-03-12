@@ -116,6 +116,24 @@ class OR(ComplexOptCheck):
         return False, self.result
 
 
+class AND(ComplexOptCheck):
+    # self.opts[0] is the option which this AND-check is about.
+    # Use case: AND(<suboption>, <main_option>)
+    # Suboption is not checked if checking of the main_option is failed.
+
+    def check(self):
+        for i, opt in reversed(list(enumerate(self.opts))):
+            ret, msg = opt.check()
+            if i == 0:
+                self.result = opt.result
+                return ret, self.result
+            elif not ret:
+                # The requirement is not met. Skip the check.
+                return False, ''
+
+        sys.exit('[!] ERROR: invalid AND check')
+
+
 def detect_arch(fname):
     with open(fname, 'r') as f:
         arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]*=y")
@@ -321,8 +339,9 @@ def print_check_results():
         'option name', 'desired val', 'decision', 'reason', 'check result'))
     print('  ' + '=' * 115)
     for opt in checklist:
-        print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
-            opt.name, opt.expected, opt.decision, opt.reason, opt.result))
+        if opt.result:
+            print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
+                opt.name, opt.expected, opt.decision, opt.reason, opt.result))
     print()
 
 
@@ -398,7 +417,7 @@ if __name__ == '__main__':
 
         construct_checklist(arch)
         check_config_file(args.config)
-        error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
+        error_count = len(list(filter(lambda opt: opt.result and opt.result.startswith('FAIL'), checklist)))
         if debug_mode:
             sys.exit(0)
         if error_count == 0:
