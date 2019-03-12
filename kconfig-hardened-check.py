@@ -101,9 +101,12 @@ class OR(ComplexOptCheck):
     #     OR(<X_is_hardened>, <X_is_hardened_old>)
 
     def check(self):
+        if not self.opts:
+            sys.exit('[!] ERROR: invalid OR check')
+
         for i, opt in enumerate(self.opts):
-            result, msg = opt.check()
-            if result:
+            ret, msg = opt.check()
+            if ret:
                 if i == 0:
                     self.result = opt.result
                 else:
