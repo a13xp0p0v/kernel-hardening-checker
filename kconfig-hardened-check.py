@@ -423,13 +423,11 @@ if __name__ == '__main__':
         construct_checklist(arch)
         check_config_file(args.config)
         error_count = len(list(filter(lambda opt: opt.result and opt.result.startswith('FAIL'), checklist)))
+        ok_count = len(list(filter(lambda opt: opt.result and opt.result.startswith('OK'), checklist)))
         if debug_mode:
             sys.exit(0)
-        if error_count == 0:
-            print('[+] config check is PASSED')
-            sys.exit(0)
-        else:
-            sys.exit('[-] config check is NOT PASSED: {} errors'.format(error_count))
+        print('[+] config check is finished: \'OK\' - {} / \'FAIL\' - {}'.format(ok_count, error_count))
+        sys.exit(0)
 
     if args.print:
         arch = args.print
