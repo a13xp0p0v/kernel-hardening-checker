@@ -66,11 +66,8 @@ optional arguments:
   CONFIG_BUG_ON_DATA_CORRUPTION          |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_WX                        |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_SCHED_STACK_END_CHECK           |      y      |   kspp   |  self_protection   ||             OK             
-  CONFIG_PAGE_POISONING                  |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_SLAB_FREELIST_HARDENED          |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_SLAB_FREELIST_RANDOM            |      y      |   kspp   |  self_protection   ||             OK             
-  CONFIG_HARDENED_USERCOPY               |      y      |   kspp   |  self_protection   ||             OK             
-  CONFIG_HARDENED_USERCOPY_FALLBACK      | is not set  |   kspp   |  self_protection   ||       OK: not found        
   CONFIG_FORTIFY_SOURCE                  |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_GCC_PLUGINS                     |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_GCC_PLUGIN_RANDSTRUCT           |      y      |   kspp   |  self_protection   ||      FAIL: not found       
@@ -81,6 +78,9 @@ optional arguments:
   CONFIG_DEBUG_SG                        |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_CREDENTIALS               |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
   CONFIG_DEBUG_NOTIFIERS                 |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
+  CONFIG_PAGE_POISONING                  |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
+  CONFIG_HARDENED_USERCOPY               |      y      |   kspp   |  self_protection   ||             OK             
+  CONFIG_HARDENED_USERCOPY_FALLBACK      | is not set  |   kspp   |  self_protection   ||       OK: not found        
   CONFIG_MODULE_SIG                      |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_MODULE_SIG_ALL                  |      y      |   kspp   |  self_protection   ||             OK             
   CONFIG_MODULE_SIG_SHA512               |      y      |   kspp   |  self_protection   ||             OK             
@@ -94,8 +94,6 @@ optional arguments:
   CONFIG_STATIC_USERMODEHELPER           |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_SECURITY_LOADPIN                |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
   CONFIG_RESET_ATTACK_MITIGATION         |      y      |    my    |  self_protection   ||             OK             
-  CONFIG_PAGE_POISONING_NO_SANITY        | is not set  |    my    |  self_protection   ||       OK: not found        
-  CONFIG_PAGE_POISONING_ZERO             | is not set  |    my    |  self_protection   ||       OK: not found        
   CONFIG_SLAB_MERGE_DEFAULT              | is not set  |    my    |  self_protection   ||         FAIL: "y"          
   CONFIG_SECURITY                        |      y      |defconfig |  security_policy   ||             OK             
   CONFIG_SECURITY_YAMA                   |      y      |   kspp   |  security_policy   ||             OK             
@@ -153,7 +151,7 @@ optional arguments:
   CONFIG_BPF_JIT                         | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
   CONFIG_ARCH_MMAP_RND_BITS              |     32      |    my    |userspace_protection||         FAIL: "28"         
 
-[-] config check is NOT PASSED: 58 errors
+[+] config check is finished: 'OK' - 43 / 'FAIL' - 58
 ```
 
 __Go and fix them all!__
