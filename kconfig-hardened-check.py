@@ -193,8 +193,6 @@ def construct_checklist(arch):
     checklist.append(OptCheck('SCHED_STACK_END_CHECK',            'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('SLAB_FREELIST_HARDENED',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('SLAB_FREELIST_RANDOM',             'y', 'kspp', 'self_protection'))
-    checklist.append(OptCheck('HARDENED_USERCOPY',                'y', 'kspp', 'self_protection'))
-    checklist.append(OptCheck('HARDENED_USERCOPY_FALLBACK',       'is not set', 'kspp', 'self_protection'))
     checklist.append(OptCheck('FORTIFY_SOURCE',                   'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('GCC_PLUGINS',                      'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('GCC_PLUGIN_RANDSTRUCT',            'y', 'kspp', 'self_protection'))
@@ -207,6 +205,10 @@ def construct_checklist(arch):
     checklist.append(OptCheck('DEBUG_NOTIFIERS',                  'y', 'kspp', 'self_protection'))
     page_poisoning_is_set = OptCheck('PAGE_POISONING',            'y', 'kspp', 'self_protection')
     checklist.append(page_poisoning_is_set)
+    hardened_usercopy_is_set = OptCheck('HARDENED_USERCOPY',      'y', 'kspp', 'self_protection')
+    checklist.append(hardened_usercopy_is_set)
+    checklist.append(AND(OptCheck('HARDENED_USERCOPY_FALLBACK',   'is not set', 'kspp', 'self_protection'), \
+                         hardened_usercopy_is_set))
     checklist.append(OR(OptCheck('MODULE_SIG',                    'y', 'kspp', 'self_protection'), \
                         modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG_ALL',                'y', 'kspp', 'self_protection'), \
