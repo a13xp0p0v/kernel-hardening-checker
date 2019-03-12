@@ -191,7 +191,6 @@ def construct_checklist(arch):
     checklist.append(OptCheck('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_WX',                         'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('SCHED_STACK_END_CHECK',            'y', 'kspp', 'self_protection'))
-    checklist.append(OptCheck('PAGE_POISONING',                   'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('SLAB_FREELIST_HARDENED',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('SLAB_FREELIST_RANDOM',             'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('HARDENED_USERCOPY',                'y', 'kspp', 'self_protection'))
@@ -206,6 +205,8 @@ def construct_checklist(arch):
     checklist.append(OptCheck('DEBUG_SG',                         'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_CREDENTIALS',                'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_NOTIFIERS',                  'y', 'kspp', 'self_protection'))
+    page_poisoning_is_set = OptCheck('PAGE_POISONING',            'y', 'kspp', 'self_protection')
+    checklist.append(page_poisoning_is_set)
     checklist.append(OR(OptCheck('MODULE_SIG',                    'y', 'kspp', 'self_protection'), \
                         modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG_ALL',                'y', 'kspp', 'self_protection'), \
@@ -235,9 +236,11 @@ def construct_checklist(arch):
     checklist.append(OptCheck('STATIC_USERMODEHELPER',            'y', 'my', 'self_protection')) # needs userspace support (systemd)
     checklist.append(OptCheck('SECURITY_LOADPIN',                 'y', 'my', 'self_protection')) # needs userspace support
     checklist.append(OptCheck('RESET_ATTACK_MITIGATION',          'y', 'my', 'self_protection')) # needs userspace support (systemd)
-    checklist.append(OptCheck('PAGE_POISONING_NO_SANITY',         'is not set', 'my', 'self_protection'))
-    checklist.append(OptCheck('PAGE_POISONING_ZERO',              'is not set', 'my', 'self_protection'))
     checklist.append(OptCheck('SLAB_MERGE_DEFAULT',               'is not set', 'my', 'self_protection')) # slab_nomerge
+    checklist.append(AND(OptCheck('PAGE_POISONING_NO_SANITY',     'is not set', 'my', 'self_protection'), \
+                         page_poisoning_is_set))
+    checklist.append(AND(OptCheck('PAGE_POISONING_ZERO',          'is not set', 'my', 'self_protection'), \
+                         page_poisoning_is_set))
     if debug_mode or arch == 'X86_32':
         checklist.append(OptCheck('PAGE_TABLE_ISOLATION',         'y', 'my', 'self_protection'))
 
