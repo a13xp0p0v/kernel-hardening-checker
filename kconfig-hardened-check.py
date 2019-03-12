@@ -68,15 +68,10 @@ class OptCheck:
         return '{} = {}'.format(self.name, self.state)
 
 
-class OR:
+class ComplexOptCheck:
     def __init__(self, *opts):
         self.opts = opts
         self.result = None
-
-    # self.opts[0] is the option which this OR-check is about.
-    # Use case:
-    #     OR(<X_is_hardened>, <X_is_disabled>)
-    #     OR(<X_is_hardened>, <X_is_hardened_old>)
 
     @property
     def name(self):
@@ -97,6 +92,13 @@ class OR:
     @property
     def reason(self):
         return self.opts[0].reason
+
+
+class OR(ComplexOptCheck):
+    # self.opts[0] is the option which this OR-check is about.
+    # Use case:
+    #     OR(<X_is_hardened>, <X_is_disabled>)
+    #     OR(<X_is_hardened>, <X_is_hardened_old>)
 
     def check(self):
         for i, opt in enumerate(self.opts):
