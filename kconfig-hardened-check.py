@@ -245,6 +245,8 @@ def construct_checklist(arch):
                          page_poisoning_is_set))
     if debug_mode or arch == 'X86_32':
         checklist.append(OptCheck('PAGE_TABLE_ISOLATION',         'y', 'my', 'self_protection'))
+    if debug_mode or arch == 'ARM':
+        checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',      'y', 'my', 'self_protection'))
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
         checklist.append(OptCheck('SECURITY',                'y', 'defconfig', 'security_policy'))
