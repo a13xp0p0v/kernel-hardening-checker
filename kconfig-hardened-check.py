@@ -322,6 +322,8 @@ def construct_checklist(arch):
     if debug_mode or arch == 'X86_32':
         checklist.append(OptCheck('MODIFY_LDT_SYSCALL', 'is not set', 'my', 'cut_attack_surface'))
 
+    if debug_mode or arch == 'ARM64':
+        checklist.append(OptCheck('ARM64_PTR_AUTH',       'y', 'defconfig', 'userspace_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64':
         checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'my', 'userspace_protection'))
     if debug_mode or arch == 'X86_32' or arch == 'ARM':
