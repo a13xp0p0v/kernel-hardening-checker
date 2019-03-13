@@ -26,6 +26,7 @@
 #
 # N.B. Hardening sysctl's:
 #    net.core.bpf_jit_harden
+#    kptr_restrict=2
 
 import sys
 from argparse import ArgumentParser
