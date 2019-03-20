@@ -156,12 +156,26 @@ optional arguments:
 [+] config check is finished: 'OK' - 43 / 'FAIL' - 60
 ```
 
-__Go and fix them all!__
 
+### Questions and answers
 
-N.B. If `CONFIG_GCC_PLUGIN*` options are automatically disabled during your kernel compilation,
-then your gcc doesn't support plugins. For example, if you have `gcc-7` on Ubuntu, try to install
-`gcc-7-plugin-dev` package, it should help.
+__Q:__ How disabling `CONFIG_USER_NS` cuts the attack surface? It's needed for containers!
+
+__A:__ Yes, the `CONFIG_USER_NS` option provides some isolation between the userspace programs,
+but the script recommends disabling it to cut the attack surface __of the kernel__.
+
+The rationale:
+
+  - A nice LWN article about the corresponding LKML discussion: https://lwn.net/Articles/673597/
+
+  - A twitter thread about `CONFIG_USER_NS` and security: https://twitter.com/robertswiecki/status/1095447678949953541
+
+<br />
+
+__Q:__ Why `CONFIG_GCC_PLUGINS` is automatically disabled during the kernel compilation?
+
+__A:__ It means that your gcc doesn't support plugins. For example, if you have `gcc-7` on Ubuntu,
+try to install `gcc-7-plugin-dev` package, it should help.
 
 
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
