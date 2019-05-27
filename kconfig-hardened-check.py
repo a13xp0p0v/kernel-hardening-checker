@@ -18,11 +18,19 @@
 #    kernel.kptr_restrict=1
 #    lockdown=1
 #
-#    spectre_v2=on
-#    pti=on
-#    spec_store_bypass_disable=on
-#    l1tf=full,force
-#
+#    Mitigations of CPU vulnerabilities:
+#       Аrch-independent:
+#           mitigations=auto,nosmt
+#       X86:
+#           spectre_v2=on
+#           pti=on
+#           spec_store_bypass_disable=on
+#           l1tf=full,force
+#           mds=full,nosmt
+#       ARM64:
+#           ? CONFIG_HARDEN_BRANCH_PREDICTOR
+#           kpti=on
+#           ssbd=force-on
 #
 # N.B. Hardening sysctl's:
 #    net.core.bpf_jit_harden
