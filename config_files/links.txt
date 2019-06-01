@@ -20,4 +20,4 @@ openSUSE:
 https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=openSUSE-15.0
 
 Pentoo:
-https://raw.githubusercontent.com/pentoo/pentoo-livecd/master/livecd/amd64/kernel/config-4.17.11
+https://raw.githubusercontent.com/pentoo/pentoo-livecd/master/livecd/amd64/kernel/config-5.1.0
