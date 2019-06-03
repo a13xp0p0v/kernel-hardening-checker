@@ -240,7 +240,12 @@ def construct_checklist(arch):
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',        '32768', 'kspp', 'self_protection'))
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
-        checklist.append(OptCheck('GCC_PLUGIN_STACKLEAK',         'y', 'my', 'self_protection'))
+        stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',       'y', 'my', 'self_protection')
+        checklist.append(stackleak_is_set)
+        checklist.append(AND(OptCheck('STACKLEAK_METRICS',        'is not set', 'my', 'self_protection'), \
+                             stackleak_is_set))
+        checklist.append(AND(OptCheck('STACKLEAK_RUNTIME_DISABLE','is not set', 'my', 'self_protection'), \
+                             stackleak_is_set))
     checklist.append(OptCheck('LOCK_DOWN_KERNEL',                 'y', 'my', 'self_protection')) # remember about LOCK_DOWN_MANDATORY
     checklist.append(OptCheck('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'))
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',          'y', 'my', 'self_protection'))
