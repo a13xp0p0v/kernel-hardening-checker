@@ -5,7 +5,7 @@
 ######################################################
 
 Alpine Linux:
-https://git.alpinelinux.org/cgit/aports/plain/main/linux-vanilla/config-vanilla.x86_64?h=3.8-stable
+https://git.alpinelinux.org/cgit/aports/plain/main/linux-vanilla/config-vanilla.x86_64
 
 Arch Linux:
 https://git.archlinux.org/svntogit/packages.git/plain/linux-hardened/trunk/config.x86_64
