@@ -87,19 +87,31 @@ CONFIG_MODULE_SIG_SHA512                |      y      |   kspp   |  self_protect
 CONFIG_MODULE_SIG_FORCE                 |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
 CONFIG_DEFAULT_MMAP_MIN_ADDR            |    65536    |   kspp   |  self_protection   ||             OK             
 CONFIG_REFCOUNT_FULL                    |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
+CONFIG_LOCK_DOWN_KERNEL                 |      y      |  clipos  |  self_protection   ||             OK             
+CONFIG_SECURITY_DMESG_RESTRICT          |      y      |  clipos  |  self_protection   ||     FAIL: "is not set"     
+CONFIG_DEBUG_VIRTUAL                    |      y      |  clipos  |  self_protection   ||     FAIL: "is not set"     
+CONFIG_STATIC_USERMODEHELPER            |      y      |  clipos  |  self_protection   ||     FAIL: "is not set"     
+CONFIG_SLAB_MERGE_DEFAULT               | is not set  |  clipos  |  self_protection   ||         FAIL: "y"          
+CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE| is not set  |  clipos  |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT is needed
+CONFIG_RANDOM_TRUST_CPU                 | is not set  |  clipos  |  self_protection   ||       OK: not found        
+CONFIG_MICROCODE                        |      y      |  clipos  |  self_protection   ||             OK             
+CONFIG_X86_MSR                          |      y      |  clipos  |  self_protection   ||         FAIL: "m"          
+CONFIG_IOMMU_SUPPORT                    |      y      |  clipos  |  self_protection   ||             OK             
+CONFIG_INTEL_IOMMU                      |      y      |  clipos  |  self_protection   ||             OK             
+CONFIG_INTEL_IOMMU_SVM                  |      y      |  clipos  |  self_protection   ||             OK             
+CONFIG_INTEL_IOMMU_DEFAULT_ON           |      y      |  clipos  |  self_protection   ||     FAIL: "is not set"     
+CONFIG_AMD_IOMMU                        |      y      |    my    |  self_protection   ||             OK             
+CONFIG_AMD_IOMMU_V2                     |      y      |    my    |  self_protection   ||         FAIL: "m"          
 CONFIG_GCC_PLUGIN_STACKLEAK             |      y      |    my    |  self_protection   ||      FAIL: not found       
-CONFIG_LOCK_DOWN_KERNEL                 |      y      |    my    |  self_protection   ||             OK             
+CONFIG_STACKLEAK_METRICS                | is not set  |    my    |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
+CONFIG_STACKLEAK_RUNTIME_DISABLE        | is not set  |    my    |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
 CONFIG_SLUB_DEBUG_ON                    |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
-CONFIG_SECURITY_DMESG_RESTRICT          |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
-CONFIG_STATIC_USERMODEHELPER            |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
 CONFIG_SECURITY_LOADPIN                 |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
 CONFIG_RESET_ATTACK_MITIGATION          |      y      |    my    |  self_protection   ||             OK             
-CONFIG_SLAB_MERGE_DEFAULT               | is not set  |    my    |  self_protection   ||         FAIL: "y"          
 CONFIG_PAGE_POISONING_NO_SANITY         | is not set  |    my    |  self_protection   ||FAIL: CONFIG_PAGE_POISONING is needed
 CONFIG_PAGE_POISONING_ZERO              | is not set  |    my    |  self_protection   ||FAIL: CONFIG_PAGE_POISONING is needed
 CONFIG_SECURITY                         |      y      |defconfig |  security_policy   ||             OK             
 CONFIG_SECURITY_YAMA                    |      y      |   kspp   |  security_policy   ||             OK             
-CONFIG_SECURITY_SELINUX_DISABLE         | is not set  |   kspp   |  security_policy   ||             OK             
 CONFIG_SECCOMP                          |      y      |defconfig | cut_attack_surface ||             OK             
 CONFIG_SECCOMP_FILTER                   |      y      |defconfig | cut_attack_surface ||             OK             
 CONFIG_STRICT_DEVMEM                    |      y      |defconfig | cut_attack_surface ||             OK             
@@ -143,8 +155,13 @@ CONFIG_ACPI_APEI_EINJ                   | is not set  | lockdown | cut_attack_su
 CONFIG_PROFILING                        | is not set  | lockdown | cut_attack_surface ||         FAIL: "y"          
 CONFIG_BPF_SYSCALL                      | is not set  | lockdown | cut_attack_surface ||         FAIL: "y"          
 CONFIG_MMIOTRACE_TEST                   | is not set  | lockdown | cut_attack_surface ||             OK             
+CONFIG_KSM                              | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
+CONFIG_IKCONFIG                         | is not set  |  clipos  | cut_attack_surface ||             OK             
+CONFIG_KALLSYMS                         | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
+CONFIG_X86_VSYSCALL_EMULATION           | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
+CONFIG_MAGIC_SYSRQ                      | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
+CONFIG_KEXEC_FILE                       | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
 CONFIG_MMIOTRACE                        | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
-CONFIG_KEXEC_FILE                       | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_LIVEPATCH                        | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_USER_NS                          | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_IP_DCCP                          | is not set  |    my    | cut_attack_surface ||         FAIL: "m"          
@@ -153,7 +170,7 @@ CONFIG_FTRACE                           | is not set  |    my    | cut_attack_su
 CONFIG_BPF_JIT                          | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_ARCH_MMAP_RND_BITS               |     32      |    my    |userspace_protection||         FAIL: "28"         
 
-[+] config check is finished: 'OK' - 43 / 'FAIL' - 60
+[+] config check is finished: 'OK' - 49 / 'FAIL' - 71
 ```
 
 
