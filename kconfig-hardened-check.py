@@ -256,6 +256,11 @@ def construct_checklist(arch):
         checklist.append(AND(OptCheck('INTEL_IOMMU_DEFAULT_ON',   'y', 'clipos', 'self_protection'), \
                              iommu_support_is_set))
 
+    if debug_mode or arch == 'X86_64':
+        checklist.append(AND(OptCheck('AMD_IOMMU',                'y', 'my', 'self_protection'), \
+                             iommu_support_is_set))
+        checklist.append(AND(OptCheck('AMD_IOMMU_V2',             'y', 'my', 'self_protection'), \
+                             iommu_support_is_set))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
         stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',       'y', 'my', 'self_protection')
         checklist.append(stackleak_is_set)
