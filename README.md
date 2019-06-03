@@ -164,6 +164,7 @@ CONFIG_X86_VSYSCALL_EMULATION           | is not set  |  clipos  | cut_attack_su
 CONFIG_MAGIC_SYSRQ                      | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
 CONFIG_KEXEC_FILE                       | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
 CONFIG_USER_NS                          | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
+CONFIG_LDISC_AUTOLOAD                   | is not set  |  clipos  | cut_attack_surface ||       OK: not found        
 CONFIG_MMIOTRACE                        | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_LIVEPATCH                        | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_IP_DCCP                          | is not set  |    my    | cut_attack_surface ||         FAIL: "m"          
@@ -172,7 +173,7 @@ CONFIG_FTRACE                           | is not set  |    my    | cut_attack_su
 CONFIG_BPF_JIT                          | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_ARCH_MMAP_RND_BITS               |     32      |  clipos  |userspace_protection||         FAIL: "28"         
 
-[+] config check is finished: 'OK' - 49 / 'FAIL' - 71
+[+] config check is finished: 'OK' - 50 / 'FAIL' - 71
 ```
 
 
