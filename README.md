@@ -10,8 +10,10 @@ But nobody likes checking configs manually. So let the computers do their job!
 
 __kconfig-hardened-check.py__ helps me to check the Linux kernel Kconfig option list
 against my hardening preferences, which are based on the
-[KSPP recommended settings][1] and last public [grsecurity][2] patch (options
-which they disable).
+
+  - [KSPP recommended settings][1],
+  - [CLIP OS kernel configuration][2],
+  - last public [grsecurity][3] patch (options which they disable).
 
 Please don't cry if my Python code looks like C. I'm just a kernel developer.
 
@@ -196,4 +198,5 @@ try to install `gcc-7-plugin-dev` package, it should help.
 
 
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
-[2]: https://grsecurity.net/
+[2]: https://docs.clip-os.org/clipos/kernel.html#configuration
+[3]: https://grsecurity.net/
