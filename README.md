@@ -95,6 +95,9 @@ CONFIG_DEBUG_VIRTUAL                    |      y      |  clipos  |  self_protect
 CONFIG_STATIC_USERMODEHELPER            |      y      |  clipos  |  self_protection   ||     FAIL: "is not set"     
 CONFIG_SLAB_MERGE_DEFAULT               | is not set  |  clipos  |  self_protection   ||         FAIL: "y"          
 CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE| is not set  |  clipos  |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT is needed
+CONFIG_GCC_PLUGIN_STACKLEAK             |      y      |  clipos  |  self_protection   ||      FAIL: not found       
+CONFIG_STACKLEAK_METRICS                | is not set  |  clipos  |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
+CONFIG_STACKLEAK_RUNTIME_DISABLE        | is not set  |  clipos  |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
 CONFIG_RANDOM_TRUST_CPU                 | is not set  |  clipos  |  self_protection   ||       OK: not found        
 CONFIG_MICROCODE                        |      y      |  clipos  |  self_protection   ||             OK             
 CONFIG_X86_MSR                          |      y      |  clipos  |  self_protection   ||         FAIL: "m"          
@@ -104,9 +107,6 @@ CONFIG_INTEL_IOMMU_SVM                  |      y      |  clipos  |  self_protect
 CONFIG_INTEL_IOMMU_DEFAULT_ON           |      y      |  clipos  |  self_protection   ||     FAIL: "is not set"     
 CONFIG_AMD_IOMMU                        |      y      |    my    |  self_protection   ||             OK             
 CONFIG_AMD_IOMMU_V2                     |      y      |    my    |  self_protection   ||         FAIL: "m"          
-CONFIG_GCC_PLUGIN_STACKLEAK             |      y      |    my    |  self_protection   ||      FAIL: not found       
-CONFIG_STACKLEAK_METRICS                | is not set  |    my    |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
-CONFIG_STACKLEAK_RUNTIME_DISABLE        | is not set  |    my    |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
 CONFIG_SLUB_DEBUG_ON                    |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
 CONFIG_SECURITY_LOADPIN                 |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
 CONFIG_RESET_ATTACK_MITIGATION          |      y      |    my    |  self_protection   ||             OK             
@@ -163,14 +163,14 @@ CONFIG_KALLSYMS                         | is not set  |  clipos  | cut_attack_su
 CONFIG_X86_VSYSCALL_EMULATION           | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
 CONFIG_MAGIC_SYSRQ                      | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
 CONFIG_KEXEC_FILE                       | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
+CONFIG_USER_NS                          | is not set  |  clipos  | cut_attack_surface ||         FAIL: "y"          
 CONFIG_MMIOTRACE                        | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_LIVEPATCH                        | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
-CONFIG_USER_NS                          | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_IP_DCCP                          | is not set  |    my    | cut_attack_surface ||         FAIL: "m"          
 CONFIG_IP_SCTP                          | is not set  |    my    | cut_attack_surface ||         FAIL: "m"          
 CONFIG_FTRACE                           | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_BPF_JIT                          | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
-CONFIG_ARCH_MMAP_RND_BITS               |     32      |    my    |userspace_protection||         FAIL: "28"         
+CONFIG_ARCH_MMAP_RND_BITS               |     32      |  clipos  |userspace_protection||         FAIL: "28"         
 
 [+] config check is finished: 'OK' - 49 / 'FAIL' - 71
 ```

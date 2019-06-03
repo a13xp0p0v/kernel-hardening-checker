@@ -247,6 +247,13 @@ def construct_checklist(arch):
     checklist.append(OptCheck('SLAB_MERGE_DEFAULT',                    'is not set', 'clipos', 'self_protection')) # slab_nomerge
     checklist.append(AND(OptCheck('GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set', 'clipos', 'self_protection'), \
                          randstruct_is_set))
+    if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+        stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',       'y', 'clipos', 'self_protection')
+        checklist.append(stackleak_is_set)
+        checklist.append(AND(OptCheck('STACKLEAK_METRICS',        'is not set', 'clipos', 'self_protection'), \
+                             stackleak_is_set))
+        checklist.append(AND(OptCheck('STACKLEAK_RUNTIME_DISABLE','is not set', 'clipos', 'self_protection'), \
+                             stackleak_is_set))
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('RANDOM_TRUST_CPU',             'is not set', 'clipos', 'self_protection'))
         checklist.append(OptCheck('MICROCODE',                    'y', 'clipos', 'self_protection')) # is needed for mitigating CPU bugs
@@ -265,13 +272,6 @@ def construct_checklist(arch):
                              iommu_support_is_set))
         checklist.append(AND(OptCheck('AMD_IOMMU_V2',             'y', 'my', 'self_protection'), \
                              iommu_support_is_set))
-    if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
-        stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',       'y', 'my', 'self_protection')
-        checklist.append(stackleak_is_set)
-        checklist.append(AND(OptCheck('STACKLEAK_METRICS',        'is not set', 'my', 'self_protection'), \
-                             stackleak_is_set))
-        checklist.append(AND(OptCheck('STACKLEAK_RUNTIME_DISABLE','is not set', 'my', 'self_protection'), \
-                             stackleak_is_set))
     checklist.append(OptCheck('SLUB_DEBUG_ON',                    'y', 'my', 'self_protection'))
     checklist.append(OptCheck('SECURITY_LOADPIN',                 'y', 'my', 'self_protection')) # needs userspace support
     checklist.append(OptCheck('RESET_ATTACK_MITIGATION',          'y', 'my', 'self_protection')) # needs userspace support (systemd)
@@ -352,10 +352,10 @@ def construct_checklist(arch):
     checklist.append(OptCheck('X86_VSYSCALL_EMULATION',   'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('MAGIC_SYSRQ',              'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('KEXEC_FILE',               'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL (permissive)
+    checklist.append(OptCheck('USER_NS',                  'is not set', 'clipos', 'cut_attack_surface')) # user.max_user_namespaces=0
 
     checklist.append(OptCheck('MMIOTRACE',            'is not set', 'my', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL (permissive)
     checklist.append(OptCheck('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'))
-    checklist.append(OptCheck('USER_NS',              'is not set', 'my', 'cut_attack_surface')) # user.max_user_namespaces=0
     checklist.append(OptCheck('IP_DCCP',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('IP_SCTP',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface'))
@@ -366,7 +366,7 @@ def construct_checklist(arch):
     if debug_mode or arch == 'ARM64':
         checklist.append(OptCheck('ARM64_PTR_AUTH',       'y', 'defconfig', 'userspace_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64':
-        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'my', 'userspace_protection'))
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'clipos', 'userspace_protection'))
     if debug_mode or arch == 'X86_32' or arch == 'ARM':
         checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '16', 'my', 'userspace_protection'))
 
