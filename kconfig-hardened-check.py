@@ -204,7 +204,8 @@ def construct_checklist(arch):
     checklist.append(OptCheck('SLAB_FREELIST_RANDOM',             'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('FORTIFY_SOURCE',                   'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('GCC_PLUGINS',                      'y', 'kspp', 'self_protection'))
-    checklist.append(OptCheck('GCC_PLUGIN_RANDSTRUCT',            'y', 'kspp', 'self_protection'))
+    randstruct_is_set = OptCheck('GCC_PLUGIN_RANDSTRUCT',         'y', 'kspp', 'self_protection')
+    checklist.append(randstruct_is_set)
     checklist.append(OptCheck('GCC_PLUGIN_STRUCTLEAK',            'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL',  'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('GCC_PLUGIN_LATENT_ENTROPY',        'y', 'kspp', 'self_protection'))
@@ -238,6 +239,10 @@ def construct_checklist(arch):
     if debug_mode or arch == 'ARM64' or arch == 'ARM':
         checklist.append(OptCheck('SYN_COOKIES',                  'y', 'kspp', 'self_protection')) # another reason?
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',        '32768', 'kspp', 'self_protection'))
+
+    checklist.append(OptCheck('DEBUG_VIRTUAL',                    'y', 'clipos', 'self_protection'))
+    checklist.append(AND(OptCheck('GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set', 'clipos', 'self_protection'), \
+                         randstruct_is_set))
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
         stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',       'y', 'my', 'self_protection')
