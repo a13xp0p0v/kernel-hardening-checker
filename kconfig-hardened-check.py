@@ -243,6 +243,18 @@ def construct_checklist(arch):
     checklist.append(OptCheck('DEBUG_VIRTUAL',                    'y', 'clipos', 'self_protection'))
     checklist.append(AND(OptCheck('GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set', 'clipos', 'self_protection'), \
                          randstruct_is_set))
+    if debug_mode or arch == 'X86_64' or arch == 'X86_32':
+        checklist.append(OptCheck('RANDOM_TRUST_CPU',             'is not set', 'clipos', 'self_protection'))
+        checklist.append(OptCheck('MICROCODE',                    'y', 'clipos', 'self_protection')) # is needed for mitigating CPU bugs
+        checklist.append(OptCheck('X86_MSR',                      'y', 'clipos', 'self_protection')) # is needed for mitigating CPU bugs
+        iommu_support_is_set = OptCheck('IOMMU_SUPPORT',          'y', 'clipos', 'self_protection') # is needed for mitigating DMA attacks
+        checklist.append(iommu_support_is_set)
+        checklist.append(AND(OptCheck('INTEL_IOMMU',              'y', 'clipos', 'self_protection'), \
+                             iommu_support_is_set))
+        checklist.append(AND(OptCheck('INTEL_IOMMU_SVM',          'y', 'clipos', 'self_protection'), \
+                             iommu_support_is_set))
+        checklist.append(AND(OptCheck('INTEL_IOMMU_DEFAULT_ON',   'y', 'clipos', 'self_protection'), \
+                             iommu_support_is_set))
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
         stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',       'y', 'my', 'self_protection')
