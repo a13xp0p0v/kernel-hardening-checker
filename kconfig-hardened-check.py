@@ -258,11 +258,10 @@ def construct_checklist(arch):
         checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',      'y', 'my', 'self_protection'))
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
-        checklist.append(OptCheck('SECURITY',                'y', 'defconfig', 'security_policy'))
+        checklist.append(OptCheck('SECURITY',                'y', 'defconfig', 'security_policy')) # and choose your favourite LSM
     if debug_mode or arch == 'ARM':
-        checklist.append(OptCheck('SECURITY',                'y', 'kspp', 'security_policy'))
+        checklist.append(OptCheck('SECURITY',                'y', 'kspp', 'security_policy')) # and choose your favourite LSM
     checklist.append(OptCheck('SECURITY_YAMA',               'y', 'kspp', 'security_policy'))
-    checklist.append(OptCheck('SECURITY_SELINUX_DISABLE',    'is not set', 'kspp', 'security_policy'))
 
     checklist.append(OptCheck('SECCOMP',              'y', 'defconfig', 'cut_attack_surface'))
     checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'defconfig', 'cut_attack_surface'))
