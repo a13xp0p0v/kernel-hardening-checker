@@ -100,7 +100,6 @@ CONFIG_STACKLEAK_METRICS                | is not set  |  clipos  |  self_protect
 CONFIG_STACKLEAK_RUNTIME_DISABLE        | is not set  |  clipos  |  self_protection   ||FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
 CONFIG_RANDOM_TRUST_CPU                 | is not set  |  clipos  |  self_protection   ||       OK: not found        
 CONFIG_MICROCODE                        |      y      |  clipos  |  self_protection   ||             OK             
-CONFIG_X86_MSR                          |      y      |  clipos  |  self_protection   ||         FAIL: "m"          
 CONFIG_IOMMU_SUPPORT                    |      y      |  clipos  |  self_protection   ||             OK             
 CONFIG_INTEL_IOMMU                      |      y      |  clipos  |  self_protection   ||             OK             
 CONFIG_INTEL_IOMMU_SVM                  |      y      |  clipos  |  self_protection   ||             OK             
@@ -173,7 +172,7 @@ CONFIG_FTRACE                           | is not set  |    my    | cut_attack_su
 CONFIG_BPF_JIT                          | is not set  |    my    | cut_attack_surface ||         FAIL: "y"          
 CONFIG_ARCH_MMAP_RND_BITS               |     32      |  clipos  |userspace_protection||         FAIL: "28"         
 
-[+] config check is finished: 'OK' - 50 / 'FAIL' - 71
+[+] config check is finished: 'OK' - 50 / 'FAIL' - 70
 ```
 
 

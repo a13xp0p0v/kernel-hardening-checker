@@ -257,7 +257,6 @@ def construct_checklist(arch):
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('RANDOM_TRUST_CPU',             'is not set', 'clipos', 'self_protection'))
         checklist.append(OptCheck('MICROCODE',                    'y', 'clipos', 'self_protection')) # is needed for mitigating CPU bugs
-        checklist.append(OptCheck('X86_MSR',                      'y', 'clipos', 'self_protection')) # is needed for mitigating CPU bugs
         iommu_support_is_set = OptCheck('IOMMU_SUPPORT',          'y', 'clipos', 'self_protection') # is needed for mitigating DMA attacks
         checklist.append(iommu_support_is_set)
         checklist.append(AND(OptCheck('INTEL_IOMMU',              'y', 'clipos', 'self_protection'), \
