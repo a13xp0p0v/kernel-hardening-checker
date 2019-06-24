@@ -42,6 +42,7 @@ from collections import OrderedDict
 import re
 
 debug_mode = False  # set it to True to print the unknown options from the config
+json_mode = False   # if True, print results in JSON format
 
 supported_archs = [ 'X86_64', 'X86_32', 'ARM64', 'ARM' ]
 
@@ -148,7 +149,8 @@ def detect_arch(fname):
         arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]*=y")
         arch = None
         msg = None
-        print('[+] Trying to detect architecture in "{}"...'.format(fname))
+        if not json_mode:
+            print('[+] Trying to detect architecture in "{}"...'.format(fname))
         for line in f.readlines():
             if arch_pattern.match(line):
                 option, value = line[7:].split('=', 1)
@@ -373,25 +375,35 @@ def construct_checklist(arch):
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
-def print_checklist(arch):
-    print('[+] Printing kernel hardening preferences for {}...'.format(arch))
-    print('{:^40}|{:^13}|{:^10}|{:^20}'.format(
-        'option name', 'desired val', 'decision', 'reason'))
-    print('=' * 87)
-    for opt in checklist:
-        print('CONFIG_{:<33}|{:^13}|{:^10}|{:^20}'.format(
-            opt.name, opt.expected, opt.decision, opt.reason))
-    print()
+def print_checks(arch=None):
+    if json_mode:
+        opts = []
+        for o in checklist:
+            opt = ['CONFIG_'+o.name, o.expected, o.decision, o.reason]
+            if not arch:
+                opt.append(o.result)
+            opts.append(opt)
+        print(opts)
+    else:
+        if arch:
+            print('[+] Printing kernel hardening preferences for {}...'.format(arch))
 
+        # header
+        print('{:^40}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'), end='')
+        sep_line_len = 87
+        if not arch:
+            print('||{:^28}'.format('check result'), end='')
+            sep_line_len = 116
+        print()
 
-def print_check_results():
-    print('{:^40}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
-        'option name', 'desired val', 'decision', 'reason', 'check result'))
-    print('=' * 116)
-    for opt in checklist:
-        print('CONFIG_{:<33}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
-            opt.name, opt.expected, opt.decision, opt.reason, opt.result))
-    print()
+        print('=' * sep_line_len)
+
+        for opt in checklist:
+            print('CONFIG_{:<33}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
+            if not arch:
+                print('||{:^28}'.format(opt.result), end='')
+            print()
+        print()
 
 
 def get_option_state(options, name):
@@ -414,7 +426,8 @@ def check_config_file(fname):
         opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
         opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
 
-        print('[+] Checking "{}" against hardening preferences...'.format(fname))
+        if not json_mode:
+            print('[+] Checking "{}" against hardening preferences...'.format(fname))
         for line in f.readlines():
             line = line.strip()
             option = None
@@ -441,7 +454,7 @@ def check_config_file(fname):
                 if option not in known_options:
                     print("DEBUG: dunno about option {} ({})".format(option, value))
 
-        print_check_results()
+        print_checks()
 
 
 if __name__ == '__main__':
@@ -452,16 +465,22 @@ if __name__ == '__main__':
                         help='check the config_file against these preferences')
     parser.add_argument('--debug', action='store_true',
                         help='enable internal debug mode')
+    parser.add_argument('--json', action='store_true',
+                        help='print results in JSON format')
     args = parser.parse_args()
 
     if args.debug:
         debug_mode = True
+    if args.json:
+        json_mode = True
+    if debug_mode and json_mode:
+        sys.exit('[!] ERROR: options --debug and --json cannot be used simultaneously')
 
     if args.config:
         arch, msg = detect_arch(args.config)
         if not arch:
             sys.exit('[!] ERROR: {}'.format(msg))
-        else:
+        elif not json_mode:
             print('[+] Detected architecture: {}'.format(arch))
 
         construct_checklist(arch)
@@ -470,13 +489,14 @@ if __name__ == '__main__':
         ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), checklist)))
         if debug_mode:
             sys.exit(0)
-        print('[+] config check is finished: \'OK\' - {} / \'FAIL\' - {}'.format(ok_count, error_count))
+        if not json_mode:
+            print('[+] config check is finished: \'OK\' - {} / \'FAIL\' - {}'.format(ok_count, error_count))
         sys.exit(0)
 
     if args.print:
         arch = args.print
         construct_checklist(arch)
-        print_checklist(arch)
+        print_checks(arch)
         sys.exit(0)
 
     parser.print_help()

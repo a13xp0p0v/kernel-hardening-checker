@@ -28,8 +28,8 @@ Please don't cry if my Python code looks like C. I'm just a kernel developer.
 
 ### Usage
 ```
-#usage: kconfig-hardened-check.py [-h] [-p {X86_64,X86_32,ARM64,ARM}]
-                                 [-c CONFIG] [--debug]
+usage: kconfig-hardened-check.py [-h] [-p {X86_64,X86_32,ARM64,ARM}]
+                                 [-c CONFIG] [--debug] [--json]
 
 Checks the hardening options in the Linux kernel config
 
@@ -40,6 +40,7 @@ optional arguments:
   -c CONFIG, --config CONFIG
                         check the config_file against these preferences
   --debug               enable internal debug mode
+  --json                print results in JSON format
 
 ```
 
