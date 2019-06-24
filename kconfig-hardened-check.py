@@ -46,8 +46,6 @@ json_mode = False   # if True, print results in JSON format
 
 supported_archs = [ 'X86_64', 'X86_32', 'ARM64', 'ARM' ]
 
-checklist = []
-
 
 class OptCheck:
     def __init__(self, name, expected, decision, reason):
@@ -165,7 +163,7 @@ def detect_arch(fname):
             return arch, 'OK'
 
 
-def construct_checklist(arch):
+def construct_checklist(checklist, arch):
     modules_not_set = OptCheck('MODULES',                'is not set', 'kspp', 'cut_attack_surface')
     devmem_not_set = OptCheck('DEVMEM',                  'is not set', 'kspp', 'cut_attack_surface') # refers to LOCK_DOWN_KERNEL
 
@@ -375,42 +373,40 @@ def construct_checklist(arch):
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
-def print_checks(arch=None):
+def print_checklist(checklist, with_results):
     if json_mode:
         opts = []
         for o in checklist:
             opt = ['CONFIG_'+o.name, o.expected, o.decision, o.reason]
-            if not arch:
+            if with_results:
                 opt.append(o.result)
             opts.append(opt)
         print(opts)
-    else:
-        if arch:
-            print('[+] Printing kernel hardening preferences for {}...'.format(arch))
+        return
 
-        # header
-        print('{:^40}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'), end='')
-        sep_line_len = 87
-        if not arch:
-            print('||{:^28}'.format('check result'), end='')
-            sep_line_len = 116
+    # header
+    print('{:^40}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'), end='')
+    sep_line_len = 86
+    if with_results:
+        print('||{:^28}'.format('check result'), end='')
+        sep_line_len += 30
+    print()
+
+    print('=' * sep_line_len)
+
+    for opt in checklist:
+        print('CONFIG_{:<33}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
+        if with_results:
+            print('||{:^28}'.format(opt.result), end='')
         print()
-
-        print('=' * sep_line_len)
-
-        for opt in checklist:
-            print('CONFIG_{:<33}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
-            if not arch:
-                print('||{:^28}'.format(opt.result), end='')
-            print()
-        print()
+    print()
 
 
 def get_option_state(options, name):
     return options.get(name, None)
 
 
-def perform_checks(parsed_options):
+def perform_checks(checklist, parsed_options):
     for opt in checklist:
         if hasattr(opt, 'opts'):
             for o in opt.opts:
@@ -420,7 +416,7 @@ def perform_checks(parsed_options):
         opt.check()
 
 
-def check_config_file(fname):
+def check_config_file(checklist, fname):
     with open(fname, 'r') as f:
         parsed_options = OrderedDict()
         opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
@@ -446,7 +442,7 @@ def check_config_file(fname):
             if option is not None:
                 parsed_options[option] = value
 
-        perform_checks(parsed_options)
+        perform_checks(checklist, parsed_options)
 
         if debug_mode:
             known_options = [opt.name for opt in checklist]
@@ -454,10 +450,12 @@ def check_config_file(fname):
                 if option not in known_options:
                     print("DEBUG: dunno about option {} ({})".format(option, value))
 
-        print_checks()
+        print_checklist(checklist, True)
 
 
 if __name__ == '__main__':
+    config_checklist = []
+
     parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print hardening preferences for selected architecture')
@@ -483,10 +481,10 @@ if __name__ == '__main__':
         elif not json_mode:
             print('[+] Detected architecture: {}'.format(arch))
 
-        construct_checklist(arch)
-        check_config_file(args.config)
-        error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
-        ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), checklist)))
+        construct_checklist(config_checklist, arch)
+        check_config_file(config_checklist, args.config)
+        error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), config_checklist)))
+        ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), config_checklist)))
         if debug_mode:
             sys.exit(0)
         if not json_mode:
@@ -495,8 +493,10 @@ if __name__ == '__main__':
 
     if args.print:
         arch = args.print
-        construct_checklist(arch)
-        print_checks(arch)
+        construct_checklist(config_checklist, arch)
+        if not json_mode:
+            print('[+] Printing kernel hardening preferences for {}...'.format(arch))
+        print_checklist(config_checklist, False)
         sys.exit(0)
 
     parser.print_help()
