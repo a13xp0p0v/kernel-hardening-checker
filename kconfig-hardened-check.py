@@ -451,11 +451,10 @@ def check_config_file(fname):
         if debug_mode:
             known_options = [opt.name for opt in checklist]
             for option, value in parsed_options.items():
-                if option not in known_options and not json_mode:
+                if option not in known_options:
                     print("DEBUG: dunno about option {} ({})".format(option, value))
 
         print_checks()
-
 
 
 if __name__ == '__main__':
@@ -467,7 +466,7 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action='store_true',
                         help='enable internal debug mode')
     parser.add_argument('--json', action='store_true',
-                        help='print results in json format')
+                        help='print results in JSON format')
     args = parser.parse_args()
 
     if args.debug:
