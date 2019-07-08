@@ -40,6 +40,7 @@ import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
 import re
+import json
 
 debug_mode = False  # set it to True to print the unknown options from the config
 json_mode = False   # if True, print results in JSON format
@@ -381,7 +382,7 @@ def print_checklist(checklist, with_results):
             if with_results:
                 opt.append(o.result)
             opts.append(opt)
-        print(opts)
+        print(json.dumps(opts))
         return
 
     # header
