@@ -32,9 +32,13 @@
 #           kpti=on
 #           ssbd=force-on
 #
-# N.B. Hardening sysctl's:
-#    net.core.bpf_jit_harden
+# N.B. Hardening sysctls:
+#    net.core.bpf_jit_harden=2
 #    kptr_restrict=2
+#    vm.unprivileged_userfaultfd=0
+#    kernel.perf_event_paranoid=3
+#    kernel.yama.ptrace_scope=1
+#    kernel.unprivileged_bpf_disabled=1
 
 import sys
 from argparse import ArgumentParser
