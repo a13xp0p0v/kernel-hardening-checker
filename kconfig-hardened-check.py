@@ -212,8 +212,6 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('GCC_PLUGINS',                      'y', 'kspp', 'self_protection'))
     randstruct_is_set = OptCheck('GCC_PLUGIN_RANDSTRUCT',         'y', 'kspp', 'self_protection')
     checklist.append(randstruct_is_set)
-    checklist.append(OptCheck('GCC_PLUGIN_STRUCTLEAK',            'y', 'kspp', 'self_protection'))
-    checklist.append(OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL',  'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('GCC_PLUGIN_LATENT_ENTROPY',        'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_LIST',                       'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_SG',                         'y', 'kspp', 'self_protection'))
@@ -272,6 +270,8 @@ def construct_checklist(checklist, arch):
         checklist.append(AND(OptCheck('INTEL_IOMMU_DEFAULT_ON',   'y', 'clipos', 'self_protection'), \
                              iommu_support_is_set))
 
+    checklist.append(OR(OptCheck('INIT_STACK_ALL',                  'y', 'my', 'self_protection'), \
+                        OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y', 'kspp', 'self_protection')))
     if debug_mode or arch == 'X86_64':
         checklist.append(AND(OptCheck('AMD_IOMMU',                'y', 'my', 'self_protection'), \
                              iommu_support_is_set))
