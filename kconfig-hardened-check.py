@@ -207,6 +207,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('SCHED_STACK_END_CHECK',            'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('SLAB_FREELIST_HARDENED',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('SLAB_FREELIST_RANDOM',             'y', 'kspp', 'self_protection'))
+    checklist.append(OptCheck('SHUFFLE_PAGE_ALLOCATOR',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('FORTIFY_SOURCE',                   'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('GCC_PLUGINS',                      'y', 'kspp', 'self_protection'))
     randstruct_is_set = OptCheck('GCC_PLUGIN_RANDSTRUCT',         'y', 'kspp', 'self_protection')
