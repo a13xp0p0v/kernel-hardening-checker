@@ -28,7 +28,6 @@
 #           l1tf=full,force
 #           mds=full,nosmt
 #       ARM64:
-#           ? CONFIG_HARDEN_BRANCH_PREDICTOR
 #           kpti=on
 #           ssbd=force-on
 #
@@ -192,6 +191,7 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('SYN_COOKIES',                 'y', 'defconfig', 'self_protection')) # another reason?
     if debug_mode or arch == 'ARM64':
         checklist.append(OptCheck('UNMAP_KERNEL_AT_EL0',         'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('HARDEN_EL2_VECTORS',          'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64':
         checklist.append(OptCheck('VMAP_STACK',                  'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
@@ -201,6 +201,7 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('CPU_SW_DOMAIN_PAN',           'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'ARM64' or arch == 'ARM':
         checklist.append(OptCheck('REFCOUNT_FULL',               'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('HARDEN_BRANCH_PREDICTOR',     'y', 'defconfig', 'self_protection'))
 
     checklist.append(OptCheck('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_WX',                         'y', 'kspp', 'self_protection'))
