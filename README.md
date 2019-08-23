@@ -71,11 +71,10 @@ CONFIG_DEBUG_WX                         |      y      |   kspp   |  self_protect
 CONFIG_SCHED_STACK_END_CHECK            |      y      |   kspp   |  self_protection   ||             OK             
 CONFIG_SLAB_FREELIST_HARDENED           |      y      |   kspp   |  self_protection   ||             OK             
 CONFIG_SLAB_FREELIST_RANDOM             |      y      |   kspp   |  self_protection   ||             OK             
+CONFIG_SHUFFLE_PAGE_ALLOCATOR           |      y      |   kspp   |  self_protection   ||      FAIL: not found       
 CONFIG_FORTIFY_SOURCE                   |      y      |   kspp   |  self_protection   ||             OK             
 CONFIG_GCC_PLUGINS                      |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
 CONFIG_GCC_PLUGIN_RANDSTRUCT            |      y      |   kspp   |  self_protection   ||      FAIL: not found       
-CONFIG_GCC_PLUGIN_STRUCTLEAK            |      y      |   kspp   |  self_protection   ||      FAIL: not found       
-CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL  |      y      |   kspp   |  self_protection   ||      FAIL: not found       
 CONFIG_GCC_PLUGIN_LATENT_ENTROPY        |      y      |   kspp   |  self_protection   ||      FAIL: not found       
 CONFIG_DEBUG_LIST                       |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
 CONFIG_DEBUG_SG                         |      y      |   kspp   |  self_protection   ||     FAIL: "is not set"     
@@ -105,13 +104,14 @@ CONFIG_IOMMU_SUPPORT                    |      y      |  clipos  |  self_protect
 CONFIG_INTEL_IOMMU                      |      y      |  clipos  |  self_protection   ||             OK             
 CONFIG_INTEL_IOMMU_SVM                  |      y      |  clipos  |  self_protection   ||             OK             
 CONFIG_INTEL_IOMMU_DEFAULT_ON           |      y      |  clipos  |  self_protection   ||     FAIL: "is not set"     
-CONFIG_AMD_IOMMU                        |      y      |    my    |  self_protection   ||             OK             
-CONFIG_AMD_IOMMU_V2                     |      y      |    my    |  self_protection   ||         FAIL: "m"          
+CONFIG_INIT_STACK_ALL                   |      y      |    my    |  self_protection   ||      FAIL: not found       
 CONFIG_SLUB_DEBUG_ON                    |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
 CONFIG_SECURITY_LOADPIN                 |      y      |    my    |  self_protection   ||     FAIL: "is not set"     
 CONFIG_RESET_ATTACK_MITIGATION          |      y      |    my    |  self_protection   ||             OK             
 CONFIG_PAGE_POISONING_NO_SANITY         | is not set  |    my    |  self_protection   ||FAIL: CONFIG_PAGE_POISONING is needed
 CONFIG_PAGE_POISONING_ZERO              | is not set  |    my    |  self_protection   ||FAIL: CONFIG_PAGE_POISONING is needed
+CONFIG_AMD_IOMMU                        |      y      |    my    |  self_protection   ||             OK             
+CONFIG_AMD_IOMMU_V2                     |      y      |    my    |  self_protection   ||         FAIL: "m"          
 CONFIG_SECURITY                         |      y      |defconfig |  security_policy   ||             OK             
 CONFIG_SECURITY_YAMA                    |      y      |   kspp   |  security_policy   ||             OK             
 CONFIG_SECCOMP                          |      y      |defconfig | cut_attack_surface ||             OK             
