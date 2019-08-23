@@ -176,8 +176,18 @@ CONFIG_ARCH_MMAP_RND_BITS               |     32      |  clipos  |userspace_prot
 [+] config check is finished: 'OK' - 50 / 'FAIL' - 70
 ```
 
+## kconfig-hardened-check versioning
 
-### Questions and answers
+I usually update the kernel hardening recommendations after each Linux kernel release.
+
+So the version of `kconfig-hardened-check` is associated with the corresponding version of the kernel.
+
+The version format is: __[major_number].[kernel_version]__
+
+The current version of `kconfig-hardened-check` is __0.5.2__, it's marked with the git tag.
+
+
+## Questions and answers
 
 __Q:__ How disabling `CONFIG_USER_NS` cuts the attack surface? It's needed for containers!
 
