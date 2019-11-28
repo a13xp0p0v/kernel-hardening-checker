@@ -192,6 +192,7 @@ def construct_checklist(checklist, arch):
     if debug_mode or arch == 'ARM64':
         checklist.append(OptCheck('UNMAP_KERNEL_AT_EL0',         'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('HARDEN_EL2_VECTORS',          'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('RODATA_FULL_DEFAULT_ENABLED', 'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64':
         checklist.append(OptCheck('VMAP_STACK',                  'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
