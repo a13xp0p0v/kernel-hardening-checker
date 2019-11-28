@@ -251,6 +251,10 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('SYN_COOKIES',                      'y', 'kspp', 'self_protection')) # another reason?
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '32768', 'kspp', 'self_protection'))
 
+    checklist.append(OR(OptCheck('INIT_STACK_ALL',                     'y', 'clipos', 'self_protection'), \
+                        OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL',    'y', 'kspp', 'self_protection')))
+    checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',              'y', 'clipos', 'self_protection'))
+    checklist.append(OptCheck('INIT_ON_FREE_DEFAULT_ON',               'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',               'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('DEBUG_VIRTUAL',                         'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('STATIC_USERMODEHELPER',                 'y', 'clipos', 'self_protection')) # needs userspace support (systemd)
@@ -276,11 +280,7 @@ def construct_checklist(checklist, arch):
         checklist.append(AND(OptCheck('INTEL_IOMMU_DEFAULT_ON',            'y', 'clipos', 'self_protection'), \
                              iommu_support_is_set))
 
-    checklist.append(OR(OptCheck('INIT_STACK_ALL',                  'y', 'my', 'self_protection'), \
-                        OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y', 'kspp', 'self_protection')))
     checklist.append(OptCheck('SLUB_DEBUG_ON',                      'y', 'my', 'self_protection'))
-    checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',           'y', 'my', 'self_protection'))
-    checklist.append(OptCheck('INIT_ON_FREE_DEFAULT_ON',            'y', 'my', 'self_protection'))
     checklist.append(OptCheck('RESET_ATTACK_MITIGATION',            'y', 'my', 'self_protection')) # needs userspace support (systemd)
     checklist.append(AND(OptCheck('PAGE_POISONING_NO_SANITY',       'is not set', 'my', 'self_protection'), \
                          page_poisoning_is_set))
