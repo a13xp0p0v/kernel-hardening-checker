@@ -14,9 +14,10 @@
 #    page_poison=1
 #    slub_debug=FZP
 #    slab_nomerge
-#    pti=on
 #    kernel.kptr_restrict=1
-#    lockdown=1
+#    lockdown=1 (is it changed?)
+#    page_alloc.shuffle=1
+#    iommu=force (does it help against DMA attacks?)
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
