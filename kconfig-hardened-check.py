@@ -195,12 +195,12 @@ def construct_checklist(checklist, arch):
                             OptCheck('X86_INTEL_UMIP',           'y', 'defconfig', 'self_protection')))
         iommu_support_is_set = OptCheck('IOMMU_SUPPORT',         'y', 'defconfig', 'self_protection') # is needed for mitigating DMA attacks
         checklist.append(iommu_support_is_set)
-        checklist.append(AND(OptCheck('INTEL_IOMMU',             'y', 'defconfig', 'self_protection'), \
-                             iommu_support_is_set))
         checklist.append(OptCheck('SYN_COOKIES',                 'y', 'defconfig', 'self_protection')) # another reason?
     if debug_mode or arch == 'X86_64':
         checklist.append(OptCheck('PAGE_TABLE_ISOLATION',        'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('RANDOMIZE_MEMORY',            'y', 'defconfig', 'self_protection'))
+        checklist.append(AND(OptCheck('INTEL_IOMMU',             'y', 'defconfig', 'self_protection'), \
+                             iommu_support_is_set))
         checklist.append(AND(OptCheck('AMD_IOMMU',               'y', 'defconfig', 'self_protection'), \
                              iommu_support_is_set))
     if debug_mode or arch == 'ARM64':
