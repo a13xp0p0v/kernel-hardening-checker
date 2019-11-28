@@ -186,15 +186,22 @@ def construct_checklist(checklist, arch):
     checklist.append(OR(OptCheck('STRICT_MODULE_RWX',        'y', 'defconfig', 'self_protection'), \
                         OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'defconfig', 'self_protection'), \
                         modules_not_set)) # DEBUG_SET_MODULE_RONX was before v4.11
-    if debug_mode or arch == 'X86_64':
-        checklist.append(OptCheck('PAGE_TABLE_ISOLATION',        'y', 'defconfig', 'self_protection'))
-        checklist.append(OptCheck('RANDOMIZE_MEMORY',            'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('RANDOMIZE_BASE',              'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('MICROCODE',                   'y', 'defconfig', 'self_protection')) # is needed for mitigating CPU bugs
         checklist.append(OptCheck('RETPOLINE',                   'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('X86_SMAP',                    'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('X86_INTEL_UMIP',              'y', 'defconfig', 'self_protection'))
+        iommu_support_is_set = OptCheck('IOMMU_SUPPORT',         'y', 'defconfig', 'self_protection') # is needed for mitigating DMA attacks
+        checklist.append(iommu_support_is_set)
+        checklist.append(AND(OptCheck('INTEL_IOMMU',             'y', 'defconfig', 'self_protection'), \
+                             iommu_support_is_set))
         checklist.append(OptCheck('SYN_COOKIES',                 'y', 'defconfig', 'self_protection')) # another reason?
+    if debug_mode or arch == 'X86_64':
+        checklist.append(OptCheck('PAGE_TABLE_ISOLATION',        'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('RANDOMIZE_MEMORY',            'y', 'defconfig', 'self_protection'))
+        checklist.append(AND(OptCheck('AMD_IOMMU',               'y', 'defconfig', 'self_protection'), \
+                             iommu_support_is_set))
     if debug_mode or arch == 'ARM64':
         checklist.append(OptCheck('UNMAP_KERNEL_AT_EL0',         'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('HARDEN_EL2_VECTORS',          'y', 'defconfig', 'self_protection'))
@@ -271,11 +278,6 @@ def construct_checklist(checklist, arch):
                              stackleak_is_set))
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('RANDOM_TRUST_CPU',                      'is not set', 'clipos', 'self_protection'))
-        checklist.append(OptCheck('MICROCODE',                             'y', 'clipos', 'self_protection')) # is needed for mitigating CPU bugs
-        iommu_support_is_set = OptCheck('IOMMU_SUPPORT',                   'y', 'clipos', 'self_protection') # is needed for mitigating DMA attacks
-        checklist.append(iommu_support_is_set)
-        checklist.append(AND(OptCheck('INTEL_IOMMU',                       'y', 'clipos', 'self_protection'), \
-                             iommu_support_is_set))
         checklist.append(AND(OptCheck('INTEL_IOMMU_SVM',                   'y', 'clipos', 'self_protection'), \
                              iommu_support_is_set))
         checklist.append(AND(OptCheck('INTEL_IOMMU_DEFAULT_ON',            'y', 'clipos', 'self_protection'), \
@@ -288,8 +290,6 @@ def construct_checklist(checklist, arch):
     checklist.append(AND(OptCheck('PAGE_POISONING_ZERO',            'is not set', 'my', 'self_protection'), \
                          page_poisoning_is_set))
     if debug_mode or arch == 'X86_64':
-        checklist.append(AND(OptCheck('AMD_IOMMU',                      'y', 'my', 'self_protection'), \
-                             iommu_support_is_set))
         checklist.append(AND(OptCheck('AMD_IOMMU_V2',                   'y', 'my', 'self_protection'), \
                              iommu_support_is_set))
     if debug_mode or arch == 'X86_32':
