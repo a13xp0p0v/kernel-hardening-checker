@@ -402,8 +402,8 @@ def print_checklist(checklist, with_results):
         return
 
     # header
-    print('{:^40}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'), end='')
-    sep_line_len = 86
+    print('{:^45}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'), end='')
+    sep_line_len = 91
     if with_results:
         print('||{:^28}'.format('check result'), end='')
         sep_line_len += 30
@@ -412,7 +412,7 @@ def print_checklist(checklist, with_results):
     print('=' * sep_line_len)
 
     for opt in checklist:
-        print('CONFIG_{:<33}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
+        print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
         if with_results:
             print('||{:^28}'.format(opt.result), end='')
         print()
