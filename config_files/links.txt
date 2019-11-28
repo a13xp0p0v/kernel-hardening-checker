@@ -21,3 +21,9 @@ https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=ope
 
 Pentoo:
 https://raw.githubusercontent.com/pentoo/pentoo-livecd/master/livecd/amd64/kernel/config-5.1.0
+
+Debian Buster:
+https://packages.debian.org/buster/amd64/linux-image-4.19.0-6-amd64/download
+
+AOSP (the instruction for kernel config generation):
+https://source.android.com/devices/tech/debug/kasan-kcov
