@@ -275,6 +275,8 @@ def construct_checklist(checklist, arch):
     checklist.append(OR(OptCheck('INIT_STACK_ALL',                  'y', 'my', 'self_protection'), \
                         OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y', 'kspp', 'self_protection')))
     checklist.append(OptCheck('SLUB_DEBUG_ON',                      'y', 'my', 'self_protection'))
+    checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',           'y', 'my', 'self_protection'))
+    checklist.append(OptCheck('INIT_ON_FREE_DEFAULT_ON',            'y', 'my', 'self_protection'))
     checklist.append(OptCheck('SECURITY_LOADPIN',                   'y', 'my', 'self_protection')) # needs userspace support
     checklist.append(OptCheck('RESET_ATTACK_MITIGATION',            'y', 'my', 'self_protection')) # needs userspace support (systemd)
     checklist.append(AND(OptCheck('PAGE_POISONING_NO_SANITY',       'is not set', 'my', 'self_protection'), \
