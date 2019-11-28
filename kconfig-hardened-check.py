@@ -363,7 +363,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
 
     checklist.append(OptCheck('KSM',                      'is not set', 'clipos', 'cut_attack_surface')) # to prevent FLUSH+RELOAD attack
-    checklist.append(OptCheck('IKCONFIG',                 'is not set', 'clipos', 'cut_attack_surface'))
+#   checklist.append(OptCheck('IKCONFIG',                 'is not set', 'clipos', 'cut_attack_surface')) # no, this info is needed for this check :)
     checklist.append(OptCheck('KALLSYMS',                 'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('X86_VSYSCALL_EMULATION',   'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('MAGIC_SYSRQ',              'is not set', 'clipos', 'cut_attack_surface'))
