@@ -36,8 +36,13 @@
 #    kptr_restrict=2
 #    vm.unprivileged_userfaultfd=0
 #    kernel.perf_event_paranoid=3
-#    kernel.yama.ptrace_scope=1
+#    kernel.yama.ptrace_scope=1 (or even 3?)
 #    kernel.unprivileged_bpf_disabled=1
+#    fs.suid_dumpable=0
+#    fs.protected_symlinks = 1
+#    fs.protected_hardlinks = 1
+#    fs.protected_fifos = 2
+#    fs.protected_regular = 2
 
 import sys
 from argparse import ArgumentParser
