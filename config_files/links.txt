@@ -27,3 +27,8 @@ https://packages.debian.org/buster/amd64/linux-image-4.19.0-6-amd64/download
 
 AOSP (the instruction for kernel config generation):
 https://source.android.com/devices/tech/debug/kasan-kcov
+
+CLIP OS:
+https://docs.clip-os.org/clipos/kernel.html#configuration
+https://github.com/clipos/src_platform_config-linux-hardware
+https://github.com/clipos/products_clipos/blob/master/efiboot/configure.d/95_dracut.sh
