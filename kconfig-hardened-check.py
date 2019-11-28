@@ -191,7 +191,8 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('MICROCODE',                   'y', 'defconfig', 'self_protection')) # is needed for mitigating CPU bugs
         checklist.append(OptCheck('RETPOLINE',                   'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('X86_SMAP',                    'y', 'defconfig', 'self_protection'))
-        checklist.append(OptCheck('X86_INTEL_UMIP',              'y', 'defconfig', 'self_protection'))
+        checklist.append(OR(OptCheck('X86_UMIP',                 'y', 'defconfig', 'self_protection'), \
+                            OptCheck('X86_INTEL_UMIP',           'y', 'defconfig', 'self_protection')))
         iommu_support_is_set = OptCheck('IOMMU_SUPPORT',         'y', 'defconfig', 'self_protection') # is needed for mitigating DMA attacks
         checklist.append(iommu_support_is_set)
         checklist.append(AND(OptCheck('INTEL_IOMMU',             'y', 'defconfig', 'self_protection'), \
