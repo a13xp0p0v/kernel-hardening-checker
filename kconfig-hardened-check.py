@@ -246,7 +246,6 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('SYN_COOKIES',                      'y', 'kspp', 'self_protection')) # another reason?
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '32768', 'kspp', 'self_protection'))
 
-    checklist.append(OptCheck('LOCK_DOWN_KERNEL',                      'y', 'clipos', 'self_protection')) # remember about LOCK_DOWN_MANDATORY
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',               'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('DEBUG_VIRTUAL',                         'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('STATIC_USERMODEHELPER',                 'y', 'clipos', 'self_protection')) # needs userspace support (systemd)
@@ -277,7 +276,6 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('SLUB_DEBUG_ON',                      'y', 'my', 'self_protection'))
     checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',           'y', 'my', 'self_protection'))
     checklist.append(OptCheck('INIT_ON_FREE_DEFAULT_ON',            'y', 'my', 'self_protection'))
-    checklist.append(OptCheck('SECURITY_LOADPIN',                   'y', 'my', 'self_protection')) # needs userspace support
     checklist.append(OptCheck('RESET_ATTACK_MITIGATION',            'y', 'my', 'self_protection')) # needs userspace support (systemd)
     checklist.append(AND(OptCheck('PAGE_POISONING_NO_SANITY',       'is not set', 'my', 'self_protection'), \
                          page_poisoning_is_set))
@@ -294,10 +292,14 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',            'y', 'my', 'self_protection'))
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
-        checklist.append(OptCheck('SECURITY',             'y', 'defconfig', 'security_policy')) # and choose your favourite LSM
+        checklist.append(OptCheck('SECURITY',                               'y', 'defconfig', 'security_policy')) # and choose your favourite LSM
     if debug_mode or arch == 'ARM':
-        checklist.append(OptCheck('SECURITY',             'y', 'kspp', 'security_policy')) # and choose your favourite LSM
-    checklist.append(OptCheck('SECURITY_YAMA',        'y', 'kspp', 'security_policy'))
+        checklist.append(OptCheck('SECURITY',                               'y', 'kspp', 'security_policy')) # and choose your favourite LSM
+    checklist.append(OptCheck('SECURITY_YAMA',                          'y', 'kspp', 'security_policy'))
+    checklist.append(OptCheck('SECURITY_LOADPIN',                       'y', 'my', 'security_policy')) # needs userspace support
+    checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM',                  'y', 'my', 'security_policy'))
+    checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM_EARLY',            'y', 'my', 'security_policy'))
+    checklist.append(OptCheck('LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y', 'my', 'security_policy'))
 
     checklist.append(OptCheck('SECCOMP',              'y', 'defconfig', 'cut_attack_surface'))
     checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'defconfig', 'cut_attack_surface'))
