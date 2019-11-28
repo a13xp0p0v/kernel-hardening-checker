@@ -64,12 +64,21 @@ General setup
    CLIP OS will need the auditing infrastructure.
 
 .. describe:: CONFIG_IKCONFIG=n
+              CONFIG_IKHEADERS=n
 
-   We do not need ``.config`` to be available at runtime.
+   We do not need ``.config`` to be available at runtime, neither do we need
+   access to kernel headers through *sysfs*.
 
 .. describe:: CONFIG_KALLSYMS=n
 
    Symbols are only useful for debug and attack purposes.
+
+.. describe:: CONFIG_USERFAULTFD=n
+
+   The ``userfaultfd()`` system call adds attack surface and can `make heap
+   sprays easier <https://duasynt.com/blog/linux-kernel-heap-spray>`_. Note
+   that the ``vm.unprivileged_userfaultfd`` sysctl can also be used to restrict
+   the use of this system call to privileged users.
 
 .. describe:: CONFIG_EXPERT=y
 
@@ -102,24 +111,19 @@ General setup
 
    Harden slab metadata
 
-.. describe:: CONFIG_SLAB_HARDENED=y
-
-   Add various little checks to harden the slab allocator. [linux-hardened]_
-
 .. describe:: CONFIG_SLAB_CANARY=y
 
    Place canaries at the end of slab allocations. [linux-hardened]_
 
-.. describe:: CONFIG_SLAB_SANITIZE=y
+.. ---
 
-   Zero-fill slab allocations on free to reduce risks of information leaks and
-   help mitigate use-after-free vulnerabilities. [linux-hardened]_
+.. describe:: CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
 
-   .. describe:: CONFIG_SLAB_SANITIZE_VERIFY=y
-
-      Verify that newly allocated slab allocations are zeroed to detect
-      write-after-free bugs. [linux-hardened]_
-
+   Page allocator randomization is primarily a performance improvement for
+   direct-mapped memory-side-cache utilization, but it does reduce the
+   predictability of page allocations and thus complements
+   ``SLAB_FREELIST_RANDOM``. The ``page_alloc.shuffle=1`` parameter needs to be
+   added to the kernel command line.
 
 .. ---
 
@@ -140,15 +144,15 @@ General setup
       cryptographically secure) entropy at boot time.
 
    .. describe:: CONFIG_GCC_PLUGIN_STRUCTLEAK=y
+                 CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL=y
 
-      Prevent potential information leakage by forcing initialization of
-      structures containing userspace addresses. This is particularly
-      important to prevent trivial bypassing of KASLR.
+      Prevent potential information leakage by forcing zero-initialization of:
 
-   .. describe:: CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL=y
+        - structures on the stack containing userspace addresses;
+        - any stack variable (thus including structures) that may be passed by
+          reference and has not already been explicitly initialized.
 
-      Extend forced initialization to all local structures that have their
-      address taken at any point.
+      This is particularly important to prevent trivial bypassing of KASLR.
 
    .. describe:: CONFIG_GCC_PLUGIN_RANDSTRUCT=y
 
@@ -207,10 +211,10 @@ additional layer of security:
 
 .. ---
 
-.. describe:: CONFIG_LOCAL_INIT=n
+.. describe:: CONFIG_INIT_STACK_ALL=n
 
-   This option requires compiler support for ``-fsanitize=local-init``, which
-   is only available in Clang. [linux-hardened]_
+   This option requires compiler support that is currently only available in
+   Clang.
 
 Processor type and features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,7 +229,8 @@ Processor type and features
    The vsyscall table is not required anymore by libc and is a fixed-position
    potential source of ROP gadgets.
 
-.. describe:: CONFIG_X86_VSYSCALL_EMULATION=n
+.. describe:: CONFIG_X86_VSYSCALL_EMULATE=n
+              CONFIG_LEGACY_VSYSCALL_XONLY=n
 
    See above.
 
@@ -235,9 +240,11 @@ Processor type and features
    additional Intel pseudo-MSRs to be used by the kernel as a mitigation for
    various speculative execution vulnerabilities).
 
-.. describe:: CONFIG_X86_MSR=y
+.. describe:: CONFIG_X86_MSR=n
+              CONFIG_X86_CPUID=n
 
-   See above explanation about ``CONFIG_MICROCODE``.
+   Enabling those features would only present userspace with more attack
+   surface.
 
 .. describe:: CONFIG_KSM=n
 
@@ -264,7 +271,7 @@ Processor type and features
 .. describe:: CONFIG_ARCH_RANDOM=y
 
    Enable the RDRAND instruction to benefit from a secure hardware RNG if
-   supported. See ``CONFIG_RANDOM_TRUST_CPU`` for warnings about that.
+   supported. See also ``CONFIG_RANDOM_TRUST_CPU``.
 
 .. describe:: CONFIG_X86_SMAP=y
 
@@ -286,6 +293,10 @@ Processor type and features
 
    Memory Protection Keys are a promising feature but they are still not
    supported on current hardware.
+
+.. describe:: CONFIG_X86_INTEL_TSX_MODE_OFF=y
+
+   Set the default value of the ``tsx`` kernel parameter to ``off``.
 
 .. ---
 
@@ -395,9 +406,16 @@ Networking support
 Device Drivers
 ~~~~~~~~~~~~~~
 
-.. describe:: CONFIG_TCG_TPM=n
+.. describe:: CONFIG_HW_RANDOM_TPM=y
 
-   TPM use is not supported by CLIP OS yet.
+   Expose the TPM's Random Number Generator (RNG) as a Hardware RNG (HWRNG)
+   device, allowing the kernel to collect randomness from it. See documentation
+   of ``CONFIG_RANDOM_TRUST_CPU`` and the ``rng_core.default_quality`` command
+   line parameter for supplementary information.
+
+.. describe:: CONFIG_TCG_TPM=y
+
+   CLIP OS leverages the TPM to ensure :ref:`boot integrity <trusted_boot>`.
 
 .. describe:: CONFIG_DEVMEM=n
 
@@ -419,6 +437,11 @@ Device Drivers
 
    Use the modern PTY interface only.
 
+.. describe:: CONFIG_LDISC_AUTOLOAD=n
+
+   Do not automatically load any line discipline that is in a kernel module
+   when an unprivileged user asks for it.
+
 .. describe:: CONFIG_DEVPORT=n
 
    The ``/dev/port`` device should not be used anymore by userspace, and it
@@ -426,9 +449,11 @@ Device Drivers
 
 .. describe:: CONFIG_RANDOM_TRUST_CPU=n
 
-   Do not rely exclusively on the hardware RNG provided by the CPU manufacturer
-   to initialize Linux's CRNG, as we do not mind blocking a bit more at boot
-   time while additional entropy sources are mixed in.
+   Do not **credit** entropy generated by the CPU manufacturer's HWRNG and
+   included in Linux's entropy pool. Fast and robust initialization of Linux's
+   CSPRNG is instead achieved thanks to the TPM's HWRNG (see documentation of
+   ``CONFIG_HW_RANDOM_TPM`` and the ``rng_core.default_quality`` command line
+   parameter).
 
 The IOMMU allows for protecting the system's main memory from arbitrary
 accesses from devices (e.g., DMA attacks). Note that this is related to
@@ -503,9 +528,9 @@ commonly targeted kernel structures:
   .. describe:: CONFIG_SCHED_STACK_END_CHECK=y
   .. describe:: CONFIG_PAGE_POISONING=n
 
-     We choose to poison pages with zeroes and thus prefer using the simpler
-     PaX-based implementation provided by linux-hardened (see
-     ``CONFIG_PAGE_SANITIZE`` below).
+     We choose to poison pages with zeroes and thus prefer using
+     ``init_on_free`` in combination with linux-hardened's
+     ``PAGE_SANITIZE_VERIFY``.
 
 Security
 ~~~~~~~~
@@ -588,10 +613,9 @@ Security
 
 .. ---
 
-.. describe:: DEFAULT_SECURITY_DAC=y
+.. describe:: CONFIG_LSM="yama"
 
-   The default security module will be changed to SELinux once CLIP OS fully
-   uses it.
+   SELinux shall be stacked too once CLIP OS uses it.
 
 .. ---
 
@@ -617,23 +641,44 @@ Security
 
 .. ---
 
-.. describe:: CONFIG_PAGE_SANITIZE=y
-
-   Zero-fill page allocations on free to reduce risks of information leaks and
-   help mitigate a subset of use-after-free vulnerabilities. This is a simpler
-   equivalent to upstream's ``CONFIG_PAGE_POISONING_ZERO``. [linux-hardened]_
-
-.. describe:: CONFIG_PAGE_SANITIZE_VERIFY=y
-
-   Verify that newly allocated pages are zeroed to detect write-after-free
-   bugs. [linux-hardened]_
-
-.. ---
-
 .. describe:: CONFIG_SECURITY_TIOCSTI_RESTRICT=y
 
    This prevents unprivileged users from using the TIOCSTI ioctl to inject
-   commands into other processes which share a tty session. [linux-hardened]_
+   commands into other processes that share a tty session. [linux-hardened]_
+
+.. ---
+
+.. describe:: CONFIG_GCC_PLUGIN_STACKLEAK=y
+              CONFIG_STACKLEAK_TRACK_MIN_SIZE=100
+              CONFIG_STACKLEAK_METRICS=n
+              CONFIG_STACKLEAK_RUNTIME_DISABLE=n
+
+``STACKLEAK`` erases the kernel stack before returning from system calls,
+leaving it initialized to a poison value. This both reduces the information
+that kernel stack leak bugs can reveal and the exploitability of uninitialized
+stack variables. However, it does not cover functions reaching the same stack
+depth as prior functions during the same system call.
+
+It used to also block kernel stack depth overflows caused by ``alloca()``, such
+as Stack Clash attacks. We maintained this functionality for our kernel for a
+while but eventually `dropped it
+<https://github.com/clipos/src_external_linux/commit/3e5f9114fc2f70f6d2ae5d10db10869e0564eb03>`_.
+
+.. describe:: CONFIG_INIT_ON_FREE_DEFAULT_ON=y
+              CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y
+
+   These set ``init_on_free=1`` and ``init_on_alloc=1`` on the kernel command
+   line. See the documentation of these kernel parameters for details.
+
+.. describe:: CONFIG_PAGE_SANITIZE_VERIFY=y
+              CONFIG_SLAB_SANITIZE_VERIFY=y
+
+   Verify that newly allocated pages and slab allocations are zeroed to detect
+   write-after-free bugs. This works in concert with ``init_on_free`` and is
+   adjusted to not be redundant with ``init_on_alloc``.
+   [linux-hardened]_
+
+.. ---
 
 We incorporated most of the *Lockdown* patch series into the CLIP OS kernel,
 though it may be merged into the mainline kernel in the near future.
@@ -647,17 +692,6 @@ already-root attacker. Among the several configuration options brought by
 
   .. describe:: CONFIG_LOCK_DOWN_KERNEL=y
                 CONFIG_LOCK_DOWN_MANDATORY=y
-
-Similarly, we incorporated the *STACKLEAK* feature ported from grsecurity/PaX
-by Alexander Popov and which should be merged upstream ultimately. *STACKLEAK*
-erases the kernel stack before returning from system calls in order to reduce
-the information which kernel stack leak bugs can reveal. It also blocks kernel
-stack depth overflows caused by ``alloca()``, such as Stack Clash attacks.
-
-  .. describe:: CONFIG_GCC_PLUGIN_STACKLEAK=y
-                CONFIG_STACKLEAK_TRACK_MIN_SIZE=100
-                CONFIG_STACKLEAK_METRICS=n
-                CONFIG_STACKLEAK_RUNTIME_DISABLE=n
 
 
 Compilation
@@ -674,6 +708,11 @@ Many sysctls are not security-relevant or only play a role if some kernel
 configuration options are enabled/disabled. In other words, the following is
 tightly related to the CLIP OS kernel configuration detailed above.
 
+.. describe:: dev.tty.ldisc_autoload = 0
+
+   See ``CONFIG_LDISC_AUTOLOAD`` above, which serves as a default value for
+   this sysctl.
+
 .. describe:: kernel.kptr_restrict = 2
 
    Hide kernel addresses in ``/proc`` and other interfaces, even to privileged
@@ -686,16 +725,19 @@ tightly related to the CLIP OS kernel configuration detailed above.
 .. describe:: kernel.perf_event_paranoid = 3
 
    This completely disallows unprivileged access to the ``perf_event_open()``
-   system call. Note that this requires a patch included in linux-hardened (see
-   `here <https://lwn.net/Articles/696216/>`_ for the reason why it is not
-   upstream), otherwise it is the same as setting this sysctl to ``2``. This is
-   actually not needed as we already enable
-   ``CONFIG_SECURITY_PERF_EVENTS_RESTRICT``.
+   system call. This is actually not needed as we already enable
+   ``CONFIG_SECURITY_PERF_EVENTS_RESTRICT``. [linux-hardened]_
+
+   Note that this requires a patch included in linux-hardened (see `here
+   <https://lwn.net/Articles/696216/>`_ for the reason why it is not upstream).
+   Indeed, on a mainline kernel without such a patch, the above is equivalent
+   to setting this sysctl to ``2``, which would still allow the profiling of
+   user processes.
 
 .. describe:: kernel.tiocsti_restrict = 1
 
    This is already forced by the ``CONFIG_SECURITY_TIOCSTI_RESTRICT`` kernel
-   configuration option that we enable.
+   configuration option that we enable. [linux-hardened]_
 
 The following two sysctls help mitigating TOCTOU vulnerabilities by preventing
 users from creating symbolic or hard links to files they do not own or have
@@ -760,7 +802,7 @@ We pass the following command line parameters to the kernel:
    This parameter provided by a linux-hardened patch (based on the PaX
    implementation) enables a very simple form of latent entropy extracted
    during system start-up and added to the entropy obtained with
-   ``GCC_PLUGIN_LATENT_ENTROPY``.
+   ``GCC_PLUGIN_LATENT_ENTROPY``. [linux-hardened]_
 
 .. describe:: pti=on
 
@@ -778,6 +820,16 @@ We pass the following command line parameters to the kernel:
    Same reasoning as above but for the Spectre v4 vulnerability. Note that this
    mitigation requires updated microcode for Intel processors.
 
+
+.. describe:: mds=full,nosmt
+
+   This parameter controls optional mitigations for the Microarchitectural Data
+   Sampling (MDS) class of Intel CPU vulnerabilities. Not specifying this
+   parameter is equivalent to setting ``mds=full``, which leaves SMT enabled
+   and therefore is not a complete mitigation. Note that this mitigation
+   requires an Intel microcode update and also addresses the TSX Asynchronous
+   Abort (TAA) Intel CPU vulnerability on systems that are affected by MDS.
+
 .. describe:: iommu=force
 
    Even if we correctly enable the IOMMU in the kernel configuration, the
@@ -792,22 +844,29 @@ We pass the following command line parameters to the kernel:
    interesting options that we considered but eventually chose to not use are:
 
     * The ``P`` option, which enables poisoning on slab cache allocations,
-      disables the ``SLAB_SANITIZE`` and ``SLAB_SANITIZE_VERIFY`` features from
-      linux-hardened. As they respectively poison with zeroes on object freeing
-      and check the zeroing on object allocations, we prefer enabling them
-      instead of using ``slub_debug=P``.
+      disables the ``init_on_free`` and ``SLAB_SANITIZE_VERIFY`` features. As
+      they respectively poison with zeroes on object freeing and check the
+      zeroing on object allocations, we prefer enabling them instead of using
+      ``slub_debug=P``.
     * The ``Z`` option enables red zoning, i.e., it adds extra areas around
       slab objects that detect when one is overwritten past its real size.
       This can help detect overflows but we already rely on ``SLAB_CANARY``
       provided by linux-hardened. A canary is much better than a simple red
       zone as it is supposed to be random.
 
+.. describe:: page_alloc.shuffle=1
+
+   See ``CONFIG_SHUFFLE_PAGE_ALLOCATOR``.
+
+.. describe:: rng_core.default_quality=512
+
+   Increase trust in the TPM's HWRNG to robustly and fastly initialize Linux's
+   CSPRNG by **crediting** half of the entropy it provides.
+
 Also, note that:
 
 * ``slub_nomerge`` is not used as we already set
   ``CONFIG_SLAB_MERGE_DEFAULT=n`` in the kernel configuration.
-* ``page_poison`` is not needed by the page poisoning implementation provided
-  by linux-hardened patches.
 * ``l1tf``: The built-in PTE Inversion mitigation is sufficient to mitigate
   the L1TF vulnerability as long as CLIP OS is not used as an hypervisor with
   untrusted guest VMs. If it were to be someday, ``l1tf=full,force`` should be
@@ -815,6 +874,46 @@ Also, note that:
   (note that an Intel microcode update is not required for this mitigation to
   work but improves performance by providing a way to invalidate caches with a
   finer granularity).
+* ``tsx=off``: This parameter is already set by default thanks to
+  ``CONFIG_X86_INTEL_TSX_MODE_OFF``. It deactivates the Intel TSX feature on
+  CPUs that support TSX control (i.e. are recent enough or received a microcode
+  update) and that are not already vulnerable to MDS, therefore mitigating the
+  TSX Asynchronous Abort (TAA) Intel CPU vulnerability.
+* ``tsx_async_abort``: This parameter controls optional mitigations for the TSX
+  Asynchronous Abort (TAA) Intel CPU vulnerability. Due to our use of
+  ``mds=full,nosmt`` in addition to ``CONFIG_X86_INTEL_TSX_MODE_OFF``, CLIP OS
+  is already protected against this vulnerability as long as the CPU microcode
+  has been updated, whether or not the CPU is affected by MDS. For the record,
+  if we wanted to keep TSX activated, we could specify
+  ``tsx_async_abort=full,nosmt``. Not specifying this parameter is equivalent
+  to setting ``tsx_async_abort=full``, which leaves SMT enabled and therefore
+  is not a complete mitigation. Note that this mitigation requires an Intel
+  microcode update and has no effect on systems that are already affected by
+  MDS and enable mitigations against it, nor on systems that disable TSX.
+* ``kvm.nx_huge_pages``: This parameter allows to control the KVM hypervisor
+  iTLB multihit mitigations. Such mitigations are not needed as long as CLIP OS
+  is not used as an hypervisor with untrusted guest VMs. If it were to be
+  someday, ``kvm.nx_huge_pages=force`` should be used to ensure that guests
+  cannot exploit the iTLB multihit erratum to crash the host.
+* ``mitigations``: This parameter controls optional mitigations for CPU
+  vulnerabilities in an arch-independent and more coarse-grained way. For now,
+  we keep using arch-specific options for the sake of explicitness. Not setting
+  this parameter equals setting it to ``auto``, which itself does not update
+  anything.
+* ``init_on_free=1`` is automatically set due to ``INIT_ON_FREE_DEFAULT_ON``. It
+  zero-fills page and slab allocations on free to reduce risks of information
+  leaks and help mitigate a subset of use-after-free vulnerabilities.
+* ``init_on_alloc=1`` is automatically set due to ``INIT_ON_ALLOC_DEFAULT_ON``.
+  The purpose of this functionality is to eliminate several kinds of
+  *uninitialized heap memory* flaws by zero-filling:
+
+  * all page allocator and slab allocator memory when allocated: this is
+    already guaranteed by our use of ``init_on_free`` in combination with
+    ``PAGE_SANITIZE_VERIFY`` and ``SLAB_SANITIZE_VERIFY`` from linux-hardened,
+    and thus has no effect;
+  * a few more *special* objects when allocated: these are the ones for which
+    we enable ``init_on_alloc`` as they are not covered by the aforementioned
+    combination of ``init_on_free`` and ``SANITIZE_VERIFY`` features.
 
 .. rubric:: Citations and origin of some items
 
