@@ -15,7 +15,9 @@ against my hardening preferences, which are based on the
   - [CLIP OS kernel configuration][2],
   - last public [grsecurity][3] patch (options which they disable).
 
-Please don't cry if my Python code looks like C. I'm just a kernel developer.
+I also created [__Linux Kernel Defence Map__][4] that is a graphical representation of the
+relationships between these hardening features and the corresponding vulnerability classes
+or exploitation techniques.
 
 ## Supported microarchitectures
 
@@ -214,3 +216,4 @@ try to install `gcc-7-plugin-dev` package, it should help.
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
 [2]: https://docs.clip-os.org/clipos/kernel.html#configuration
 [3]: https://grsecurity.net/
+[4]: https://github.com/a13xp0p0v/linux-kernel-defence-map
