@@ -187,7 +187,6 @@ def construct_checklist(checklist, arch):
                         OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'defconfig', 'self_protection'), \
                         modules_not_set)) # DEBUG_SET_MODULE_RONX was before v4.11
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
-        checklist.append(OptCheck('RANDOMIZE_BASE',              'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('MICROCODE',                   'y', 'defconfig', 'self_protection')) # is needed for mitigating CPU bugs
         checklist.append(OptCheck('RETPOLINE',                   'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('X86_SMAP',                    'y', 'defconfig', 'self_protection'))
@@ -210,6 +209,7 @@ def construct_checklist(checklist, arch):
     if debug_mode or arch == 'X86_64' or arch == 'ARM64':
         checklist.append(OptCheck('VMAP_STACK',                  'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+        checklist.append(OptCheck('RANDOMIZE_BASE',              'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('THREAD_INFO_IN_TASK',         'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'ARM':
         checklist.append(OptCheck('VMSPLIT_3G',                  'y', 'defconfig', 'self_protection'))
@@ -255,7 +255,6 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('X86_PAE',                          'y', 'kspp', 'self_protection'))
     if debug_mode or arch == 'ARM64':
         checklist.append(OptCheck('ARM64_SW_TTBR0_PAN',               'y', 'kspp', 'self_protection'))
-        checklist.append(OptCheck('RANDOMIZE_BASE',                   'y', 'kspp', 'self_protection'))
     if debug_mode or arch == 'ARM64' or arch == 'ARM':
         checklist.append(OptCheck('SYN_COOKIES',                      'y', 'kspp', 'self_protection')) # another reason?
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '32768', 'kspp', 'self_protection'))
