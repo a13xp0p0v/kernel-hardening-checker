@@ -189,7 +189,7 @@ So the version of `kconfig-hardened-check` is associated with the corresponding 
 
 The version format is: __[major_number].[kernel_version]__
 
-The current version of `kconfig-hardened-check` is __0.5.2__, it's marked with the git tag.
+The current version of `kconfig-hardened-check` is __0.5.3__, it's marked with the git tag.
 
 
 ## Questions and answers
