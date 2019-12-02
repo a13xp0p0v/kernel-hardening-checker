@@ -382,11 +382,11 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'my', 'cut_attack_surface'))
 
     if debug_mode or arch == 'ARM64':
-        checklist.append(OptCheck('ARM64_PTR_AUTH',       'y', 'defconfig', 'userspace_protection'))
+        checklist.append(OptCheck('ARM64_PTR_AUTH',       'y', 'defconfig', 'userspace_hardening'))
     if debug_mode or arch == 'X86_64' or arch == 'ARM64':
-        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'clipos', 'userspace_protection'))
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'clipos', 'userspace_hardening'))
     if debug_mode or arch == 'X86_32' or arch == 'ARM':
-        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '16', 'my', 'userspace_protection'))
+        checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '16', 'my', 'userspace_hardening'))
 
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
@@ -406,7 +406,7 @@ def print_checklist(checklist, with_results):
     print('{:^45}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'), end='')
     sep_line_len = 91
     if with_results:
-        print('||{:^28}'.format('check result'), end='')
+        print('|   {}'.format('check result'), end='')
         sep_line_len += 30
     print()
 
@@ -415,7 +415,7 @@ def print_checklist(checklist, with_results):
     for opt in checklist:
         print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
         if with_results:
-            print('||{:^28}'.format(opt.result), end='')
+            print('|   {}'.format(opt.result), end='')
         print()
     print()
 
