@@ -28,10 +28,18 @@ or exploitation techniques.
 
 ## Script output examples
 
+### Installation
+
+```
+pip install git+https://github.com/a13xp0p0v/kconfig-hardened-check'
+```
+
+or just run `./bin/kconfig-hardened-check` from the repository.
+
 ### Usage
 ```
-usage: kconfig-hardened-check.py [-h] [-p {X86_64,X86_32,ARM64,ARM}]
-                                 [-c CONFIG] [--debug] [--json]
+usage: kconfig-hardened-check [-h] [-p {X86_64,X86_32,ARM64,ARM}]
+                              [-c CONFIG] [--debug] [--json]
 
 Checks the hardening options in the Linux kernel config
 
@@ -48,8 +56,8 @@ optional arguments:
 
 ### Script output for `Ubuntu 18.04 (Bionic Beaver)` kernel config
 ```
-#./kconfig-hardened-check.py -c config_files/distros/ubuntu-bionic-generic.config
-[+] Trying to detect architecture in "config_files/distros/ubuntu-bionic-generic.config"...
+#./bin/kconfig-hardened-check -c kconfig_hardened_check/config_files/distros/ubuntu-bionic-generic.config
+[+] Trying to detect architecture in "kconfig_hardened_check/config_files/distros/ubuntu-bionic-generic.config"...
 [+] Detected architecture: X86_64
 [+] Checking "config_files/distros/ubuntu-bionic-generic.config" against hardening preferences...
                  option name                 | desired val | decision |       reason       |   check result

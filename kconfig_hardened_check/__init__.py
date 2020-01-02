@@ -48,6 +48,7 @@
 import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
+from typing import List, Any
 import re
 import json
 
@@ -470,9 +471,8 @@ def check_config_file(checklist, fname):
 
         print_checklist(checklist, True)
 
-
-if __name__ == '__main__':
-    config_checklist = []
+def main() -> None:
+    config_checklist: List[Any] = []
 
     parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('-p', '--print', choices=supported_archs,
@@ -484,11 +484,9 @@ if __name__ == '__main__':
     parser.add_argument('--json', action='store_true',
                         help='print results in JSON format')
     args = parser.parse_args()
+    debug_mode = args.debug
+    json_mode = args.json
 
-    if args.debug:
-        debug_mode = True
-    if args.json:
-        json_mode = True
     if debug_mode and json_mode:
         sys.exit('[!] ERROR: options --debug and --json cannot be used simultaneously')
 
@@ -518,3 +516,6 @@ if __name__ == '__main__':
         sys.exit(0)
 
     parser.print_help()
+
+if __name__ == '__main__':
+    main()
