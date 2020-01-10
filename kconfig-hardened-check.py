@@ -301,11 +301,13 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('SECURITY',                               'y', 'defconfig', 'security_policy')) # and choose your favourite LSM
     if debug_mode or arch == 'ARM':
         checklist.append(OptCheck('SECURITY',                               'y', 'kspp', 'security_policy')) # and choose your favourite LSM
+    checklist.append(OptCheck('SECURITY_WRITABLE_HOOKS',                'is not set', 'defconfig', 'security_policy'))
     checklist.append(OptCheck('SECURITY_YAMA',                          'y', 'kspp', 'security_policy'))
     checklist.append(OptCheck('SECURITY_LOADPIN',                       'y', 'my', 'security_policy')) # needs userspace support
     checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM',                  'y', 'my', 'security_policy'))
     checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM_EARLY',            'y', 'my', 'security_policy'))
     checklist.append(OptCheck('LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y', 'my', 'security_policy'))
+    checklist.append(OptCheck('SECURITY_SAFESETID',                     'y', 'my', 'security_policy'))
 
     checklist.append(OptCheck('SECCOMP',              'y', 'defconfig', 'cut_attack_surface'))
     checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'defconfig', 'cut_attack_surface'))
