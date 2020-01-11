@@ -178,9 +178,10 @@ CONFIG_IP_DCCP                               | is not set  |    my    | cut_atta
 CONFIG_IP_SCTP                               | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_FTRACE                                | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_BPF_JIT                               | is not set  |    my    | cut_attack_surface |   FAIL: "y"
+CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] config check is finished: 'OK' - 49 / 'FAIL' - 76
+[+] config check is finished: 'OK' - 49 / 'FAIL' - 77
 ```
 
 ## kconfig-hardened-check versioning

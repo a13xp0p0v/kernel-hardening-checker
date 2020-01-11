@@ -380,6 +380,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('IP_SCTP',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('VIDEO_VIVID',          'is not set', 'my', 'cut_attack_surface'))
     if debug_mode or arch == 'X86_32':
         checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'my', 'cut_attack_surface'))
 
