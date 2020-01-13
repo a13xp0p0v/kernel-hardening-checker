@@ -114,6 +114,7 @@ CONFIG_RESET_ATTACK_MITIGATION               |      y      |    my    |  self_pr
 CONFIG_PAGE_POISONING_NO_SANITY              | is not set  |    my    |  self_protection   |   FAIL: CONFIG_PAGE_POISONING is needed
 CONFIG_PAGE_POISONING_ZERO                   | is not set  |    my    |  self_protection   |   FAIL: CONFIG_PAGE_POISONING is needed
 CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_protection   |   FAIL: "m"
+CONFIG_PANIC_ON_OOPS                         |      y      |    kspp  |  self_protection   |   FAIL: "is not set"
 CONFIG_SECURITY                              |      y      |defconfig |  security_policy   |   OK
 CONFIG_SECURITY_WRITABLE_HOOKS               | is not set  |defconfig |  security_policy   |   OK
 CONFIG_SECURITY_YAMA                         |      y      |   kspp   |  security_policy   |   OK
@@ -181,7 +182,7 @@ CONFIG_BPF_JIT                               | is not set  |    my    | cut_atta
 CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] config check is finished: 'OK' - 49 / 'FAIL' - 77
+[+] config check is finished: 'OK' - 49 / 'FAIL' - 78
 ```
 
 ## kconfig-hardened-check versioning

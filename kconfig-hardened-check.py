@@ -296,6 +296,7 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('PAGE_TABLE_ISOLATION',               'y', 'my', 'self_protection'))
     if debug_mode or arch == 'ARM':
         checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',            'y', 'my', 'self_protection'))
+    checklist.append(OptCheck('PANIC_ON_OOPS',                         'y', 'kspp', 'self_protection'))
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
         checklist.append(OptCheck('SECURITY',                               'y', 'defconfig', 'security_policy')) # and choose your favourite LSM
