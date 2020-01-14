@@ -86,7 +86,6 @@ CONFIG_DEBUG_LIST                            |      y      |   kspp   |  self_pr
 CONFIG_DEBUG_SG                              |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_DEBUG_CREDENTIALS                     |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_DEBUG_NOTIFIERS                       |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_PAGE_POISONING                        |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_HARDENED_USERCOPY                     |      y      |   kspp   |  self_protection   |   OK
 CONFIG_HARDENED_USERCOPY_FALLBACK            | is not set  |   kspp   |  self_protection   |   OK: not found
 CONFIG_MODULE_SIG                            |      y      |   kspp   |  self_protection   |   OK
@@ -111,8 +110,6 @@ CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_pr
 CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_SLUB_DEBUG_ON                         |      y      |    my    |  self_protection   |   FAIL: "is not set"
 CONFIG_RESET_ATTACK_MITIGATION               |      y      |    my    |  self_protection   |   OK
-CONFIG_PAGE_POISONING_NO_SANITY              | is not set  |    my    |  self_protection   |   FAIL: CONFIG_PAGE_POISONING is needed
-CONFIG_PAGE_POISONING_ZERO                   | is not set  |    my    |  self_protection   |   FAIL: CONFIG_PAGE_POISONING is needed
 CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_protection   |   FAIL: "m"
 CONFIG_SECURITY                              |      y      |defconfig |  security_policy   |   OK
 CONFIG_SECURITY_WRITABLE_HOOKS               | is not set  |defconfig |  security_policy   |   OK
@@ -181,7 +178,7 @@ CONFIG_BPF_JIT                               | is not set  |    my    | cut_atta
 CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] config check is finished: 'OK' - 49 / 'FAIL' - 77
+[+] config check is finished: 'OK' - 49 / 'FAIL' - 74
 ```
 
 ## kconfig-hardened-check versioning

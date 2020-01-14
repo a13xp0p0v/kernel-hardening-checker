@@ -11,13 +11,13 @@
 #
 #
 # N.B Hardening command line parameters:
-#    page_poison=1
 #    slub_debug=FZP
 #    slab_nomerge
 #    kernel.kptr_restrict=1
 #    lockdown=1 (is it changed?)
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
+#    page_poison=1 (if enabled)
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
@@ -233,8 +233,6 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('DEBUG_SG',                         'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_CREDENTIALS',                'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('DEBUG_NOTIFIERS',                  'y', 'kspp', 'self_protection'))
-    page_poisoning_is_set = OptCheck('PAGE_POISONING',            'y', 'kspp', 'self_protection')
-    checklist.append(page_poisoning_is_set)
     hardened_usercopy_is_set = OptCheck('HARDENED_USERCOPY',      'y', 'kspp', 'self_protection')
     checklist.append(hardened_usercopy_is_set)
     checklist.append(AND(OptCheck('HARDENED_USERCOPY_FALLBACK',   'is not set', 'kspp', 'self_protection'), \
@@ -262,7 +260,8 @@ def construct_checklist(checklist, arch):
     checklist.append(OR(OptCheck('INIT_STACK_ALL',                     'y', 'clipos', 'self_protection'), \
                         OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL',    'y', 'kspp', 'self_protection')))
     checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',              'y', 'clipos', 'self_protection'))
-    checklist.append(OptCheck('INIT_ON_FREE_DEFAULT_ON',               'y', 'clipos', 'self_protection'))
+    checklist.append(OR(OptCheck('INIT_ON_FREE_DEFAULT_ON',            'y', 'clipos', 'self_protection'), \
+                        OptCheck('PAGE_POISONING',                     'y', 'kspp', 'self_protection')))
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',               'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('DEBUG_VIRTUAL',                         'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('STATIC_USERMODEHELPER',                 'y', 'clipos', 'self_protection')) # needs userspace support (systemd)
@@ -285,10 +284,6 @@ def construct_checklist(checklist, arch):
 
     checklist.append(OptCheck('SLUB_DEBUG_ON',                      'y', 'my', 'self_protection'))
     checklist.append(OptCheck('RESET_ATTACK_MITIGATION',            'y', 'my', 'self_protection')) # needs userspace support (systemd)
-    checklist.append(AND(OptCheck('PAGE_POISONING_NO_SANITY',       'is not set', 'my', 'self_protection'), \
-                         page_poisoning_is_set))
-    checklist.append(AND(OptCheck('PAGE_POISONING_ZERO',            'is not set', 'my', 'self_protection'), \
-                         page_poisoning_is_set))
     if debug_mode or arch == 'X86_64':
         checklist.append(AND(OptCheck('AMD_IOMMU_V2',                   'y', 'my', 'self_protection'), \
                              iommu_support_is_set))
