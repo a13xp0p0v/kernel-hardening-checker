@@ -215,6 +215,13 @@ __Q:__ Why `CONFIG_GCC_PLUGINS` is automatically disabled during the kernel comp
 __A:__ It means that your gcc doesn't support plugins. For example, if you have `gcc-7` on Ubuntu,
 try to install `gcc-7-plugin-dev` package, it should help.
 
+<br />
+
+__Q:__ KSPP and CLIP OS recommend `CONFIG_PANIC_ON_OOPS=y`. Why doesn't this tool do the same?
+
+__A:__ I personally don't support this recommendation because it provides easy denial-of-service
+attacks for the whole system (kernel oops is not a rare situation). I think having `CONFIG_BUG` is enough here --
+if we have a kernel oops in the process context, the offending/attacking process is killed.
 
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
 [2]: https://docs.clip-os.org/clipos/kernel.html#configuration
