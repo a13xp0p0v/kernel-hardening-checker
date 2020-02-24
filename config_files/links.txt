@@ -7,6 +7,9 @@
 Alpine Linux:
 https://git.alpinelinux.org/aports/plain/main/linux-lts/config-lts.x86_64
 
+Amazon Linux 2:
+http://52.45.193.166/mirrors/http/amazonlinux.us-east-1.amazonaws.com/amazon_linux_2/?C=M;O=D
+
 Arch Linux:
 https://git.archlinux.org/svntogit/packages.git/plain/linux-hardened/trunk/config
 
