@@ -14,10 +14,10 @@ Oracle Linux: Unbreakable Enterprise Kernel (UEK):
 https://raw.githubusercontent.com/oracle/linux-uek/uek6/master/uek-rpm/ol7/config-x86_64
 
 SUSE Linux Enterprise (SLE):
-https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=SLE15-SP1
+https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=SLE15-SP2
 
 openSUSE:
-https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=openSUSE-15.0
+https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=openSUSE-15.1
 
 Pentoo:
 https://raw.githubusercontent.com/pentoo/pentoo-livecd/master/livecd/amd64/kernel/config-5.5.5
