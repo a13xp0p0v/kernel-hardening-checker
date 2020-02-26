@@ -13,6 +13,10 @@ http://52.45.193.166/mirrors/http/amazonlinux.us-east-1.amazonaws.com/amazon_lin
 Arch Linux:
 https://git.archlinux.org/svntogit/packages.git/plain/linux-hardened/trunk/config
 
+Clear Linux OS:
+https://raw.githubusercontent.com/clearlinux-pkgs/linux/master/config
+https://raw.githubusercontent.com/clearlinux-pkgs/linux/master/cmdline
+
 Oracle Linux: Unbreakable Enterprise Kernel (UEK):
 https://raw.githubusercontent.com/oracle/linux-uek/uek6/master/uek-rpm/ol7/config-x86_64
 
