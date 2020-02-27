@@ -46,9 +46,9 @@ optional arguments:
 
 ```
 
-### Script output for `Ubuntu 18.04 (Bionic Beaver)` kernel config
+### Script output for `Ubuntu 18.04 (Bionic Beaver with HWE)` kernel config
 ```
-#./kconfig-hardened-check.py -c config_files/distros/ubuntu-bionic-generic.config
+$ ./kconfig-hardened-check.py -c config_files/distros/ubuntu-bionic-generic.config
 [+] Trying to detect architecture in "config_files/distros/ubuntu-bionic-generic.config"...
 [+] Detected architecture: X86_64
 [+] Checking "config_files/distros/ubuntu-bionic-generic.config" against hardening preferences...
@@ -56,7 +56,7 @@ optional arguments:
 =========================================================================================================================
 CONFIG_BUG                                   |      y      |defconfig |  self_protection   |   OK
 CONFIG_STRICT_KERNEL_RWX                     |      y      |defconfig |  self_protection   |   OK
-CONFIG_STACKPROTECTOR_STRONG                 |      y      |defconfig |  self_protection   |   OK: CONFIG_CC_STACKPROTECTOR_STRONG "y"
+CONFIG_STACKPROTECTOR_STRONG                 |      y      |defconfig |  self_protection   |   OK
 CONFIG_SLUB_DEBUG                            |      y      |defconfig |  self_protection   |   OK
 CONFIG_STRICT_MODULE_RWX                     |      y      |defconfig |  self_protection   |   OK
 CONFIG_MICROCODE                             |      y      |defconfig |  self_protection   |   OK
@@ -77,9 +77,9 @@ CONFIG_DEBUG_WX                              |      y      |   kspp   |  self_pr
 CONFIG_SCHED_STACK_END_CHECK                 |      y      |   kspp   |  self_protection   |   OK
 CONFIG_SLAB_FREELIST_HARDENED                |      y      |   kspp   |  self_protection   |   OK
 CONFIG_SLAB_FREELIST_RANDOM                  |      y      |   kspp   |  self_protection   |   OK
-CONFIG_SHUFFLE_PAGE_ALLOCATOR                |      y      |   kspp   |  self_protection   |   FAIL: not found
+CONFIG_SHUFFLE_PAGE_ALLOCATOR                |      y      |   kspp   |  self_protection   |   OK
 CONFIG_FORTIFY_SOURCE                        |      y      |   kspp   |  self_protection   |   OK
-CONFIG_GCC_PLUGINS                           |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
+CONFIG_GCC_PLUGINS                           |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_GCC_PLUGIN_RANDSTRUCT                 |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_GCC_PLUGIN_LATENT_ENTROPY             |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_DEBUG_LIST                            |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
@@ -87,7 +87,7 @@ CONFIG_DEBUG_SG                              |      y      |   kspp   |  self_pr
 CONFIG_DEBUG_CREDENTIALS                     |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_DEBUG_NOTIFIERS                       |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_HARDENED_USERCOPY                     |      y      |   kspp   |  self_protection   |   OK
-CONFIG_HARDENED_USERCOPY_FALLBACK            | is not set  |   kspp   |  self_protection   |   OK: not found
+CONFIG_HARDENED_USERCOPY_FALLBACK            | is not set  |   kspp   |  self_protection   |   FAIL: "y"
 CONFIG_MODULE_SIG                            |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_ALL                        |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_SHA512                     |      y      |   kspp   |  self_protection   |   OK
@@ -95,8 +95,8 @@ CONFIG_MODULE_SIG_FORCE                      |      y      |   kspp   |  self_pr
 CONFIG_DEFAULT_MMAP_MIN_ADDR                 |    65536    |   kspp   |  self_protection   |   OK
 CONFIG_REFCOUNT_FULL                         |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_INIT_STACK_ALL                        |      y      |  clipos  |  self_protection   |   FAIL: not found
-CONFIG_INIT_ON_ALLOC_DEFAULT_ON              |      y      |  clipos  |  self_protection   |   FAIL: not found
-CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |  clipos  |  self_protection   |   FAIL: not found
+CONFIG_INIT_ON_ALLOC_DEFAULT_ON              |      y      |  clipos  |  self_protection   |   OK
+CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |  clipos  |  self_protection   |   OK: CONFIG_PAGE_POISONING "y"
 CONFIG_SECURITY_DMESG_RESTRICT               |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_DEBUG_VIRTUAL                         |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_STATIC_USERMODEHELPER                 |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
@@ -105,20 +105,20 @@ CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE     | is not set  |  clipos  |  self_pr
 CONFIG_GCC_PLUGIN_STACKLEAK                  |      y      |  clipos  |  self_protection   |   FAIL: not found
 CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
 CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
-CONFIG_RANDOM_TRUST_CPU                      | is not set  |  clipos  |  self_protection   |   OK: not found
+CONFIG_RANDOM_TRUST_CPU                      | is not set  |  clipos  |  self_protection   |   FAIL: "y"
 CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
 CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_SLUB_DEBUG_ON                         |      y      |    my    |  self_protection   |   FAIL: "is not set"
 CONFIG_RESET_ATTACK_MITIGATION               |      y      |    my    |  self_protection   |   OK
 CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_protection   |   FAIL: "m"
 CONFIG_SECURITY                              |      y      |defconfig |  security_policy   |   OK
-CONFIG_SECURITY_WRITABLE_HOOKS               | is not set  |defconfig |  security_policy   |   OK
+CONFIG_SECURITY_WRITABLE_HOOKS               | is not set  |defconfig |  security_policy   |   OK: not found
 CONFIG_SECURITY_YAMA                         |      y      |   kspp   |  security_policy   |   OK
 CONFIG_SECURITY_LOADPIN                      |      y      |    my    |  security_policy   |   FAIL: "is not set"
 CONFIG_SECURITY_LOCKDOWN_LSM                 |      y      |    my    |  security_policy   |   FAIL: not found
 CONFIG_SECURITY_LOCKDOWN_LSM_EARLY           |      y      |    my    |  security_policy   |   FAIL: not found
 CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|      y      |    my    |  security_policy   |   FAIL: not found
-CONFIG_SECURITY_SAFESETID                    |      y      |    my    |  security_policy   |   FAIL: not found
+CONFIG_SECURITY_SAFESETID                    |      y      |    my    |  security_policy   |   OK
 CONFIG_SECCOMP                               |      y      |defconfig | cut_attack_surface |   OK
 CONFIG_SECCOMP_FILTER                        |      y      |defconfig | cut_attack_surface |   OK
 CONFIG_STRICT_DEVMEM                         |      y      |defconfig | cut_attack_surface |   OK
@@ -168,7 +168,7 @@ CONFIG_X86_VSYSCALL_EMULATION                | is not set  |  clipos  | cut_atta
 CONFIG_MAGIC_SYSRQ                           | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_KEXEC_FILE                            | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_USER_NS                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_LDISC_AUTOLOAD                        | is not set  |  clipos  | cut_attack_surface |   OK: not found
+CONFIG_LDISC_AUTOLOAD                        | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_MMIOTRACE                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_LIVEPATCH                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_IP_DCCP                               | is not set  |    my    | cut_attack_surface |   FAIL: "m"
@@ -178,7 +178,7 @@ CONFIG_BPF_JIT                               | is not set  |    my    | cut_atta
 CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] config check is finished: 'OK' - 49 / 'FAIL' - 74
+[+] config check is finished: 'OK' - 50 / 'FAIL' - 73
 ```
 
 ## kconfig-hardened-check versioning

@@ -5,25 +5,32 @@
 ######################################################
 
 Alpine Linux:
-https://git.alpinelinux.org/cgit/aports/plain/main/linux-vanilla/config-vanilla.x86_64
+https://git.alpinelinux.org/aports/plain/main/linux-lts/config-lts.x86_64
+
+Amazon Linux 2:
+http://52.45.193.166/mirrors/http/amazonlinux.us-east-1.amazonaws.com/amazon_linux_2/?C=M;O=D
 
 Arch Linux:
-https://git.archlinux.org/svntogit/packages.git/plain/linux-hardened/trunk/config.x86_64
+https://git.archlinux.org/svntogit/packages.git/plain/linux-hardened/trunk/config
+
+Clear Linux OS:
+https://raw.githubusercontent.com/clearlinux-pkgs/linux/master/config
+https://raw.githubusercontent.com/clearlinux-pkgs/linux/master/cmdline
 
 Oracle Linux: Unbreakable Enterprise Kernel (UEK):
-https://raw.githubusercontent.com/oracle/linux-uek/uek5/master/uek-rpm/ol7/config-x86_64
+https://raw.githubusercontent.com/oracle/linux-uek/uek6/master/uek-rpm/ol7/config-x86_64
 
 SUSE Linux Enterprise (SLE):
-https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=SLE15-SP1
+https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=SLE15-SP2
 
 openSUSE:
-https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=openSUSE-15.0
+https://kernel.opensuse.org/cgit/kernel-source/plain/config/x86_64/default?h=openSUSE-15.1
 
 Pentoo:
-https://raw.githubusercontent.com/pentoo/pentoo-livecd/master/livecd/amd64/kernel/config-5.1.0
+https://raw.githubusercontent.com/pentoo/pentoo-livecd/master/livecd/amd64/kernel/config-5.5.5
 
 Debian Buster:
-https://packages.debian.org/buster/amd64/linux-image-4.19.0-6-amd64/download
+https://packages.debian.org/buster/amd64/linux-image-4.19.0-8-amd64/download
 
 AOSP (the instruction for kernel config generation):
 https://source.android.com/devices/tech/debug/kasan-kcov
