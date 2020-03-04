@@ -215,6 +215,7 @@ def construct_checklist(checklist, arch):
     if debug_mode or arch == 'ARM':
         checklist.append(OptCheck('VMSPLIT_3G',                  'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('CPU_SW_DOMAIN_PAN',           'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',     'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'ARM64' or arch == 'ARM':
         checklist.append(OptCheck('REFCOUNT_FULL',               'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('HARDEN_BRANCH_PREDICTOR',     'y', 'defconfig', 'self_protection'))
@@ -289,8 +290,6 @@ def construct_checklist(checklist, arch):
                              iommu_support_is_set))
     if debug_mode or arch == 'X86_32':
         checklist.append(OptCheck('PAGE_TABLE_ISOLATION',               'y', 'my', 'self_protection'))
-    if debug_mode or arch == 'ARM':
-        checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',            'y', 'my', 'self_protection'))
 
     if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
         checklist.append(OptCheck('SECURITY',                               'y', 'defconfig', 'security_policy')) # and choose your favourite LSM
