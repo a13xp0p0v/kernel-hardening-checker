@@ -186,6 +186,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OR(OptCheck('STRICT_MODULE_RWX',        'y', 'defconfig', 'self_protection'), \
                         OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'defconfig', 'self_protection'), \
                         modules_not_set)) # DEBUG_SET_MODULE_RONX was before v4.11
+    checklist.append(OptCheck('GCC_PLUGINS',                 'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('MICROCODE',                   'y', 'defconfig', 'self_protection')) # is needed for mitigating CPU bugs
         checklist.append(OptCheck('RETPOLINE',                   'y', 'defconfig', 'self_protection'))
@@ -225,7 +226,6 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('SLAB_FREELIST_RANDOM',             'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('SHUFFLE_PAGE_ALLOCATOR',           'y', 'kspp', 'self_protection'))
     checklist.append(OptCheck('FORTIFY_SOURCE',                   'y', 'kspp', 'self_protection'))
-    checklist.append(OptCheck('GCC_PLUGINS',                      'y', 'kspp', 'self_protection'))
     randstruct_is_set = OptCheck('GCC_PLUGIN_RANDSTRUCT',         'y', 'kspp', 'self_protection')
     checklist.append(randstruct_is_set)
     checklist.append(OptCheck('GCC_PLUGIN_LATENT_ENTROPY',        'y', 'kspp', 'self_protection'))
