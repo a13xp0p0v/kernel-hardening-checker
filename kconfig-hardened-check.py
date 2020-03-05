@@ -232,6 +232,8 @@ def construct_checklist(checklist, arch):
                         OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'defconfig', 'self_protection'), \
                         modules_not_set)) # DEBUG_SET_MODULE_RONX was before v4.11
     checklist.append(OptCheck('GCC_PLUGINS',                 'y', 'defconfig', 'self_protection'))
+    checklist.append(OR(OptCheck('REFCOUNT_FULL',               'y', 'defconfig', 'self_protection'), \
+                        VerCheck((5, 5)))) # REFCOUNT_FULL is enabled by default since v5.5
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('MICROCODE',                   'y', 'defconfig', 'self_protection')) # is needed for mitigating CPU bugs
         checklist.append(OptCheck('RETPOLINE',                   'y', 'defconfig', 'self_protection'))
@@ -262,7 +264,6 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('CPU_SW_DOMAIN_PAN',           'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',     'y', 'defconfig', 'self_protection'))
     if debug_mode or arch == 'ARM64' or arch == 'ARM':
-        checklist.append(OptCheck('REFCOUNT_FULL',               'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('HARDEN_BRANCH_PREDICTOR',     'y', 'defconfig', 'self_protection'))
 
     checklist.append(OptCheck('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'))
@@ -293,7 +294,6 @@ def construct_checklist(checklist, arch):
                         modules_not_set)) # refers to LOCK_DOWN_KERNEL
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '65536', 'kspp', 'self_protection'))
-        checklist.append(OptCheck('REFCOUNT_FULL',                    'y', 'kspp', 'self_protection'))
     if debug_mode or arch == 'X86_32':
         checklist.append(OptCheck('HIGHMEM64G',                       'y', 'kspp', 'self_protection'))
         checklist.append(OptCheck('X86_PAE',                          'y', 'kspp', 'self_protection'))
