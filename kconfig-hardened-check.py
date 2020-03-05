@@ -417,17 +417,15 @@ def print_checklist(checklist, with_results):
     print()
 
 
-def get_option_state(options, name):
-    return options.get(name, None)
-
-
 def perform_checks(checklist, parsed_options):
     for opt in checklist:
         if hasattr(opt, 'opts'):
+            # prepare ComplexOptCheck
             for o in opt.opts:
-                o.state = get_option_state(parsed_options, o.name)
+                o.state = parsed_options.get(o.name, None)
         else:
-            opt.state = get_option_state(parsed_options, opt.name)
+            # prepare OptCheck
+            opt.state = parsed_options.get(opt.name, None)
         opt.check()
 
 
