@@ -18,6 +18,8 @@
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
 #    page_poison=1 (if enabled)
+#    init_on_alloc=1
+#    init_on_free=1
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
@@ -292,6 +294,18 @@ def construct_checklist(checklist, arch):
                         modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG_FORCE',              'y', 'kspp', 'self_protection'), \
                         modules_not_set)) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OR(OptCheck('INIT_STACK_ALL',                'y', 'kspp', 'self_protection'), \
+                      OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y', 'kspp', 'self_protection')))
+    checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',         'y', 'kspp', 'self_protection'))
+    checklist.append(OR(OptCheck('INIT_ON_FREE_DEFAULT_ON',       'y', 'kspp', 'self_protection'), \
+                        OptCheck('PAGE_POISONING',                'y', 'kspp', 'self_protection'))) # before v5.3
+    if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+        stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',       'y', 'kspp', 'self_protection')
+        checklist.append(stackleak_is_set)
+        checklist.append(AND(OptCheck('STACKLEAK_METRICS',         'is not set', 'clipos', 'self_protection'), \
+                             stackleak_is_set))
+        checklist.append(AND(OptCheck('STACKLEAK_RUNTIME_DISABLE', 'is not set', 'clipos', 'self_protection'), \
+                             stackleak_is_set))
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '65536', 'kspp', 'self_protection'))
     if debug_mode or arch == 'X86_32':
@@ -303,24 +317,12 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('SYN_COOKIES',                      'y', 'kspp', 'self_protection')) # another reason?
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '32768', 'kspp', 'self_protection'))
 
-    checklist.append(OR(OptCheck('INIT_STACK_ALL',                     'y', 'clipos', 'self_protection'), \
-                        OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL',    'y', 'kspp', 'self_protection')))
-    checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',              'y', 'clipos', 'self_protection'))
-    checklist.append(OR(OptCheck('INIT_ON_FREE_DEFAULT_ON',            'y', 'clipos', 'self_protection'), \
-                        OptCheck('PAGE_POISONING',                     'y', 'kspp', 'self_protection')))
     checklist.append(OptCheck('SECURITY_DMESG_RESTRICT',               'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('DEBUG_VIRTUAL',                         'y', 'clipos', 'self_protection'))
     checklist.append(OptCheck('STATIC_USERMODEHELPER',                 'y', 'clipos', 'self_protection')) # needs userspace support (systemd)
     checklist.append(OptCheck('SLAB_MERGE_DEFAULT',                    'is not set', 'clipos', 'self_protection')) # slab_nomerge
     checklist.append(AND(OptCheck('GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set', 'clipos', 'self_protection'), \
                          randstruct_is_set))
-    if debug_mode or arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
-        stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',                'y', 'clipos', 'self_protection')
-        checklist.append(stackleak_is_set)
-        checklist.append(AND(OptCheck('STACKLEAK_METRICS',                 'is not set', 'clipos', 'self_protection'), \
-                             stackleak_is_set))
-        checklist.append(AND(OptCheck('STACKLEAK_RUNTIME_DISABLE',         'is not set', 'clipos', 'self_protection'), \
-                             stackleak_is_set))
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('RANDOM_TRUST_CPU',                      'is not set', 'clipos', 'self_protection'))
         checklist.append(AND(OptCheck('INTEL_IOMMU_SVM',                   'y', 'clipos', 'self_protection'), \
