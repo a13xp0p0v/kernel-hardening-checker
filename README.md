@@ -51,6 +51,9 @@ optional arguments:
 $ ./kconfig-hardened-check.py -c config_files/distros/ubuntu-bionic-generic.config
 [+] Trying to detect architecture in "config_files/distros/ubuntu-bionic-generic.config"...
 [+] Detected architecture: X86_64
+[+] Trying to detect kernel version in "config_files/distros/ubuntu-bionic-generic.config"...
+[+] Found version line: "# Linux/x86 5.3.0-28-generic Kernel Configuration"
+[+] Detected kernel version: 5.3
 [+] Checking "config_files/distros/ubuntu-bionic-generic.config" against hardening preferences...
                  option name                 | desired val | decision |       reason       |   check result
 =========================================================================================================================
@@ -59,6 +62,8 @@ CONFIG_STRICT_KERNEL_RWX                     |      y      |defconfig |  self_pr
 CONFIG_STACKPROTECTOR_STRONG                 |      y      |defconfig |  self_protection   |   OK
 CONFIG_SLUB_DEBUG                            |      y      |defconfig |  self_protection   |   OK
 CONFIG_STRICT_MODULE_RWX                     |      y      |defconfig |  self_protection   |   OK
+CONFIG_GCC_PLUGINS                           |      y      |defconfig |  self_protection   |   FAIL: not found
+CONFIG_REFCOUNT_FULL                         |      y      |defconfig |  self_protection   |   FAIL: "is not set"
 CONFIG_MICROCODE                             |      y      |defconfig |  self_protection   |   OK
 CONFIG_RETPOLINE                             |      y      |defconfig |  self_protection   |   OK
 CONFIG_X86_SMAP                              |      y      |defconfig |  self_protection   |   OK
@@ -79,7 +84,6 @@ CONFIG_SLAB_FREELIST_HARDENED                |      y      |   kspp   |  self_pr
 CONFIG_SLAB_FREELIST_RANDOM                  |      y      |   kspp   |  self_protection   |   OK
 CONFIG_SHUFFLE_PAGE_ALLOCATOR                |      y      |   kspp   |  self_protection   |   OK
 CONFIG_FORTIFY_SOURCE                        |      y      |   kspp   |  self_protection   |   OK
-CONFIG_GCC_PLUGINS                           |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_GCC_PLUGIN_RANDSTRUCT                 |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_GCC_PLUGIN_LATENT_ENTROPY             |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_DEBUG_LIST                            |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
@@ -93,7 +97,6 @@ CONFIG_MODULE_SIG_ALL                        |      y      |   kspp   |  self_pr
 CONFIG_MODULE_SIG_SHA512                     |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_FORCE                      |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_DEFAULT_MMAP_MIN_ADDR                 |    65536    |   kspp   |  self_protection   |   OK
-CONFIG_REFCOUNT_FULL                         |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_INIT_STACK_ALL                        |      y      |  clipos  |  self_protection   |   FAIL: not found
 CONFIG_INIT_ON_ALLOC_DEFAULT_ON              |      y      |  clipos  |  self_protection   |   OK
 CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |  clipos  |  self_protection   |   OK: CONFIG_PAGE_POISONING "y"
@@ -112,13 +115,13 @@ CONFIG_SLUB_DEBUG_ON                         |      y      |    my    |  self_pr
 CONFIG_RESET_ATTACK_MITIGATION               |      y      |    my    |  self_protection   |   OK
 CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_protection   |   FAIL: "m"
 CONFIG_SECURITY                              |      y      |defconfig |  security_policy   |   OK
-CONFIG_SECURITY_WRITABLE_HOOKS               | is not set  |defconfig |  security_policy   |   OK: not found
 CONFIG_SECURITY_YAMA                         |      y      |   kspp   |  security_policy   |   OK
 CONFIG_SECURITY_LOADPIN                      |      y      |    my    |  security_policy   |   FAIL: "is not set"
 CONFIG_SECURITY_LOCKDOWN_LSM                 |      y      |    my    |  security_policy   |   FAIL: not found
 CONFIG_SECURITY_LOCKDOWN_LSM_EARLY           |      y      |    my    |  security_policy   |   FAIL: not found
 CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|      y      |    my    |  security_policy   |   FAIL: not found
 CONFIG_SECURITY_SAFESETID                    |      y      |    my    |  security_policy   |   OK
+CONFIG_SECURITY_WRITABLE_HOOKS               | is not set  |    my    |  security_policy   |   OK: not found
 CONFIG_SECCOMP                               |      y      |defconfig | cut_attack_surface |   OK
 CONFIG_SECCOMP_FILTER                        |      y      |defconfig | cut_attack_surface |   OK
 CONFIG_STRICT_DEVMEM                         |      y      |defconfig | cut_attack_surface |   OK
