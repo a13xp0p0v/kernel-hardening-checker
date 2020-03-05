@@ -156,7 +156,6 @@ def detect_arch(fname):
     with open(fname, 'r') as f:
         arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]*=y")
         arch = None
-        msg = None
         if not json_mode:
             print('[+] Trying to detect architecture in "{}"...'.format(fname))
         for line in f.readlines():
@@ -171,6 +170,27 @@ def detect_arch(fname):
             return None, 'failed to detect architecture'
         else:
             return arch, 'OK'
+
+
+def detect_version(fname):
+    with open(fname, 'r') as f:
+        ver_pattern = re.compile("# Linux/.* Kernel Configuration")
+        if not json_mode:
+            print('[+] Trying to detect kernel version in "{}"...'.format(fname))
+        for line in f.readlines():
+            if ver_pattern.match(line):
+                line = line.strip()
+                if not json_mode:
+                    print('[+] Found version line: "{}"'.format(line))
+                parts = line.split()
+                ver_str = parts[2]
+                ver_numbers = ver_str.split('.')
+                if len(ver_numbers) < 3 or not ver_numbers[0].isdigit() or not ver_numbers[1].isdigit():
+                    msg = 'failed to parse the version "' + ver_str + '"'
+                    return None, msg
+                else:
+                    return (int(ver_numbers[0]), int(ver_numbers[1])), None
+        return None, 'no kernel version detected'
 
 
 def construct_checklist(checklist, arch):
@@ -493,6 +513,12 @@ if __name__ == '__main__':
             sys.exit('[!] ERROR: {}'.format(msg))
         elif not json_mode:
             print('[+] Detected architecture: {}'.format(arch))
+
+        kernel_version, msg = detect_version(args.config)
+        if not kernel_version:
+            sys.exit('[!] ERROR: {}'.format(msg))
+        elif not json_mode:
+            print('[+] Detected kernel version: {}.{}'.format(kernel_version[0], kernel_version[1]))
 
         construct_checklist(config_checklist, arch)
         check_config_file(config_checklist, args.config)
