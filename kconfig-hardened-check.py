@@ -55,6 +55,8 @@ debug_mode = False  # set it to True to print the unknown options from the confi
 json_mode = False   # if True, print results in JSON format
 
 supported_archs = [ 'X86_64', 'X86_32', 'ARM64', 'ARM' ]
+config_checklist = []
+kernel_version = None
 
 
 class OptCheck:
@@ -84,6 +86,26 @@ class OptCheck:
 
     def __repr__(self):
         return '{} = {}'.format(self.name, self.state)
+
+
+class VerCheck:
+    def __init__(self, ver_expected):
+        self.ver_expected = ver_expected
+        self.result = None
+
+    def check(self):
+        if kernel_version[0] > self.ver_expected[0]:
+            self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+            return True, self.result
+        if kernel_version[0] < self.ver_expected[0]:
+            self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+            return False, self.result
+        if kernel_version[1] >= self.ver_expected[1]:
+            self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+            return True, self.result
+        else:
+            self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+            return False, self.result
 
 
 class ComplexOptCheck:
@@ -125,7 +147,7 @@ class OR(ComplexOptCheck):
         for i, opt in enumerate(self.opts):
             ret, msg = opt.check()
             if ret:
-                if i == 0:
+                if i == 0 or not hasattr(opt, 'name'):
                     self.result = opt.result
                 else:
                     self.result = 'OK: CONFIG_{} "{}"'.format(opt.name, opt.expected)
@@ -146,7 +168,10 @@ class AND(ComplexOptCheck):
                 self.result = opt.result
                 return ret, self.result
             elif not ret:
-                self.result = 'FAIL: CONFIG_{} is needed'.format(opt.name)
+                if hasattr(opt, 'name'):
+                    self.result = 'FAIL: CONFIG_{} is needed'.format(opt.name)
+                else:
+                    self.result = opt.result
                 return False, self.result
 
         sys.exit('[!] ERROR: invalid AND check')
@@ -442,9 +467,12 @@ def perform_checks(checklist, parsed_options):
         if hasattr(opt, 'opts'):
             # prepare ComplexOptCheck
             for o in opt.opts:
-                o.state = parsed_options.get(o.name, None)
+                if hasattr(o, 'name'):
+                    o.state = parsed_options.get(o.name, None)
         else:
-            # prepare OptCheck
+            # prepare simple OptCheck
+            if not hasattr(opt, 'name'):
+                sys.exit('[!] ERROR: bad OptCheck {}'.format(vars(opt)))
             opt.state = parsed_options.get(opt.name, None)
         opt.check()
 
@@ -487,8 +515,6 @@ def check_config_file(checklist, fname):
 
 
 if __name__ == '__main__':
-    config_checklist = []
-
     parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print hardening preferences for selected architecture')
