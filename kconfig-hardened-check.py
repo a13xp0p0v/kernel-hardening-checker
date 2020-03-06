@@ -86,9 +86,6 @@ class OptCheck:
         else:
             return False, self.result
 
-    def __repr__(self):
-        return '{} = {}'.format(self.name, self.state)
-
 
 class VerCheck:
     def __init__(self, ver_expected):
