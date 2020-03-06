@@ -326,6 +326,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('SLAB_MERGE_DEFAULT',                    'is not set', 'clipos', 'self_protection')) # slab_nomerge
     checklist.append(AND(OptCheck('GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set', 'clipos', 'self_protection'), \
                          randstruct_is_set))
+    checklist.append(OptCheck('CONFIG_RANDOM_TRUST_BOOTLOADER',        'is not set', 'clipos', 'self_protection'))
     if debug_mode or arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('RANDOM_TRUST_CPU',                      'is not set', 'clipos', 'self_protection'))
         checklist.append(AND(OptCheck('INTEL_IOMMU_SVM',                   'y', 'clipos', 'self_protection'), \
