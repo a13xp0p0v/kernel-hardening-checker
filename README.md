@@ -41,9 +41,8 @@ optional arguments:
                         print hardening preferences for selected architecture
   -c CONFIG, --config CONFIG
                         check the config_file against these preferences
-  --debug               enable internal debug mode
+  --debug               enable internal debug mode (not for production use)
   --json                print results in JSON format
-
 ```
 
 ### Script output for `Ubuntu 18.04 (Bionic Beaver with HWE)` kernel config
@@ -54,7 +53,8 @@ $ ./kconfig-hardened-check.py -c config_files/distros/ubuntu-bionic-generic.conf
 [+] Trying to detect kernel version in "config_files/distros/ubuntu-bionic-generic.config"...
 [+] Found version line: "# Linux/x86 5.3.0-28-generic Kernel Configuration"
 [+] Detected kernel version: 5.3
-[+] Checking "config_files/distros/ubuntu-bionic-generic.config" against hardening preferences...
+[+] Checking "config_files/distros/ubuntu-bionic-generic.config" against X86_64 hardening preferences...
+=========================================================================================================================
                  option name                 | desired val | decision |       reason       |   check result
 =========================================================================================================================
 CONFIG_BUG                                   |      y      |defconfig |  self_protection   |   OK
@@ -96,18 +96,18 @@ CONFIG_MODULE_SIG                            |      y      |   kspp   |  self_pr
 CONFIG_MODULE_SIG_ALL                        |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_SHA512                     |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_FORCE                      |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
+CONFIG_INIT_STACK_ALL                        |      y      |   kspp   |  self_protection   |   FAIL: not found
+CONFIG_INIT_ON_ALLOC_DEFAULT_ON              |      y      |   kspp   |  self_protection   |   OK
+CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |   kspp   |  self_protection   |   OK: CONFIG_PAGE_POISONING "y"
+CONFIG_GCC_PLUGIN_STACKLEAK                  |      y      |   kspp   |  self_protection   |   FAIL: not found
+CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
+CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
 CONFIG_DEFAULT_MMAP_MIN_ADDR                 |    65536    |   kspp   |  self_protection   |   OK
-CONFIG_INIT_STACK_ALL                        |      y      |  clipos  |  self_protection   |   FAIL: not found
-CONFIG_INIT_ON_ALLOC_DEFAULT_ON              |      y      |  clipos  |  self_protection   |   OK
-CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |  clipos  |  self_protection   |   OK: CONFIG_PAGE_POISONING "y"
 CONFIG_SECURITY_DMESG_RESTRICT               |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_DEBUG_VIRTUAL                         |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_STATIC_USERMODEHELPER                 |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_SLAB_MERGE_DEFAULT                    | is not set  |  clipos  |  self_protection   |   FAIL: "y"
 CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT is needed
-CONFIG_GCC_PLUGIN_STACKLEAK                  |      y      |  clipos  |  self_protection   |   FAIL: not found
-CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
-CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
 CONFIG_RANDOM_TRUST_CPU                      | is not set  |  clipos  |  self_protection   |   FAIL: "y"
 CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
 CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
