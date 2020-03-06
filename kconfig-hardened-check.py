@@ -53,8 +53,14 @@ from collections import OrderedDict
 import re
 import json
 
-debug_mode = False  # set it to True to print the unknown options from the config
-json_mode = False   # if True, print results in JSON format
+# debug_mode enables:
+#    - reporting about unknown kernel options in the config,
+#    - showing all checks from all supported platforms,
+#    - verbose printing of ComplexOptChecks (OR, AND).
+debug_mode = False
+
+# json_mode is for printing results in JSON format
+json_mode = False
 
 supported_archs = [ 'X86_64', 'X86_32', 'ARM64', 'ARM' ]
 config_checklist = []
@@ -433,6 +439,13 @@ def construct_checklist(checklist, arch):
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
+def print_opt(opt, with_results):
+    print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
+    if with_results:
+        print('|   {}'.format(opt.result), end='')
+    print()
+
+
 def print_checklist(checklist, with_results):
     if json_mode:
         opts = []
@@ -455,11 +468,26 @@ def print_checklist(checklist, with_results):
     print()
     print('=' * sep_line_len)
 
+    # table contents
     for opt in checklist:
-        print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
-        if with_results:
-            print('|   {}'.format(opt.result), end='')
-        print()
+        if debug_mode and hasattr(opt, 'opts'):
+            print('    {:87}'.format('<<< ' + opt.__class__.__name__ + ' >>>'), end='')
+            if with_results:
+                print('|   {}'.format(opt.result), end='')
+            print()
+            for o in opt.opts:
+                if hasattr(o, 'ver_expected'):
+                    ver_req = 'kernel version >= ' + str(o.ver_expected[0]) + '.' + str(o.ver_expected[1])
+                    print('{:<91}'.format(ver_req), end='')
+                    if with_results:
+                        print('|   {}'.format(o.result), end='')
+                    print()
+                else:
+                    print_opt(o, with_results)
+        else:
+            print_opt(opt, with_results)
+        if debug_mode:
+            print('-' * sep_line_len)
     print()
 
 
@@ -485,7 +513,11 @@ def check_config_file(checklist, fname):
         opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
 
         if not json_mode:
-            print('[+] Checking "{}" against hardening preferences...'.format(fname))
+            if not debug_mode:
+                which = arch
+            else:
+                which = 'ALL (debug)'
+            print('[+] Checking "{}" against {} hardening preferences...'.format(fname, which))
         for line in f.readlines():
             line = line.strip()
             option = None
@@ -510,7 +542,7 @@ def check_config_file(checklist, fname):
             known_options = [opt.name for opt in checklist]
             for option, value in parsed_options.items():
                 if option not in known_options:
-                    print("DEBUG: dunno about option {} ({})".format(option, value))
+                    print('DEBUG: dunno about option {} ({})'.format(option, value))
 
         print_checklist(checklist, True)
 
@@ -522,13 +554,14 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--config',
                         help='check the config_file against these preferences')
     parser.add_argument('--debug', action='store_true',
-                        help='enable internal debug mode')
+                        help='enable internal debug mode (not for production use)')
     parser.add_argument('--json', action='store_true',
                         help='print results in JSON format')
     args = parser.parse_args()
 
     if args.debug:
         debug_mode = True
+        print('[!] WARNING: debug mode is enabled')
     if args.json:
         json_mode = True
     if debug_mode and json_mode:
@@ -561,7 +594,11 @@ if __name__ == '__main__':
         arch = args.print
         construct_checklist(config_checklist, arch)
         if not json_mode:
-            print('[+] Printing kernel hardening preferences for {}...'.format(arch))
+            if not debug_mode:
+                which = arch
+            else:
+                which = 'ALL architectures (debug)'
+            print('[+] Printing kernel hardening preferences for {}...'.format(which))
         print_checklist(config_checklist, False)
         sys.exit(0)
 
