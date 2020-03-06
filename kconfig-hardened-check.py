@@ -444,14 +444,15 @@ def print_checklist(checklist, with_results):
         print(json.dumps(opts))
         return
 
-    # header
-    print('{:^45}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'), end='')
+    # table header
     sep_line_len = 91
     if with_results:
-        print('|   {}'.format('check result'), end='')
         sep_line_len += 30
+    print('=' * sep_line_len)
+    print('{:^45}|{:^13}|{:^10}|{:^20}'.format('option name', 'desired val', 'decision', 'reason'), end='')
+    if with_results:
+        print('|   {}'.format('check result'), end='')
     print()
-
     print('=' * sep_line_len)
 
     for opt in checklist:
