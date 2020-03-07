@@ -545,7 +545,14 @@ def check_config_file(checklist, fname):
         perform_checks(checklist, parsed_options)
 
         if debug_mode:
-            known_options = [opt.name for opt in checklist]
+            known_options = []
+            for opt in checklist:
+                if hasattr(opt, 'opts'):
+                    for o in opt.opts:
+                        if hasattr(o, 'name'):
+                            known_options.append(o.name)
+                else:
+                    known_options.append(opt.name)
             for option, value in parsed_options.items():
                 if option not in known_options:
                     print('DEBUG: dunno about option {} ({})'.format(option, value))
