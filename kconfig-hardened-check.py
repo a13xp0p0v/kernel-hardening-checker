@@ -434,6 +434,7 @@ def construct_checklist(checklist, arch):
     if arch == 'X86_32':
         checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'my', 'cut_attack_surface'))
 
+    checklist.append(OptCheck('INTEGRITY',       'y', 'defconfig', 'userspace_hardening'))
     if arch == 'ARM64':
         checklist.append(OptCheck('ARM64_PTR_AUTH',       'y', 'defconfig', 'userspace_hardening'))
     if arch == 'X86_64' or arch == 'ARM64':
