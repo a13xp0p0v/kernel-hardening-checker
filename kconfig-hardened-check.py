@@ -140,7 +140,7 @@ class ComplexOptCheck:
 
 
 class OR(ComplexOptCheck):
-    # self.opts[0] is the option which this OR-check is about.
+    # self.opts[0] is the option that this OR-check is about.
     # Use case:
     #     OR(<X_is_hardened>, <X_is_disabled>)
     #     OR(<X_is_hardened>, <X_is_hardened_old>)
@@ -162,7 +162,7 @@ class OR(ComplexOptCheck):
 
 
 class AND(ComplexOptCheck):
-    # self.opts[0] is the option which this AND-check is about.
+    # self.opts[0] is the option that this AND-check is about.
     # Use case: AND(<suboption>, <main_option>)
     # Suboption is not checked if checking of the main_option is failed.
 
