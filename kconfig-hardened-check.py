@@ -422,7 +422,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('KEXEC_FILE',               'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL (permissive)
     checklist.append(OptCheck('USER_NS',                  'is not set', 'clipos', 'cut_attack_surface')) # user.max_user_namespaces=0
     checklist.append(AND(OptCheck('LDISC_AUTOLOAD',           'is not set', 'clipos', 'cut_attack_surface'), \
-                         VerCheck((5, 1)))) # LDISC_AUTOLOAD can be disabled since v5.1
+                         VerCheck((4, 14)))) # LDISC_AUTOLOAD can be disabled since v4.14
 
     checklist.append(OptCheck('MMIOTRACE',            'is not set', 'my', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL (permissive)
     checklist.append(OptCheck('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'))
