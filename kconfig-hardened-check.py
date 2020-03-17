@@ -14,7 +14,6 @@
 #    slub_debug=FZP
 #    slab_nomerge
 #    kernel.kptr_restrict=1
-#    lockdown=1 (is it changed?)
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
 #    page_poison=1 (if enabled)
@@ -347,13 +346,13 @@ def construct_checklist(checklist, arch):
     if arch == 'ARM':
         checklist.append(OptCheck('SECURITY',                               'y', 'kspp', 'security_policy')) # and choose your favourite LSM
     checklist.append(OptCheck('SECURITY_YAMA',                          'y', 'kspp', 'security_policy'))
+    checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM',                  'y', 'clipos', 'security_policy'))
+    checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM_EARLY',            'y', 'clipos', 'security_policy'))
+    checklist.append(OptCheck('LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y', 'clipos', 'security_policy'))
     loadpin_is_set = OptCheck('SECURITY_LOADPIN',                       'y', 'my', 'security_policy') # needs userspace support
     checklist.append(loadpin_is_set)
     checklist.append(AND(OptCheck('SECURITY_LOADPIN_ENFORCE',           'y', 'my', 'security_policy'), \
                          loadpin_is_set))
-    checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM',                  'y', 'my', 'security_policy'))
-    checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM_EARLY',            'y', 'my', 'security_policy'))
-    checklist.append(OptCheck('LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y', 'my', 'security_policy'))
     checklist.append(OptCheck('SECURITY_SAFESETID',                     'y', 'my', 'security_policy'))
     checklist.append(OptCheck('SECURITY_WRITABLE_HOOKS',                'is not set', 'my', 'security_policy'))
 
