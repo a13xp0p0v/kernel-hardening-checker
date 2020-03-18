@@ -238,14 +238,14 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('GCC_PLUGINS',                 'y', 'defconfig', 'self_protection'))
     checklist.append(OR(OptCheck('REFCOUNT_FULL',               'y', 'defconfig', 'self_protection'), \
                         VerCheck((5, 5)))) # REFCOUNT_FULL is enabled by default since v5.5
+    iommu_support_is_set = OptCheck('IOMMU_SUPPORT',         'y', 'defconfig', 'self_protection') # is needed for mitigating DMA attacks
+    checklist.append(iommu_support_is_set)
     if arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('MICROCODE',                   'y', 'defconfig', 'self_protection')) # is needed for mitigating CPU bugs
         checklist.append(OptCheck('RETPOLINE',                   'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('X86_SMAP',                    'y', 'defconfig', 'self_protection'))
         checklist.append(OR(OptCheck('X86_UMIP',                 'y', 'defconfig', 'self_protection'), \
                             OptCheck('X86_INTEL_UMIP',           'y', 'defconfig', 'self_protection')))
-        iommu_support_is_set = OptCheck('IOMMU_SUPPORT',         'y', 'defconfig', 'self_protection') # is needed for mitigating DMA attacks
-        checklist.append(iommu_support_is_set)
         checklist.append(OptCheck('SYN_COOKIES',                 'y', 'defconfig', 'self_protection')) # another reason?
     if arch == 'X86_64':
         checklist.append(OptCheck('PAGE_TABLE_ISOLATION',        'y', 'defconfig', 'self_protection'))
