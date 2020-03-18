@@ -346,6 +346,8 @@ def construct_checklist(checklist, arch):
     if arch == 'ARM':
         checklist.append(OptCheck('SECURITY',                               'y', 'kspp', 'security_policy')) # and choose your favourite LSM
     checklist.append(OptCheck('SECURITY_YAMA',                          'y', 'kspp', 'security_policy'))
+    checklist.append(OR(OptCheck('SECURITY_WRITABLE_HOOKS',             'is not set', 'my', 'security_policy'), \
+                        OptCheck('SECURITY_SELINUX_DISABLE',            'is not set', 'kspp', 'security_policy')))
     checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM',                  'y', 'clipos', 'security_policy'))
     checklist.append(OptCheck('SECURITY_LOCKDOWN_LSM_EARLY',            'y', 'clipos', 'security_policy'))
     checklist.append(OptCheck('LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y', 'clipos', 'security_policy'))
@@ -354,7 +356,6 @@ def construct_checklist(checklist, arch):
     checklist.append(AND(OptCheck('SECURITY_LOADPIN_ENFORCE',           'y', 'my', 'security_policy'), \
                          loadpin_is_set))
     checklist.append(OptCheck('SECURITY_SAFESETID',                     'y', 'my', 'security_policy'))
-    checklist.append(OptCheck('SECURITY_WRITABLE_HOOKS',                'is not set', 'my', 'security_policy'))
 
     checklist.append(OptCheck('SECCOMP',              'y', 'defconfig', 'cut_attack_surface'))
     checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'defconfig', 'cut_attack_surface'))
