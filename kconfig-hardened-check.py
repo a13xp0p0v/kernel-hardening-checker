@@ -236,7 +236,7 @@ def construct_checklist(checklist, arch):
                         OptCheck('DEBUG_SET_MODULE_RONX',    'y', 'defconfig', 'self_protection'), \
                         modules_not_set)) # DEBUG_SET_MODULE_RONX was before v4.11
     checklist.append(OptCheck('GCC_PLUGINS',                 'y', 'defconfig', 'self_protection'))
-    checklist.append(OR(OptCheck('REFCOUNT_FULL',               'y', 'defconfig', 'self_protection'), \
+    checklist.append(OR(OptCheck('REFCOUNT_FULL',            'y', 'defconfig', 'self_protection'), \
                         VerCheck((5, 5)))) # REFCOUNT_FULL is enabled by default since v5.5
     iommu_support_is_set = OptCheck('IOMMU_SUPPORT',         'y', 'defconfig', 'self_protection') # is needed for mitigating DMA attacks
     checklist.append(iommu_support_is_set)
