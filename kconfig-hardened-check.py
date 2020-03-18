@@ -331,6 +331,9 @@ def construct_checklist(checklist, arch):
                              iommu_support_is_set))
         checklist.append(AND(OptCheck('INTEL_IOMMU_DEFAULT_ON',            'y', 'clipos', 'self_protection'), \
                              iommu_support_is_set))
+    if arch == 'X86_32':
+        checklist.append(AND(OptCheck('INTEL_IOMMU',                       'y', 'clipos', 'self_protection'), \
+                             iommu_support_is_set))
 
     checklist.append(OptCheck('SLUB_DEBUG_ON',                      'y', 'my', 'self_protection'))
     checklist.append(OptCheck('RESET_ATTACK_MITIGATION',            'y', 'my', 'self_protection')) # needs userspace support (systemd)
