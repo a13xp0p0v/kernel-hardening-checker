@@ -373,7 +373,7 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
     checklist.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'kspp', 'cut_attack_surface'))
-    checklist.append(OptCheck('DEVKMEM',              'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('DEVKMEM',              'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('COMPAT_VDSO',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
@@ -393,7 +393,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('BINFMT_AOUT',             'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('KPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('UPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'))
-    checklist.append(OptCheck('GENERIC_TRACER',          'is not set', 'grsecurity', 'cut_attack_surface'))
+    checklist.append(OptCheck('GENERIC_TRACER',          'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('PROC_VMCORE',             'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('PROC_PAGE_MONITOR',       'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('USELIB',                  'is not set', 'grsecurity', 'cut_attack_surface'))
@@ -406,8 +406,8 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('NOTIFIER_ERROR_INJECTION','is not set', 'grsecurity', 'cut_attack_surface'))
 
     checklist.append(OptCheck('ACPI_TABLE_UPGRADE',   'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
-    checklist.append(OptCheck('ACPI_APEI_EINJ',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
-    checklist.append(OptCheck('PROFILING',            'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OptCheck('X86_IOPL_IOPERM',      'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
+    checklist.append(OptCheck('EFI_TEST',             'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('BPF_SYSCALL',          'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
 
@@ -419,6 +419,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('MAGIC_SYSRQ',              'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('KEXEC_FILE',               'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCKDOWN (permissive)
     checklist.append(OptCheck('USER_NS',                  'is not set', 'clipos', 'cut_attack_surface')) # user.max_user_namespaces=0
+    checklist.append(OptCheck('X86_MSR',                  'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(AND(OptCheck('LDISC_AUTOLOAD',           'is not set', 'clipos', 'cut_attack_surface'), \
                          VerCheck((5, 1)))) # LDISC_AUTOLOAD can be disabled since v5.1
 
@@ -426,7 +427,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('IP_DCCP',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('IP_SCTP',              'is not set', 'my', 'cut_attack_surface'))
-    checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('VIDEO_VIVID',          'is not set', 'my', 'cut_attack_surface'))
 
