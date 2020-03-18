@@ -224,7 +224,7 @@ def detect_version(fname):
 
 def construct_checklist(checklist, arch):
     modules_not_set = OptCheck('MODULES',     'is not set', 'kspp', 'cut_attack_surface')
-    devmem_not_set = OptCheck('DEVMEM',       'is not set', 'kspp', 'cut_attack_surface') # refers to LOCK_DOWN_KERNEL
+    devmem_not_set = OptCheck('DEVMEM',       'is not set', 'kspp', 'cut_attack_surface') # refers to LOCKDOWN
 
     checklist.append(OptCheck('BUG',                         'y', 'defconfig', 'self_protection'))
     checklist.append(OR(OptCheck('STRICT_KERNEL_RWX',        'y', 'defconfig', 'self_protection'), \
@@ -295,7 +295,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OR(OptCheck('MODULE_SIG_SHA512',             'y', 'kspp', 'self_protection'), \
                         modules_not_set))
     checklist.append(OR(OptCheck('MODULE_SIG_FORCE',              'y', 'kspp', 'self_protection'), \
-                        modules_not_set)) # refers to LOCK_DOWN_KERNEL
+                        modules_not_set)) # refers to LOCKDOWN
     checklist.append(OR(OptCheck('INIT_STACK_ALL',                'y', 'kspp', 'self_protection'), \
                       OptCheck('GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y', 'kspp', 'self_protection')))
     checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',         'y', 'kspp', 'self_protection'))
@@ -360,27 +360,27 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'defconfig', 'cut_attack_surface'))
     if arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
         checklist.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'defconfig', 'cut_attack_surface'), \
-                            devmem_not_set)) # refers to LOCK_DOWN_KERNEL
+                            devmem_not_set)) # refers to LOCKDOWN
 
     checklist.append(modules_not_set)
     checklist.append(devmem_not_set)
     checklist.append(OR(OptCheck('IO_STRICT_DEVMEM',  'y', 'kspp', 'cut_attack_surface'), \
-                        devmem_not_set)) # refers to LOCK_DOWN_KERNEL
+                        devmem_not_set)) # refers to LOCKDOWN
     if arch == 'ARM':
         checklist.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'), \
-                            devmem_not_set)) # refers to LOCK_DOWN_KERNEL
-    checklist.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+                            devmem_not_set)) # refers to LOCKDOWN
     if arch == 'X86_64':
         checklist.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
+    checklist.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('DEVKMEM',              'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('COMPAT_VDSO',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('BINFMT_MISC',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('INET_DIAG',            'is not set', 'kspp', 'cut_attack_surface'))
-    checklist.append(OptCheck('KEXEC',                'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
-    checklist.append(OptCheck('PROC_KCORE',           'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OptCheck('KEXEC',                'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCKDOWN
+    checklist.append(OptCheck('PROC_KCORE',           'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('LEGACY_PTYS',          'is not set', 'kspp', 'cut_attack_surface'))
-    checklist.append(OptCheck('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OptCheck('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('IA32_EMULATION',       'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('X86_X32',              'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'))
@@ -391,7 +391,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('PAGE_OWNER',              'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('DEBUG_KMEMLEAK',          'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('BINFMT_AOUT',             'is not set', 'grsecurity', 'cut_attack_surface'))
-    checklist.append(OptCheck('KPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OptCheck('KPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('UPROBES',                 'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('GENERIC_TRACER',          'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('PROC_VMCORE',             'is not set', 'grsecurity', 'cut_attack_surface'))
@@ -401,15 +401,15 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('USERFAULTFD',             'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('HWPOISON_INJECT',         'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('MEM_SOFT_DIRTY',          'is not set', 'grsecurity', 'cut_attack_surface'))
-    checklist.append(OptCheck('DEVPORT',                 'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
-    checklist.append(OptCheck('DEBUG_FS',                'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OptCheck('DEVPORT',                 'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCKDOWN
+    checklist.append(OptCheck('DEBUG_FS',                'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('NOTIFIER_ERROR_INJECTION','is not set', 'grsecurity', 'cut_attack_surface'))
 
-    checklist.append(OptCheck('ACPI_TABLE_UPGRADE',   'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OptCheck('ACPI_TABLE_UPGRADE',   'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('ACPI_APEI_EINJ',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('PROFILING',            'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
-    checklist.append(OptCheck('BPF_SYSCALL',          'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
-    checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    checklist.append(OptCheck('BPF_SYSCALL',          'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
+    checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
 
     checklist.append(OptCheck('STAGING',                  'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('KSM',                      'is not set', 'clipos', 'cut_attack_surface')) # to prevent FLUSH+RELOAD attack
@@ -417,12 +417,12 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('KALLSYMS',                 'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('X86_VSYSCALL_EMULATION',   'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('MAGIC_SYSRQ',              'is not set', 'clipos', 'cut_attack_surface'))
-    checklist.append(OptCheck('KEXEC_FILE',               'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL (permissive)
+    checklist.append(OptCheck('KEXEC_FILE',               'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCKDOWN (permissive)
     checklist.append(OptCheck('USER_NS',                  'is not set', 'clipos', 'cut_attack_surface')) # user.max_user_namespaces=0
     checklist.append(AND(OptCheck('LDISC_AUTOLOAD',           'is not set', 'clipos', 'cut_attack_surface'), \
                          VerCheck((5, 1)))) # LDISC_AUTOLOAD can be disabled since v5.1
 
-    checklist.append(OptCheck('MMIOTRACE',            'is not set', 'my', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL (permissive)
+    checklist.append(OptCheck('MMIOTRACE',            'is not set', 'my', 'cut_attack_surface')) # refers to LOCKDOWN (permissive)
     checklist.append(OptCheck('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('IP_DCCP',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('IP_SCTP',              'is not set', 'my', 'cut_attack_surface'))
