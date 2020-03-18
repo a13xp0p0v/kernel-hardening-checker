@@ -420,6 +420,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('KEXEC_FILE',               'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCKDOWN (permissive)
     checklist.append(OptCheck('USER_NS',                  'is not set', 'clipos', 'cut_attack_surface')) # user.max_user_namespaces=0
     checklist.append(OptCheck('X86_MSR',                  'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCKDOWN
+    checklist.append(OptCheck('X86_CPUID',                'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(AND(OptCheck('LDISC_AUTOLOAD',           'is not set', 'clipos', 'cut_attack_surface'), \
                          VerCheck((5, 1)))) # LDISC_AUTOLOAD can be disabled since v5.1
 
