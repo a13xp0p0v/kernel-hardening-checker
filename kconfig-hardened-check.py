@@ -326,8 +326,8 @@ def construct_checklist(checklist, arch):
     checklist.append(AND(OptCheck('GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set', 'clipos', 'self_protection'), \
                          randstruct_is_set))
     checklist.append(OptCheck('CONFIG_RANDOM_TRUST_BOOTLOADER',        'is not set', 'clipos', 'self_protection'))
+    checklist.append(OptCheck('RANDOM_TRUST_CPU',                      'is not set', 'clipos', 'self_protection'))
     if arch == 'X86_64' or arch == 'X86_32':
-        checklist.append(OptCheck('RANDOM_TRUST_CPU',                      'is not set', 'clipos', 'self_protection'))
         checklist.append(AND(OptCheck('INTEL_IOMMU_SVM',                   'y', 'clipos', 'self_protection'), \
                              iommu_support_is_set))
         checklist.append(AND(OptCheck('INTEL_IOMMU_DEFAULT_ON',            'y', 'clipos', 'self_protection'), \
@@ -370,6 +370,8 @@ def construct_checklist(checklist, arch):
         checklist.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'kspp', 'cut_attack_surface'), \
                             devmem_not_set)) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('ACPI_CUSTOM_METHOD',   'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
+    if arch == 'X86_64':
+        checklist.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
     checklist.append(OptCheck('COMPAT_BRK',           'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('DEVKMEM',              'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('COMPAT_VDSO',          'is not set', 'kspp', 'cut_attack_surface'))
@@ -379,13 +381,10 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('PROC_KCORE',           'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
     checklist.append(OptCheck('LEGACY_PTYS',          'is not set', 'kspp', 'cut_attack_surface'))
     checklist.append(OptCheck('HIBERNATION',          'is not set', 'kspp', 'cut_attack_surface')) # refers to LOCK_DOWN_KERNEL
-    if arch == 'X86_64':
-        checklist.append(OptCheck('LEGACY_VSYSCALL_NONE', 'y', 'kspp', 'cut_attack_surface')) # 'vsyscall=none'
-        checklist.append(OptCheck('IA32_EMULATION',       'is not set', 'kspp', 'cut_attack_surface'))
-        checklist.append(OptCheck('X86_X32',              'is not set', 'kspp', 'cut_attack_surface'))
-        checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'))
-    if arch == 'ARM':
-        checklist.append(OptCheck('OABI_COMPAT',          'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('IA32_EMULATION',       'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('X86_X32',              'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'kspp', 'cut_attack_surface'))
+    checklist.append(OptCheck('OABI_COMPAT',          'is not set', 'kspp', 'cut_attack_surface'))
 
     checklist.append(OptCheck('X86_PTDUMP',              'is not set', 'grsecurity', 'cut_attack_surface'))
     checklist.append(OptCheck('ZSMALLOC_STAT',           'is not set', 'grsecurity', 'cut_attack_surface'))
@@ -430,8 +429,6 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('VIDEO_VIVID',          'is not set', 'my', 'cut_attack_surface'))
-    if arch == 'X86_32':
-        checklist.append(OptCheck('MODIFY_LDT_SYSCALL',   'is not set', 'my', 'cut_attack_surface'))
 
     checklist.append(OptCheck('INTEGRITY',       'y', 'defconfig', 'userspace_hardening'))
     if arch == 'ARM64':
