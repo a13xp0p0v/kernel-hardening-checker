@@ -264,7 +264,6 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('RANDOMIZE_BASE',              'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('THREAD_INFO_IN_TASK',         'y', 'defconfig', 'self_protection'))
     if arch == 'ARM':
-        checklist.append(OptCheck('VMSPLIT_3G',                  'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('CPU_SW_DOMAIN_PAN',           'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',     'y', 'defconfig', 'self_protection'))
     if arch == 'ARM64' or arch == 'ARM':
@@ -436,6 +435,8 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('INTEGRITY',       'y', 'defconfig', 'userspace_hardening'))
     if arch == 'ARM64':
         checklist.append(OptCheck('ARM64_PTR_AUTH',       'y', 'defconfig', 'userspace_hardening'))
+    if arch == 'ARM' or  arch == 'X86_32':
+        checklist.append(OptCheck('VMSPLIT_3G',           'y', 'defconfig', 'userspace_hardening'))
     if arch == 'X86_64' or arch == 'ARM64':
         checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'clipos', 'userspace_hardening'))
     if arch == 'X86_32' or arch == 'ARM':
