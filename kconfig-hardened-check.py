@@ -310,6 +310,7 @@ def construct_checklist(checklist, arch):
     if arch == 'X86_64' or arch == 'X86_32':
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '65536', 'kspp', 'self_protection'))
     if arch == 'X86_32':
+        checklist.append(OptCheck('PAGE_TABLE_ISOLATION',             'y', 'kspp', 'self_protection'))
         checklist.append(OptCheck('HIGHMEM64G',                       'y', 'kspp', 'self_protection'))
         checklist.append(OptCheck('X86_PAE',                          'y', 'kspp', 'self_protection'))
     if arch == 'ARM64':
@@ -340,8 +341,6 @@ def construct_checklist(checklist, arch):
     if arch == 'X86_64':
         checklist.append(AND(OptCheck('AMD_IOMMU_V2',                   'y', 'my', 'self_protection'), \
                              iommu_support_is_set))
-    if arch == 'X86_32':
-        checklist.append(OptCheck('PAGE_TABLE_ISOLATION',               'y', 'my', 'self_protection'))
 
     if arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
         checklist.append(OptCheck('SECURITY',                               'y', 'defconfig', 'security_policy')) # and choose your favourite LSM
