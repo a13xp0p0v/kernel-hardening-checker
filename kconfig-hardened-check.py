@@ -426,6 +426,8 @@ def construct_checklist(checklist, arch):
     checklist.append(AND(OptCheck('LDISC_AUTOLOAD',           'is not set', 'clipos', 'cut_attack_surface'), \
                          VerCheck((5, 1)))) # LDISC_AUTOLOAD can be disabled since v5.1
 
+    checklist.append(OptCheck('AIO',                  'is not set', 'copperhead', 'cut_attack_surface'))
+
     checklist.append(OptCheck('MMIOTRACE',            'is not set', 'my', 'cut_attack_surface')) # refers to LOCKDOWN (permissive)
     checklist.append(OptCheck('LIVEPATCH',            'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('IP_DCCP',              'is not set', 'my', 'cut_attack_surface'))
