@@ -13,7 +13,6 @@
 # N.B Hardening command line parameters:
 #    slub_debug=FZP
 #    slab_nomerge
-#    kernel.kptr_restrict=1
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
 #    page_poison=1 (if enabled)
@@ -35,17 +34,24 @@
 #           ssbd=force-on
 #
 # N.B. Hardening sysctls:
-#    net.core.bpf_jit_harden=2
-#    kptr_restrict=2
-#    vm.unprivileged_userfaultfd=0
+#    kernel.kptr_restrict=2
+#    kernel.dmesg_restrict=1
 #    kernel.perf_event_paranoid=3
-#    kernel.yama.ptrace_scope=1 (or even 3?)
+#    kernel.kexec_load_disabled=1
+#    kernel.yama.ptrace_scope=3
+#    user.max_user_namespaces=0
 #    kernel.unprivileged_bpf_disabled=1
+#    net.core.bpf_jit_harden=2
+#
+#    vm.unprivileged_userfaultfd=0
+#
+#    dev.tty.ldisc_autoload=0
+#    fs.protected_symlinks=1
+#    fs.protected_hardlinks=1
+#    fs.protected_fifos=2
+#    fs.protected_regular=2
 #    fs.suid_dumpable=0
-#    fs.protected_symlinks = 1
-#    fs.protected_hardlinks = 1
-#    fs.protected_fifos = 2
-#    fs.protected_regular = 2
+#    kernel.modules_disabled=1
 
 import sys
 from argparse import ArgumentParser
