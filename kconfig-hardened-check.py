@@ -29,6 +29,7 @@
 #           spec_store_bypass_disable=on
 #           l1tf=full,force
 #           mds=full,nosmt
+#           tsx=off
 #       ARM64:
 #           kpti=on
 #           ssbd=force-on
@@ -419,6 +420,8 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('BPF_SYSCALL',          'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
 
+    if arch == 'X86_64' or arch == 'X86_32':
+        checklist.append(OptCheck('X86_INTEL_TSX_MODE_OFF',   'y', 'clipos', 'cut_attack_surface')) # tsx=off
     checklist.append(OptCheck('STAGING',                  'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('KSM',                      'is not set', 'clipos', 'cut_attack_surface')) # to prevent FLUSH+RELOAD attack
 #   checklist.append(OptCheck('IKCONFIG',                 'is not set', 'clipos', 'cut_attack_surface')) # no, this info is needed for this check :)
