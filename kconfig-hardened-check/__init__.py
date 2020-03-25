@@ -69,7 +69,7 @@ debug_mode = False
 json_mode = False
 
 supported_archs = [ 'X86_64', 'X86_32', 'ARM64', 'ARM' ]
-config_checklist = []
+
 kernel_version = None
 
 
@@ -525,7 +525,7 @@ def perform_checks(checklist, parsed_options):
         opt.check()
 
 
-def check_config_file(checklist, fname):
+def check_config_file(checklist, fname, arch):
     with open(fname, 'r') as f:
         parsed_options = OrderedDict()
         opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
@@ -568,8 +568,13 @@ def check_config_file(checklist, fname):
 
         print_checklist(checklist, True)
 
+def main():
+    global debug_mode
+    global json_mode
+    global kernel_version
 
-if __name__ == '__main__':
+    config_checklist = []
+
     parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print hardening preferences for selected architecture')
@@ -603,7 +608,7 @@ if __name__ == '__main__':
             print('[+] Detected kernel version: {}.{}'.format(kernel_version[0], kernel_version[1]))
 
         construct_checklist(config_checklist, arch)
-        check_config_file(config_checklist, args.config)
+        check_config_file(config_checklist, args.config, arch)
         error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), config_checklist)))
         ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), config_checklist)))
         if debug_mode:
@@ -621,3 +626,6 @@ if __name__ == '__main__':
         sys.exit(0)
 
     parser.print_help()
+
+if __name__ == '__main__':
+    main()
