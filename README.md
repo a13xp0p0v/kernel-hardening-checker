@@ -31,7 +31,7 @@ or exploitation techniques.
 You can install the package:
 
 ```
-pip install git+https://github.com/a13xp0p0v/kconfig-hardened-check'
+pip install git+https://github.com/a13xp0p0v/kconfig-hardened-check
 ```
 
 or simply run `./bin/kconfig-hardened-check` from the cloned repository.
