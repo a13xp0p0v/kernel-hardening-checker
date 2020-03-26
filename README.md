@@ -1,4 +1,4 @@
-# Kconfig hardened check
+# kconfig-hardened-check
 
 ## Motivation
 
@@ -26,7 +26,7 @@ or exploitation techniques.
   - ARM64
   - ARM
 
-## Script output examples
+## Output examples
 
 ### Usage
 ```
@@ -45,7 +45,7 @@ optional arguments:
   --json                print results in JSON format
 ```
 
-### Script output for `Ubuntu 18.04 (Bionic Beaver with HWE)` kernel config
+### Output for `Ubuntu 18.04 (Bionic Beaver with HWE)` kernel config
 ```
 $ ./kconfig-hardened-check.py -c config_files/distros/ubuntu-bionic-generic.config
 [+] Trying to detect architecture in "config_files/distros/ubuntu-bionic-generic.config"...
@@ -209,7 +209,7 @@ The current version of `kconfig-hardened-check` is __0.5.5__, it's marked with t
 __Q:__ How disabling `CONFIG_USER_NS` cuts the attack surface? It's needed for containers!
 
 __A:__ Yes, the `CONFIG_USER_NS` option provides some isolation between the userspace programs,
-but the script recommends disabling it to cut the attack surface __of the kernel__.
+but the tool recommends disabling it to cut the attack surface __of the kernel__.
 
 The rationale:
 

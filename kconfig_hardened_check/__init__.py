@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 #
-# This script helps me to check the Linux kernel Kconfig option list
+# This tool helps me to check the Linux kernel Kconfig option list
 # against my hardening preferences for X86_64, ARM64, X86_32, and ARM.
 # Let the computers do their job!
 #
