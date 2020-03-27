@@ -39,3 +39,6 @@ CLIP OS:
 https://docs.clip-os.org/clipos/kernel.html#configuration
 https://github.com/clipos/src_platform_config-linux-hardware
 https://github.com/clipos/products_clipos/blob/master/efiboot/configure.d/95_dracut.sh
+
+NixOS:
+run contrib/get-nix-kconfig.py from nix-shell to get the kernel configs
