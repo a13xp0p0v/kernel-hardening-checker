@@ -51,6 +51,7 @@ jobs:
     - name: Collect coverage
       run: |
         coverage run -a --branch bin/kconfig-hardened-check
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_64
         coverage xml -i -o coverage.xml
 
     - name: Handle coverage
