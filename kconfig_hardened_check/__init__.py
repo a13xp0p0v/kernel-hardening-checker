@@ -611,9 +611,7 @@ def main():
         check_config_file(config_checklist, args.config, arch)
         error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), config_checklist)))
         ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), config_checklist)))
-        if debug_mode:
-            sys.exit(0)
-        if not json_mode:
+        if not debug_mode and not json_mode:
             print('[+] config check is finished: \'OK\' - {} / \'FAIL\' - {}'.format(ok_count, error_count))
         sys.exit(0)
 
@@ -626,6 +624,7 @@ def main():
         sys.exit(0)
 
     parser.print_help()
+    sys.exit(0)
 
 if __name__ == '__main__':
     main()
