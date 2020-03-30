@@ -42,7 +42,7 @@ jobs:
         do
                 COUNT=$(expr $COUNT + 1)
                 echo -e "\n>>>>> checking config number $COUNT <<<<<"
-                kconfig-hardened-check -c $C || exit
+                kconfig-hardened-check -c $C
         done
         echo -e "\n>>>>> checking $COUNT configs is done <<<<<"
 
@@ -56,12 +56,16 @@ jobs:
         coverage run -a --branch bin/kconfig-hardened-check -p X86_32
         coverage run -a --branch bin/kconfig-hardened-check -p ARM64
         coverage run -a --branch bin/kconfig-hardened-check -p ARM
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_64 --debug
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_64 --json
 
         CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
         CONFIGS=`find $CONFIG_DIR -type f|grep "\.config"`
         for C in $CONFIGS
         do
-                coverage run -a --branch bin/kconfig-hardened-check -c $C || exit
+                coverage run -a --branch bin/kconfig-hardened-check -c $C
+                coverage run -a --branch bin/kconfig-hardened-check -c $C --debug
+                coverage run -a --branch bin/kconfig-hardened-check -c $C --json
         done
         coverage xml -i -o coverage.xml
 
