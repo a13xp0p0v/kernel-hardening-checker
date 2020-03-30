@@ -1,5 +1,7 @@
 # kconfig-hardened-check
 
+![functional test](https://github.com/a13xp0p0v/kconfig-hardened-check/workflows/functional%20test/badge.svg)
+
 ## Motivation
 
 There are plenty of Linux kernel hardening config options. A lot of them are
