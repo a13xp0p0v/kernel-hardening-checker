@@ -41,9 +41,11 @@ jobs:
         echo ">>>>> check all configs <<<<<"
         CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
         CONFIGS=`find $CONFIG_DIR -type f|grep "\.config"`
+        COUNT=0
         for C in $CONFIGS
         do
-                echo -e "\n>>>>> checking $C <<<<<"
+                COUNT=$(expr $COUNT + 1)
+                echo -e "\n>>>>> checking config number $COUNT <<<<<"
                 kconfig-hardened-check -c $C || exit
         done
-        echo -e "\n>>>>> checking done <<<<<"
+        echo -e "\n>>>>> checking $COUNT configs is done <<<<<"
