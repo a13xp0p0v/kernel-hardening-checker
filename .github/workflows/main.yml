@@ -51,7 +51,18 @@ jobs:
     - name: Collect coverage
       run: |
         coverage run -a --branch bin/kconfig-hardened-check
+
         coverage run -a --branch bin/kconfig-hardened-check -p X86_64
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_32
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM64
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM
+
+        CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
+        CONFIGS=`find $CONFIG_DIR -type f|grep "\.config"`
+        for C in $CONFIGS
+        do
+                coverage run -a --branch bin/kconfig-hardened-check -c $C || exit
+        done
         coverage xml -i -o coverage.xml
 
     - name: Handle coverage
