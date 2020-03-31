@@ -158,7 +158,7 @@ class OR(ComplexOptCheck):
         for i, opt in enumerate(self.opts):
             ret, msg = opt.check()
             if ret:
-                if i == 0 or not hasattr(opt, 'name'):
+                if i == 0 or not hasattr(opt, 'expected'):
                     self.result = opt.result
                 else:
                     self.result = 'OK: CONFIG_{} "{}"'.format(opt.name, opt.expected)
@@ -179,7 +179,7 @@ class AND(ComplexOptCheck):
                 self.result = opt.result
                 return ret, self.result
             elif not ret:
-                if hasattr(opt, 'name'):
+                if hasattr(opt, 'expected'):
                     self.result = 'FAIL: CONFIG_{} is needed'.format(opt.name)
                 else:
                     self.result = opt.result
@@ -515,12 +515,12 @@ def perform_checks(checklist, parsed_options):
         if hasattr(opt, 'opts'):
             # prepare ComplexOptCheck
             for o in opt.opts:
-                if hasattr(o, 'name'):
+                if hasattr(o, 'state'):
                     o.state = parsed_options.get(o.name, None)
         else:
-            # prepare simple OptCheck
-            if not hasattr(opt, 'name'):
-                sys.exit('[!] ERROR: bad OptCheck {}'.format(vars(opt)))
+            # prepare simple check
+            if not hasattr(opt, 'state'):
+                sys.exit('[!] ERROR: bad simple check {}'.format(vars(opt)))
             opt.state = parsed_options.get(opt.name, None)
         opt.check()
 
