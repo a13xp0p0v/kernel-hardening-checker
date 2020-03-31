@@ -98,6 +98,12 @@ class OptCheck:
         else:
             return False, self.result
 
+    def table_print(self, with_results):
+        print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(self.name, self.expected, self.decision, self.reason), end='')
+        if with_results:
+            print('|   {}'.format(self.result), end='')
+        print()
+
 
 class VerCheck:
     def __init__(self, ver_expected):
@@ -117,6 +123,13 @@ class VerCheck:
         else:
             self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
             return False, self.result
+
+    def table_print(self, with_results):
+        ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+        print('{:<91}'.format(ver_req), end='')
+        if with_results:
+            print('|   {}'.format(self.result), end='')
+        print()
 
 
 class ComplexOptCheck:
@@ -143,6 +156,18 @@ class ComplexOptCheck:
     @property
     def reason(self):
         return self.opts[0].reason
+
+    def table_print(self, with_results):
+        if debug_mode:
+            print('    {:87}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
+            if with_results:
+                print('|   {}'.format(self.result), end='')
+            print()
+            for o in self.opts:
+                o.table_print(with_results)
+        else:
+            o = self.opts[0]
+            o.table_print(with_results)
 
 
 class OR(ComplexOptCheck):
@@ -458,13 +483,6 @@ def construct_checklist(checklist, arch):
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
 
 
-def print_opt(opt, with_results):
-    print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(opt.name, opt.expected, opt.decision, opt.reason), end='')
-    if with_results:
-        print('|   {}'.format(opt.result), end='')
-    print()
-
-
 def print_checklist(checklist, with_results):
     if json_mode:
         opts = []
@@ -489,22 +507,7 @@ def print_checklist(checklist, with_results):
 
     # table contents
     for opt in checklist:
-        if debug_mode and hasattr(opt, 'opts'):
-            print('    {:87}'.format('<<< ' + opt.__class__.__name__ + ' >>>'), end='')
-            if with_results:
-                print('|   {}'.format(opt.result), end='')
-            print()
-            for o in opt.opts:
-                if hasattr(o, 'ver_expected'):
-                    ver_req = 'kernel version >= ' + str(o.ver_expected[0]) + '.' + str(o.ver_expected[1])
-                    print('{:<91}'.format(ver_req), end='')
-                    if with_results:
-                        print('|   {}'.format(o.result), end='')
-                    print()
-                else:
-                    print_opt(o, with_results)
-        else:
-            print_opt(opt, with_results)
+        opt.table_print(with_results)
         if debug_mode:
             print('-' * sep_line_len)
     print()
