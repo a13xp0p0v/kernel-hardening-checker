@@ -54,11 +54,20 @@ jobs:
         coverage run -a --branch bin/kconfig-hardened-check
 
         coverage run -a --branch bin/kconfig-hardened-check -p X86_64
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_32
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM64
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM
         coverage run -a --branch bin/kconfig-hardened-check -p X86_64 --debug
         coverage run -a --branch bin/kconfig-hardened-check -p X86_64 --json
+
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_32
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_32 --debug
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_32 --json
+
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM64
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM64 --debug
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM64 --json
+
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM --debug
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM --json
 
         CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
         CONFIGS=`find $CONFIG_DIR -type f|grep "\.config"`
