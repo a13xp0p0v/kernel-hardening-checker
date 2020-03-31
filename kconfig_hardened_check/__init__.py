@@ -165,7 +165,9 @@ class ComplexOptCheck:
                 o.table_print(with_results)
         else:
             o = self.opts[0]
-            o.table_print(with_results)
+            o.table_print(False)
+            if with_results:
+                print('|   {}'.format(self.result), end='')
 
 
 class OR(ComplexOptCheck):
