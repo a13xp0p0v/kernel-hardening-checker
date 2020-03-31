@@ -130,6 +130,26 @@ class VerCheck:
             print('|   {}'.format(self.result), end='')
 
 
+class PresenceCheck:
+    def __init__(self, name):
+        self.name = name
+        self.state = None
+        self.result = None
+
+    def check(self):
+        if self.state is None:
+            self.result = 'FAIL: not present'
+            return False, self.result
+        else:
+            self.result = 'OK: is present'
+            return True, self.result
+
+    def table_print(self, with_results):
+        print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
+        if with_results:
+            print('|   {}'.format(self.result), end='')
+
+
 class ComplexOptCheck:
     def __init__(self, *opts):
         self.opts = opts
@@ -458,7 +478,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('X86_MSR',                  'is not set', 'clipos', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('X86_CPUID',                'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(AND(OptCheck('LDISC_AUTOLOAD',           'is not set', 'clipos', 'cut_attack_surface'), \
-                         VerCheck((5, 1)))) # LDISC_AUTOLOAD can be disabled since v5.1
+                         PresenceCheck('LDISC_AUTOLOAD')))
 
     checklist.append(OptCheck('AIO',                  'is not set', 'grapheneos', 'cut_attack_surface'))
 
