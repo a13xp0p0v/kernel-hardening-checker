@@ -102,7 +102,6 @@ class OptCheck:
         print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(self.name, self.expected, self.decision, self.reason), end='')
         if with_results:
             print('|   {}'.format(self.result), end='')
-        print()
 
 
 class VerCheck:
@@ -129,7 +128,6 @@ class VerCheck:
         print('{:<91}'.format(ver_req), end='')
         if with_results:
             print('|   {}'.format(self.result), end='')
-        print()
 
 
 class ComplexOptCheck:
@@ -162,8 +160,8 @@ class ComplexOptCheck:
             print('    {:87}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
             if with_results:
                 print('|   {}'.format(self.result), end='')
-            print()
             for o in self.opts:
+                print()
                 o.table_print(with_results)
         else:
             o = self.opts[0]
@@ -508,6 +506,7 @@ def print_checklist(checklist, with_results):
     # table contents
     for opt in checklist:
         opt.table_print(with_results)
+        print()
         if debug_mode:
             print('-' * sep_line_len)
     print()
