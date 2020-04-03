@@ -260,7 +260,7 @@ def detect_version(fname):
                     print('[+] Found version line: "{}"'.format(line))
                 parts = line.split()
                 ver_str = parts[2]
-                ver_numbers = ver_str.split('.')
+                ver_numbers = ver_str.split('.')[:3]
                 # 5.5.15-xxx --> 5.5.15
                 ver_numbers[-1] = re.sub(r'([0-9]+).*', r'\1', ver_numbers[-1])
                 if len(ver_numbers) < 3 or not all(i.isdigit() for i in ver_numbers):
