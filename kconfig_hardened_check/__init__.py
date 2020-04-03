@@ -459,6 +459,10 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('DEBUG_FS',                'is not set', 'grsecurity', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('NOTIFIER_ERROR_INJECTION','is not set', 'grsecurity', 'cut_attack_surface'))
 
+    checklist.append(OptCheck('DRM_LEGACY',     'is not set', 'maintainer', 'cut_attack_surface'))
+    checklist.append(OptCheck('FB',             'is not set', 'maintainer', 'cut_attack_surface'))
+    checklist.append(OptCheck('VT',             'is not set', 'maintainer', 'cut_attack_surface'))
+
     checklist.append(OptCheck('ACPI_TABLE_UPGRADE',   'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('X86_IOPL_IOPERM',      'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('EFI_TEST',             'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN

@@ -16,7 +16,9 @@ against my hardening preferences, which are based on the
 
   - [KSPP recommended settings][1],
   - [CLIP OS kernel configuration][2],
-  - last public [grsecurity][3] patch (options which they disable).
+  - last public [grsecurity][3] patch (options which they disable),
+  - [SECURITY_LOCKDOWN_LSM][5] patchset,
+  - direct feedback from Linux kernel maintainers (Daniel Vetter in [issue #38][6]).
 
 I also created [__Linux Kernel Defence Map__][4] that is a graphical representation of the
 relationships between these hardening features and the corresponding vulnerability classes
@@ -174,6 +176,9 @@ CONFIG_MEM_SOFT_DIRTY                        | is not set  |grsecurity| cut_atta
 CONFIG_DEVPORT                               | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_DEBUG_FS                              | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_NOTIFIER_ERROR_INJECTION              | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
+CONFIG_DRM_LEGACY                            | is not set  |maintainer| cut_attack_surface |   OK
+CONFIG_FB                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
+CONFIG_VT                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
 CONFIG_ACPI_TABLE_UPGRADE                    | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
 CONFIG_X86_IOPL_IOPERM                       | is not set  | lockdown | cut_attack_surface |   OK: not found
 CONFIG_EFI_TEST                              | is not set  | lockdown | cut_attack_surface |   FAIL: "m"
@@ -201,7 +206,7 @@ CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_atta
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] config check is finished: 'OK' - 55 / 'FAIL' - 77
+[+] config check is finished: 'OK' - 56 / 'FAIL' - 79
 ```
 
 ## kconfig-hardened-check versioning
@@ -247,3 +252,5 @@ if we have a kernel oops in the process context, the offending/attacking process
 [2]: https://docs.clip-os.org/clipos/kernel.html#configuration
 [3]: https://grsecurity.net/
 [4]: https://github.com/a13xp0p0v/linux-kernel-defence-map
+[5]: https://lwn.net/Articles/791863/
+[6]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38
