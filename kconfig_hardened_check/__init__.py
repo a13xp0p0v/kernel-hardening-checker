@@ -108,23 +108,18 @@ class VerCheck:
     def __init__(self, ver_expected):
         self.ver_expected = ver_expected
         self.result = None
+        self.exp_str = '.'.join(str(i) for i in self.ver_expected)
 
     def check(self):
-        if kernel_version[0] > self.ver_expected[0]:
-            self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return True, self.result
-        if kernel_version[0] < self.ver_expected[0]:
-            self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return False, self.result
-        if kernel_version[1] >= self.ver_expected[1]:
-            self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+        if kernel_version >= self.ver_expected:
+            self.result = f'OK: version >= {self.exp_str}'
             return True, self.result
         else:
-            self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+            self.result = f'FAIL: version < {self.exp_str}'
             return False, self.result
 
     def table_print(self, with_results):
-        ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+        ver_req = f'kernel version >= {self.exp_str}'
         print('{:<91}'.format(ver_req), end='')
         if with_results:
             print('|   {}'.format(self.result), end='')
@@ -258,7 +253,7 @@ def detect_version(fname):
         ver_pattern = re.compile("# Linux/.* Kernel Configuration")
         if not json_mode:
             print('[+] Trying to detect kernel version in "{}"...'.format(fname))
-        for line in f.readlines():
+        for line in f:
             if ver_pattern.match(line):
                 line = line.strip()
                 if not json_mode:
@@ -266,11 +261,13 @@ def detect_version(fname):
                 parts = line.split()
                 ver_str = parts[2]
                 ver_numbers = ver_str.split('.')
-                if len(ver_numbers) < 3 or not ver_numbers[0].isdigit() or not ver_numbers[1].isdigit():
-                    msg = 'failed to parse the version "' + ver_str + '"'
+                # 5.5.15-xxx --> 5.5.15
+                ver_numbers[-1] = re.sub(r'([0-9]+).*', r'\1', ver_numbers[-1])
+                if len(ver_numbers) < 3 or not all(i.isdigit() for i in ver_numbers):
+                    msg = f'failed to parse the version "{ver_str}"'
                     return None, msg
                 else:
-                    return (int(ver_numbers[0]), int(ver_numbers[1])), None
+                    return tuple(int(i) for i in ver_numbers), None
         return None, 'no kernel version detected'
 
 
@@ -629,7 +626,8 @@ def main():
         if not kernel_version:
             sys.exit('[!] ERROR: {}'.format(msg))
         elif not json_mode:
-            print('[+] Detected kernel version: {}.{}'.format(kernel_version[0], kernel_version[1]))
+            vstr = '.'.join(str(i) for i in kernel_version)
+            print(f'[+] Detected kernel version: {vstr}')
 
         construct_checklist(config_checklist, arch)
         check_config_file(config_checklist, args.config, arch)
