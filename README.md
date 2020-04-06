@@ -44,7 +44,7 @@ or simply run `./bin/kconfig-hardened-check` from the cloned repository.
 ## Usage
 ```
 usage: kconfig-hardened-check [-h] [-p {X86_64,X86_32,ARM64,ARM}] [-c CONFIG]
-                              [--debug] [--json]
+                              [--debug] [--json] [--version]
 
 Checks the hardening options in the Linux kernel config
 
@@ -56,6 +56,7 @@ optional arguments:
                         check the config_file against these preferences
   --debug               enable verbose debug mode
   --json                print results in JSON format
+  --version             show program's version number and exit
 ```
 
 ## Output for `Ubuntu 18.04 (Bionic Beaver with HWE)` kernel config
@@ -215,9 +216,7 @@ I usually update the kernel hardening recommendations after each Linux kernel re
 
 So the version of `kconfig-hardened-check` is associated with the corresponding version of the kernel.
 
-The version format is: __[major_number].[kernel_version]__
-
-The current version of `kconfig-hardened-check` is __0.5.5__, it's marked with the git tag.
+The version format is: __[major_number].[kernel_version].[kernel_patchlevel]__
 
 
 ## Questions and answers

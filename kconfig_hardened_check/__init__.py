@@ -59,6 +59,7 @@ from argparse import ArgumentParser
 from collections import OrderedDict
 import re
 import json
+from .__about__ import __version__
 
 # debug_mode enables:
 #    - reporting about unknown kernel options in the config,
@@ -603,7 +604,8 @@ def main():
 
     config_checklist = []
 
-    parser = ArgumentParser(description='Checks the hardening options in the Linux kernel config')
+    parser = ArgumentParser(prog='kconfig-hardened-check',
+                            description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print hardening preferences for selected architecture')
     parser.add_argument('-c', '--config',
@@ -612,6 +614,7 @@ def main():
                         help='enable verbose debug mode')
     parser.add_argument('--json', action='store_true',
                         help='print results in JSON format')
+    parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     args = parser.parse_args()
 
     if args.debug:
