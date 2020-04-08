@@ -127,3 +127,6 @@ dmypy.json
 
 # vim swp files
 .*.swp
+
+tmp/
+*.tmp
