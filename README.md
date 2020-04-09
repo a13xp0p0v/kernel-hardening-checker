@@ -204,6 +204,7 @@ CONFIG_IP_SCTP                               | is not set  |    my    | cut_atta
 CONFIG_FTRACE                                | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_BPF_JIT                               | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
+CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
