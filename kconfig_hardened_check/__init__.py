@@ -492,6 +492,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('VIDEO_VIVID',          'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('INPUT_EVBUG',          'is not set', 'my', 'cut_attack_surface')) # Can be used as a keylogger
 
     checklist.append(OptCheck('INTEGRITY',       'y', 'defconfig', 'userspace_hardening'))
     if arch == 'ARM64':
