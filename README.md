@@ -44,7 +44,7 @@ or simply run `./bin/kconfig-hardened-check` from the cloned repository.
 ## Usage
 ```
 usage: kconfig-hardened-check [-h] [-p {X86_64,X86_32,ARM64,ARM}] [-c CONFIG]
-                              [--debug] [--json]
+                              [--debug] [--json] [--version]
 
 Checks the hardening options in the Linux kernel config
 
@@ -56,6 +56,7 @@ optional arguments:
                         check the config_file against these preferences
   --debug               enable verbose debug mode
   --json                print results in JSON format
+  --version             show program's version number and exit
 ```
 
 ## Output for `Ubuntu 18.04 (Bionic Beaver with HWE)` kernel config
@@ -203,10 +204,11 @@ CONFIG_IP_SCTP                               | is not set  |    my    | cut_atta
 CONFIG_FTRACE                                | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_BPF_JIT                               | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
+CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] config check is finished: 'OK' - 56 / 'FAIL' - 79
+[+] config check is finished: 'OK' - 56 / 'FAIL' - 80
 ```
 
 ## kconfig-hardened-check versioning
@@ -215,9 +217,7 @@ I usually update the kernel hardening recommendations after each Linux kernel re
 
 So the version of `kconfig-hardened-check` is associated with the corresponding version of the kernel.
 
-The version format is: __[major_number].[kernel_version]__
-
-The current version of `kconfig-hardened-check` is __0.5.5__, it's marked with the git tag.
+The version format is: __[major_number].[kernel_version].[kernel_patchlevel]__
 
 
 ## Questions and answers
