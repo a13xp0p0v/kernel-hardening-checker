@@ -208,7 +208,7 @@ CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_atta
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] config check is finished: 'OK' - 56 / 'FAIL' - 79
+[+] config check is finished: 'OK' - 56 / 'FAIL' - 80
 ```
 
 ## kconfig-hardened-check versioning
