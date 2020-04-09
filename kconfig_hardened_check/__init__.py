@@ -61,6 +61,9 @@ import re
 import json
 from .__about__ import __version__
 
+# pylint: disable=line-too-long,bad-whitespace,too-many-branches
+# pylint: disable=too-many-statements,global-statement
+
 # debug_mode enables:
 #    - reporting about unknown kernel options in the config,
 #    - verbose printing of ComplexOptChecks (OR, AND).
@@ -69,7 +72,7 @@ debug_mode = False
 # json_mode is for printing results in JSON format
 json_mode = False
 
-supported_archs = [ 'X86_64', 'X86_32', 'ARM64', 'ARM' ]
+supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
 
 kernel_version = None
 
@@ -96,8 +99,7 @@ class OptCheck:
 
         if self.result.startswith('OK'):
             return True, self.result
-        else:
-            return False, self.result
+        return False, self.result
 
     def table_print(self, with_results):
         print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(self.name, self.expected, self.decision, self.reason), end='')
@@ -120,9 +122,8 @@ class VerCheck:
         if kernel_version[1] >= self.ver_expected[1]:
             self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
             return True, self.result
-        else:
-            self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return False, self.result
+        self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+        return False, self.result
 
     def table_print(self, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
@@ -141,9 +142,8 @@ class PresenceCheck:
         if self.state is None:
             self.result = 'FAIL: not present'
             return False, self.result
-        else:
-            self.result = 'OK: is present'
-            return True, self.result
+        self.result = 'OK: is present'
+        return True, self.result
 
     def table_print(self, with_results):
         print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
@@ -202,7 +202,7 @@ class OR(ComplexOptCheck):
             sys.exit('[!] ERROR: invalid OR check')
 
         for i, opt in enumerate(self.opts):
-            ret, msg = opt.check()
+            ret, _ = opt.check()
             if ret:
                 if i == 0 or not hasattr(opt, 'expected'):
                     self.result = opt.result
@@ -220,11 +220,11 @@ class AND(ComplexOptCheck):
 
     def check(self):
         for i, opt in reversed(list(enumerate(self.opts))):
-            ret, msg = opt.check()
+            ret, _ = opt.check()
             if i == 0:
                 self.result = opt.result
                 return ret, self.result
-            elif not ret:
+            if not ret:
                 if hasattr(opt, 'expected'):
                     self.result = 'FAIL: CONFIG_{} is needed'.format(opt.name)
                 else:
@@ -242,7 +242,7 @@ def detect_arch(fname):
             print('[+] Trying to detect architecture in "{}"...'.format(fname))
         for line in f.readlines():
             if arch_pattern.match(line):
-                option, value = line[7:].split('=', 1)
+                option, _ = line[7:].split('=', 1)
                 if option in supported_archs:
                     if not arch:
                         arch = option
@@ -250,8 +250,7 @@ def detect_arch(fname):
                         return None, 'more than one supported architecture is detected'
         if not arch:
             return None, 'failed to detect architecture'
-        else:
-            return arch, 'OK'
+        return arch, 'OK'
 
 
 def detect_version(fname):
@@ -270,8 +269,7 @@ def detect_version(fname):
                 if len(ver_numbers) < 3 or not ver_numbers[0].isdigit() or not ver_numbers[1].isdigit():
                     msg = 'failed to parse the version "' + ver_str + '"'
                     return None, msg
-                else:
-                    return (int(ver_numbers[0]), int(ver_numbers[1])), None
+                return (int(ver_numbers[0]), int(ver_numbers[1])), None
         return None, 'no kernel version detected'
 
 
@@ -293,7 +291,7 @@ def construct_checklist(checklist, arch):
                         VerCheck((5, 5)))) # REFCOUNT_FULL is enabled by default since v5.5
     iommu_support_is_set = OptCheck('IOMMU_SUPPORT',         'y', 'defconfig', 'self_protection') # is needed for mitigating DMA attacks
     checklist.append(iommu_support_is_set)
-    if arch == 'X86_64' or arch == 'X86_32':
+    if arch in ('X86_64', 'X86_32'):
         checklist.append(OptCheck('MICROCODE',                   'y', 'defconfig', 'self_protection')) # is needed for mitigating CPU bugs
         checklist.append(OptCheck('RETPOLINE',                   'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('X86_SMAP',                    'y', 'defconfig', 'self_protection'))
@@ -311,15 +309,15 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('UNMAP_KERNEL_AT_EL0',         'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('HARDEN_EL2_VECTORS',          'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('RODATA_FULL_DEFAULT_ENABLED', 'y', 'defconfig', 'self_protection'))
-    if arch == 'X86_64' or arch == 'ARM64':
+    if arch in ('X86_64', 'ARM64'):
         checklist.append(OptCheck('VMAP_STACK',                  'y', 'defconfig', 'self_protection'))
-    if arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
         checklist.append(OptCheck('RANDOMIZE_BASE',              'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('THREAD_INFO_IN_TASK',         'y', 'defconfig', 'self_protection'))
     if arch == 'ARM':
         checklist.append(OptCheck('CPU_SW_DOMAIN_PAN',           'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('STACKPROTECTOR_PER_TASK',     'y', 'defconfig', 'self_protection'))
-    if arch == 'ARM64' or arch == 'ARM':
+    if arch in ('ARM64', 'ARM'):
         checklist.append(OptCheck('HARDEN_BRANCH_PREDICTOR',     'y', 'defconfig', 'self_protection'))
 
     checklist.append(OptCheck('BUG_ON_DATA_CORRUPTION',           'y', 'kspp', 'self_protection'))
@@ -353,14 +351,14 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('INIT_ON_ALLOC_DEFAULT_ON',         'y', 'kspp', 'self_protection'))
     checklist.append(OR(OptCheck('INIT_ON_FREE_DEFAULT_ON',       'y', 'kspp', 'self_protection'), \
                         OptCheck('PAGE_POISONING',                'y', 'kspp', 'self_protection'))) # before v5.3
-    if arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = OptCheck('GCC_PLUGIN_STACKLEAK',       'y', 'kspp', 'self_protection')
         checklist.append(stackleak_is_set)
         checklist.append(AND(OptCheck('STACKLEAK_METRICS',         'is not set', 'clipos', 'self_protection'), \
                              stackleak_is_set))
         checklist.append(AND(OptCheck('STACKLEAK_RUNTIME_DISABLE', 'is not set', 'clipos', 'self_protection'), \
                              stackleak_is_set))
-    if arch == 'X86_64' or arch == 'X86_32':
+    if arch in ('X86_64', 'X86_32'):
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '65536', 'kspp', 'self_protection'))
     if arch == 'X86_32':
         checklist.append(OptCheck('PAGE_TABLE_ISOLATION',             'y', 'kspp', 'self_protection'))
@@ -368,7 +366,7 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('X86_PAE',                          'y', 'kspp', 'self_protection'))
     if arch == 'ARM64':
         checklist.append(OptCheck('ARM64_SW_TTBR0_PAN',               'y', 'kspp', 'self_protection'))
-    if arch == 'ARM64' or arch == 'ARM':
+    if arch in ('ARM64', 'ARM'):
         checklist.append(OptCheck('SYN_COOKIES',                      'y', 'kspp', 'self_protection')) # another reason?
         checklist.append(OptCheck('DEFAULT_MMAP_MIN_ADDR',            '32768', 'kspp', 'self_protection'))
 
@@ -380,7 +378,7 @@ def construct_checklist(checklist, arch):
                          randstruct_is_set))
     checklist.append(OptCheck('RANDOM_TRUST_BOOTLOADER',               'is not set', 'clipos', 'self_protection'))
     checklist.append(OptCheck('RANDOM_TRUST_CPU',                      'is not set', 'clipos', 'self_protection'))
-    if arch == 'X86_64' or arch == 'X86_32':
+    if arch in ('X86_64', 'X86_32'):
         checklist.append(AND(OptCheck('INTEL_IOMMU_SVM',                   'y', 'clipos', 'self_protection'), \
                              iommu_support_is_set))
         checklist.append(AND(OptCheck('INTEL_IOMMU_DEFAULT_ON',            'y', 'clipos', 'self_protection'), \
@@ -395,7 +393,7 @@ def construct_checklist(checklist, arch):
         checklist.append(AND(OptCheck('AMD_IOMMU_V2',                   'y', 'my', 'self_protection'), \
                              iommu_support_is_set))
 
-    if arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
         checklist.append(OptCheck('SECURITY',                               'y', 'defconfig', 'security_policy')) # and choose your favourite LSM
     if arch == 'ARM':
         checklist.append(OptCheck('SECURITY',                               'y', 'kspp', 'security_policy')) # and choose your favourite LSM
@@ -413,7 +411,7 @@ def construct_checklist(checklist, arch):
 
     checklist.append(OptCheck('SECCOMP',              'y', 'defconfig', 'cut_attack_surface'))
     checklist.append(OptCheck('SECCOMP_FILTER',       'y', 'defconfig', 'cut_attack_surface'))
-    if arch == 'X86_64' or arch == 'ARM64' or arch == 'X86_32':
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
         checklist.append(OR(OptCheck('STRICT_DEVMEM',     'y', 'defconfig', 'cut_attack_surface'), \
                             devmem_not_set)) # refers to LOCKDOWN
 
@@ -470,7 +468,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('BPF_SYSCALL',          'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('MMIOTRACE_TEST',       'is not set', 'lockdown', 'cut_attack_surface')) # refers to LOCKDOWN
 
-    if arch == 'X86_64' or arch == 'X86_32':
+    if arch in ('X86_64', 'X86_32'):
         checklist.append(OptCheck('X86_INTEL_TSX_MODE_OFF',   'y', 'clipos', 'cut_attack_surface')) # tsx=off
     checklist.append(OptCheck('STAGING',                  'is not set', 'clipos', 'cut_attack_surface'))
     checklist.append(OptCheck('KSM',                      'is not set', 'clipos', 'cut_attack_surface')) # to prevent FLUSH+RELOAD attack
@@ -498,11 +496,11 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('INTEGRITY',       'y', 'defconfig', 'userspace_hardening'))
     if arch == 'ARM64':
         checklist.append(OptCheck('ARM64_PTR_AUTH',       'y', 'defconfig', 'userspace_hardening'))
-    if arch == 'ARM' or  arch == 'X86_32':
+    if arch in ('ARM', 'X86_32'):
         checklist.append(OptCheck('VMSPLIT_3G',           'y', 'defconfig', 'userspace_hardening'))
-    if arch == 'X86_64' or arch == 'ARM64':
+    if arch in ('X86_64', 'ARM64'):
         checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '32', 'clipos', 'userspace_hardening'))
-    if arch == 'X86_32' or arch == 'ARM':
+    if arch in ('X86_32', 'ARM'):
         checklist.append(OptCheck('ARCH_MMAP_RND_BITS',   '16', 'my', 'userspace_hardening'))
 
 #   checklist.append(OptCheck('LKDTM',    'm', 'my', 'feature_test'))
