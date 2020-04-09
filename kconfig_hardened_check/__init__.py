@@ -61,7 +61,7 @@ import re
 import json
 from .__about__ import __version__
 
-# pylint: disable=bad-whitespace,line-too-long,no-else-return,too-many-branches
+# pylint: disable=line-too-long,bad-whitespace,too-many-branches
 # pylint: disable=too-many-statements,global-statement
 
 # debug_mode enables:
@@ -72,7 +72,7 @@ debug_mode = False
 # json_mode is for printing results in JSON format
 json_mode = False
 
-supported_archs = [ 'X86_64', 'X86_32', 'ARM64', 'ARM' ]
+supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
 
 kernel_version = None
 
@@ -99,8 +99,7 @@ class OptCheck:
 
         if self.result.startswith('OK'):
             return True, self.result
-        else:
-            return False, self.result
+        return False, self.result
 
     def table_print(self, with_results):
         print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(self.name, self.expected, self.decision, self.reason), end='')
@@ -139,9 +138,8 @@ class PresenceCheck:
         if self.state is None:
             self.result = 'FAIL: not present'
             return False, self.result
-        else:
-            self.result = 'OK: is present'
-            return True, self.result
+        self.result = 'OK: is present'
+        return True, self.result
 
     def table_print(self, with_results):
         print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
@@ -200,7 +198,7 @@ class OR(ComplexOptCheck):
             sys.exit('[!] ERROR: invalid OR check')
 
         for i, opt in enumerate(self.opts):
-            ret, msg = opt.check()
+            ret, _ = opt.check()
             if ret:
                 if i == 0 or not hasattr(opt, 'expected'):
                     self.result = opt.result
@@ -218,11 +216,11 @@ class AND(ComplexOptCheck):
 
     def check(self):
         for i, opt in reversed(list(enumerate(self.opts))):
-            ret, msg = opt.check()
+            ret, _ = opt.check()
             if i == 0:
                 self.result = opt.result
                 return ret, self.result
-            elif not ret:
+            if not ret:
                 if hasattr(opt, 'expected'):
                     self.result = 'FAIL: CONFIG_{} is needed'.format(opt.name)
                 else:
@@ -240,7 +238,7 @@ def detect_arch(fname):
             print('[+] Trying to detect architecture in "{}"...'.format(fname))
         for line in f.readlines():
             if arch_pattern.match(line):
-                option, value = line[7:].split('=', 1)
+                option, _ = line[7:].split('=', 1)
                 if option in supported_archs:
                     if not arch:
                         arch = option
@@ -248,8 +246,7 @@ def detect_arch(fname):
                         return None, 'more than one supported architecture is detected'
         if not arch:
             return None, 'failed to detect architecture'
-        else:
-            return arch, 'OK'
+        return arch, 'OK'
 
 
 def detect_version(fname):
@@ -494,6 +491,7 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('FTRACE',               'is not set', 'my', 'cut_attack_surface')) # refers to LOCKDOWN
     checklist.append(OptCheck('BPF_JIT',              'is not set', 'my', 'cut_attack_surface'))
     checklist.append(OptCheck('VIDEO_VIVID',          'is not set', 'my', 'cut_attack_surface'))
+    checklist.append(OptCheck('INPUT_EVBUG',          'is not set', 'my', 'cut_attack_surface')) # Can be used as a keylogger
 
     checklist.append(OptCheck('INTEGRITY',       'y', 'defconfig', 'userspace_hardening'))
     if arch == 'ARM64':
