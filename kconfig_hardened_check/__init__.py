@@ -117,9 +117,8 @@ class VerCheck:
         if kernel_version >= self.ver_expected:
             self.result = f'OK: version >= {self.exp_str}'
             return True, self.result
-        else:
-            self.result = f'FAIL: version < {self.exp_str}'
-            return False, self.result
+        self.result = f'FAIL: version < {self.exp_str}'
+        return False, self.result
 
     def table_print(self, with_results):
         ver_req = f'kernel version >= {self.exp_str}'
@@ -267,8 +266,7 @@ def detect_version(fname):
                 if len(ver_numbers) < 3 or not all(i.isdigit() for i in ver_numbers):
                     msg = f'failed to parse the version "{ver_str}"'
                     return None, msg
-                else:
-                    return tuple(int(i) for i in ver_numbers), None
+                return tuple(int(i) for i in ver_numbers), None
         return None, 'no kernel version detected'
 
 
