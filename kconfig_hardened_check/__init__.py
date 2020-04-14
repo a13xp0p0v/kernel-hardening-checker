@@ -597,12 +597,6 @@ def check_config_file(checklist, fname, arch):
         print_checklist(checklist, True)
 
 def main():
-    global debug_mode
-    global json_mode
-    global kernel_version
-
-    config_checklist = []
-
     parser = ArgumentParser(prog='kconfig-hardened-check',
                             description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('-p', '--print', choices=supported_archs,
@@ -615,6 +609,16 @@ def main():
                         help='print results in JSON format')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     args = parser.parse_args()
+    main2(args)
+    #parser.print_help()
+    sys.exit(0)
+
+def main2(args):
+    global debug_mode
+    global json_mode
+    global kernel_version
+
+    config_checklist = []
 
     if args.debug:
         debug_mode = True
@@ -643,7 +647,8 @@ def main():
         ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), config_checklist)))
         if not debug_mode and not json_mode:
             print('[+] config check is finished: \'OK\' - {} / \'FAIL\' - {}'.format(ok_count, error_count))
-        sys.exit(0)
+        #sys.exit(0)
+        return
 
     if args.print:
         arch = args.print
@@ -653,8 +658,6 @@ def main():
         print_checklist(config_checklist, False)
         sys.exit(0)
 
-    parser.print_help()
-    sys.exit(0)
 
 if __name__ == '__main__':
     main()
