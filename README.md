@@ -59,15 +59,15 @@ optional arguments:
   --version             show program's version number and exit
 ```
 
-## Output for `Ubuntu 18.04 (Bionic Beaver with HWE)` kernel config
+## Output for `Ubuntu 20.04 LTS (Focal Fossa)` kernel config
 ```
-$ ./bin/kconfig-hardened-check -c kconfig_hardened_check/config_files/distros/ubuntu-bionic-generic.config 
-[+] Trying to detect architecture in "kconfig_hardened_check/config_files/distros/ubuntu-bionic-generic.config"...
+$ ./bin/kconfig-hardened-check -c kconfig_hardened_check/config_files/distros/ubuntu-focal.config 
+[+] Trying to detect architecture in "kconfig_hardened_check/config_files/distros/ubuntu-focal.config"...
 [+] Detected architecture: X86_64
-[+] Trying to detect kernel version in "kconfig_hardened_check/config_files/distros/ubuntu-bionic-generic.config"...
-[+] Found version line: "# Linux/x86 5.3.0-28-generic Kernel Configuration"
-[+] Detected kernel version: 5.3
-[+] Checking "kconfig_hardened_check/config_files/distros/ubuntu-bionic-generic.config" against X86_64 hardening preferences...
+[+] Trying to detect kernel version in "kconfig_hardened_check/config_files/distros/ubuntu-focal.config"...
+[+] Found version line: "# Linux/x86 5.4.0-29-generic Kernel Configuration"
+[+] Detected kernel version: 5.4
+[+] Checking "kconfig_hardened_check/config_files/distros/ubuntu-focal.config" against X86_64 hardening preferences...
 =========================================================================================================================
                  option name                 | desired val | decision |       reason       |   check result
 =========================================================================================================================
@@ -122,7 +122,7 @@ CONFIG_DEBUG_VIRTUAL                         |      y      |  clipos  |  self_pr
 CONFIG_STATIC_USERMODEHELPER                 |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_SLAB_MERGE_DEFAULT                    | is not set  |  clipos  |  self_protection   |   FAIL: "y"
 CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT is needed
-CONFIG_RANDOM_TRUST_BOOTLOADER               | is not set  |  clipos  |  self_protection   |   OK: not found
+CONFIG_RANDOM_TRUST_BOOTLOADER               | is not set  |  clipos  |  self_protection   |   FAIL: "y"
 CONFIG_RANDOM_TRUST_CPU                      | is not set  |  clipos  |  self_protection   |   FAIL: "y"
 CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
 CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
@@ -132,9 +132,9 @@ CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_pr
 CONFIG_SECURITY                              |      y      |defconfig |  security_policy   |   OK
 CONFIG_SECURITY_YAMA                         |      y      |   kspp   |  security_policy   |   OK
 CONFIG_SECURITY_WRITABLE_HOOKS               | is not set  |    my    |  security_policy   |   OK: not found
-CONFIG_SECURITY_LOCKDOWN_LSM                 |      y      |  clipos  |  security_policy   |   FAIL: not found
-CONFIG_SECURITY_LOCKDOWN_LSM_EARLY           |      y      |  clipos  |  security_policy   |   FAIL: not found
-CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|      y      |  clipos  |  security_policy   |   FAIL: not found
+CONFIG_SECURITY_LOCKDOWN_LSM                 |      y      |  clipos  |  security_policy   |   OK
+CONFIG_SECURITY_LOCKDOWN_LSM_EARLY           |      y      |  clipos  |  security_policy   |   OK
+CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|      y      |  clipos  |  security_policy   |   FAIL: "is not set"
 CONFIG_SECURITY_LOADPIN                      |      y      |    my    |  security_policy   |   FAIL: "is not set"
 CONFIG_SECURITY_LOADPIN_ENFORCE              |      y      |    my    |  security_policy   |   FAIL: CONFIG_SECURITY_LOADPIN is needed
 CONFIG_SECURITY_SAFESETID                    |      y      |    my    |  security_policy   |   OK
@@ -208,7 +208,7 @@ CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_atta
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] config check is finished: 'OK' - 56 / 'FAIL' - 80
+[+] config check is finished: 'OK' - 57 / 'FAIL' - 79
 ```
 
 ## kconfig-hardened-check versioning
