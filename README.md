@@ -248,9 +248,17 @@ __A:__ I personally don't support this recommendation because it provides easy d
 attacks for the whole system (kernel oops is not a rare situation). I think having `CONFIG_BUG` is enough here --
 if we have a kernel oops in the process context, the offending/attacking process is killed.
 
+<br />
+
+__Q:__ What about performance impact of these kernel hardening options?
+
+__A:__ Ike Devolder [@BlackIkeEagle][7] made some performance tests and described the results in [this article][8].
+
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
 [2]: https://docs.clip-os.org/clipos/kernel.html#configuration
 [3]: https://grsecurity.net/
 [4]: https://github.com/a13xp0p0v/linux-kernel-defence-map
 [5]: https://lwn.net/Articles/791863/
 [6]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38
+[7]: https://github.com/BlackIkeEagle
+[8]: https://blog.herecura.eu/blog/2020-05-30-kconfig-hardening-tests/
