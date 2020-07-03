@@ -254,6 +254,17 @@ __Q:__ What about performance impact of these kernel hardening options?
 
 __A:__ Ike Devolder [@BlackIkeEagle][7] made some performance tests and described the results in [this article][8].
 
+<br />
+
+__Q:__ Why enabling `CONFIG_STATIC_USERMODEHELPER` breaks various things in my GNU/Linux system?
+Do I really need that feature?
+
+__A:__ Linux kernel usermode helpers can be used for privilege escalation in kernel exploits
+([example 1][9], [example 2][10]). `CONFIG_STATIC_USERMODEHELPER` prevents that method. But it
+requires the corresponding support in the userspace: see the [example implementation][11] by
+Tycho Andersen [@tych0][12].
+
+
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
 [2]: https://docs.clip-os.org/clipos/kernel.html#configuration
 [3]: https://grsecurity.net/
@@ -262,3 +273,7 @@ __A:__ Ike Devolder [@BlackIkeEagle][7] made some performance tests and describe
 [6]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38
 [7]: https://github.com/BlackIkeEagle
 [8]: https://blog.herecura.eu/blog/2020-05-30-kconfig-hardening-tests/
+[9]: https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
+[10]: https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+[11]: https://github.com/tych0/huldufolk
+[12]: https://github.com/tych0
