@@ -309,6 +309,7 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('UNMAP_KERNEL_AT_EL0',         'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('HARDEN_EL2_VECTORS',          'y', 'defconfig', 'self_protection'))
         checklist.append(OptCheck('RODATA_FULL_DEFAULT_ENABLED', 'y', 'defconfig', 'self_protection'))
+        checklist.append(OptCheck('ARM64_PTR_AUTH',              'y', 'defconfig', 'self_protection'))
     if arch in ('X86_64', 'ARM64'):
         checklist.append(OptCheck('VMAP_STACK',                  'y', 'defconfig', 'self_protection'))
     if arch in ('X86_64', 'ARM64', 'X86_32'):
@@ -495,8 +496,6 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('INPUT_EVBUG',          'is not set', 'my', 'cut_attack_surface')) # Can be used as a keylogger
 
     checklist.append(OptCheck('INTEGRITY',       'y', 'defconfig', 'userspace_hardening'))
-    if arch == 'ARM64':
-        checklist.append(OptCheck('ARM64_PTR_AUTH',       'y', 'defconfig', 'userspace_hardening'))
     if arch in ('ARM', 'X86_32'):
         checklist.append(OptCheck('VMSPLIT_3G',           'y', 'defconfig', 'userspace_hardening'))
     if arch in ('X86_64', 'ARM64'):
