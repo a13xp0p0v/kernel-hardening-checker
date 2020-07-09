@@ -165,10 +165,6 @@ class ComplexOptCheck:
         return self.opts[0].expected
 
     @property
-    def state(self):
-        return self.opts[0].state
-
-    @property
     def decision(self):
         return self.opts[0].decision
 
