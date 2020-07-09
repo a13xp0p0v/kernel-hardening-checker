@@ -275,15 +275,15 @@ def construct_checklist(checklist, arch):
 
     # 'self_protection', 'defconfig'
     checklist.append(OptCheck('self_protection', 'defconfig', 'BUG', 'y'))
-    checklist.append(OR(OptCheck('self_protection', 'defconfig', 'STRICT_KERNEL_RWX', 'y'), \
-                        OptCheck('self_protection', 'defconfig', 'DEBUG_RODATA', 'y'))) # before v4.11
+    checklist.append(OptCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y'))
+    checklist.append(OptCheck('self_protection', 'defconfig', 'GCC_PLUGINS', 'y'))
     checklist.append(OR(OptCheck('self_protection', 'defconfig', 'STACKPROTECTOR_STRONG', 'y'), \
                         OptCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_STRONG', 'y')))
-    checklist.append(OptCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y'))
+    checklist.append(OR(OptCheck('self_protection', 'defconfig', 'STRICT_KERNEL_RWX', 'y'), \
+                        OptCheck('self_protection', 'defconfig', 'DEBUG_RODATA', 'y'))) # before v4.11
     checklist.append(OR(OptCheck('self_protection', 'defconfig', 'STRICT_MODULE_RWX', 'y'), \
                         OptCheck('self_protection', 'defconfig', 'DEBUG_SET_MODULE_RONX', 'y'), \
                         modules_not_set)) # DEBUG_SET_MODULE_RONX was before v4.11
-    checklist.append(OptCheck('self_protection', 'defconfig', 'GCC_PLUGINS', 'y'))
     checklist.append(OR(OptCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'), \
                         VerCheck((5, 5)))) # REFCOUNT_FULL is enabled by default since v5.5
     iommu_support_is_set = OptCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y') # is needed for mitigating DMA attacks
@@ -292,9 +292,9 @@ def construct_checklist(checklist, arch):
         checklist.append(OptCheck('self_protection', 'defconfig', 'MICROCODE', 'y')) # is needed for mitigating CPU bugs
         checklist.append(OptCheck('self_protection', 'defconfig', 'RETPOLINE', 'y'))
         checklist.append(OptCheck('self_protection', 'defconfig', 'X86_SMAP', 'y'))
+        checklist.append(OptCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')) # another reason?
         checklist.append(OR(OptCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'), \
                             OptCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y')))
-        checklist.append(OptCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')) # another reason?
     if arch == 'X86_64':
         checklist.append(OptCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y'))
         checklist.append(OptCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y'))
@@ -326,13 +326,14 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('self_protection', 'kspp', 'SLAB_FREELIST_RANDOM', 'y'))
     checklist.append(OptCheck('self_protection', 'kspp', 'SHUFFLE_PAGE_ALLOCATOR', 'y'))
     checklist.append(OptCheck('self_protection', 'kspp', 'FORTIFY_SOURCE', 'y'))
-    randstruct_is_set = OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y')
-    checklist.append(randstruct_is_set)
-    checklist.append(OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_LATENT_ENTROPY', 'y'))
     checklist.append(OptCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y'))
     checklist.append(OptCheck('self_protection', 'kspp', 'DEBUG_SG', 'y'))
     checklist.append(OptCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y'))
     checklist.append(OptCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y'))
+    checklist.append(OptCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'))
+    checklist.append(OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_LATENT_ENTROPY', 'y'))
+    randstruct_is_set = OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y')
+    checklist.append(randstruct_is_set)
     hardened_usercopy_is_set = OptCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
     checklist.append(hardened_usercopy_is_set)
     checklist.append(AND(OptCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'), \
@@ -346,17 +347,12 @@ def construct_checklist(checklist, arch):
     checklist.append(OR(OptCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'), \
                         modules_not_set)) # refers to LOCKDOWN
     checklist.append(OR(OptCheck('self_protection', 'kspp', 'INIT_STACK_ALL', 'y'), \
-                      OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y')))
-    checklist.append(OptCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'))
+                        OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y')))
     checklist.append(OR(OptCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'), \
                         OptCheck('self_protection', 'kspp', 'PAGE_POISONING', 'y'))) # before v5.3
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         checklist.append(stackleak_is_set)
-        checklist.append(AND(OptCheck('self_protection', 'clipos', 'STACKLEAK_METRICS', 'is not set'), \
-                             stackleak_is_set))
-        checklist.append(AND(OptCheck('self_protection', 'clipos', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'), \
-                             stackleak_is_set))
     if arch in ('X86_64', 'X86_32'):
         checklist.append(OptCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536'))
     if arch == 'X86_32':
@@ -374,10 +370,15 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y'))
     checklist.append(OptCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')) # needs userspace support
     checklist.append(OptCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')) # slab_nomerge
-    checklist.append(AND(OptCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'), \
-                         randstruct_is_set))
     checklist.append(OptCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set'))
     checklist.append(OptCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set'))
+    checklist.append(AND(OptCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'), \
+                         randstruct_is_set))
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
+        checklist.append(AND(OptCheck('self_protection', 'clipos', 'STACKLEAK_METRICS', 'is not set'), \
+                             stackleak_is_set))
+        checklist.append(AND(OptCheck('self_protection', 'clipos', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'), \
+                             stackleak_is_set))
     if arch in ('X86_64', 'X86_32'):
         checklist.append(AND(OptCheck('self_protection', 'clipos', 'INTEL_IOMMU_SVM', 'y'), \
                              iommu_support_is_set))
@@ -405,11 +406,11 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM', 'y'))
     checklist.append(OptCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y'))
     checklist.append(OptCheck('security_policy', 'clipos', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y'))
+    checklist.append(OptCheck('security_policy', 'my', 'SECURITY_SAFESETID', 'y'))
     loadpin_is_set = OptCheck('security_policy', 'my', 'SECURITY_LOADPIN', 'y') # needs userspace support
     checklist.append(loadpin_is_set)
     checklist.append(AND(OptCheck('security_policy', 'my', 'SECURITY_LOADPIN_ENFORCE', 'y'), \
                          loadpin_is_set))
-    checklist.append(OptCheck('security_policy', 'my', 'SECURITY_SAFESETID', 'y'))
 
     # 'cut_attack_surface', 'defconfig'
     checklist.append(OptCheck('cut_attack_surface', 'defconfig', 'SECCOMP', 'y'))
@@ -419,15 +420,6 @@ def construct_checklist(checklist, arch):
                             devmem_not_set)) # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'kspp'
-    checklist.append(modules_not_set)
-    checklist.append(devmem_not_set)
-    checklist.append(OR(OptCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'), \
-                        devmem_not_set)) # refers to LOCKDOWN
-    if arch == 'ARM':
-        checklist.append(OR(OptCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'), \
-                            devmem_not_set)) # refers to LOCKDOWN
-    if arch == 'X86_64':
-        checklist.append(OptCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y')) # 'vsyscall=none'
     checklist.append(OptCheck('cut_attack_surface', 'kspp', 'ACPI_CUSTOM_METHOD', 'is not set')) # refers to LOCKDOWN
     checklist.append(OptCheck('cut_attack_surface', 'kspp', 'COMPAT_BRK', 'is not set'))
     checklist.append(OptCheck('cut_attack_surface', 'kspp', 'DEVKMEM', 'is not set')) # refers to LOCKDOWN
@@ -442,6 +434,15 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('cut_attack_surface', 'kspp', 'X86_X32', 'is not set'))
     checklist.append(OptCheck('cut_attack_surface', 'kspp', 'MODIFY_LDT_SYSCALL', 'is not set'))
     checklist.append(OptCheck('cut_attack_surface', 'kspp', 'OABI_COMPAT', 'is not set'))
+    checklist.append(modules_not_set)
+    checklist.append(devmem_not_set)
+    checklist.append(OR(OptCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'), \
+                        devmem_not_set)) # refers to LOCKDOWN
+    if arch == 'ARM':
+        checklist.append(OR(OptCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'), \
+                            devmem_not_set)) # refers to LOCKDOWN
+    if arch == 'X86_64':
+        checklist.append(OptCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y')) # 'vsyscall=none'
 
     # 'cut_attack_surface', 'grsecurity'
     checklist.append(OptCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set'))
@@ -476,8 +477,6 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')) # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'clipos'
-    if arch in ('X86_64', 'X86_32'):
-        checklist.append(OptCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')) # tsx=off
     checklist.append(OptCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set'))
     checklist.append(OptCheck('cut_attack_surface', 'clipos', 'KSM', 'is not set')) # to prevent FLUSH+RELOAD attack
 #   checklist.append(OptCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')) # no, this info is needed for this check :)
@@ -490,6 +489,8 @@ def construct_checklist(checklist, arch):
     checklist.append(OptCheck('cut_attack_surface', 'clipos', 'X86_CPUID', 'is not set'))
     checklist.append(AND(OptCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD', 'is not set'), \
                          PresenceCheck('LDISC_AUTOLOAD')))
+    if arch in ('X86_64', 'X86_32'):
+        checklist.append(OptCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')) # tsx=off
 
     # 'cut_attack_surface', 'grapheneos'
     checklist.append(OptCheck('cut_attack_surface', 'grapheneos', 'AIO', 'is not set'))
