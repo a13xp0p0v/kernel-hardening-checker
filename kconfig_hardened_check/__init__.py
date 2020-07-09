@@ -98,8 +98,8 @@ class OptCheck:
             self.result = 'FAIL: "' + self.state + '"'
 
         if self.result.startswith('OK'):
-            return True, self.result
-        return False, self.result
+            return True
+        return False
 
     def table_print(self, with_results):
         print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(self.name, self.expected, self.decision, self.reason), end='')
@@ -115,15 +115,15 @@ class VerCheck:
     def check(self):
         if kernel_version[0] > self.ver_expected[0]:
             self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return True, self.result
+            return True
         if kernel_version[0] < self.ver_expected[0]:
             self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return False, self.result
+            return False
         if kernel_version[1] >= self.ver_expected[1]:
             self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return True, self.result
+            return True
         self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-        return False, self.result
+        return False
 
     def table_print(self, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
@@ -141,9 +141,9 @@ class PresenceCheck:
     def check(self):
         if self.state is None:
             self.result = 'FAIL: not present'
-            return False, self.result
+            return False
         self.result = 'OK: is present'
-        return True, self.result
+        return True
 
     def table_print(self, with_results):
         print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
@@ -202,15 +202,15 @@ class OR(ComplexOptCheck):
             sys.exit('[!] ERROR: invalid OR check')
 
         for i, opt in enumerate(self.opts):
-            ret, _ = opt.check()
+            ret = opt.check()
             if ret:
                 if i == 0 or not hasattr(opt, 'expected'):
                     self.result = opt.result
                 else:
                     self.result = 'OK: CONFIG_{} "{}"'.format(opt.name, opt.expected)
-                return True, self.result
+                return True
         self.result = self.opts[0].result
-        return False, self.result
+        return False
 
 
 class AND(ComplexOptCheck):
@@ -220,16 +220,16 @@ class AND(ComplexOptCheck):
 
     def check(self):
         for i, opt in reversed(list(enumerate(self.opts))):
-            ret, _ = opt.check()
+            ret = opt.check()
             if i == 0:
                 self.result = opt.result
-                return ret, self.result
+                return ret
             if not ret:
                 if hasattr(opt, 'expected'):
                     self.result = 'FAIL: CONFIG_{} is needed'.format(opt.name)
                 else:
                     self.result = opt.result
-                return False, self.result
+                return False
 
         sys.exit('[!] ERROR: invalid AND check')
 
