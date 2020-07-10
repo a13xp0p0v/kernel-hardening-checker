@@ -303,6 +303,7 @@ def construct_checklist(l, arch):
         l += [AND(OptCheck('self_protection', 'defconfig', 'AMD_IOMMU', 'y'),
                   iommu_support_is_set)]
     if arch == 'ARM64':
+        l += [OptCheck('self_protection', 'defconfig', 'ARM64_PAN', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'UNMAP_KERNEL_AT_EL0', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y')]
