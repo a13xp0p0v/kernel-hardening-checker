@@ -73,8 +73,6 @@ report_modes = ['verbose', 'json']
 
 supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
 
-kernel_version = None
-
 
 class OptCheck:
     def __init__(self, reason, decision, name, expected):
@@ -109,16 +107,17 @@ class OptCheck:
 class VerCheck:
     def __init__(self, ver_expected):
         self.ver_expected = ver_expected
+        self.ver = None
         self.result = None
 
     def check(self):
-        if kernel_version[0] > self.ver_expected[0]:
+        if self.ver[0] > self.ver_expected[0]:
             self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
             return True
-        if kernel_version[0] < self.ver_expected[0]:
+        if self.ver[0] < self.ver_expected[0]:
             self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
             return False
-        if kernel_version[1] >= self.ver_expected[1]:
+        if self.ver[1] >= self.ver_expected[1]:
             self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
             return True
         self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
@@ -563,13 +562,15 @@ def print_checklist(mode, checklist, with_results):
             print('[+] Config check is finished: \'OK\' - {} / \'FAIL\' - {}'.format(ok_count, error_count))
 
 
-def perform_checks(checklist, parsed_options):
+def perform_checks(checklist, parsed_options, kernel_version):
     for opt in checklist:
         if hasattr(opt, 'opts'):
             # prepare ComplexOptCheck
             for o in opt.opts:
                 if hasattr(o, 'state'):
                     o.state = parsed_options.get(o.name, None)
+                if hasattr(o, 'ver'):
+                    o.ver = kernel_version
         else:
             # prepare simple check
             if not hasattr(opt, 'state'):
@@ -605,9 +606,9 @@ def parse_config_file(parsed_options, fname):
 
 
 def main():
-    global kernel_version
-
     mode = None
+    arch = None
+    kernel_version = None
     config_checklist = []
     parsed_options = OrderedDict()
 
@@ -645,7 +646,7 @@ def main():
 
         construct_checklist(config_checklist, arch)
         parse_config_file(parsed_options, args.config)
-        perform_checks(config_checklist, parsed_options)
+        perform_checks(config_checklist, parsed_options, kernel_version)
 
         if mode == 'verbose':
             print_unknown_options(config_checklist, parsed_options)
