@@ -233,6 +233,8 @@ The rationale:
 
   - A twitter thread about `CONFIG_USER_NS` and security: https://twitter.com/robertswiecki/status/1095447678949953541
 
+  - A good overview of the trade-off between having user namespaces enabled, disabled and available only for root: https://github.com/NixOS/nixpkgs/pull/84522#issuecomment-614640601
+
 <br />
 
 __Q:__ Why `CONFIG_GCC_PLUGINS` is automatically disabled during the kernel compilation?
