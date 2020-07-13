@@ -54,28 +54,28 @@ jobs:
         coverage run -a --branch bin/kconfig-hardened-check
 
         coverage run -a --branch bin/kconfig-hardened-check -p X86_64
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_64 --debug
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_64 --json
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m verbose
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m json
 
         coverage run -a --branch bin/kconfig-hardened-check -p X86_32
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_32 --debug
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_32 --json
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_32 -m verbose
+        coverage run -a --branch bin/kconfig-hardened-check -p X86_32 -m json
 
         coverage run -a --branch bin/kconfig-hardened-check -p ARM64
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM64 --debug
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM64 --json
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM64 -m verbose
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM64 -m json
 
         coverage run -a --branch bin/kconfig-hardened-check -p ARM
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM --debug
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM --json
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM -m verbose
+        coverage run -a --branch bin/kconfig-hardened-check -p ARM -m json
 
         CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
         CONFIGS=`find $CONFIG_DIR -type f|grep "\.config"`
         for C in $CONFIGS
         do
                 coverage run -a --branch bin/kconfig-hardened-check -c $C
-                coverage run -a --branch bin/kconfig-hardened-check -c $C --debug
-                coverage run -a --branch bin/kconfig-hardened-check -c $C --json
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -m json
         done
         coverage xml -i -o coverage.xml
 
