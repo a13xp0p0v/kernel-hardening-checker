@@ -64,15 +64,6 @@ from .__about__ import __version__
 # pylint: disable=line-too-long,bad-whitespace,too-many-branches
 # pylint: disable=too-many-statements,global-statement
 
-# Report modes:
-#   * verbose mode for
-#     - reporting about unknown kernel options in the config
-#     - verbose printing of ComplexOptCheck items
-#   * json mode for printing the results in JSON format
-report_modes = ['verbose', 'json']
-
-supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
-
 
 class OptCheck:
     def __init__(self, reason, decision, name, expected):
@@ -228,14 +219,14 @@ class AND(ComplexOptCheck):
         sys.exit('[!] ERROR: invalid AND check')
 
 
-def detect_arch(fname):
+def detect_arch(fname, archs):
     with open(fname, 'r') as f:
         arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]*=y")
         arch = None
         for line in f.readlines():
             if arch_pattern.match(line):
                 option, _ = line[7:].split('=', 1)
-                if option in supported_archs:
+                if option in archs:
                     if not arch:
                         arch = option
                     else:
@@ -606,12 +597,13 @@ def parse_config_file(parsed_options, fname):
 
 
 def main():
-    mode = None
-    arch = None
-    kernel_version = None
-    config_checklist = []
-    parsed_options = OrderedDict()
-
+    # Report modes:
+    #   * verbose mode for
+    #     - reporting about unknown kernel options in the config
+    #     - verbose printing of ComplexOptCheck items
+    #   * json mode for printing the results in JSON format
+    report_modes = ['verbose', 'json']
+    supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
     parser = ArgumentParser(prog='kconfig-hardened-check',
                             description='Checks the hardening options in the Linux kernel config')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
@@ -623,16 +615,19 @@ def main():
                         help='choose the report mode')
     args = parser.parse_args()
 
+    mode = None
     if args.mode:
         mode = args.mode
         if mode != 'json':
             print("[+] Special report mode: {}".format(mode))
 
+    config_checklist = []
+
     if args.config:
         if mode != 'json':
             print('[+] Config file to check: {}'.format(args.config))
 
-        arch, msg = detect_arch(args.config)
+        arch, msg = detect_arch(args.config, supported_archs)
         if not arch:
             sys.exit('[!] ERROR: {}'.format(msg))
         if mode != 'json':
@@ -645,6 +640,7 @@ def main():
             print('[+] Detected kernel version: {}.{}'.format(kernel_version[0], kernel_version[1]))
 
         construct_checklist(config_checklist, arch)
+        parsed_options = OrderedDict()
         parse_config_file(parsed_options, args.config)
         perform_checks(config_checklist, parsed_options, kernel_version)
 
