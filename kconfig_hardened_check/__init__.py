@@ -355,6 +355,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('self_protection', 'clipos', 'SECURITY_DMESG_RESTRICT', 'y')]
     l += [OptCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y')]
     l += [OptCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
+    l += [OptCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y')]
     l += [OptCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')] # slab_nomerge
     l += [OptCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set')]
     l += [OptCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set')]
