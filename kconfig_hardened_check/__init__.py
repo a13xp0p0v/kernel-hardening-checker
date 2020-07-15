@@ -457,11 +457,8 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'maintainer', 'FB', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'maintainer', 'VT', 'is not set')]
 
-    # 'cut_attack_surface', 'lockdown'
-    l += [OptCheck('cut_attack_surface', 'lockdown', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
-    l += [OptCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
-    l += [OptCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')] # refers to LOCKDOWN
-    l += [OptCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')] # refers to LOCKDOWN
+    # 'cut_attack_surface', 'grapheneos'
+    l += [OptCheck('cut_attack_surface', 'grapheneos', 'AIO', 'is not set')]
 
     # 'cut_attack_surface', 'clipos'
     l += [OptCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
@@ -481,8 +478,11 @@ def construct_checklist(l, arch):
     if arch in ('X86_64', 'X86_32'):
         l += [OptCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
-    # 'cut_attack_surface', 'grapheneos'
-    l += [OptCheck('cut_attack_surface', 'grapheneos', 'AIO', 'is not set')]
+    # 'cut_attack_surface', 'lockdown'
+    l += [OptCheck('cut_attack_surface', 'lockdown', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
+    l += [OptCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
+    l += [OptCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')] # refers to LOCKDOWN
+    l += [OptCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')] # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'my'
     l += [OptCheck('cut_attack_surface', 'my', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
