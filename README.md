@@ -116,12 +116,13 @@ CONFIG_DEFAULT_MMAP_MIN_ADDR                 |    65536    |   kspp   |  self_pr
 CONFIG_SECURITY_DMESG_RESTRICT               |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_DEBUG_VIRTUAL                         |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_STATIC_USERMODEHELPER                 |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
+CONFIG_EFI_DISABLE_PCI_DMA                   |      y      |  clipos  |  self_protection   |   FAIL: not found
 CONFIG_SLAB_MERGE_DEFAULT                    | is not set  |  clipos  |  self_protection   |   FAIL: "y"
 CONFIG_RANDOM_TRUST_BOOTLOADER               | is not set  |  clipos  |  self_protection   |   FAIL: "y"
 CONFIG_RANDOM_TRUST_CPU                      | is not set  |  clipos  |  self_protection   |   FAIL: "y"
-CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT is needed
-CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
-CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is needed
+CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT not "y"
+CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
+CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
 CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
 CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_SLUB_DEBUG_ON                         |      y      |    my    |  self_protection   |   FAIL: "is not set"
@@ -135,7 +136,7 @@ CONFIG_SECURITY_LOCKDOWN_LSM_EARLY           |      y      |  clipos  |  securit
 CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|      y      |  clipos  |  security_policy   |   FAIL: "is not set"
 CONFIG_SECURITY_SAFESETID                    |      y      |    my    |  security_policy   |   OK
 CONFIG_SECURITY_LOADPIN                      |      y      |    my    |  security_policy   |   FAIL: "is not set"
-CONFIG_SECURITY_LOADPIN_ENFORCE              |      y      |    my    |  security_policy   |   FAIL: CONFIG_SECURITY_LOADPIN is needed
+CONFIG_SECURITY_LOADPIN_ENFORCE              |      y      |    my    |  security_policy   |   FAIL: CONFIG_SECURITY_LOADPIN not "y"
 CONFIG_SECCOMP                               |      y      |defconfig | cut_attack_surface |   OK
 CONFIG_SECCOMP_FILTER                        |      y      |defconfig | cut_attack_surface |   OK
 CONFIG_STRICT_DEVMEM                         |      y      |defconfig | cut_attack_surface |   OK
@@ -157,7 +158,6 @@ CONFIG_MODULES                               | is not set  |   kspp   | cut_atta
 CONFIG_DEVMEM                                | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
 CONFIG_IO_STRICT_DEVMEM                      |      y      |   kspp   | cut_attack_surface |   FAIL: "is not set"
 CONFIG_LEGACY_VSYSCALL_NONE                  |      y      |   kspp   | cut_attack_surface |   FAIL: "is not set"
-CONFIG_X86_PTDUMP                            | is not set  |grsecurity| cut_attack_surface |   OK
 CONFIG_ZSMALLOC_STAT                         | is not set  |grsecurity| cut_attack_surface |   OK
 CONFIG_PAGE_OWNER                            | is not set  |grsecurity| cut_attack_surface |   OK
 CONFIG_DEBUG_KMEMLEAK                        | is not set  |grsecurity| cut_attack_surface |   OK
@@ -175,14 +175,11 @@ CONFIG_MEM_SOFT_DIRTY                        | is not set  |grsecurity| cut_atta
 CONFIG_DEVPORT                               | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_DEBUG_FS                              | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_NOTIFIER_ERROR_INJECTION              | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
+CONFIG_X86_PTDUMP                            | is not set  |grsecurity| cut_attack_surface |   OK
 CONFIG_DRM_LEGACY                            | is not set  |maintainer| cut_attack_surface |   OK
 CONFIG_FB                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
 CONFIG_VT                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
-CONFIG_ACPI_TABLE_UPGRADE                    | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
-CONFIG_X86_IOPL_IOPERM                       | is not set  | lockdown | cut_attack_surface |   OK: not found
-CONFIG_EFI_TEST                              | is not set  | lockdown | cut_attack_surface |   FAIL: "m"
-CONFIG_BPF_SYSCALL                           | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
-CONFIG_MMIOTRACE_TEST                        | is not set  | lockdown | cut_attack_surface |   OK
+CONFIG_AIO                                   | is not set  |grapheneos| cut_attack_surface |   FAIL: "y"
 CONFIG_STAGING                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_KSM                                   | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_KALLSYMS                              | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
@@ -192,9 +189,14 @@ CONFIG_KEXEC_FILE                            | is not set  |  clipos  | cut_atta
 CONFIG_USER_NS                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_X86_MSR                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "m"
 CONFIG_X86_CPUID                             | is not set  |  clipos  | cut_attack_surface |   FAIL: "m"
+CONFIG_IO_URING                              | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
+CONFIG_X86_IOPL_IOPERM                       | is not set  |  clipos  | cut_attack_surface |   OK: not found
 CONFIG_LDISC_AUTOLOAD                        | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_X86_INTEL_TSX_MODE_OFF                |      y      |  clipos  | cut_attack_surface |   OK
-CONFIG_AIO                                   | is not set  |grapheneos| cut_attack_surface |   FAIL: "y"
+CONFIG_ACPI_TABLE_UPGRADE                    | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
+CONFIG_EFI_TEST                              | is not set  | lockdown | cut_attack_surface |   FAIL: "m"
+CONFIG_BPF_SYSCALL                           | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
+CONFIG_MMIOTRACE_TEST                        | is not set  | lockdown | cut_attack_surface |   OK
 CONFIG_MMIOTRACE                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_LIVEPATCH                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_IP_DCCP                               | is not set  |    my    | cut_attack_surface |   FAIL: "m"
@@ -206,7 +208,7 @@ CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_atta
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] Config check is finished: 'OK' - 57 / 'FAIL' - 79
+[+] Config check is finished: 'OK' - 57 / 'FAIL' - 81
 ```
 
 ## kconfig-hardened-check versioning
