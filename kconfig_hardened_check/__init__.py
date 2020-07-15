@@ -54,15 +54,17 @@
 #    fs.suid_dumpable=0
 #    kernel.modules_disabled=1
 
+
+# pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
+# pylint: disable=line-too-long,invalid-name,too-many-branches,too-many-statements
+
+
 import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
 import re
 import json
 from .__about__ import __version__
-
-# pylint: disable=line-too-long,bad-whitespace,too-many-branches
-# pylint: disable=too-many-statements,global-statement
 
 
 class OptCheck:
@@ -89,7 +91,7 @@ class OptCheck:
             return True
         return False
 
-    def table_print(self, mode, with_results):
+    def table_print(self, _mode, with_results):
         print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(self.name, self.expected, self.decision, self.reason), end='')
         if with_results:
             print('|   {}'.format(self.result), end='')
@@ -98,7 +100,7 @@ class OptCheck:
 class VerCheck:
     def __init__(self, ver_expected):
         self.ver_expected = ver_expected
-        self.ver = None
+        self.ver = ()
         self.result = None
 
     def check(self):
@@ -114,7 +116,7 @@ class VerCheck:
         self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
         return False
 
-    def table_print(self, mode, with_results):
+    def table_print(self, _mode, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
         print('{:<91}'.format(ver_req), end='')
         if with_results:
@@ -134,7 +136,7 @@ class PresenceCheck:
         self.result = 'OK: is present'
         return True
 
-    def table_print(self, mode, with_results):
+    def table_print(self, _mode, with_results):
         print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
         if with_results:
             print('|   {}'.format(self.result), end='')
@@ -448,7 +450,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'MEM_SOFT_DIRTY', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEVPORT', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEBUG_FS', 'is not set')] # refers to LOCKDOWN
-    l += [OptCheck('cut_attack_surface', 'grsecurity', 'NOTIFIER_ERROR_INJECTION','is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'NOTIFIER_ERROR_INJECTION', 'is not set')]
     l += [AND(OptCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set'),
               OptCheck('cut_attack_surface', 'my', 'PTDUMP_DEBUGFS', 'is not set'))]
 
