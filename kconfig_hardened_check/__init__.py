@@ -539,6 +539,13 @@ def print_checklist(mode, checklist, with_results):
 
     # table contents
     for opt in checklist:
+        if with_results:
+            if mode == 'show_ok':
+                if not opt.result.startswith('OK'):
+                    continue
+            if mode == 'show_fail':
+                if not opt.result.startswith('FAIL'):
+                    continue
         opt.table_print(mode, with_results)
         print()
         if mode == 'verbose':
@@ -547,10 +554,16 @@ def print_checklist(mode, checklist, with_results):
 
     # final score
     if with_results:
-        error_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
+        fail_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
+        fail_suppressed = ''
         ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), checklist)))
+        ok_suppressed = ''
+        if mode == 'show_ok':
+            fail_suppressed = ' (suppressed in output)'
+        if mode == 'show_fail':
+            ok_suppressed = ' (suppressed in output)'
         if mode != 'json':
-            print('[+] Config check is finished: \'OK\' - {} / \'FAIL\' - {}'.format(ok_count, error_count))
+            print('[+] Config check is finished: \'OK\' - {}{} / \'FAIL\' - {}{}'.format(ok_count, ok_suppressed, fail_count, fail_suppressed))
 
 
 def perform_checks(checklist, parsed_options, kernel_version):
@@ -602,7 +615,7 @@ def main():
     #     - reporting about unknown kernel options in the config
     #     - verbose printing of ComplexOptCheck items
     #   * json mode for printing the results in JSON format
-    report_modes = ['verbose', 'json']
+    report_modes = ['verbose', 'json', 'show_ok', 'show_fail']
     supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
     parser = ArgumentParser(prog='kconfig-hardened-check',
                             description='Checks the hardening options in the Linux kernel config')
@@ -610,7 +623,7 @@ def main():
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print hardening preferences for selected architecture')
     parser.add_argument('-c', '--config',
-                        help='check the config_file against these preferences')
+                        help='check the kernel config file against these preferences')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
     args = parser.parse_args()
@@ -651,6 +664,8 @@ def main():
         sys.exit(0)
 
     if args.print:
+        if mode in ('show_ok', 'show_fail'):
+            sys.exit('[!] ERROR: please use "{}" mode for checking the kernel config'.format(mode))
         arch = args.print
         construct_checklist(config_checklist, arch)
         if mode != 'json':

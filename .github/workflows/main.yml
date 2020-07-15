@@ -76,6 +76,8 @@ jobs:
                 coverage run -a --branch bin/kconfig-hardened-check -c $C
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -m json
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -m show_ok
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -m show_fail
         done
         coverage xml -i -o coverage.xml
 

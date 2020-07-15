@@ -44,7 +44,8 @@ or simply run `./bin/kconfig-hardened-check` from the cloned repository.
 ## Usage
 ```
 usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}]
-                              [-c CONFIG] [-m {verbose,json}]
+                              [-c CONFIG]
+                              [-m {verbose,json,show_ok,show_fail}]
 
 Checks the hardening options in the Linux kernel config
 
@@ -54,8 +55,8 @@ optional arguments:
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
                         print hardening preferences for selected architecture
   -c CONFIG, --config CONFIG
-                        check the config_file against these preferences
-  -m {verbose,json}, --mode {verbose,json}
+                        check the kernel config file against these preferences
+  -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
                         choose the report mode
 ```
 
