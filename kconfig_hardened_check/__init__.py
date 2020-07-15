@@ -431,7 +431,6 @@ def construct_checklist(l, arch):
         l += [OptCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y')] # 'vsyscall=none'
 
     # 'cut_attack_surface', 'grsecurity'
-    l += [OptCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'ZSMALLOC_STAT', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'PAGE_OWNER', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEBUG_KMEMLEAK', 'is not set')]
@@ -449,6 +448,8 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEVPORT', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEBUG_FS', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'NOTIFIER_ERROR_INJECTION','is not set')]
+    l += [AND(OptCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set'),
+              OptCheck('cut_attack_surface', 'my', 'PTDUMP_DEBUGFS', 'is not set'))]
 
     # 'cut_attack_surface', 'maintainer'
     l += [OptCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')]
