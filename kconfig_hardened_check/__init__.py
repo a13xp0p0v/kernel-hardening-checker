@@ -493,7 +493,10 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'my', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
 
     # 'userspace_hardening'
-    l += [OptCheck('userspace_hardening', 'defconfig', 'INTEGRITY', 'y')]
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
+        l += [OptCheck('userspace_hardening', 'defconfig', 'INTEGRITY', 'y')]
+    if arch == 'ARM':
+        l += [OptCheck('userspace_hardening', 'my', 'INTEGRITY', 'y')]
     if arch in ('ARM', 'X86_32'):
         l += [OptCheck('userspace_hardening', 'defconfig', 'VMSPLIT_3G', 'y')]
     if arch in ('X86_64', 'ARM64'):
