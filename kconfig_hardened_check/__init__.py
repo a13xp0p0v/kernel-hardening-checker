@@ -178,9 +178,9 @@ class ComplexOptCheck:
 
 class OR(ComplexOptCheck):
     # self.opts[0] is the option that this OR-check is about.
-    # Use case:
+    # Use cases:
     #     OR(<X_is_hardened>, <X_is_disabled>)
-    #     OR(<X_is_hardened>, <X_is_hardened_old>)
+    #     OR(<X_is_hardened>, <old_X_is_hardened>)
 
     def check(self):
         if not self.opts:
@@ -200,8 +200,10 @@ class OR(ComplexOptCheck):
 
 class AND(ComplexOptCheck):
     # self.opts[0] is the option that this AND-check is about.
-    # Use case: AND(<suboption>, <main_option>)
-    # Suboption is not checked if checking of the main_option is failed.
+    # Use cases:
+    #     AND(<suboption>, <main_option>)
+    #       Suboption is not checked if checking of the main_option is failed.
+    #     AND(<X_is_disabled>, <old_X_is_disabled>)
 
     def check(self):
         for i, opt in reversed(list(enumerate(self.opts))):
@@ -211,7 +213,7 @@ class AND(ComplexOptCheck):
                 return ret
             if not ret:
                 if hasattr(opt, 'expected'):
-                    self.result = 'FAIL: CONFIG_{} is needed'.format(opt.name)
+                    self.result = 'FAIL: CONFIG_{} not "{}"'.format(opt.name, opt.expected)
                 else:
                     self.result = opt.result
                 return False
