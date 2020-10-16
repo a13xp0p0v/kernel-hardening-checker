@@ -379,7 +379,7 @@ def construct_checklist(l, arch):
                   iommu_support_is_set)]
 
     # 'self_protection', 'my'
-    l += [OptCheck('self_protection', 'my', 'SLUB_DEBUG_ON', 'y')]
+    l += [OptCheck('self_protection', 'my', 'SLUB_DEBUG_ON', 'y')] # TODO: is it better to set that via kernel cmd?
     l += [OptCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
     if arch == 'X86_64':
         l += [AND(OptCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
