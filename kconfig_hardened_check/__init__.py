@@ -41,6 +41,7 @@
 #    kernel.kexec_load_disabled=1
 #    kernel.yama.ptrace_scope=3
 #    user.max_user_namespaces=0
+#    what about bpf_jit_enable?
 #    kernel.unprivileged_bpf_disabled=1
 #    net.core.bpf_jit_harden=2
 #
@@ -492,7 +493,6 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'my', 'IP_DCCP', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'my', 'IP_SCTP', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'my', 'FTRACE', 'is not set')] # refers to LOCKDOWN
-    l += [OptCheck('cut_attack_surface', 'my', 'BPF_JIT', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'my', 'VIDEO_VIVID', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'my', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
 
