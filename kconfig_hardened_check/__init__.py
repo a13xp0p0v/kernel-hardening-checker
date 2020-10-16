@@ -477,6 +477,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'clipos', 'IO_URING', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
+    l += [OptCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [AND(OptCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD', 'is not set'),
               PresenceCheck('LDISC_AUTOLOAD'))]
     if arch in ('X86_64', 'X86_32'):
