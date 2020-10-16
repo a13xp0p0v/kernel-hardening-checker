@@ -476,13 +476,13 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'clipos', 'X86_CPUID', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'clipos', 'IO_URING', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')] # refers to LOCKDOWN
+    l += [OptCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [AND(OptCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD', 'is not set'),
               PresenceCheck('LDISC_AUTOLOAD'))]
     if arch in ('X86_64', 'X86_32'):
         l += [OptCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
     # 'cut_attack_surface', 'lockdown'
-    l += [OptCheck('cut_attack_surface', 'lockdown', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')] # refers to LOCKDOWN
