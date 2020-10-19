@@ -293,7 +293,8 @@ def construct_checklist(l, arch):
     if arch == 'ARM64':
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_PAN', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'UNMAP_KERNEL_AT_EL0', 'y')]
-        l += [OptCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y')]
+        l += [OR(OptCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
+                 VerCheck((5,9)))] # HARDEN_EL2_VECTORS was removed in v5.9
         l += [OptCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
     if arch in ('X86_64', 'ARM64'):
