@@ -146,6 +146,10 @@ class PresenceCheck:
 class ComplexOptCheck:
     def __init__(self, *opts):
         self.opts = opts
+        if not self.opts:
+            sys.exit('[!] ERROR: empty {} check'.format(self.__class__.__name__))
+        if not isinstance(opts[0], OptCheck):
+            sys.exit('[!] ERROR: invalid {} check: {}'.format(self.__class__.__name__, opts))
         self.result = None
 
     @property
@@ -192,9 +196,13 @@ class OR(ComplexOptCheck):
         for i, opt in enumerate(self.opts):
             ret = opt.check()
             if ret:
-                if i == 0 or not hasattr(opt, 'expected'):
+                if opt.result != 'OK' or i == 0:
+                    # Preserve additional explanation of this OK result.
+                    # Simple OK is enough only for the main option that
+                    # this OR-check is about.
                     self.result = opt.result
                 else:
+                    # Simple OK is not enough for additional checks.
                     self.result = 'OK: CONFIG_{} "{}"'.format(opt.name, opt.expected)
                 return True
         self.result = self.opts[0].result
@@ -215,9 +223,13 @@ class AND(ComplexOptCheck):
                 self.result = opt.result
                 return ret
             if not ret:
-                if hasattr(opt, 'expected'):
+                # This FAIL is caused by additional checks,
+                # and not by the main option that this AND-check is about.
+                if opt.result.startswith('FAIL: \"'):
+                    # Describe the reason of the FAIL.
                     self.result = 'FAIL: CONFIG_{} not "{}"'.format(opt.name, opt.expected)
                 else:
+                    # This FAIL message is self-explaining.
                     self.result = opt.result
                 return False
 
@@ -577,21 +589,28 @@ def print_checklist(mode, checklist, with_results):
             print('[+] Config check is finished: \'OK\' - {}{} / \'FAIL\' - {}{}'.format(ok_count, ok_suppressed, fail_count, fail_suppressed))
 
 
-def perform_checks(checklist, parsed_options, kernel_version):
-    for opt in checklist:
+def perform_check(opt, parsed_options, kernel_version):
         if hasattr(opt, 'opts'):
             # prepare ComplexOptCheck
             for o in opt.opts:
+                if hasattr(o, 'opts'):
+                    # Recursion for nested ComplexOptChecks
+                    perform_check(o, parsed_options, kernel_version)
                 if hasattr(o, 'state'):
                     o.state = parsed_options.get(o.name, None)
                 if hasattr(o, 'ver'):
                     o.ver = kernel_version
         else:
-            # prepare simple check
+            # prepare simple check, opt.state is mandatory
             if not hasattr(opt, 'state'):
                 sys.exit('[!] ERROR: bad simple check {}'.format(vars(opt)))
             opt.state = parsed_options.get(opt.name, None)
         opt.check()
+
+
+def perform_checks(checklist, parsed_options, kernel_version):
+    for opt in checklist:
+        perform_check(opt, parsed_options, kernel_version)
 
 
 def parse_config_file(parsed_options, fname):
