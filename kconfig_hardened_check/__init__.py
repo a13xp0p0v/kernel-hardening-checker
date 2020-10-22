@@ -312,6 +312,7 @@ def construct_checklist(l, arch):
                      VerCheck((5, 9))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
         l += [OptCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
+        l += [OptCheck('self_protection', 'defconfig', 'ARM64_BTI_KERNEL', 'y')]
     if arch in ('X86_64', 'ARM64'):
         l += [OptCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
