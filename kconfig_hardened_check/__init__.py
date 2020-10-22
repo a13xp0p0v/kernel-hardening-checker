@@ -225,9 +225,11 @@ class AND(ComplexOptCheck):
             if not ret:
                 # This FAIL is caused by additional checks,
                 # and not by the main option that this AND-check is about.
-                if opt.result.startswith('FAIL: \"'):
-                    # Describe the reason of the FAIL.
+                # Describe the reason of the FAIL.
+                if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: not found':
                     self.result = 'FAIL: CONFIG_{} not "{}"'.format(opt.name, opt.expected)
+                elif opt.result == 'FAIL: not present':
+                    self.result = 'FAIL: CONFIG_{} not present'.format(opt.name)
                 else:
                     # This FAIL message is self-explaining.
                     self.result = opt.result
