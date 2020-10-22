@@ -395,6 +395,9 @@ def construct_checklist(l, arch):
                   iommu_support_is_set)]
 
     # 'self_protection', 'my'
+    l += [AND(OptCheck('self_protection', 'my', 'UBSAN_BOUNDS', 'y'),
+              OptCheck('self_protection', 'my', 'UBSAN_MISC', 'is not set'),
+              OptCheck('self_protection', 'my', 'UBSAN_TRAP', 'y'))]
     l += [OptCheck('self_protection', 'my', 'SLUB_DEBUG_ON', 'y')] # TODO: is it better to set that via kernel cmd?
     l += [OptCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
     if arch == 'X86_64':
