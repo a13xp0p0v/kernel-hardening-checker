@@ -509,6 +509,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')] # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'my'
+    l += [OptCheck('cut_attack_surface', 'my', 'TRIM_UNUSED_KSYMS', 'y')]
     l += [OptCheck('cut_attack_surface', 'my', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
     l += [OptCheck('cut_attack_surface', 'my', 'LIVEPATCH', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'my', 'IP_DCCP', 'is not set')]
