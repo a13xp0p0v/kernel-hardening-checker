@@ -352,7 +352,7 @@ def construct_checklist(l, arch):
              modules_not_set)]
     l += [OR(OptCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
              modules_not_set)] # refers to LOCKDOWN
-    l += [OR(OptCheck('self_protection', 'kspp', 'INIT_STACK_ALL', 'y'),
+    l += [OR(OptCheck('self_protection', 'kspp', 'INIT_STACK_ALL_ZERO', 'y'),
              OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
     l += [OR(OptCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'),
              OptCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'))] # before v5.3
