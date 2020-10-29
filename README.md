@@ -266,6 +266,13 @@ __A:__ Linux kernel usermode helpers can be used for privilege escalation in ker
 requires the corresponding support in the userspace: see the [example implementation][11] by
 Tycho Andersen [@tych0][12].
 
+<br />
+
+__Q:__ Does my kernel have all those mitigations of Transient Execution Vulnerabilities in my hardware?
+
+__A:__ Checking the kernel config is not enough to answer this question.
+I highly recommend using [spectre-meltdown-checker][13] tool maintained by Stéphane Lesimple [@speed47][14].
+
 
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
 [2]: https://docs.clip-os.org/clipos/kernel.html#configuration
@@ -279,3 +286,5 @@ Tycho Andersen [@tych0][12].
 [10]: https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
 [11]: https://github.com/tych0/huldufolk
 [12]: https://github.com/tych0
+[13]: https://github.com/speed47/spectre-meltdown-checker
+[14]: https://github.com/speed47
