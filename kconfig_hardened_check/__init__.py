@@ -601,22 +601,22 @@ def print_checklist(mode, checklist, with_results):
 
 
 def perform_check(opt, parsed_options, kernel_version):
-        if hasattr(opt, 'opts'):
-            # prepare ComplexOptCheck
-            for o in opt.opts:
-                if hasattr(o, 'opts'):
-                    # Recursion for nested ComplexOptChecks
-                    perform_check(o, parsed_options, kernel_version)
-                if hasattr(o, 'state'):
-                    o.state = parsed_options.get(o.name, None)
-                if hasattr(o, 'ver'):
-                    o.ver = kernel_version
-        else:
-            # prepare simple check, opt.state is mandatory
-            if not hasattr(opt, 'state'):
-                sys.exit('[!] ERROR: bad simple check {}'.format(vars(opt)))
-            opt.state = parsed_options.get(opt.name, None)
-        opt.check()
+    if hasattr(opt, 'opts'):
+        # prepare ComplexOptCheck
+        for o in opt.opts:
+            if hasattr(o, 'opts'):
+                # Recursion for nested ComplexOptChecks
+                perform_check(o, parsed_options, kernel_version)
+            if hasattr(o, 'state'):
+                o.state = parsed_options.get(o.name, None)
+            if hasattr(o, 'ver'):
+                o.ver = kernel_version
+    else:
+        # prepare simple check, opt.state is mandatory
+        if not hasattr(opt, 'state'):
+            sys.exit('[!] ERROR: bad simple check {}'.format(vars(opt)))
+        opt.state = parsed_options.get(opt.name, None)
+    opt.check()
 
 
 def perform_checks(checklist, parsed_options, kernel_version):
