@@ -109,8 +109,8 @@ CONFIG_MODULE_SIG                            |      y      |   kspp   |  self_pr
 CONFIG_MODULE_SIG_ALL                        |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_SHA512                     |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_FORCE                      |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_INIT_STACK_ALL                        |      y      |   kspp   |  self_protection   |   FAIL: not found
-CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |   kspp   |  self_protection   |   OK: CONFIG_PAGE_POISONING "y"
+CONFIG_INIT_STACK_ALL_ZERO                   |      y      |   kspp   |  self_protection   |   FAIL: not found
+CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |   kspp   |  self_protection   |   OK: CONFIG_PAGE_POISONING_ZERO "y"
 CONFIG_GCC_PLUGIN_STACKLEAK                  |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_DEFAULT_MMAP_MIN_ADDR                 |    65536    |   kspp   |  self_protection   |   OK
 CONFIG_SECURITY_DMESG_RESTRICT               |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
@@ -125,6 +125,7 @@ CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_pr
 CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
 CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
 CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
+CONFIG_UBSAN_BOUNDS                          |      y      |    my    |  self_protection   |   FAIL: CONFIG_UBSAN_TRAP not "y"
 CONFIG_SLUB_DEBUG_ON                         |      y      |    my    |  self_protection   |   FAIL: "is not set"
 CONFIG_RESET_ATTACK_MITIGATION               |      y      |    my    |  self_protection   |   OK
 CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_protection   |   FAIL: "m"
@@ -191,24 +192,25 @@ CONFIG_X86_MSR                               | is not set  |  clipos  | cut_atta
 CONFIG_X86_CPUID                             | is not set  |  clipos  | cut_attack_surface |   FAIL: "m"
 CONFIG_IO_URING                              | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_X86_IOPL_IOPERM                       | is not set  |  clipos  | cut_attack_surface |   OK: not found
+CONFIG_ACPI_TABLE_UPGRADE                    | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
+CONFIG_EFI_CUSTOM_SSDT_OVERLAYS              | is not set  |  clipos  | cut_attack_surface |   OK: not found
 CONFIG_LDISC_AUTOLOAD                        | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_X86_INTEL_TSX_MODE_OFF                |      y      |  clipos  | cut_attack_surface |   OK
-CONFIG_ACPI_TABLE_UPGRADE                    | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
 CONFIG_EFI_TEST                              | is not set  | lockdown | cut_attack_surface |   FAIL: "m"
 CONFIG_BPF_SYSCALL                           | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
 CONFIG_MMIOTRACE_TEST                        | is not set  | lockdown | cut_attack_surface |   OK
+CONFIG_TRIM_UNUSED_KSYMS                     |      y      |    my    | cut_attack_surface |   FAIL: not found
 CONFIG_MMIOTRACE                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_LIVEPATCH                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_IP_DCCP                               | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_IP_SCTP                               | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_FTRACE                                | is not set  |    my    | cut_attack_surface |   FAIL: "y"
-CONFIG_BPF_JIT                               | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] Config check is finished: 'OK' - 57 / 'FAIL' - 81
+[+] Config check is finished: 'OK' - 58 / 'FAIL' - 82
 ```
 
 ## kconfig-hardened-check versioning
