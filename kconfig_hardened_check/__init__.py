@@ -406,7 +406,7 @@ def construct_checklist(l, arch):
         l += [AND(OptCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
                   iommu_support_is_set)]
     if arch == 'ARM64':
-        l += [OptCheck('self_protection', 'my', 'SHADOW_CALL_STACK', 'y')]
+        l += [OptCheck('self_protection', 'my', 'SHADOW_CALL_STACK', 'y')] # maybe it should be alternative to STACKPROTECTOR_STRONG
 
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
