@@ -19,6 +19,7 @@
 #    init_on_alloc=1
 #    init_on_free=1
 #    loadpin.enforce=1
+#    debugfs=no-mount (or off if possible)
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
