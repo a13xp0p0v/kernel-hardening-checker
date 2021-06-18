@@ -526,6 +526,8 @@ def construct_checklist(l, arch):
         l += [OptCheck('userspace_hardening', 'defconfig', 'INTEGRITY', 'y')]
     if arch == 'ARM':
         l += [OptCheck('userspace_hardening', 'my', 'INTEGRITY', 'y')]
+    if arch == 'ARM64':
+        l += [OptCheck('userspace_hardening', 'defconfig', 'ARM64_MTE', 'y')]
     if arch in ('ARM', 'X86_32'):
         l += [OptCheck('userspace_hardening', 'defconfig', 'VMSPLIT_3G', 'y')]
     if arch in ('X86_64', 'ARM64'):
