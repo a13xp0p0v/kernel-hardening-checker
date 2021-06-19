@@ -36,7 +36,7 @@
 #
 # N.B. Hardening sysctls:
 #    kernel.kptr_restrict=2 (or 1?)
-#    kernel.dmesg_restrict=1
+#    kernel.dmesg_restrict=1 (also see the kconfig option)
 #    kernel.perf_event_paranoid=3
 #    kernel.kexec_load_disabled=1
 #    kernel.yama.ptrace_scope=3
@@ -328,6 +328,7 @@ def construct_checklist(l, arch):
         l += [OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
 
     # 'self_protection', 'kspp'
+    l += [OptCheck('self_protection', 'kspp', 'SECURITY_DMESG_RESTRICT', 'y')]
     l += [OptCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
     l += [OptCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     l += [OptCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y')]
@@ -375,7 +376,6 @@ def construct_checklist(l, arch):
         l += [OptCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
 
     # 'self_protection', 'clipos'
-    l += [OptCheck('self_protection', 'clipos', 'SECURITY_DMESG_RESTRICT', 'y')]
     l += [OptCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y')]
     l += [OptCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [OptCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y')]
