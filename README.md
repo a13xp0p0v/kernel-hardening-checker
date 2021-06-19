@@ -77,6 +77,9 @@ CONFIG_STRICT_KERNEL_RWX                     |      y      |defconfig |  self_pr
 CONFIG_STRICT_MODULE_RWX                     |      y      |defconfig |  self_protection   |   OK
 CONFIG_REFCOUNT_FULL                         |      y      |defconfig |  self_protection   |   FAIL: "is not set"
 CONFIG_IOMMU_SUPPORT                         |      y      |defconfig |  self_protection   |   OK
+CONFIG_RANDOMIZE_BASE                        |      y      |defconfig |  self_protection   |   OK
+CONFIG_THREAD_INFO_IN_TASK                   |      y      |defconfig |  self_protection   |   OK
+CONFIG_VMAP_STACK                            |      y      |defconfig |  self_protection   |   OK
 CONFIG_MICROCODE                             |      y      |defconfig |  self_protection   |   OK
 CONFIG_RETPOLINE                             |      y      |defconfig |  self_protection   |   OK
 CONFIG_X86_SMAP                              |      y      |defconfig |  self_protection   |   OK
@@ -86,9 +89,7 @@ CONFIG_PAGE_TABLE_ISOLATION                  |      y      |defconfig |  self_pr
 CONFIG_RANDOMIZE_MEMORY                      |      y      |defconfig |  self_protection   |   OK
 CONFIG_INTEL_IOMMU                           |      y      |defconfig |  self_protection   |   OK
 CONFIG_AMD_IOMMU                             |      y      |defconfig |  self_protection   |   OK
-CONFIG_VMAP_STACK                            |      y      |defconfig |  self_protection   |   OK
-CONFIG_RANDOMIZE_BASE                        |      y      |defconfig |  self_protection   |   OK
-CONFIG_THREAD_INFO_IN_TASK                   |      y      |defconfig |  self_protection   |   OK
+CONFIG_SECURITY_DMESG_RESTRICT               |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_BUG_ON_DATA_CORRUPTION                |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
 CONFIG_DEBUG_WX                              |      y      |   kspp   |  self_protection   |   OK
 CONFIG_SCHED_STACK_END_CHECK                 |      y      |   kspp   |  self_protection   |   OK
@@ -113,7 +114,6 @@ CONFIG_INIT_STACK_ALL_ZERO                   |      y      |   kspp   |  self_pr
 CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |   kspp   |  self_protection   |   OK: CONFIG_PAGE_POISONING_ZERO "y"
 CONFIG_GCC_PLUGIN_STACKLEAK                  |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_DEFAULT_MMAP_MIN_ADDR                 |    65536    |   kspp   |  self_protection   |   OK
-CONFIG_SECURITY_DMESG_RESTRICT               |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_DEBUG_VIRTUAL                         |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_STATIC_USERMODEHELPER                 |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_EFI_DISABLE_PCI_DMA                   |      y      |  clipos  |  self_protection   |   FAIL: not found
@@ -123,10 +123,9 @@ CONFIG_RANDOM_TRUST_CPU                      | is not set  |  clipos  |  self_pr
 CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT not "y"
 CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
 CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
-CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
 CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
+CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
 CONFIG_UBSAN_BOUNDS                          |      y      |    my    |  self_protection   |   FAIL: CONFIG_UBSAN_TRAP not "y"
-CONFIG_SLUB_DEBUG_ON                         |      y      |    my    |  self_protection   |   FAIL: "is not set"
 CONFIG_RESET_ATTACK_MITIGATION               |      y      |    my    |  self_protection   |   OK
 CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_protection   |   FAIL: "m"
 CONFIG_SECURITY                              |      y      |defconfig |  security_policy   |   OK
@@ -210,7 +209,7 @@ CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_atta
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] Config check is finished: 'OK' - 58 / 'FAIL' - 82
+[+] Config check is finished: 'OK' - 58 / 'FAIL' - 81
 ```
 
 ## kconfig-hardened-check versioning
