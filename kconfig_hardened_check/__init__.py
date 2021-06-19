@@ -35,7 +35,7 @@
 #           ssbd=force-on
 #
 # N.B. Hardening sysctls:
-#    kernel.kptr_restrict=2
+#    kernel.kptr_restrict=2 (or 1?)
 #    kernel.dmesg_restrict=1
 #    kernel.perf_event_paranoid=3
 #    kernel.kexec_load_disabled=1
