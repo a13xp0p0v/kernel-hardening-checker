@@ -11,10 +11,10 @@
 #
 #
 # N.B Hardening command line parameters:
-#    slub_debug=FZP
 #    slab_nomerge
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
+#    slub_debug=FZ (slow)
 #    page_poison=1 (if enabled)
 #    init_on_alloc=1
 #    init_on_free=1
@@ -403,7 +403,6 @@ def construct_checklist(l, arch):
     l += [AND(OptCheck('self_protection', 'my', 'UBSAN_BOUNDS', 'y'),
               OptCheck('self_protection', 'my', 'UBSAN_MISC', 'is not set'),
               OptCheck('self_protection', 'my', 'UBSAN_TRAP', 'y'))]
-    l += [OptCheck('self_protection', 'my', 'SLUB_DEBUG_ON', 'y')] # TODO: is it better to set that via kernel cmd?
     l += [OptCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
     if arch == 'X86_64':
         l += [AND(OptCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
