@@ -322,7 +322,10 @@ def construct_checklist(l, arch):
     if arch == 'ARM':
         l += [OptCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
-    if arch in ('ARM64', 'ARM'):
+    if arch == 'ARM64':
+        l += [OR(OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
+             VerCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+    if arch == 'ARM':
         l += [OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
 
     # 'self_protection', 'kspp'
