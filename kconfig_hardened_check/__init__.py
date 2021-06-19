@@ -321,7 +321,7 @@ def construct_checklist(l, arch):
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_BTI_KERNEL', 'y')]
         l += [OR(OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
-             VerCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+                 VerCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
     if arch == 'ARM':
         l += [OptCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
