@@ -15,9 +15,8 @@
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
 #    slub_debug=FZ (slow)
-#    page_poison=1 (if enabled)
-#    init_on_alloc=1
-#    init_on_free=1
+#    init_on_alloc=1 (since v5.3)
+#    init_on_free=1 (since v5.3, otherwise slub_debug=P and page_poison=1)
 #    loadpin.enforce=1
 #    debugfs=no-mount (or off if possible)
 #
