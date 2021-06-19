@@ -22,7 +22,7 @@
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
-#           mitigations=auto,nosmt
+#           mitigations=auto,nosmt (nosmt is slow)
 #       X86:
 #           spectre_v2=on
 #           pti=on
