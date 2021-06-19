@@ -388,9 +388,10 @@ def construct_checklist(l, arch):
         l += [AND(OptCheck('self_protection', 'clipos', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'),
                   stackleak_is_set)]
     if arch in ('X86_64', 'X86_32'):
-        l += [AND(OptCheck('self_protection', 'clipos', 'INTEL_IOMMU_SVM', 'y'),
-                  iommu_support_is_set)]
         l += [AND(OptCheck('self_protection', 'clipos', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
+                  iommu_support_is_set)]
+    if arch == 'X86_64':
+        l += [AND(OptCheck('self_protection', 'clipos', 'INTEL_IOMMU_SVM', 'y'),
                   iommu_support_is_set)]
     if arch == 'X86_32':
         l += [AND(OptCheck('self_protection', 'clipos', 'INTEL_IOMMU', 'y'),
