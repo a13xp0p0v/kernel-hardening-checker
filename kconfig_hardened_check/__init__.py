@@ -302,6 +302,8 @@ def construct_checklist(l, arch):
         l += [OptCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
         l += [OR(OptCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'),
                  OptCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y'))]
+    if arch in ('ARM64', 'ARM'):
+        l += [OptCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch == 'X86_64':
         l += [OptCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
@@ -322,7 +324,6 @@ def construct_checklist(l, arch):
              VerCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
     if arch == 'ARM':
         l += [OptCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
-        l += [OptCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
 
     # 'self_protection', 'kspp'
