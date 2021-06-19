@@ -290,6 +290,11 @@ def construct_checklist(l, arch):
              VerCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
     iommu_support_is_set = OptCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
     l += [iommu_support_is_set] # is needed for mitigating DMA attacks
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
+        l += [OptCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
+        l += [OptCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
+    if arch in ('X86_64', 'ARM64'):
+        l += [OptCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
     if arch in ('X86_64', 'X86_32'):
         l += [OptCheck('self_protection', 'defconfig', 'MICROCODE', 'y')] # is needed for mitigating CPU bugs
         l += [OptCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
@@ -313,18 +318,11 @@ def construct_checklist(l, arch):
         l += [OptCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_BTI_KERNEL', 'y')]
-    if arch in ('X86_64', 'ARM64'):
-        l += [OptCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
-    if arch in ('X86_64', 'ARM64', 'X86_32'):
-        l += [OptCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
-        l += [OptCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
-    if arch == 'ARM':
-        l += [OptCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
-        l += [OptCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
-    if arch == 'ARM64':
         l += [OR(OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
              VerCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
     if arch == 'ARM':
+        l += [OptCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
+        l += [OptCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
 
     # 'self_protection', 'kspp'
@@ -365,15 +363,15 @@ def construct_checklist(l, arch):
         l += [stackleak_is_set]
     if arch in ('X86_64', 'X86_32'):
         l += [OptCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
+    if arch in ('ARM64', 'ARM'):
+        l += [OptCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
+        l += [OptCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
+    if arch == 'ARM64':
+        l += [OptCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
     if arch == 'X86_32':
         l += [OptCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [OptCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [OptCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
-    if arch == 'ARM64':
-        l += [OptCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
-    if arch in ('ARM64', 'ARM'):
-        l += [OptCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
-        l += [OptCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
 
     # 'self_protection', 'clipos'
     l += [OptCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y')]
