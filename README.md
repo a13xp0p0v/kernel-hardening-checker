@@ -5,14 +5,14 @@
 
 ## Motivation
 
-There are plenty of Linux kernel hardening config options. A lot of them are
+There are plenty of security hardening options in the Linux kernel. A lot of them are
 not enabled by the major distros. We have to enable these options ourselves to
 make our systems more secure.
 
 But nobody likes checking configs manually. So let the computers do their job!
 
 __kconfig-hardened-check.py__ helps me to check the Linux kernel Kconfig option list
-against my hardening preferences, which are based on the
+against my security hardening preferences, which are based on the
 
   - [KSPP recommended settings][1],
   - [CLIP OS kernel configuration][2],
@@ -21,7 +21,7 @@ against my hardening preferences, which are based on the
   - direct feedback from Linux kernel maintainers (Daniel Vetter in [issue #38][6]).
 
 I also created [__Linux Kernel Defence Map__][4] that is a graphical representation of the
-relationships between these hardening features and the corresponding vulnerability classes
+relationships between security hardening features and the corresponding vulnerability classes
 or exploitation techniques.
 
 ## Supported microarchitectures
@@ -47,13 +47,13 @@ usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}]
                               [-c CONFIG]
                               [-m {verbose,json,show_ok,show_fail}]
 
-Checks the hardening options in the Linux kernel config
+A tool for checking the security hardening options of the Linux kernel
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
-                        print hardening preferences for selected architecture
+                        print security hardening preferences for the selected architecture
   -c CONFIG, --config CONFIG
                         check the kernel config file against these preferences
   -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
@@ -214,7 +214,7 @@ CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace
 
 ## kconfig-hardened-check versioning
 
-I usually update the kernel hardening recommendations after each Linux kernel release.
+I usually update the kernel security hardening recommendations after each Linux kernel release.
 
 So the version of `kconfig-hardened-check` is associated with the corresponding version of the kernel.
 
@@ -253,7 +253,7 @@ if we have a kernel oops in the process context, the offending/attacking process
 
 <br />
 
-__Q:__ What about performance impact of these kernel hardening options?
+__Q:__ What about performance impact of these security hardening options?
 
 __A:__ Ike Devolder [@BlackIkeEagle][7] made some performance tests and described the results in [this article][8].
 

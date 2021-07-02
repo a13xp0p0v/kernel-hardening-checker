@@ -2,7 +2,7 @@
 
 #
 # This tool helps me to check the Linux kernel Kconfig option list
-# against my hardening preferences for X86_64, ARM64, X86_32, and ARM.
+# against my security hardening preferences for X86_64, ARM64, X86_32, and ARM.
 # Let the computers do their job!
 #
 # Author: Alexander Popov <alex.popov@linux.com>
@@ -663,10 +663,10 @@ def main():
     report_modes = ['verbose', 'json', 'show_ok', 'show_fail']
     supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
     parser = ArgumentParser(prog='kconfig-hardened-check',
-                            description='Checks the hardening options in the Linux kernel config')
+                            description='A tool for checking the security hardening options of the Linux kernel')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument('-p', '--print', choices=supported_archs,
-                        help='print hardening preferences for selected architecture')
+                        help='print security hardening preferences for the selected architecture')
     parser.add_argument('-c', '--config',
                         help='check the kernel config file against these preferences')
     parser.add_argument('-m', '--mode', choices=report_modes,
@@ -714,7 +714,7 @@ def main():
         arch = args.print
         construct_checklist(config_checklist, arch)
         if mode != 'json':
-            print('[+] Printing kernel hardening preferences for {}...'.format(arch))
+            print('[+] Printing kernel security hardening preferences for {}...'.format(arch))
         print_checklist(mode, config_checklist, False)
         sys.exit(0)
 
