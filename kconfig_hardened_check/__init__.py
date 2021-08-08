@@ -358,7 +358,12 @@ def construct_checklist(l, arch):
     l += [OR(OptCheck('self_protection', 'kspp', 'INIT_STACK_ALL_ZERO', 'y'),
              OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
     l += [OR(OptCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'),
-             OptCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'))] # before v5.3
+             OptCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'))]
+             # CONFIG_INIT_ON_FREE_DEFAULT_ON was added in v5.3.
+             # CONFIG_PAGE_POISONING_ZERO was removed in v5.11.
+             # Starting from v5.11 CONFIG_PAGE_POISONING unconditionally checks
+             # the 0xAA poison pattern on allocation.
+             # That brings higher performance penalty.
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [stackleak_is_set]
