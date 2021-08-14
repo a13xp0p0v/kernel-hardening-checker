@@ -34,6 +34,11 @@
 #           kpti=on
 #           ssbd=force-on
 #
+#    Should NOT be set:
+#           nokaslr
+#           arm64.nobti
+#           arm64.nopauth
+#
 # N.B. Hardening sysctls:
 #    kernel.kptr_restrict=2 (or 1?)
 #    kernel.dmesg_restrict=1 (also see the kconfig option)
