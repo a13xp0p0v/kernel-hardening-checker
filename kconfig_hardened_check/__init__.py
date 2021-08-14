@@ -39,6 +39,11 @@
 #           arm64.nobti
 #           arm64.nopauth
 #
+#    Hardware tag-based KASAN with arm64 Memory Tagging Extension (MTE):
+#           kasan=on
+#           kasan.stacktrace=off
+#           kasan.fault=panic
+#
 # N.B. Hardening sysctls:
 #    kernel.kptr_restrict=2 (or 1?)
 #    kernel.dmesg_restrict=1 (also see the kconfig option)
@@ -329,6 +334,7 @@ def construct_checklist(l, arch):
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_BTI_KERNEL', 'y')]
         l += [OR(OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
                  VerCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+        l += [OptCheck('self_protection', 'defconfig', 'ARM64_MTE', 'y')]
     if arch == 'ARM':
         l += [OptCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
@@ -420,6 +426,7 @@ def construct_checklist(l, arch):
                   iommu_support_is_set)]
     if arch == 'ARM64':
         l += [OptCheck('self_protection', 'my', 'SHADOW_CALL_STACK', 'y')] # depends on clang, maybe it's alternative to STACKPROTECTOR_STRONG
+        l += [OptCheck('self_protection', 'my', 'KASAN_HW_TAGS', 'y')]
 
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
