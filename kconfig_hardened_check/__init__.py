@@ -19,6 +19,7 @@
 #    init_on_free=1 (since v5.3, otherwise slub_debug=P and page_poison=1)
 #    loadpin.enforce=1
 #    debugfs=no-mount (or off if possible)
+#    randomize_kstack_offset=1
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
@@ -422,6 +423,8 @@ def construct_checklist(l, arch):
               OptCheck('self_protection', 'my', 'UBSAN_MISC', 'is not set'),
               OptCheck('self_protection', 'my', 'UBSAN_TRAP', 'y'))]
     l += [OptCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
+        l += [OptCheck('self_protection', 'my', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch == 'X86_64':
         l += [AND(OptCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
                   iommu_support_is_set)]
