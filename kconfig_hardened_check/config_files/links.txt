@@ -42,3 +42,6 @@ https://github.com/clipos/products_clipos/blob/master/efiboot/configure.d/95_dra
 
 NixOS:
 run contrib/get-nix-kconfig.py from nix-shell to get the kernel configs
+
+CBL-Mariner:
+https://github.com/microsoft/CBL-Mariner/blob/1.0/SPECS/kernel/config
