@@ -325,6 +325,7 @@ def construct_checklist(l, arch):
                   iommu_support_is_set)]
     if arch == 'ARM64':
         l += [OptCheck('self_protection', 'defconfig', 'ARM64_PAN', 'y')]
+        l += [OptCheck('self_protection', 'defconfig', 'ARM64_EPAN', 'y')]
         l += [OptCheck('self_protection', 'defconfig', 'UNMAP_KERNEL_AT_EL0', 'y')]
         l += [OR(OptCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
                  AND(OptCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y'),
