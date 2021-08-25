@@ -380,6 +380,8 @@ def construct_checklist(l, arch):
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [stackleak_is_set]
+        l += [OR(OptCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
+                 VerCheck((5, 13)))]  # RANDOMIZE_KSTACK_OFFSET_DEFAULT was added in v5.13
     if arch in ('X86_64', 'X86_32'):
         l += [OptCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
     if arch in ('ARM64', 'ARM'):
