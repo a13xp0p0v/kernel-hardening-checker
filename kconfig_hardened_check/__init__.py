@@ -428,6 +428,10 @@ def construct_checklist(l, arch):
     if arch == 'ARM64':
         l += [OptCheck('self_protection', 'my', 'SHADOW_CALL_STACK', 'y')] # depends on clang, maybe it's alternative to STACKPROTECTOR_STRONG
         l += [OptCheck('self_protection', 'my', 'KASAN_HW_TAGS', 'y')]
+        cfi_clang_is_set = OptCheck('self_protection', 'my', 'CFI_CLANG', 'y')
+        l += [cfi_clang_is_set]
+        l += [AND(OptCheck('self_protection', 'my', 'CFI_PERMISSIVE', 'is not set'),
+                  cfi_clang_is_set)]
 
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
