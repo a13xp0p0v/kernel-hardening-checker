@@ -510,6 +510,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'maintainer', 'FB', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'maintainer', 'VT', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD', 'is not set')]
 
     # 'cut_attack_surface', 'grapheneos'
     l += [OptCheck('cut_attack_surface', 'grapheneos', 'AIO', 'is not set')]
