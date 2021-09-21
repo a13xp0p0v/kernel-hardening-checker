@@ -419,10 +419,15 @@ def construct_checklist(l, arch):
         l += [AND(OptCheck('self_protection', 'clipos', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
 
+    # 'self_protection', 'maintainer'
+    ubsan_bounds_is_set = OptCheck('self_protection', 'maintainer', 'UBSAN_BOUNDS', 'y') # only array index bounds checking
+    l += [ubsan_bounds_is_set]
+    l += [AND(OptCheck('self_protection', 'maintainer', 'UBSAN_SANITIZE_ALL', 'y'),
+              ubsan_bounds_is_set)]
+    l += [AND(OptCheck('self_protection', 'maintainer', 'UBSAN_TRAP', 'y'),
+              ubsan_bounds_is_set)]
+
     # 'self_protection', 'my'
-    l += [AND(OptCheck('self_protection', 'my', 'UBSAN_BOUNDS', 'y'),
-              OptCheck('self_protection', 'my', 'UBSAN_MISC', 'is not set'),
-              OptCheck('self_protection', 'my', 'UBSAN_TRAP', 'y'))]
     l += [OptCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
     if arch == 'X86_64':
         l += [AND(OptCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
