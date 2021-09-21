@@ -382,6 +382,7 @@ def construct_checklist(l, arch):
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = OptCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [stackleak_is_set]
+        l += [OptCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'X86_32'):
         l += [OptCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
     if arch in ('ARM64', 'ARM'):
@@ -423,8 +424,6 @@ def construct_checklist(l, arch):
               OptCheck('self_protection', 'my', 'UBSAN_MISC', 'is not set'),
               OptCheck('self_protection', 'my', 'UBSAN_TRAP', 'y'))]
     l += [OptCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
-    if arch in ('X86_64', 'ARM64', 'X86_32'):
-        l += [OptCheck('self_protection', 'my', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch == 'X86_64':
         l += [AND(OptCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
                   iommu_support_is_set)]
