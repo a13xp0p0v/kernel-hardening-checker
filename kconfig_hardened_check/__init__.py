@@ -362,6 +362,8 @@ def construct_checklist(l, arch):
     l += [hardened_usercopy_is_set]
     l += [AND(OptCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
               hardened_usercopy_is_set)]
+    l += [AND(OptCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_PAGESPAN', 'is not set'),
+              hardened_usercopy_is_set)]
     l += [OR(OptCheck('self_protection', 'kspp', 'MODULE_SIG', 'y'),
              modules_not_set)]
     l += [OR(OptCheck('self_protection', 'kspp', 'MODULE_SIG_ALL', 'y'),
