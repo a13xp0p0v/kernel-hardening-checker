@@ -421,11 +421,11 @@ def construct_checklist(l, arch):
 
     # 'self_protection', 'maintainer'
     ubsan_bounds_is_set = OptCheck('self_protection', 'maintainer', 'UBSAN_BOUNDS', 'y') # only array index bounds checking
-    l += [ubsan_bounds_is_set]
+    l += [ubsan_bounds_is_set] # recommended by Kees Cook in /issues/53
     l += [AND(OptCheck('self_protection', 'maintainer', 'UBSAN_SANITIZE_ALL', 'y'),
-              ubsan_bounds_is_set)]
+              ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
     l += [AND(OptCheck('self_protection', 'maintainer', 'UBSAN_TRAP', 'y'),
-              ubsan_bounds_is_set)]
+              ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
 
     # 'self_protection', 'my'
     l += [OptCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
@@ -511,10 +511,10 @@ def construct_checklist(l, arch):
               OptCheck('cut_attack_surface', 'my', 'PTDUMP_DEBUGFS', 'is not set'))]
 
     # 'cut_attack_surface', 'maintainer'
-    l += [OptCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')]
-    l += [OptCheck('cut_attack_surface', 'maintainer', 'FB', 'is not set')]
-    l += [OptCheck('cut_attack_surface', 'maintainer', 'VT', 'is not set')]
-    l += [OptCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')] # recommended by Daniel Vetter in /issues/38
+    l += [OptCheck('cut_attack_surface', 'maintainer', 'FB', 'is not set')] # recommended by Daniel Vetter in /issues/38
+    l += [OptCheck('cut_attack_surface', 'maintainer', 'VT', 'is not set')] # recommended by Daniel Vetter in /issues/38
+    l += [OptCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD', 'is not set')] # recommended by Denis Efremov in /pull/54
 
     # 'cut_attack_surface', 'grapheneos'
     l += [OptCheck('cut_attack_surface', 'grapheneos', 'AIO', 'is not set')]
