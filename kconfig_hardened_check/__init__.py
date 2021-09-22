@@ -397,6 +397,14 @@ def construct_checklist(l, arch):
         l += [OptCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [OptCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
 
+    # 'self_protection', 'maintainer'
+    ubsan_bounds_is_set = OptCheck('self_protection', 'maintainer', 'UBSAN_BOUNDS', 'y') # only array index bounds checking
+    l += [ubsan_bounds_is_set] # recommended by Kees Cook in /issues/53
+    l += [AND(OptCheck('self_protection', 'maintainer', 'UBSAN_SANITIZE_ALL', 'y'),
+              ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
+    l += [AND(OptCheck('self_protection', 'maintainer', 'UBSAN_TRAP', 'y'),
+              ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
+
     # 'self_protection', 'clipos'
     l += [OptCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y')]
     l += [OptCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
@@ -420,14 +428,6 @@ def construct_checklist(l, arch):
     if arch == 'X86_32':
         l += [AND(OptCheck('self_protection', 'clipos', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
-
-    # 'self_protection', 'maintainer'
-    ubsan_bounds_is_set = OptCheck('self_protection', 'maintainer', 'UBSAN_BOUNDS', 'y') # only array index bounds checking
-    l += [ubsan_bounds_is_set] # recommended by Kees Cook in /issues/53
-    l += [AND(OptCheck('self_protection', 'maintainer', 'UBSAN_SANITIZE_ALL', 'y'),
-              ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
-    l += [AND(OptCheck('self_protection', 'maintainer', 'UBSAN_TRAP', 'y'),
-              ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
 
     # 'self_protection', 'my'
     l += [OptCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
