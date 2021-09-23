@@ -106,6 +106,7 @@ CONFIG_GCC_PLUGIN_LATENT_ENTROPY             |      y      |   kspp   |  self_pr
 CONFIG_GCC_PLUGIN_RANDSTRUCT                 |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_HARDENED_USERCOPY                     |      y      |   kspp   |  self_protection   |   OK
 CONFIG_HARDENED_USERCOPY_FALLBACK            | is not set  |   kspp   |  self_protection   |   FAIL: "y"
+CONFIG_HARDENED_USERCOPY_PAGESPAN            | is not set  |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG                            |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_ALL                        |      y      |   kspp   |  self_protection   |   OK
 CONFIG_MODULE_SIG_SHA512                     |      y      |   kspp   |  self_protection   |   OK
@@ -113,7 +114,11 @@ CONFIG_MODULE_SIG_FORCE                      |      y      |   kspp   |  self_pr
 CONFIG_INIT_STACK_ALL_ZERO                   |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |   kspp   |  self_protection   |   OK: CONFIG_PAGE_POISONING_ZERO "y"
 CONFIG_GCC_PLUGIN_STACKLEAK                  |      y      |   kspp   |  self_protection   |   FAIL: not found
+CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT       |      y      |   kspp   |  self_protection   |   FAIL: not found
 CONFIG_DEFAULT_MMAP_MIN_ADDR                 |    65536    |   kspp   |  self_protection   |   OK
+CONFIG_UBSAN_BOUNDS                          |      y      |maintainer|  self_protection   |   FAIL: not found
+CONFIG_UBSAN_SANITIZE_ALL                    |      y      |maintainer|  self_protection   |   FAIL: CONFIG_UBSAN_BOUNDS not "y"
+CONFIG_UBSAN_TRAP                            |      y      |maintainer|  self_protection   |   FAIL: CONFIG_UBSAN_BOUNDS not "y"
 CONFIG_DEBUG_VIRTUAL                         |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_STATIC_USERMODEHELPER                 |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_EFI_DISABLE_PCI_DMA                   |      y      |  clipos  |  self_protection   |   FAIL: not found
@@ -125,7 +130,6 @@ CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_pr
 CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
 CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
 CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
-CONFIG_UBSAN_BOUNDS                          |      y      |    my    |  self_protection   |   FAIL: CONFIG_UBSAN_TRAP not "y"
 CONFIG_RESET_ATTACK_MITIGATION               |      y      |    my    |  self_protection   |   OK
 CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_protection   |   FAIL: "m"
 CONFIG_SECURITY                              |      y      |defconfig |  security_policy   |   OK
@@ -179,6 +183,7 @@ CONFIG_X86_PTDUMP                            | is not set  |grsecurity| cut_atta
 CONFIG_DRM_LEGACY                            | is not set  |maintainer| cut_attack_surface |   OK
 CONFIG_FB                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
 CONFIG_VT                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
+CONFIG_BLK_DEV_FD                            | is not set  |maintainer| cut_attack_surface |   FAIL: "m"
 CONFIG_AIO                                   | is not set  |grapheneos| cut_attack_surface |   FAIL: "y"
 CONFIG_STAGING                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_KSM                                   | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
@@ -209,7 +214,7 @@ CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_atta
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] Config check is finished: 'OK' - 58 / 'FAIL' - 81
+[+] Config check is finished: 'OK' - 59 / 'FAIL' - 85
 ```
 
 ## kconfig-hardened-check versioning
