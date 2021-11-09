@@ -511,6 +511,14 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEVPORT', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEBUG_FS', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'NOTIFIER_ERROR_INJECTION', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'PUNIT_ATOM_DEBUG', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'ACPI_CONFIGFS', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'EDAC_DEBUG', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'DRM_I915_DEBUG', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'BCACHE_CLOSURES_DEBUG', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'DVB_C8SECTPFE', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'MTD_SLRAM', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'MTD_PHRAM', 'is not set')]
     l += [AND(OptCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set'),
               OptCheck('cut_attack_surface', 'my', 'PTDUMP_DEBUGFS', 'is not set'))]
 
