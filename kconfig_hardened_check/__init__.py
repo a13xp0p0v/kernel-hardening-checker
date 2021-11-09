@@ -519,6 +519,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DVB_C8SECTPFE', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'MTD_SLRAM', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'MTD_PHRAM', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'IO_URING', 'is not set')]
     l += [AND(OptCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set'),
               OptCheck('cut_attack_surface', 'my', 'PTDUMP_DEBUGFS', 'is not set'))]
 
@@ -542,7 +543,6 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'clipos', 'USER_NS', 'is not set')] # user.max_user_namespaces=0
     l += [OptCheck('cut_attack_surface', 'clipos', 'X86_MSR', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'clipos', 'X86_CPUID', 'is not set')]
-    l += [OptCheck('cut_attack_surface', 'clipos', 'IO_URING', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
