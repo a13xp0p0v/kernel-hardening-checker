@@ -285,6 +285,9 @@ def detect_version(fname):
 
 
 def construct_checklist(l, arch):
+    # Calling the OptCheck class constructor:
+    #     OptCheck(reason, decision, name, expected)
+
     modules_not_set = OptCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')
     devmem_not_set = OptCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
 
