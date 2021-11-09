@@ -166,9 +166,13 @@ CONFIG_ZSMALLOC_STAT                         | is not set  |grsecurity| cut_atta
 CONFIG_PAGE_OWNER                            | is not set  |grsecurity| cut_attack_surface |   OK
 CONFIG_DEBUG_KMEMLEAK                        | is not set  |grsecurity| cut_attack_surface |   OK
 CONFIG_BINFMT_AOUT                           | is not set  |grsecurity| cut_attack_surface |   OK: not found
-CONFIG_KPROBES                               | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_UPROBES                               | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_KPROBE_EVENTS                         | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_UPROBE_EVENTS                         | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_GENERIC_TRACER                        | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_FUNCTION_TRACER                       | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_STACK_TRACER                          | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_HIST_TRIGGERS                         | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_BLK_DEV_IO_TRACE                      | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_PROC_VMCORE                           | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_PROC_PAGE_MONITOR                     | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_USELIB                                | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
@@ -179,7 +183,23 @@ CONFIG_MEM_SOFT_DIRTY                        | is not set  |grsecurity| cut_atta
 CONFIG_DEVPORT                               | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_DEBUG_FS                              | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
 CONFIG_NOTIFIER_ERROR_INJECTION              | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
-CONFIG_X86_PTDUMP                            | is not set  |grsecurity| cut_attack_surface |   OK
+CONFIG_FAIL_FUTEX                            | is not set  |grsecurity| cut_attack_surface |   OK: not found
+CONFIG_PUNIT_ATOM_DEBUG                      | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
+CONFIG_ACPI_CONFIGFS                         | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
+CONFIG_EDAC_DEBUG                            | is not set  |grsecurity| cut_attack_surface |   OK
+CONFIG_DRM_I915_DEBUG                        | is not set  |grsecurity| cut_attack_surface |   OK
+CONFIG_BCACHE_CLOSURES_DEBUG                 | is not set  |grsecurity| cut_attack_surface |   OK
+CONFIG_DVB_C8SECTPFE                         | is not set  |grsecurity| cut_attack_surface |   OK: not found
+CONFIG_MTD_SLRAM                             | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
+CONFIG_MTD_PHRAM                             | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
+CONFIG_IO_URING                              | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_KCMP                                  | is not set  |grsecurity| cut_attack_surface |   OK: not found
+CONFIG_RSEQ                                  | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_LATENCYTOP                            | is not set  |grsecurity| cut_attack_surface |   OK
+CONFIG_KCOV                                  | is not set  |grsecurity| cut_attack_surface |   OK
+CONFIG_PROVIDE_OHCI1394_DMA_INIT             | is not set  |grsecurity| cut_attack_surface |   OK
+CONFIG_SUNRPC_DEBUG                          | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
+CONFIG_PTDUMP_DEBUGFS                        | is not set  |grsecurity| cut_attack_surface |   OK: not found
 CONFIG_DRM_LEGACY                            | is not set  |maintainer| cut_attack_surface |   OK
 CONFIG_FB                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
 CONFIG_VT                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
@@ -194,7 +214,6 @@ CONFIG_KEXEC_FILE                            | is not set  |  clipos  | cut_atta
 CONFIG_USER_NS                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_X86_MSR                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "m"
 CONFIG_X86_CPUID                             | is not set  |  clipos  | cut_attack_surface |   FAIL: "m"
-CONFIG_IO_URING                              | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_X86_IOPL_IOPERM                       | is not set  |  clipos  | cut_attack_surface |   OK: not found
 CONFIG_ACPI_TABLE_UPGRADE                    | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
 CONFIG_EFI_CUSTOM_SSDT_OVERLAYS              | is not set  |  clipos  | cut_attack_surface |   OK: not found
@@ -203,6 +222,7 @@ CONFIG_X86_INTEL_TSX_MODE_OFF                |      y      |  clipos  | cut_atta
 CONFIG_EFI_TEST                              | is not set  | lockdown | cut_attack_surface |   FAIL: "m"
 CONFIG_BPF_SYSCALL                           | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
 CONFIG_MMIOTRACE_TEST                        | is not set  | lockdown | cut_attack_surface |   OK
+CONFIG_KPROBES                               | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
 CONFIG_TRIM_UNUSED_KSYMS                     |      y      |    my    | cut_attack_surface |   FAIL: not found
 CONFIG_MMIOTRACE                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
 CONFIG_LIVEPATCH                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
@@ -214,7 +234,7 @@ CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_atta
 CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
 CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
 
-[+] Config check is finished: 'OK' - 59 / 'FAIL' - 85
+[+] Config check is finished: 'OK' - 68 / 'FAIL' - 96
 ```
 
 ## kconfig-hardened-check versioning
