@@ -532,8 +532,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'KCOV', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'PROVIDE_OHCI1394_DMA_INIT', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'SUNRPC_DEBUG', 'is not set')]
-    l += [AND(OptCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set'),
-              OptCheck('cut_attack_surface', 'my', 'PTDUMP_DEBUGFS', 'is not set'))]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'PTDUMP_DEBUGFS', 'is not set')]
 
     # 'cut_attack_surface', 'maintainer'
     l += [OptCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')] # recommended by Daniel Vetter in /issues/38
