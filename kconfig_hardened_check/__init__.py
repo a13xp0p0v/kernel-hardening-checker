@@ -499,8 +499,13 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'PAGE_OWNER', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEBUG_KMEMLEAK', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'BINFMT_AOUT', 'is not set')]
-    l += [OptCheck('cut_attack_surface', 'grsecurity', 'UPROBES', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'KPROBE_EVENTS', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'UPROBE_EVENTS', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'GENERIC_TRACER', 'is not set')] # refers to LOCKDOWN
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'FUNCTION_TRACER', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'STACK_TRACER', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'HIST_TRIGGERS', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'BLK_DEV_IO_TRACE', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'PROC_VMCORE', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'PROC_PAGE_MONITOR', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'USELIB', 'is not set')]
@@ -511,6 +516,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEVPORT', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEBUG_FS', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'NOTIFIER_ERROR_INJECTION', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'FAIL_FUTEX', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'PUNIT_ATOM_DEBUG', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'ACPI_CONFIGFS', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'EDAC_DEBUG', 'is not set')]
@@ -520,6 +526,12 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'MTD_SLRAM', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'MTD_PHRAM', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'IO_URING', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'KCMP', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'RSEQ', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'LATENCYTOP', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'KCOV', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'PROVIDE_OHCI1394_DMA_INIT', 'is not set')]
+    l += [OptCheck('cut_attack_surface', 'grsecurity', 'SUNRPC_DEBUG', 'is not set')]
     l += [AND(OptCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set'),
               OptCheck('cut_attack_surface', 'my', 'PTDUMP_DEBUGFS', 'is not set'))]
 
