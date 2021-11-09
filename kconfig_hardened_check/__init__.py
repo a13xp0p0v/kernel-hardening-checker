@@ -499,7 +499,6 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'PAGE_OWNER', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'DEBUG_KMEMLEAK', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'BINFMT_AOUT', 'is not set')]
-    l += [OptCheck('cut_attack_surface', 'grsecurity', 'KPROBES', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'UPROBES', 'is not set')]
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'GENERIC_TRACER', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'grsecurity', 'PROC_VMCORE', 'is not set')]
@@ -548,6 +547,7 @@ def construct_checklist(l, arch):
     l += [OptCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')] # refers to LOCKDOWN
     l += [OptCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')] # refers to LOCKDOWN
+    l += [OptCheck('cut_attack_surface', 'lockdown', 'KPROBES', 'is not set')] # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'my'
     l += [OptCheck('cut_attack_surface', 'my', 'TRIM_UNUSED_KSYMS', 'y')]
