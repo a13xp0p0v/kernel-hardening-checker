@@ -43,6 +43,8 @@ pip install git+https://github.com/a13xp0p0v/kconfig-hardened-check
 
 or simply run `./bin/kconfig-hardened-check` from the cloned repository.
 
+Some Linux distributions also provide `kconfig-hardened-check` as a package.
+
 ## Usage
 ```
 usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}]
@@ -62,7 +64,24 @@ optional arguments:
                         choose the report mode
 ```
 
-## Output for `Ubuntu 20.04 LTS (Focal Fossa)` kernel config
+## Output modes
+
+  -  no `-m` argument for the default output mode (see the example below)
+  - `-m verbose` for printing additional info:
+    - config options without a corresponding check
+    - internals of complex checks with AND/OR, like this:
+```
+-------------------------------------------------------------------------------------------
+    <<< OR >>>                                                                             
+CONFIG_STRICT_DEVMEM                         |      y      |defconfig | cut_attack_surface 
+CONFIG_DEVMEM                                | is not set  |   kspp   | cut_attack_surface 
+-------------------------------------------------------------------------------------------
+```
+  - `-m show_fail` for showing only the failed checks
+  - `-m show_ok` for showing only the successful checks
+  - `-m json` for printing the results in JSON format (for combining `kconfig-hardened-check` with other tools)
+
+## Example output for `Ubuntu 20.04 LTS (Focal Fossa)` kernel config
 ```
 $ ./bin/kconfig-hardened-check -c kconfig_hardened_check/config_files/distros/ubuntu-focal.config 
 [+] Config file to check: kconfig_hardened_check/config_files/distros/ubuntu-focal.config
