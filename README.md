@@ -31,6 +31,8 @@ or exploitation techniques.
   - ARM64
   - ARM
 
+TODO: RISC-V
+
 ## Installation
 
 You can install the package:
