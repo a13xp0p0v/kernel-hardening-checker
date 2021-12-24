@@ -31,6 +31,7 @@
 #           l1tf=full,force
 #           mds=full,nosmt
 #           tsx=off
+#           l1d_flush=on
 #       ARM64:
 #           kpti=on
 #           ssbd=force-on
