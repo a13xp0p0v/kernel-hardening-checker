@@ -83,177 +83,177 @@ CONFIG_DEVMEM                                | is not set  |   kspp   | cut_atta
 
 ## Example output for `Ubuntu 20.04 LTS (Focal Fossa)` kernel config
 ```
-$ ./bin/kconfig-hardened-check -c kconfig_hardened_check/config_files/distros/ubuntu-focal.config 
+$ ./bin/kconfig-hardened-check -c kconfig_hardened_check/config_files/distros/ubuntu-focal.config
 [+] Config file to check: kconfig_hardened_check/config_files/distros/ubuntu-focal.config
 [+] Detected architecture: X86_64
 [+] Detected kernel version: 5.4
 =========================================================================================================================
-                 option name                 | desired val | decision |       reason       |   check result
+          kconfig option name           |desired val| decision |      reason      | check result
 =========================================================================================================================
-CONFIG_BUG                                   |      y      |defconfig |  self_protection   |   OK
-CONFIG_SLUB_DEBUG                            |      y      |defconfig |  self_protection   |   OK
-CONFIG_GCC_PLUGINS                           |      y      |defconfig |  self_protection   |   FAIL: not found
-CONFIG_STACKPROTECTOR_STRONG                 |      y      |defconfig |  self_protection   |   OK
-CONFIG_STRICT_KERNEL_RWX                     |      y      |defconfig |  self_protection   |   OK
-CONFIG_STRICT_MODULE_RWX                     |      y      |defconfig |  self_protection   |   OK
-CONFIG_REFCOUNT_FULL                         |      y      |defconfig |  self_protection   |   FAIL: "is not set"
-CONFIG_IOMMU_SUPPORT                         |      y      |defconfig |  self_protection   |   OK
-CONFIG_RANDOMIZE_BASE                        |      y      |defconfig |  self_protection   |   OK
-CONFIG_THREAD_INFO_IN_TASK                   |      y      |defconfig |  self_protection   |   OK
-CONFIG_VMAP_STACK                            |      y      |defconfig |  self_protection   |   OK
-CONFIG_MICROCODE                             |      y      |defconfig |  self_protection   |   OK
-CONFIG_RETPOLINE                             |      y      |defconfig |  self_protection   |   OK
-CONFIG_X86_SMAP                              |      y      |defconfig |  self_protection   |   OK
-CONFIG_SYN_COOKIES                           |      y      |defconfig |  self_protection   |   OK
-CONFIG_X86_UMIP                              |      y      |defconfig |  self_protection   |   OK: CONFIG_X86_INTEL_UMIP "y"
-CONFIG_PAGE_TABLE_ISOLATION                  |      y      |defconfig |  self_protection   |   OK
-CONFIG_RANDOMIZE_MEMORY                      |      y      |defconfig |  self_protection   |   OK
-CONFIG_INTEL_IOMMU                           |      y      |defconfig |  self_protection   |   OK
-CONFIG_AMD_IOMMU                             |      y      |defconfig |  self_protection   |   OK
-CONFIG_SECURITY_DMESG_RESTRICT               |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_BUG_ON_DATA_CORRUPTION                |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_DEBUG_WX                              |      y      |   kspp   |  self_protection   |   OK
-CONFIG_SCHED_STACK_END_CHECK                 |      y      |   kspp   |  self_protection   |   OK
-CONFIG_SLAB_FREELIST_HARDENED                |      y      |   kspp   |  self_protection   |   OK
-CONFIG_SLAB_FREELIST_RANDOM                  |      y      |   kspp   |  self_protection   |   OK
-CONFIG_SHUFFLE_PAGE_ALLOCATOR                |      y      |   kspp   |  self_protection   |   OK
-CONFIG_FORTIFY_SOURCE                        |      y      |   kspp   |  self_protection   |   OK
-CONFIG_DEBUG_LIST                            |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_DEBUG_SG                              |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_DEBUG_CREDENTIALS                     |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_DEBUG_NOTIFIERS                       |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_INIT_ON_ALLOC_DEFAULT_ON              |      y      |   kspp   |  self_protection   |   OK
-CONFIG_GCC_PLUGIN_LATENT_ENTROPY             |      y      |   kspp   |  self_protection   |   FAIL: not found
-CONFIG_GCC_PLUGIN_RANDSTRUCT                 |      y      |   kspp   |  self_protection   |   FAIL: not found
-CONFIG_HARDENED_USERCOPY                     |      y      |   kspp   |  self_protection   |   OK
-CONFIG_HARDENED_USERCOPY_FALLBACK            | is not set  |   kspp   |  self_protection   |   FAIL: "y"
-CONFIG_HARDENED_USERCOPY_PAGESPAN            | is not set  |   kspp   |  self_protection   |   OK
-CONFIG_MODULE_SIG                            |      y      |   kspp   |  self_protection   |   OK
-CONFIG_MODULE_SIG_ALL                        |      y      |   kspp   |  self_protection   |   OK
-CONFIG_MODULE_SIG_SHA512                     |      y      |   kspp   |  self_protection   |   OK
-CONFIG_MODULE_SIG_FORCE                      |      y      |   kspp   |  self_protection   |   FAIL: "is not set"
-CONFIG_INIT_STACK_ALL_ZERO                   |      y      |   kspp   |  self_protection   |   FAIL: not found
-CONFIG_INIT_ON_FREE_DEFAULT_ON               |      y      |   kspp   |  self_protection   |   OK: CONFIG_PAGE_POISONING_ZERO "y"
-CONFIG_GCC_PLUGIN_STACKLEAK                  |      y      |   kspp   |  self_protection   |   FAIL: not found
-CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT       |      y      |   kspp   |  self_protection   |   FAIL: not found
-CONFIG_DEFAULT_MMAP_MIN_ADDR                 |    65536    |   kspp   |  self_protection   |   OK
-CONFIG_UBSAN_BOUNDS                          |      y      |maintainer|  self_protection   |   FAIL: not found
-CONFIG_UBSAN_SANITIZE_ALL                    |      y      |maintainer|  self_protection   |   FAIL: CONFIG_UBSAN_BOUNDS not "y"
-CONFIG_UBSAN_TRAP                            |      y      |maintainer|  self_protection   |   FAIL: CONFIG_UBSAN_BOUNDS not "y"
-CONFIG_DEBUG_VIRTUAL                         |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
-CONFIG_STATIC_USERMODEHELPER                 |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
-CONFIG_EFI_DISABLE_PCI_DMA                   |      y      |  clipos  |  self_protection   |   FAIL: not found
-CONFIG_SLAB_MERGE_DEFAULT                    | is not set  |  clipos  |  self_protection   |   FAIL: "y"
-CONFIG_RANDOM_TRUST_BOOTLOADER               | is not set  |  clipos  |  self_protection   |   FAIL: "y"
-CONFIG_RANDOM_TRUST_CPU                      | is not set  |  clipos  |  self_protection   |   FAIL: "y"
-CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT not "y"
-CONFIG_STACKLEAK_METRICS                     | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
-CONFIG_STACKLEAK_RUNTIME_DISABLE             | is not set  |  clipos  |  self_protection   |   FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
-CONFIG_INTEL_IOMMU_DEFAULT_ON                |      y      |  clipos  |  self_protection   |   FAIL: "is not set"
-CONFIG_INTEL_IOMMU_SVM                       |      y      |  clipos  |  self_protection   |   OK
-CONFIG_RESET_ATTACK_MITIGATION               |      y      |    my    |  self_protection   |   OK
-CONFIG_AMD_IOMMU_V2                          |      y      |    my    |  self_protection   |   FAIL: "m"
-CONFIG_SECURITY                              |      y      |defconfig |  security_policy   |   OK
-CONFIG_SECURITY_YAMA                         |      y      |   kspp   |  security_policy   |   OK
-CONFIG_SECURITY_WRITABLE_HOOKS               | is not set  |    my    |  security_policy   |   OK: not found
-CONFIG_SECURITY_LOCKDOWN_LSM                 |      y      |  clipos  |  security_policy   |   OK
-CONFIG_SECURITY_LOCKDOWN_LSM_EARLY           |      y      |  clipos  |  security_policy   |   OK
-CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|      y      |  clipos  |  security_policy   |   FAIL: "is not set"
-CONFIG_SECURITY_SAFESETID                    |      y      |    my    |  security_policy   |   OK
-CONFIG_SECURITY_LOADPIN                      |      y      |    my    |  security_policy   |   FAIL: "is not set"
-CONFIG_SECURITY_LOADPIN_ENFORCE              |      y      |    my    |  security_policy   |   FAIL: CONFIG_SECURITY_LOADPIN not "y"
-CONFIG_SECCOMP                               |      y      |defconfig | cut_attack_surface |   OK
-CONFIG_SECCOMP_FILTER                        |      y      |defconfig | cut_attack_surface |   OK
-CONFIG_STRICT_DEVMEM                         |      y      |defconfig | cut_attack_surface |   OK
-CONFIG_ACPI_CUSTOM_METHOD                    | is not set  |   kspp   | cut_attack_surface |   OK
-CONFIG_COMPAT_BRK                            | is not set  |   kspp   | cut_attack_surface |   OK
-CONFIG_DEVKMEM                               | is not set  |   kspp   | cut_attack_surface |   OK
-CONFIG_COMPAT_VDSO                           | is not set  |   kspp   | cut_attack_surface |   OK
-CONFIG_BINFMT_MISC                           | is not set  |   kspp   | cut_attack_surface |   FAIL: "m"
-CONFIG_INET_DIAG                             | is not set  |   kspp   | cut_attack_surface |   FAIL: "m"
-CONFIG_KEXEC                                 | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_PROC_KCORE                            | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_LEGACY_PTYS                           | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_HIBERNATION                           | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_IA32_EMULATION                        | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_X86_X32                               | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_MODIFY_LDT_SYSCALL                    | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_OABI_COMPAT                           | is not set  |   kspp   | cut_attack_surface |   OK: not found
-CONFIG_MODULES                               | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_DEVMEM                                | is not set  |   kspp   | cut_attack_surface |   FAIL: "y"
-CONFIG_IO_STRICT_DEVMEM                      |      y      |   kspp   | cut_attack_surface |   FAIL: "is not set"
-CONFIG_LEGACY_VSYSCALL_NONE                  |      y      |   kspp   | cut_attack_surface |   FAIL: "is not set"
-CONFIG_ZSMALLOC_STAT                         | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_PAGE_OWNER                            | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_DEBUG_KMEMLEAK                        | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_BINFMT_AOUT                           | is not set  |grsecurity| cut_attack_surface |   OK: not found
-CONFIG_KPROBE_EVENTS                         | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_UPROBE_EVENTS                         | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_GENERIC_TRACER                        | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_FUNCTION_TRACER                       | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_STACK_TRACER                          | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_HIST_TRIGGERS                         | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_BLK_DEV_IO_TRACE                      | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_PROC_VMCORE                           | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_PROC_PAGE_MONITOR                     | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_USELIB                                | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_CHECKPOINT_RESTORE                    | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_USERFAULTFD                           | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_HWPOISON_INJECT                       | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
-CONFIG_MEM_SOFT_DIRTY                        | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_DEVPORT                               | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_DEBUG_FS                              | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_NOTIFIER_ERROR_INJECTION              | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
-CONFIG_FAIL_FUTEX                            | is not set  |grsecurity| cut_attack_surface |   OK: not found
-CONFIG_PUNIT_ATOM_DEBUG                      | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
-CONFIG_ACPI_CONFIGFS                         | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
-CONFIG_EDAC_DEBUG                            | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_DRM_I915_DEBUG                        | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_BCACHE_CLOSURES_DEBUG                 | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_DVB_C8SECTPFE                         | is not set  |grsecurity| cut_attack_surface |   OK: not found
-CONFIG_MTD_SLRAM                             | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
-CONFIG_MTD_PHRAM                             | is not set  |grsecurity| cut_attack_surface |   FAIL: "m"
-CONFIG_IO_URING                              | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_KCMP                                  | is not set  |grsecurity| cut_attack_surface |   OK: not found
-CONFIG_RSEQ                                  | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_LATENCYTOP                            | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_KCOV                                  | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_PROVIDE_OHCI1394_DMA_INIT             | is not set  |grsecurity| cut_attack_surface |   OK
-CONFIG_SUNRPC_DEBUG                          | is not set  |grsecurity| cut_attack_surface |   FAIL: "y"
-CONFIG_PTDUMP_DEBUGFS                        | is not set  |grsecurity| cut_attack_surface |   OK: not found
-CONFIG_DRM_LEGACY                            | is not set  |maintainer| cut_attack_surface |   OK
-CONFIG_FB                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
-CONFIG_VT                                    | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
-CONFIG_BLK_DEV_FD                            | is not set  |maintainer| cut_attack_surface |   FAIL: "m"
-CONFIG_AIO                                   | is not set  |grapheneos| cut_attack_surface |   FAIL: "y"
-CONFIG_STAGING                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_KSM                                   | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_KALLSYMS                              | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_X86_VSYSCALL_EMULATION                | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_MAGIC_SYSRQ                           | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_KEXEC_FILE                            | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_USER_NS                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_X86_MSR                               | is not set  |  clipos  | cut_attack_surface |   FAIL: "m"
-CONFIG_X86_CPUID                             | is not set  |  clipos  | cut_attack_surface |   FAIL: "m"
-CONFIG_X86_IOPL_IOPERM                       | is not set  |  clipos  | cut_attack_surface |   OK: not found
-CONFIG_ACPI_TABLE_UPGRADE                    | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_EFI_CUSTOM_SSDT_OVERLAYS              | is not set  |  clipos  | cut_attack_surface |   OK: not found
-CONFIG_LDISC_AUTOLOAD                        | is not set  |  clipos  | cut_attack_surface |   FAIL: "y"
-CONFIG_X86_INTEL_TSX_MODE_OFF                |      y      |  clipos  | cut_attack_surface |   OK
-CONFIG_EFI_TEST                              | is not set  | lockdown | cut_attack_surface |   FAIL: "m"
-CONFIG_BPF_SYSCALL                           | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
-CONFIG_MMIOTRACE_TEST                        | is not set  | lockdown | cut_attack_surface |   OK
-CONFIG_KPROBES                               | is not set  | lockdown | cut_attack_surface |   FAIL: "y"
-CONFIG_TRIM_UNUSED_KSYMS                     |      y      |    my    | cut_attack_surface |   FAIL: not found
-CONFIG_MMIOTRACE                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
-CONFIG_LIVEPATCH                             | is not set  |    my    | cut_attack_surface |   FAIL: "y"
-CONFIG_IP_DCCP                               | is not set  |    my    | cut_attack_surface |   FAIL: "m"
-CONFIG_IP_SCTP                               | is not set  |    my    | cut_attack_surface |   FAIL: "m"
-CONFIG_FTRACE                                | is not set  |    my    | cut_attack_surface |   FAIL: "y"
-CONFIG_VIDEO_VIVID                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
-CONFIG_INPUT_EVBUG                           | is not set  |    my    | cut_attack_surface |   FAIL: "m"
-CONFIG_INTEGRITY                             |      y      |defconfig |userspace_hardening |   OK
-CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace_hardening |   FAIL: "28"
+CONFIG_BUG                              |     y     |defconfig | self_protection  | OK
+CONFIG_SLUB_DEBUG                       |     y     |defconfig | self_protection  | OK
+CONFIG_GCC_PLUGINS                      |     y     |defconfig | self_protection  | FAIL: not found
+CONFIG_STACKPROTECTOR_STRONG            |     y     |defconfig | self_protection  | OK
+CONFIG_STRICT_KERNEL_RWX                |     y     |defconfig | self_protection  | OK
+CONFIG_STRICT_MODULE_RWX                |     y     |defconfig | self_protection  | OK
+CONFIG_REFCOUNT_FULL                    |     y     |defconfig | self_protection  | FAIL: "is not set"
+CONFIG_IOMMU_SUPPORT                    |     y     |defconfig | self_protection  | OK
+CONFIG_RANDOMIZE_BASE                   |     y     |defconfig | self_protection  | OK
+CONFIG_THREAD_INFO_IN_TASK              |     y     |defconfig | self_protection  | OK
+CONFIG_VMAP_STACK                       |     y     |defconfig | self_protection  | OK
+CONFIG_MICROCODE                        |     y     |defconfig | self_protection  | OK
+CONFIG_RETPOLINE                        |     y     |defconfig | self_protection  | OK
+CONFIG_X86_SMAP                         |     y     |defconfig | self_protection  | OK
+CONFIG_SYN_COOKIES                      |     y     |defconfig | self_protection  | OK
+CONFIG_X86_UMIP                         |     y     |defconfig | self_protection  | OK: CONFIG_X86_INTEL_UMIP "y"
+CONFIG_PAGE_TABLE_ISOLATION             |     y     |defconfig | self_protection  | OK
+CONFIG_RANDOMIZE_MEMORY                 |     y     |defconfig | self_protection  | OK
+CONFIG_INTEL_IOMMU                      |     y     |defconfig | self_protection  | OK
+CONFIG_AMD_IOMMU                        |     y     |defconfig | self_protection  | OK
+CONFIG_SECURITY_DMESG_RESTRICT          |     y     |   kspp   | self_protection  | FAIL: "is not set"
+CONFIG_BUG_ON_DATA_CORRUPTION           |     y     |   kspp   | self_protection  | FAIL: "is not set"
+CONFIG_DEBUG_WX                         |     y     |   kspp   | self_protection  | OK
+CONFIG_SCHED_STACK_END_CHECK            |     y     |   kspp   | self_protection  | OK
+CONFIG_SLAB_FREELIST_HARDENED           |     y     |   kspp   | self_protection  | OK
+CONFIG_SLAB_FREELIST_RANDOM             |     y     |   kspp   | self_protection  | OK
+CONFIG_SHUFFLE_PAGE_ALLOCATOR           |     y     |   kspp   | self_protection  | OK
+CONFIG_FORTIFY_SOURCE                   |     y     |   kspp   | self_protection  | OK
+CONFIG_DEBUG_LIST                       |     y     |   kspp   | self_protection  | FAIL: "is not set"
+CONFIG_DEBUG_SG                         |     y     |   kspp   | self_protection  | FAIL: "is not set"
+CONFIG_DEBUG_CREDENTIALS                |     y     |   kspp   | self_protection  | FAIL: "is not set"
+CONFIG_DEBUG_NOTIFIERS                  |     y     |   kspp   | self_protection  | FAIL: "is not set"
+CONFIG_INIT_ON_ALLOC_DEFAULT_ON         |     y     |   kspp   | self_protection  | OK
+CONFIG_GCC_PLUGIN_LATENT_ENTROPY        |     y     |   kspp   | self_protection  | FAIL: not found
+CONFIG_GCC_PLUGIN_RANDSTRUCT            |     y     |   kspp   | self_protection  | FAIL: not found
+CONFIG_HARDENED_USERCOPY                |     y     |   kspp   | self_protection  | OK
+CONFIG_HARDENED_USERCOPY_FALLBACK       |is not set |   kspp   | self_protection  | FAIL: "y"
+CONFIG_HARDENED_USERCOPY_PAGESPAN       |is not set |   kspp   | self_protection  | OK
+CONFIG_MODULE_SIG                       |     y     |   kspp   | self_protection  | OK
+CONFIG_MODULE_SIG_ALL                   |     y     |   kspp   | self_protection  | OK
+CONFIG_MODULE_SIG_SHA512                |     y     |   kspp   | self_protection  | OK
+CONFIG_MODULE_SIG_FORCE                 |     y     |   kspp   | self_protection  | FAIL: "is not set"
+CONFIG_INIT_STACK_ALL_ZERO              |     y     |   kspp   | self_protection  | FAIL: not found
+CONFIG_INIT_ON_FREE_DEFAULT_ON          |     y     |   kspp   | self_protection  | OK: CONFIG_PAGE_POISONING_ZERO "y"
+CONFIG_GCC_PLUGIN_STACKLEAK             |     y     |   kspp   | self_protection  | FAIL: not found
+CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT  |     y     |   kspp   | self_protection  | FAIL: not found
+CONFIG_DEFAULT_MMAP_MIN_ADDR            |   65536   |   kspp   | self_protection  | OK
+CONFIG_UBSAN_BOUNDS                     |     y     |maintainer| self_protection  | FAIL: not found
+CONFIG_UBSAN_SANITIZE_ALL               |     y     |maintainer| self_protection  | FAIL: CONFIG_UBSAN_BOUNDS not "y"
+CONFIG_UBSAN_TRAP                       |     y     |maintainer| self_protection  | FAIL: CONFIG_UBSAN_BOUNDS not "y"
+CONFIG_DEBUG_VIRTUAL                    |     y     |  clipos  | self_protection  | FAIL: "is not set"
+CONFIG_STATIC_USERMODEHELPER            |     y     |  clipos  | self_protection  | FAIL: "is not set"
+CONFIG_EFI_DISABLE_PCI_DMA              |     y     |  clipos  | self_protection  | FAIL: not found
+CONFIG_SLAB_MERGE_DEFAULT               |is not set |  clipos  | self_protection  | FAIL: "y"
+CONFIG_RANDOM_TRUST_BOOTLOADER          |is not set |  clipos  | self_protection  | FAIL: "y"
+CONFIG_RANDOM_TRUST_CPU                 |is not set |  clipos  | self_protection  | FAIL: "y"
+CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE|is not set |  clipos  | self_protection  | FAIL: CONFIG_GCC_PLUGIN_RANDSTRUCT not "y"
+CONFIG_STACKLEAK_METRICS                |is not set |  clipos  | self_protection  | FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
+CONFIG_STACKLEAK_RUNTIME_DISABLE        |is not set |  clipos  | self_protection  | FAIL: CONFIG_GCC_PLUGIN_STACKLEAK not "y"
+CONFIG_INTEL_IOMMU_DEFAULT_ON           |     y     |  clipos  | self_protection  | FAIL: "is not set"
+CONFIG_INTEL_IOMMU_SVM                  |     y     |  clipos  | self_protection  | OK
+CONFIG_RESET_ATTACK_MITIGATION          |     y     |    my    | self_protection  | OK
+CONFIG_AMD_IOMMU_V2                     |     y     |    my    | self_protection  | FAIL: "m"
+CONFIG_SECURITY                         |     y     |defconfig | security_policy  | OK
+CONFIG_SECURITY_YAMA                    |     y     |   kspp   | security_policy  | OK
+CONFIG_SECURITY_WRITABLE_HOOKS          |is not set |    my    | security_policy  | OK: not found
+CONFIG_SECURITY_LOCKDOWN_LSM            |     y     |  clipos  | security_policy  | OK
+CONFIG_SECURITY_LOCKDOWN_LSM_EARLY      |     y     |  clipos  | security_policy  | OK
+CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|     y     |  clipos  | security_policy  | FAIL: "is not set"
+CONFIG_SECURITY_SAFESETID               |     y     |    my    | security_policy  | OK
+CONFIG_SECURITY_LOADPIN                 |     y     |    my    | security_policy  | FAIL: "is not set"
+CONFIG_SECURITY_LOADPIN_ENFORCE         |     y     |    my    | security_policy  | FAIL: CONFIG_SECURITY_LOADPIN not "y"
+CONFIG_SECCOMP                          |     y     |defconfig |cut_attack_surface| OK
+CONFIG_SECCOMP_FILTER                   |     y     |defconfig |cut_attack_surface| OK
+CONFIG_STRICT_DEVMEM                    |     y     |defconfig |cut_attack_surface| OK
+CONFIG_ACPI_CUSTOM_METHOD               |is not set |   kspp   |cut_attack_surface| OK
+CONFIG_COMPAT_BRK                       |is not set |   kspp   |cut_attack_surface| OK
+CONFIG_DEVKMEM                          |is not set |   kspp   |cut_attack_surface| OK
+CONFIG_COMPAT_VDSO                      |is not set |   kspp   |cut_attack_surface| OK
+CONFIG_BINFMT_MISC                      |is not set |   kspp   |cut_attack_surface| FAIL: "m"
+CONFIG_INET_DIAG                        |is not set |   kspp   |cut_attack_surface| FAIL: "m"
+CONFIG_KEXEC                            |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_PROC_KCORE                       |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_LEGACY_PTYS                      |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_HIBERNATION                      |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_IA32_EMULATION                   |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_X86_X32                          |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_MODIFY_LDT_SYSCALL               |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_OABI_COMPAT                      |is not set |   kspp   |cut_attack_surface| OK: not found
+CONFIG_MODULES                          |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_DEVMEM                           |is not set |   kspp   |cut_attack_surface| FAIL: "y"
+CONFIG_IO_STRICT_DEVMEM                 |     y     |   kspp   |cut_attack_surface| FAIL: "is not set"
+CONFIG_LEGACY_VSYSCALL_NONE             |     y     |   kspp   |cut_attack_surface| FAIL: "is not set"
+CONFIG_ZSMALLOC_STAT                    |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_PAGE_OWNER                       |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_DEBUG_KMEMLEAK                   |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_BINFMT_AOUT                      |is not set |grsecurity|cut_attack_surface| OK: not found
+CONFIG_KPROBE_EVENTS                    |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_UPROBE_EVENTS                    |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_GENERIC_TRACER                   |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_FUNCTION_TRACER                  |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_STACK_TRACER                     |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_HIST_TRIGGERS                    |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_BLK_DEV_IO_TRACE                 |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_PROC_VMCORE                      |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_PROC_PAGE_MONITOR                |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_USELIB                           |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_CHECKPOINT_RESTORE               |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_USERFAULTFD                      |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_HWPOISON_INJECT                  |is not set |grsecurity|cut_attack_surface| FAIL: "m"
+CONFIG_MEM_SOFT_DIRTY                   |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_DEVPORT                          |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_DEBUG_FS                         |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_NOTIFIER_ERROR_INJECTION         |is not set |grsecurity|cut_attack_surface| FAIL: "m"
+CONFIG_FAIL_FUTEX                       |is not set |grsecurity|cut_attack_surface| OK: not found
+CONFIG_PUNIT_ATOM_DEBUG                 |is not set |grsecurity|cut_attack_surface| FAIL: "m"
+CONFIG_ACPI_CONFIGFS                    |is not set |grsecurity|cut_attack_surface| FAIL: "m"
+CONFIG_EDAC_DEBUG                       |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_DRM_I915_DEBUG                   |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_BCACHE_CLOSURES_DEBUG            |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_DVB_C8SECTPFE                    |is not set |grsecurity|cut_attack_surface| OK: not found
+CONFIG_MTD_SLRAM                        |is not set |grsecurity|cut_attack_surface| FAIL: "m"
+CONFIG_MTD_PHRAM                        |is not set |grsecurity|cut_attack_surface| FAIL: "m"
+CONFIG_IO_URING                         |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_KCMP                             |is not set |grsecurity|cut_attack_surface| OK: not found
+CONFIG_RSEQ                             |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_LATENCYTOP                       |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_KCOV                             |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_PROVIDE_OHCI1394_DMA_INIT        |is not set |grsecurity|cut_attack_surface| OK
+CONFIG_SUNRPC_DEBUG                     |is not set |grsecurity|cut_attack_surface| FAIL: "y"
+CONFIG_PTDUMP_DEBUGFS                   |is not set |grsecurity|cut_attack_surface| OK: not found
+CONFIG_DRM_LEGACY                       |is not set |maintainer|cut_attack_surface| OK
+CONFIG_FB                               |is not set |maintainer|cut_attack_surface| FAIL: "y"
+CONFIG_VT                               |is not set |maintainer|cut_attack_surface| FAIL: "y"
+CONFIG_BLK_DEV_FD                       |is not set |maintainer|cut_attack_surface| FAIL: "m"
+CONFIG_AIO                              |is not set |grapheneos|cut_attack_surface| FAIL: "y"
+CONFIG_STAGING                          |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_KSM                              |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_KALLSYMS                         |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_X86_VSYSCALL_EMULATION           |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_MAGIC_SYSRQ                      |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_KEXEC_FILE                       |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_USER_NS                          |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_X86_MSR                          |is not set |  clipos  |cut_attack_surface| FAIL: "m"
+CONFIG_X86_CPUID                        |is not set |  clipos  |cut_attack_surface| FAIL: "m"
+CONFIG_X86_IOPL_IOPERM                  |is not set |  clipos  |cut_attack_surface| OK: not found
+CONFIG_ACPI_TABLE_UPGRADE               |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_EFI_CUSTOM_SSDT_OVERLAYS         |is not set |  clipos  |cut_attack_surface| OK: not found
+CONFIG_LDISC_AUTOLOAD                   |is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_X86_INTEL_TSX_MODE_OFF           |     y     |  clipos  |cut_attack_surface| OK
+CONFIG_EFI_TEST                         |is not set | lockdown |cut_attack_surface| FAIL: "m"
+CONFIG_BPF_SYSCALL                      |is not set | lockdown |cut_attack_surface| FAIL: "y"
+CONFIG_MMIOTRACE_TEST                   |is not set | lockdown |cut_attack_surface| OK
+CONFIG_KPROBES                          |is not set | lockdown |cut_attack_surface| FAIL: "y"
+CONFIG_TRIM_UNUSED_KSYMS                |     y     |    my    |cut_attack_surface| FAIL: not found
+CONFIG_MMIOTRACE                        |is not set |    my    |cut_attack_surface| FAIL: "y"
+CONFIG_LIVEPATCH                        |is not set |    my    |cut_attack_surface| FAIL: "y"
+CONFIG_IP_DCCP                          |is not set |    my    |cut_attack_surface| FAIL: "m"
+CONFIG_IP_SCTP                          |is not set |    my    |cut_attack_surface| FAIL: "m"
+CONFIG_FTRACE                           |is not set |    my    |cut_attack_surface| FAIL: "y"
+CONFIG_VIDEO_VIVID                      |is not set |    my    |cut_attack_surface| FAIL: "m"
+CONFIG_INPUT_EVBUG                      |is not set |    my    |cut_attack_surface| FAIL: "m"
+CONFIG_INTEGRITY                        |     y     |defconfig | harden_userspace | OK
+CONFIG_ARCH_MMAP_RND_BITS               |    32     |  clipos  | harden_userspace | FAIL: "28"
 
 [+] Config check is finished: 'OK' - 68 / 'FAIL' - 96
 ```
