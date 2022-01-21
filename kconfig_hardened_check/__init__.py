@@ -113,7 +113,7 @@ class KconfigCheck(OptCheck):
         return "kconfig"
 
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<33}|{:^7}|{:^11}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
+        print('CONFIG_{:<33}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -139,7 +139,7 @@ class VerCheck:
 
     def table_print(self, _mode, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-        print('{:<90}'.format(ver_req), end='')
+        print('{:<91}'.format(ver_req), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -158,7 +158,7 @@ class PresenceCheck:
         return True
 
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<83}'.format(self.name + ' is present'), end='')
+        print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -190,7 +190,7 @@ class ComplexOptCheck:
 
     def table_print(self, mode, with_results):
         if mode == 'verbose':
-            print('    {:86}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
+            print('    {:87}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
             if with_results:
                 print('| {}'.format(self.result), end='')
             for o in self.opts:
@@ -501,46 +501,46 @@ def construct_checklist(l, arch):
     if arch == 'X86_64':
         l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y')] # 'vsyscall=none'
 
-    # 'cut_attack_surface', 'grsecurity'
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'ZSMALLOC_STAT', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'PAGE_OWNER', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'DEBUG_KMEMLEAK', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'BINFMT_AOUT', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'KPROBE_EVENTS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'UPROBE_EVENTS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'GENERIC_TRACER', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'FUNCTION_TRACER', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'STACK_TRACER', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'HIST_TRIGGERS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'BLK_DEV_IO_TRACE', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'PROC_VMCORE', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'PROC_PAGE_MONITOR', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'USELIB', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'CHECKPOINT_RESTORE', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'USERFAULTFD', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'HWPOISON_INJECT', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'MEM_SOFT_DIRTY', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'DEVPORT', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'DEBUG_FS', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'NOTIFIER_ERROR_INJECTION', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'FAIL_FUTEX', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'PUNIT_ATOM_DEBUG', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'ACPI_CONFIGFS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'EDAC_DEBUG', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'DRM_I915_DEBUG', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'BCACHE_CLOSURES_DEBUG', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'DVB_C8SECTPFE', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'MTD_SLRAM', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'MTD_PHRAM', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'IO_URING', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'KCMP', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'RSEQ', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'LATENCYTOP', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'KCOV', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'PROVIDE_OHCI1394_DMA_INIT', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsecurity', 'SUNRPC_DEBUG', 'is not set')]
-    l += [AND(KconfigCheck('cut_attack_surface', 'grsecurity', 'PTDUMP_DEBUGFS', 'is not set'),
-              KconfigCheck('cut_attack_surface', 'grsecurity', 'X86_PTDUMP', 'is not set'))]
+    # 'cut_attack_surface', 'grsec'
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'ZSMALLOC_STAT', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'PAGE_OWNER', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_KMEMLEAK', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BINFMT_AOUT', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'KPROBE_EVENTS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'UPROBE_EVENTS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'GENERIC_TRACER', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'FUNCTION_TRACER', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'STACK_TRACER', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'HIST_TRIGGERS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BLK_DEV_IO_TRACE', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'PROC_VMCORE', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'PROC_PAGE_MONITOR', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'USELIB', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'CHECKPOINT_RESTORE', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'USERFAULTFD', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'HWPOISON_INJECT', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'MEM_SOFT_DIRTY', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEVPORT', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'NOTIFIER_ERROR_INJECTION', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'FAIL_FUTEX', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'PUNIT_ATOM_DEBUG', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'ACPI_CONFIGFS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'EDAC_DEBUG', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DRM_I915_DEBUG', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BCACHE_CLOSURES_DEBUG', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DVB_C8SECTPFE', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'MTD_SLRAM', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'MTD_PHRAM', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'IO_URING', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'KCMP', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'RSEQ', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'LATENCYTOP', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'KCOV', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'PROVIDE_OHCI1394_DMA_INIT', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'SUNRPC_DEBUG', 'is not set')]
+    l += [AND(KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set'),
+              KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set'))]
 
     # 'cut_attack_surface', 'maintainer'
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')] # recommended by Daniel Vetter in /issues/38
@@ -634,7 +634,7 @@ def print_checklist(mode, checklist, with_results):
     if with_results:
         sep_line_len += 30
     print('=' * sep_line_len)
-    print('{:^40}|{:^7}|{:^11}|{:^10}|{:^18}'.format('option name', 'type', 'desired val', 'decision', 'reason'), end='')
+    print('{:^40}|{:^7}|{:^12}|{:^10}|{:^18}'.format('option name', 'type', 'desired val', 'decision', 'reason'), end='')
     if with_results:
         print('| {}'.format('check result'), end='')
     print()
