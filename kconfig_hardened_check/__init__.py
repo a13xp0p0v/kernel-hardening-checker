@@ -109,9 +109,9 @@ class OptCheck:
 
 class KconfigCheck(OptCheck):
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<38}|{:^13}|{:^10}|{:^20}'.format(self.name, self.expected, self.decision, self.reason), end='')
+        print('CONFIG_{:<33}|{:^11}|{:^10}|{:^18}'.format(self.name, self.expected, self.decision, self.reason), end='')
         if with_results:
-            print('|   {}'.format(self.result), end='')
+            print('| {}'.format(self.result), end='')
 
 
 class VerCheck:
@@ -135,9 +135,9 @@ class VerCheck:
 
     def table_print(self, _mode, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-        print('{:<91}'.format(ver_req), end='')
+        print('{:<82}'.format(ver_req), end='')
         if with_results:
-            print('|   {}'.format(self.result), end='')
+            print('| {}'.format(self.result), end='')
 
 
 class PresenceCheck:
@@ -154,9 +154,9 @@ class PresenceCheck:
         return True
 
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
+        print('CONFIG_{:<75}'.format(self.name + ' is present'), end='')
         if with_results:
-            print('|   {}'.format(self.result), end='')
+            print('| {}'.format(self.result), end='')
 
 
 class ComplexOptCheck:
@@ -186,9 +186,9 @@ class ComplexOptCheck:
 
     def table_print(self, mode, with_results):
         if mode == 'verbose':
-            print('    {:87}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
+            print('    {:78}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
             if with_results:
-                print('|   {}'.format(self.result), end='')
+                print('| {}'.format(self.result), end='')
             for o in self.opts:
                 print()
                 o.table_print(mode, with_results)
@@ -196,7 +196,7 @@ class ComplexOptCheck:
             o = self.opts[0]
             o.table_print(mode, False)
             if with_results:
-                print('|   {}'.format(self.result), end='')
+                print('| {}'.format(self.result), end='')
 
 
 class OR(ComplexOptCheck):
@@ -583,19 +583,19 @@ def construct_checklist(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'my', 'VIDEO_VIVID', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
 
-    # 'userspace_hardening'
+    # 'harden_userspace'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
-        l += [KconfigCheck('userspace_hardening', 'defconfig', 'INTEGRITY', 'y')]
+        l += [KconfigCheck('harden_userspace', 'defconfig', 'INTEGRITY', 'y')]
     if arch == 'ARM':
-        l += [KconfigCheck('userspace_hardening', 'my', 'INTEGRITY', 'y')]
+        l += [KconfigCheck('harden_userspace', 'my', 'INTEGRITY', 'y')]
     if arch == 'ARM64':
-        l += [KconfigCheck('userspace_hardening', 'defconfig', 'ARM64_MTE', 'y')]
+        l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_MTE', 'y')]
     if arch in ('ARM', 'X86_32'):
-        l += [KconfigCheck('userspace_hardening', 'defconfig', 'VMSPLIT_3G', 'y')]
+        l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     if arch in ('X86_64', 'ARM64'):
-        l += [KconfigCheck('userspace_hardening', 'clipos', 'ARCH_MMAP_RND_BITS', '32')]
+        l += [KconfigCheck('harden_userspace', 'clipos', 'ARCH_MMAP_RND_BITS', '32')]
     if arch in ('X86_32', 'ARM'):
-        l += [KconfigCheck('userspace_hardening', 'my', 'ARCH_MMAP_RND_BITS', '16')]
+        l += [KconfigCheck('harden_userspace', 'my', 'ARCH_MMAP_RND_BITS', '16')]
 
 #   l += [KconfigCheck('feature_test', 'my', 'LKDTM', 'm')] # only for debugging!
 
@@ -630,9 +630,9 @@ def print_checklist(mode, checklist, with_results):
     if with_results:
         sep_line_len += 30
     print('=' * sep_line_len)
-    print('{:^45}|{:^13}|{:^10}|{:^20}'.format('kconfig option name', 'desired val', 'decision', 'reason'), end='')
+    print('{:^40}|{:^11}|{:^10}|{:^18}'.format('kconfig option name', 'desired val', 'decision', 'reason'), end='')
     if with_results:
-        print('|   {}'.format('check result'), end='')
+        print('| {}'.format('check result'), end='')
     print()
     print('=' * sep_line_len)
 
