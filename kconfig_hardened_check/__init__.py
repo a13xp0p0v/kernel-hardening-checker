@@ -108,8 +108,12 @@ class OptCheck:
 
 
 class KconfigCheck(OptCheck):
+    @property
+    def type(self):
+        return "kconfig"
+
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<33}|{:^11}|{:^10}|{:^18}'.format(self.name, self.expected, self.decision, self.reason), end='')
+        print('CONFIG_{:<33}|{:^7}|{:^11}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -135,7 +139,7 @@ class VerCheck:
 
     def table_print(self, _mode, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-        print('{:<82}'.format(ver_req), end='')
+        print('{:<90}'.format(ver_req), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -154,7 +158,7 @@ class PresenceCheck:
         return True
 
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<75}'.format(self.name + ' is present'), end='')
+        print('CONFIG_{:<83}'.format(self.name + ' is present'), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -186,7 +190,7 @@ class ComplexOptCheck:
 
     def table_print(self, mode, with_results):
         if mode == 'verbose':
-            print('    {:78}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
+            print('    {:86}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
             if with_results:
                 print('| {}'.format(self.result), end='')
             for o in self.opts:
@@ -630,7 +634,7 @@ def print_checklist(mode, checklist, with_results):
     if with_results:
         sep_line_len += 30
     print('=' * sep_line_len)
-    print('{:^40}|{:^11}|{:^10}|{:^18}'.format('kconfig option name', 'desired val', 'decision', 'reason'), end='')
+    print('{:^40}|{:^7}|{:^11}|{:^10}|{:^18}'.format('option name', 'type', 'desired val', 'decision', 'reason'), end='')
     if with_results:
         print('| {}'.format('check result'), end='')
     print()
