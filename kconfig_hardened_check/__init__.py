@@ -177,6 +177,10 @@ class ComplexOptCheck:
         return self.opts[0].name
 
     @property
+    def type(self):
+        return self.opts[0].type
+
+    @property
     def expected(self):
         return self.opts[0].expected
 
