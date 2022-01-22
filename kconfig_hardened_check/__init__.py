@@ -626,7 +626,7 @@ def print_checklist(mode, checklist, with_results):
     if mode == 'json':
         opts = []
         for o in checklist:
-            opt = ['CONFIG_'+o.name, o.expected, o.decision, o.reason]
+            opt = ['CONFIG_'+o.name, o.type, o.expected, o.decision, o.reason]
             if with_results:
                 opt.append(o.result)
             opts.append(opt)
