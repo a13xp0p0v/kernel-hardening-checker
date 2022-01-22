@@ -673,13 +673,13 @@ def print_checklist(mode, checklist, with_results):
             print('[+] Config check is finished: \'OK\' - {}{} / \'FAIL\' - {}{}'.format(ok_count, ok_suppressed, fail_count, fail_suppressed))
 
 
-def perform_check(opt, parsed_options, kernel_version):
+def populate_opt_with_data(opt, parsed_options, kernel_version):
     if hasattr(opt, 'opts'):
         # prepare ComplexOptCheck
         for o in opt.opts:
             if hasattr(o, 'opts'):
                 # Recursion for nested ComplexOptChecks
-                perform_check(o, parsed_options, kernel_version)
+                populate_opt_with_data(o, parsed_options, kernel_version)
             if hasattr(o, 'state'):
                 o.state = parsed_options.get(o.name, None)
             if hasattr(o, 'ver'):
@@ -689,12 +689,16 @@ def perform_check(opt, parsed_options, kernel_version):
         if not hasattr(opt, 'state'):
             sys.exit('[!] ERROR: bad simple check {}'.format(vars(opt)))
         opt.state = parsed_options.get(opt.name, None)
-    opt.check()
 
 
-def perform_checks(checklist, parsed_options, kernel_version):
+def populate_with_data(checklist, parsed_options, kernel_version):
     for opt in checklist:
-        perform_check(opt, parsed_options, kernel_version)
+        populate_opt_with_data(opt, parsed_options, kernel_version)
+
+
+def perform_checks(checklist):
+    for opt in checklist:
+        opt.check()
 
 
 def parse_kconfig_file(parsed_options, fname):
@@ -769,11 +773,15 @@ def main():
         # add relevant kconfig checks to the checklist
         add_kconfig_checks(config_checklist, arch)
 
+        # populate the checklist with the parsed kconfig data
         parsed_kconfig_options = OrderedDict()
         parse_kconfig_file(parsed_kconfig_options, args.config)
+        populate_with_data(config_checklist, parsed_kconfig_options, kernel_version)
 
-        perform_checks(config_checklist, parsed_kconfig_options, kernel_version)
+        # now everything is ready for performing the checks
+        perform_checks(config_checklist)
 
+        # finally print the results
         if mode == 'verbose':
             print_unknown_options(config_checklist, parsed_kconfig_options)
         print_checklist(mode, config_checklist, True)
