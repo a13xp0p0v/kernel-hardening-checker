@@ -295,7 +295,7 @@ def detect_version(fname):
         return None, 'no kernel version detected'
 
 
-def construct_checklist(l, arch):
+def add_kconfig_checks(l, arch):
     # Calling the KconfigCheck class constructor:
     #     KconfigCheck(reason, decision, name, expected)
 
@@ -697,7 +697,7 @@ def perform_checks(checklist, parsed_options, kernel_version):
         perform_check(opt, parsed_options, kernel_version)
 
 
-def parse_config_file(parsed_options, fname):
+def parse_kconfig_file(parsed_options, fname):
     with open(fname, 'r') as f:
         opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
         opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
@@ -712,10 +712,10 @@ def parse_config_file(parsed_options, fname):
             elif opt_is_off.match(line):
                 option, value = line[9:].split(' ', 1)
                 if value != 'is not set':
-                    sys.exit('[!] ERROR: bad disabled config option "{}"'.format(line))
+                    sys.exit('[!] ERROR: bad disabled kconfig option "{}"'.format(line))
 
             if option in parsed_options:
-                sys.exit('[!] ERROR: config option "{}" exists multiple times'.format(line))
+                sys.exit('[!] ERROR: kconfig option "{}" exists multiple times'.format(line))
 
             if option:
                 parsed_options[option] = value
@@ -726,7 +726,7 @@ def parse_config_file(parsed_options, fname):
 def main():
     # Report modes:
     #   * verbose mode for
-    #     - reporting about unknown kernel options in the config
+    #     - reporting about unknown kernel options in the kconfig
     #     - verbose printing of ComplexOptCheck items
     #   * json mode for printing the results in JSON format
     report_modes = ['verbose', 'json', 'show_ok', 'show_fail']
@@ -766,22 +766,25 @@ def main():
         if mode != 'json':
             print('[+] Detected kernel version: {}.{}'.format(kernel_version[0], kernel_version[1]))
 
-        construct_checklist(config_checklist, arch)
-        parsed_options = OrderedDict()
-        parse_config_file(parsed_options, args.config)
-        perform_checks(config_checklist, parsed_options, kernel_version)
+        # add relevant kconfig checks to the checklist
+        add_kconfig_checks(config_checklist, arch)
+
+        parsed_kconfig_options = OrderedDict()
+        parse_kconfig_file(parsed_kconfig_options, args.config)
+
+        perform_checks(config_checklist, parsed_kconfig_options, kernel_version)
 
         if mode == 'verbose':
-            print_unknown_options(config_checklist, parsed_options)
+            print_unknown_options(config_checklist, parsed_kconfig_options)
         print_checklist(mode, config_checklist, True)
 
         sys.exit(0)
 
     if args.print:
         if mode in ('show_ok', 'show_fail'):
-            sys.exit('[!] ERROR: please use "{}" mode for checking the kernel config'.format(mode))
+            sys.exit('[!] ERROR: wrong mode "{}" for --print'.format(mode))
         arch = args.print
-        construct_checklist(config_checklist, arch)
+        add_kconfig_checks(config_checklist, arch)
         if mode != 'json':
             print('[+] Printing kernel security hardening preferences for {}...'.format(arch))
         print_checklist(mode, config_checklist, False)
