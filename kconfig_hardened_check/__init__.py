@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 #
-# This tool helps me to check the Linux kernel Kconfig option list
-# against my security hardening preferences for X86_64, ARM64, X86_32, and ARM.
+# This tool helps me to check Linux kernel options against
+# my security hardening preferences for X86_64, ARM64, X86_32, and ARM.
 # Let the computers do their job!
 #
 # Author: Alexander Popov <alex.popov@linux.com>
@@ -741,7 +741,7 @@ def main():
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print security hardening preferences for the selected architecture')
     parser.add_argument('-c', '--config',
-                        help='check the kernel config file against these preferences')
+                        help='check the kernel kconfig file against these preferences')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
     args = parser.parse_args()
@@ -756,7 +756,7 @@ def main():
 
     if args.config:
         if mode != 'json':
-            print('[+] Config file to check: {}'.format(args.config))
+            print('[+] Kconfig file to check: {}'.format(args.config))
 
         arch, msg = detect_arch(args.config, supported_archs)
         if not arch:
