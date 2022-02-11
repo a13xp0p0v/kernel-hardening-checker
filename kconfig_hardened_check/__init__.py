@@ -220,14 +220,11 @@ class OR(ComplexOptCheck):
         for i, opt in enumerate(self.opts):
             ret = opt.check()
             if ret:
-                if opt.result != 'OK' or i == 0:
-                    # Preserve additional explanation of this OK result.
-                    # Simple OK is enough only for the main option that
-                    # this OR-check is about.
-                    self.result = opt.result
-                else:
-                    # Simple OK is not enough for additional checks.
+                if opt.result == 'OK' and i != 0:
+                    # Simple OK is not enough for additional checks, add more info:
                     self.result = 'OK: CONFIG_{} "{}"'.format(opt.name, opt.expected)
+                else:
+                    self.result = opt.result
                 return True
         self.result = self.opts[0].result
         return False
