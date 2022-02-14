@@ -128,6 +128,10 @@ class VersionCheck:
         self.ver = ()
         self.result = None
 
+    @property
+    def type(self):
+        return 'version'
+
     def check(self):
         if self.ver[0] > self.ver_expected[0]:
             self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
@@ -150,7 +154,8 @@ class VersionCheck:
 
 class PresenceCheck:
     def __init__(self, name, type):
-        if type == 'kconfig':
+        self.type = type
+        if self.type == 'kconfig':
             self.name = 'CONFIG_' + name
         else:
             self.name = name
