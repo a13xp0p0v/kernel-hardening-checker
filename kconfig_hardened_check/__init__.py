@@ -81,6 +81,7 @@ import re
 import json
 from .__about__ import __version__
 
+TYPES_OF_CHECKS = ('kconfig', 'version')
 
 class OptCheck:
     def __init__(self, reason, decision, name, expected):
@@ -693,27 +694,37 @@ def print_checklist(mode, checklist, with_results):
             print('[+] Config check is finished: \'OK\' - {}{} / \'FAIL\' - {}{}'.format(ok_count, ok_suppressed, fail_count, fail_suppressed))
 
 
-def populate_opt_with_data(opt, parsed_options, kernel_version):
+def populate_simple_opt_with_data(opt, data, data_type):
     if hasattr(opt, 'opts'):
-        # prepare ComplexOptCheck
+        sys.exit('[!] ERROR: unexpected ComplexOptCheck {}: {}'.format(opt.name, vars(opt)))
+    if data_type not in TYPES_OF_CHECKS:
+        sys.exit('[!] ERROR: invalid data type "{}"'.format(data_type))
+    if data_type != opt.type:
+        return
+    if data_type == 'kconfig':
+        opt.state = data.get(opt.name, None)
+    elif data_type == 'version':
+        opt.ver = data
+
+
+def populate_opt_with_data(opt, data, data_type):
+    if hasattr(opt, 'opts'):
         for o in opt.opts:
             if hasattr(o, 'opts'):
-                # Recursion for nested ComplexOptChecks
-                populate_opt_with_data(o, parsed_options, kernel_version)
-            if hasattr(o, 'state'):
-                o.state = parsed_options.get(o.name, None)
-            if hasattr(o, 'ver'):
-                o.ver = kernel_version
+                # Recursion for nested ComplexOptCheck objects
+                populate_opt_with_data(o, data, data_type)
+            else:
+                populate_simple_opt_with_data(o, data, data_type)
     else:
-        # prepare simple check, opt.state is mandatory
+        # The 'state' is mandatory for simple checks
         if not hasattr(opt, 'state'):
             sys.exit('[!] ERROR: bad simple check {}'.format(vars(opt)))
-        opt.state = parsed_options.get(opt.name, None)
+        populate_simple_opt_with_data(opt, data, data_type)
 
 
-def populate_with_data(checklist, parsed_options, kernel_version):
+def populate_with_data(checklist, data, data_type):
     for opt in checklist:
-        populate_opt_with_data(opt, parsed_options, kernel_version)
+        populate_opt_with_data(opt, data, data_type)
 
 
 def perform_checks(checklist):
@@ -796,7 +807,8 @@ def main():
         # populate the checklist with the parsed kconfig data
         parsed_kconfig_options = OrderedDict()
         parse_kconfig_file(parsed_kconfig_options, args.config)
-        populate_with_data(config_checklist, parsed_kconfig_options, kernel_version)
+        populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
+        populate_with_data(config_checklist, kernel_version, 'version')
 
         # now everything is ready for performing the checks
         perform_checks(config_checklist)
