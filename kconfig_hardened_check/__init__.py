@@ -175,6 +175,8 @@ class ComplexOptCheck:
         self.opts = opts
         if not self.opts:
             sys.exit('[!] ERROR: empty {} check'.format(self.__class__.__name__))
+        if len(self.opts) == 1:
+            sys.exit('[!] ERROR: useless {} check'.format(self.__class__.__name__))
         if not isinstance(opts[0], KconfigCheck):
             sys.exit('[!] ERROR: invalid {} check: {}'.format(self.__class__.__name__, opts))
         self.result = None
