@@ -614,16 +614,25 @@ def add_kconfig_checks(l, arch):
 
 def print_unknown_options(checklist, parsed_options):
     known_options = []
-    for opt in checklist:
-        if hasattr(opt, 'opts'):
-            for o in opt.opts:
-                if hasattr(o, 'name'):
-                    known_options.append(o.name)
-        else:
-            known_options.append(opt.name)
+
+    for o1 in checklist:
+        if not hasattr(o1, 'opts'):
+            known_options.append(o1.name)
+            continue
+        for o2 in o1.opts:
+            if not hasattr(o2, 'opts'):
+                if hasattr(o2, 'name'):
+                    known_options.append(o2.name)
+                continue
+            for o3 in o2.opts:
+                if hasattr(o3, 'opts'):
+                    sys.exit('[!] ERROR: unexpected ComplexOptCheck inside {}'.format(o2.name))
+                if hasattr(o3, 'name'):
+                    known_options.append(o3.name)
+
     for option, value in parsed_options.items():
         if option not in known_options:
-            print('[?] No rule for option {} ({})'.format(option, value))
+            print('[?] No check for option {} ({})'.format(option, value))
 
 
 def print_checklist(mode, checklist, with_results):
