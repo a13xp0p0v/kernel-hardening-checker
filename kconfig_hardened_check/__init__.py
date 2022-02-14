@@ -122,6 +122,12 @@ class KconfigCheck(OptCheck):
     def type(self):
         return 'kconfig'
 
+    def json_dump(self, with_results):
+        dump = [self.name, self.type, self.expected, self.decision, self.reason]
+        if with_results:
+            dump.append(self.result)
+        return dump
+
 
 class VersionCheck:
     def __init__(self, ver_expected):
@@ -220,6 +226,12 @@ class ComplexOptCheck:
             o.table_print(mode, False)
             if with_results:
                 print('| {}'.format(self.result), end='')
+
+    def json_dump(self, with_results):
+        dump = self.opts[0].json_dump(False)
+        if with_results:
+            dump.append(self.result)
+        return dump
 
 
 class OR(ComplexOptCheck):
@@ -645,13 +657,10 @@ def print_unknown_options(checklist, parsed_options):
 
 def print_checklist(mode, checklist, with_results):
     if mode == 'json':
-        opts = []
+        output = []
         for o in checklist:
-            opt = [o.name, o.type, o.expected, o.decision, o.reason]
-            if with_results:
-                opt.append(o.result)
-            opts.append(opt)
-        print(json.dumps(opts))
+            output.append(o.json_dump(with_results))
+        print(json.dumps(output))
         return
 
     # table header
