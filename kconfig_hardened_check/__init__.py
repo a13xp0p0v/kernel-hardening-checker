@@ -159,7 +159,7 @@ class PresenceCheck:
         if self.type == 'kconfig':
             self.name = 'CONFIG_' + name
         else:
-            self.name = name
+            sys.exit('[!] ERROR: unsupported type "{}" for {}'.format(type, self.__class__.__name__))
         self.state = None
         self.result = None
 
@@ -193,7 +193,7 @@ class ComplexOptCheck:
 
     @property
     def type(self):
-        return self.opts[0].type
+        return 'complex'
 
     @property
     def expected(self):
