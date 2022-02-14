@@ -106,16 +106,20 @@ class OptCheck:
             return True
         return False
 
-
-class KconfigCheck(OptCheck):
-    @property
-    def type(self):
-        return "kconfig"
-
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<33}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
+        print('{:<40}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
+
+
+class KconfigCheck(OptCheck):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = 'CONFIG_' + self.name
+
+    @property
+    def type(self):
+        return 'kconfig'
 
 
 class VerCheck:
@@ -145,8 +149,11 @@ class VerCheck:
 
 
 class PresenceCheck:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, name, type):
+        if type == 'kconfig':
+            self.name = 'CONFIG_' + name
+        else:
+            self.name = name
         self.state = None
         self.result = None
 
@@ -158,7 +165,7 @@ class PresenceCheck:
         return True
 
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
+        print('{:<91}'.format(self.name + ' is present'), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -222,7 +229,7 @@ class OR(ComplexOptCheck):
             if ret:
                 if opt.result == 'OK' and i != 0:
                     # Simple OK is not enough for additional checks, add more info:
-                    self.result = 'OK: CONFIG_{} "{}"'.format(opt.name, opt.expected)
+                    self.result = 'OK: {} "{}"'.format(opt.name, opt.expected)
                 else:
                     self.result = opt.result
                 return True
@@ -248,9 +255,9 @@ class AND(ComplexOptCheck):
                 # and not by the main option that this AND-check is about.
                 # Describe the reason of the FAIL.
                 if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: not found':
-                    self.result = 'FAIL: CONFIG_{} not "{}"'.format(opt.name, opt.expected)
+                    self.result = 'FAIL: {} not "{}"'.format(opt.name, opt.expected)
                 elif opt.result == 'FAIL: not present':
-                    self.result = 'FAIL: CONFIG_{} not present'.format(opt.name)
+                    self.result = 'FAIL: {} not present'.format(opt.name)
                 else:
                     # This FAIL message is self-explaining.
                     self.result = opt.result
@@ -567,7 +574,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [AND(KconfigCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD', 'is not set'),
-              PresenceCheck('LDISC_AUTOLOAD'))]
+              PresenceCheck('LDISC_AUTOLOAD', 'kconfig'))]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
@@ -623,7 +630,7 @@ def print_checklist(mode, checklist, with_results):
     if mode == 'json':
         opts = []
         for o in checklist:
-            opt = ['CONFIG_'+o.name, o.type, o.expected, o.decision, o.reason]
+            opt = [o.name, o.type, o.expected, o.decision, o.reason]
             if with_results:
                 opt.append(o.result)
             opts.append(opt)
@@ -709,9 +716,9 @@ def parse_kconfig_file(parsed_options, fname):
             value = None
 
             if opt_is_on.match(line):
-                option, value = line[7:].split('=', 1)
+                option, value = line.split('=', 1)
             elif opt_is_off.match(line):
-                option, value = line[9:].split(' ', 1)
+                option, value = line[2:].split(' ', 1)
                 if value != 'is not set':
                     sys.exit('[!] ERROR: bad disabled kconfig option "{}"'.format(line))
 
@@ -747,7 +754,7 @@ def main():
     if args.mode:
         mode = args.mode
         if mode != 'json':
-            print("[+] Special report mode: {}".format(mode))
+            print('[+] Special report mode: {}'.format(mode))
 
     config_checklist = []
 
