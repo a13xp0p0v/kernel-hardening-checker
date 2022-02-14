@@ -122,7 +122,7 @@ class KconfigCheck(OptCheck):
         return 'kconfig'
 
 
-class VerCheck:
+class VersionCheck:
     def __init__(self, ver_expected):
         self.ver_expected = ver_expected
         self.ver = ()
@@ -320,7 +320,7 @@ def add_kconfig_checks(l, arch):
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_SET_MODULE_RONX', 'y'),
              modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
-             VerCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
+             VersionCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
     iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
     l += [iommu_support_is_set] # is needed for mitigating DMA attacks
     if arch in ('X86_64', 'ARM64', 'X86_32'):
@@ -350,12 +350,12 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'UNMAP_KERNEL_AT_EL0', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y'),
-                     VerCheck((5, 9))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
+                     VersionCheck((5, 9))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
         l += [KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_PTR_AUTH_KERNEL', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_BTI_KERNEL', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
-                 VerCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+                 VersionCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
         l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_MTE', 'y')]
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
