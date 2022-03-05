@@ -636,16 +636,16 @@ def print_unknown_options(checklist, parsed_options):
     known_options = []
 
     for o1 in checklist:
-        if not hasattr(o1, 'opts'):
+        if o1.type != 'complex':
             known_options.append(o1.name)
             continue
         for o2 in o1.opts:
-            if not hasattr(o2, 'opts'):
+            if o2.type != 'complex':
                 if hasattr(o2, 'name'):
                     known_options.append(o2.name)
                 continue
             for o3 in o2.opts:
-                if hasattr(o3, 'opts'):
+                if o3.type == 'complex':
                     sys.exit('[!] ERROR: unexpected ComplexOptCheck inside {}'.format(o2.name))
                 if hasattr(o3, 'name'):
                     known_options.append(o3.name)
@@ -704,12 +704,14 @@ def print_checklist(mode, checklist, with_results):
 
 
 def populate_simple_opt_with_data(opt, data, data_type):
-    if hasattr(opt, 'opts'):
+    if opt.type == 'complex':
         sys.exit('[!] ERROR: unexpected ComplexOptCheck {}: {}'.format(opt.name, vars(opt)))
     if data_type not in TYPES_OF_CHECKS:
         sys.exit('[!] ERROR: invalid data type "{}"'.format(data_type))
+
     if data_type != opt.type:
         return
+
     if data_type == 'kconfig':
         opt.state = data.get(opt.name, None)
     elif data_type == 'version':
@@ -717,17 +719,16 @@ def populate_simple_opt_with_data(opt, data, data_type):
 
 
 def populate_opt_with_data(opt, data, data_type):
-    if hasattr(opt, 'opts'):
+    if opt.type == 'complex':
         for o in opt.opts:
-            if hasattr(o, 'opts'):
+            if o.type == 'complex':
                 # Recursion for nested ComplexOptCheck objects
                 populate_opt_with_data(o, data, data_type)
             else:
                 populate_simple_opt_with_data(o, data, data_type)
     else:
-        # The 'state' is mandatory for simple checks
-        if not hasattr(opt, 'state'):
-            sys.exit('[!] ERROR: bad simple check {}'.format(vars(opt)))
+        if opt.type != 'kconfig':
+            sys.exit('[!] ERROR: bad type "{}" for a simple check {}'.format(opt.type, opt.name))
         populate_simple_opt_with_data(opt, data, data_type)
 
 
