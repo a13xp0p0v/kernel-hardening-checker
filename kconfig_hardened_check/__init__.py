@@ -81,6 +81,7 @@ import re
 import json
 from .__about__ import __version__
 
+TYPES_OF_CHECKS = ('kconfig', 'version')
 
 class OptCheck:
     def __init__(self, reason, decision, name, expected):
@@ -106,23 +107,37 @@ class OptCheck:
             return True
         return False
 
-
-class KconfigCheck(OptCheck):
-    @property
-    def type(self):
-        return "kconfig"
-
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<33}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
+        print('{:<40}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
 
-class VerCheck:
+class KconfigCheck(OptCheck):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = 'CONFIG_' + self.name
+
+    @property
+    def type(self):
+        return 'kconfig'
+
+    def json_dump(self, with_results):
+        dump = [self.name, self.type, self.expected, self.decision, self.reason]
+        if with_results:
+            dump.append(self.result)
+        return dump
+
+
+class VersionCheck:
     def __init__(self, ver_expected):
         self.ver_expected = ver_expected
         self.ver = ()
         self.result = None
+
+    @property
+    def type(self):
+        return 'version'
 
     def check(self):
         if self.ver[0] > self.ver_expected[0]:
@@ -145,8 +160,12 @@ class VerCheck:
 
 
 class PresenceCheck:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, name, type):
+        self.type = type
+        if self.type == 'kconfig':
+            self.name = 'CONFIG_' + name
+        else:
+            sys.exit('[!] ERROR: unsupported type "{}" for {}'.format(type, self.__class__.__name__))
         self.state = None
         self.result = None
 
@@ -158,7 +177,7 @@ class PresenceCheck:
         return True
 
     def table_print(self, _mode, with_results):
-        print('CONFIG_{:<84}'.format(self.name + ' is present'), end='')
+        print('{:<91}'.format(self.name + ' is present'), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -168,6 +187,8 @@ class ComplexOptCheck:
         self.opts = opts
         if not self.opts:
             sys.exit('[!] ERROR: empty {} check'.format(self.__class__.__name__))
+        if len(self.opts) == 1:
+            sys.exit('[!] ERROR: useless {} check'.format(self.__class__.__name__))
         if not isinstance(opts[0], KconfigCheck):
             sys.exit('[!] ERROR: invalid {} check: {}'.format(self.__class__.__name__, opts))
         self.result = None
@@ -178,7 +199,7 @@ class ComplexOptCheck:
 
     @property
     def type(self):
-        return self.opts[0].type
+        return 'complex'
 
     @property
     def expected(self):
@@ -206,6 +227,12 @@ class ComplexOptCheck:
             if with_results:
                 print('| {}'.format(self.result), end='')
 
+    def json_dump(self, with_results):
+        dump = self.opts[0].json_dump(False)
+        if with_results:
+            dump.append(self.result)
+        return dump
+
 
 class OR(ComplexOptCheck):
     # self.opts[0] is the option that this OR-check is about.
@@ -222,7 +249,7 @@ class OR(ComplexOptCheck):
             if ret:
                 if opt.result == 'OK' and i != 0:
                     # Simple OK is not enough for additional checks, add more info:
-                    self.result = 'OK: CONFIG_{} "{}"'.format(opt.name, opt.expected)
+                    self.result = 'OK: {} "{}"'.format(opt.name, opt.expected)
                 else:
                     self.result = opt.result
                 return True
@@ -248,9 +275,9 @@ class AND(ComplexOptCheck):
                 # and not by the main option that this AND-check is about.
                 # Describe the reason of the FAIL.
                 if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: not found':
-                    self.result = 'FAIL: CONFIG_{} not "{}"'.format(opt.name, opt.expected)
+                    self.result = 'FAIL: {} not "{}"'.format(opt.name, opt.expected)
                 elif opt.result == 'FAIL: not present':
-                    self.result = 'FAIL: CONFIG_{} not present'.format(opt.name)
+                    self.result = 'FAIL: {} not present'.format(opt.name)
                 else:
                     # This FAIL message is self-explaining.
                     self.result = opt.result
@@ -311,7 +338,7 @@ def add_kconfig_checks(l, arch):
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_SET_MODULE_RONX', 'y'),
              modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
-             VerCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
+             VersionCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
     iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
     l += [iommu_support_is_set] # is needed for mitigating DMA attacks
     if arch in ('X86_64', 'ARM64', 'X86_32'):
@@ -341,12 +368,12 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'UNMAP_KERNEL_AT_EL0', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y'),
-                     VerCheck((5, 9))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
+                     VersionCheck((5, 9))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
         l += [KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_PTR_AUTH_KERNEL', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_BTI_KERNEL', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
-                 VerCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+                 VersionCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
         l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_MTE', 'y')]
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
@@ -567,7 +594,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [AND(KconfigCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD', 'is not set'),
-              PresenceCheck('LDISC_AUTOLOAD'))]
+              PresenceCheck('LDISC_AUTOLOAD', 'kconfig'))]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
@@ -607,27 +634,33 @@ def add_kconfig_checks(l, arch):
 
 def print_unknown_options(checklist, parsed_options):
     known_options = []
-    for opt in checklist:
-        if hasattr(opt, 'opts'):
-            for o in opt.opts:
-                if hasattr(o, 'name'):
-                    known_options.append(o.name)
-        else:
-            known_options.append(opt.name)
+
+    for o1 in checklist:
+        if not hasattr(o1, 'opts'):
+            known_options.append(o1.name)
+            continue
+        for o2 in o1.opts:
+            if not hasattr(o2, 'opts'):
+                if hasattr(o2, 'name'):
+                    known_options.append(o2.name)
+                continue
+            for o3 in o2.opts:
+                if hasattr(o3, 'opts'):
+                    sys.exit('[!] ERROR: unexpected ComplexOptCheck inside {}'.format(o2.name))
+                if hasattr(o3, 'name'):
+                    known_options.append(o3.name)
+
     for option, value in parsed_options.items():
         if option not in known_options:
-            print('[?] No rule for option {} ({})'.format(option, value))
+            print('[?] No check for option {} ({})'.format(option, value))
 
 
 def print_checklist(mode, checklist, with_results):
     if mode == 'json':
-        opts = []
+        output = []
         for o in checklist:
-            opt = ['CONFIG_'+o.name, o.type, o.expected, o.decision, o.reason]
-            if with_results:
-                opt.append(o.result)
-            opts.append(opt)
-        print(json.dumps(opts))
+            output.append(o.json_dump(with_results))
+        print(json.dumps(output))
         return
 
     # table header
@@ -670,27 +703,37 @@ def print_checklist(mode, checklist, with_results):
             print('[+] Config check is finished: \'OK\' - {}{} / \'FAIL\' - {}{}'.format(ok_count, ok_suppressed, fail_count, fail_suppressed))
 
 
-def populate_opt_with_data(opt, parsed_options, kernel_version):
+def populate_simple_opt_with_data(opt, data, data_type):
     if hasattr(opt, 'opts'):
-        # prepare ComplexOptCheck
+        sys.exit('[!] ERROR: unexpected ComplexOptCheck {}: {}'.format(opt.name, vars(opt)))
+    if data_type not in TYPES_OF_CHECKS:
+        sys.exit('[!] ERROR: invalid data type "{}"'.format(data_type))
+    if data_type != opt.type:
+        return
+    if data_type == 'kconfig':
+        opt.state = data.get(opt.name, None)
+    elif data_type == 'version':
+        opt.ver = data
+
+
+def populate_opt_with_data(opt, data, data_type):
+    if hasattr(opt, 'opts'):
         for o in opt.opts:
             if hasattr(o, 'opts'):
-                # Recursion for nested ComplexOptChecks
-                populate_opt_with_data(o, parsed_options, kernel_version)
-            if hasattr(o, 'state'):
-                o.state = parsed_options.get(o.name, None)
-            if hasattr(o, 'ver'):
-                o.ver = kernel_version
+                # Recursion for nested ComplexOptCheck objects
+                populate_opt_with_data(o, data, data_type)
+            else:
+                populate_simple_opt_with_data(o, data, data_type)
     else:
-        # prepare simple check, opt.state is mandatory
+        # The 'state' is mandatory for simple checks
         if not hasattr(opt, 'state'):
             sys.exit('[!] ERROR: bad simple check {}'.format(vars(opt)))
-        opt.state = parsed_options.get(opt.name, None)
+        populate_simple_opt_with_data(opt, data, data_type)
 
 
-def populate_with_data(checklist, parsed_options, kernel_version):
+def populate_with_data(checklist, data, data_type):
     for opt in checklist:
-        populate_opt_with_data(opt, parsed_options, kernel_version)
+        populate_opt_with_data(opt, data, data_type)
 
 
 def perform_checks(checklist):
@@ -709,9 +752,9 @@ def parse_kconfig_file(parsed_options, fname):
             value = None
 
             if opt_is_on.match(line):
-                option, value = line[7:].split('=', 1)
+                option, value = line.split('=', 1)
             elif opt_is_off.match(line):
-                option, value = line[9:].split(' ', 1)
+                option, value = line[2:].split(' ', 1)
                 if value != 'is not set':
                     sys.exit('[!] ERROR: bad disabled kconfig option "{}"'.format(line))
 
@@ -747,7 +790,7 @@ def main():
     if args.mode:
         mode = args.mode
         if mode != 'json':
-            print("[+] Special report mode: {}".format(mode))
+            print('[+] Special report mode: {}'.format(mode))
 
     config_checklist = []
 
@@ -773,7 +816,8 @@ def main():
         # populate the checklist with the parsed kconfig data
         parsed_kconfig_options = OrderedDict()
         parse_kconfig_file(parsed_kconfig_options, args.config)
-        populate_with_data(config_checklist, parsed_kconfig_options, kernel_version)
+        populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
+        populate_with_data(config_checklist, kernel_version, 'version')
 
         # now everything is ready for performing the checks
         perform_checks(config_checklist)
