@@ -29,9 +29,9 @@
 #           pti=on
 #           spec_store_bypass_disable=on
 #           l1tf=full,force
+#           l1d_flush=on (a part of the l1tf option)
 #           mds=full,nosmt
 #           tsx=off
-#           l1d_flush=on
 #       ARM64:
 #           kpti=on
 #           ssbd=force-on
