@@ -607,6 +607,7 @@ def add_kconfig_checks(l, arch):
     # 'cut_attack_surface', 'my'
     l += [OR(KconfigCheck('cut_attack_surface', 'my', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
+    l += [KconfigCheck('cut_attack_surface', 'my', 'BPF_UNPRIV_DEFAULT_OFF', 'y')] # see kernel.unprivileged_bpf_disabled
     l += [KconfigCheck('cut_attack_surface', 'my', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'my', 'LIVEPATCH', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'IP_DCCP', 'is not set')]
