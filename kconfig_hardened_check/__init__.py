@@ -325,6 +325,7 @@ def add_kconfig_checks(l, arch):
 
     modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
+    efi_not_set = KconfigCheck('cut_attack_surface', 'my', 'EFI', 'is not set')
 
     # 'self_protection', 'defconfig'
     l += [KconfigCheck('self_protection', 'defconfig', 'BUG', 'y')]
@@ -446,7 +447,8 @@ def add_kconfig_checks(l, arch):
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y')]
     l += [KconfigCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
-    l += [KconfigCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y')]
+    l += [OR(KconfigCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y'),
+             efi_not_set)]
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')] # slab_nomerge
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set')]
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set')]
@@ -468,7 +470,8 @@ def add_kconfig_checks(l, arch):
                   iommu_support_is_set)]
 
     # 'self_protection', 'my'
-    l += [KconfigCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y')] # needs userspace support (systemd)
+    l += [OR(KconfigCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y'),
+             efi_not_set)] # needs userspace support (systemd)
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'my', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
