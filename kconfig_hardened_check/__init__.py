@@ -340,11 +340,11 @@ def add_kconfig_checks(l, arch):
              modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
              VersionCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
+    l += [KconfigCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
     iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
     l += [iommu_support_is_set] # is needed for mitigating DMA attacks
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
     if arch in ('X86_64', 'ARM64'):
         l += [KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
     if arch in ('X86_64', 'X86_32'):
