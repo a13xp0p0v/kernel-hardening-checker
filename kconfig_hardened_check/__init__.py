@@ -380,6 +380,7 @@ def add_kconfig_checks(l, arch):
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_HISTORY', 'y')]
 
     # 'self_protection', 'kspp'
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_DMESG_RESTRICT', 'y')]
