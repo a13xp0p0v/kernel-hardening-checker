@@ -441,8 +441,9 @@ def add_kconfig_checks(l, arch):
     # 'self_protection', 'maintainer'
     ubsan_bounds_is_set = KconfigCheck('self_protection', 'maintainer', 'UBSAN_BOUNDS', 'y') # only array index bounds checking
     l += [ubsan_bounds_is_set] # recommended by Kees Cook in /issues/53
-    l += [AND(KconfigCheck('self_protection', 'maintainer', 'UBSAN_SANITIZE_ALL', 'y'),
-              ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
+    if arch in ('X86_64', 'ARM64', 'X86_32'):  # ARCH_HAS_UBSAN_SANITIZE_ALL is not enabled for ARM
+        l += [AND(KconfigCheck('self_protection', 'maintainer', 'UBSAN_SANITIZE_ALL', 'y'),
+                  ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
     l += [AND(KconfigCheck('self_protection', 'maintainer', 'UBSAN_TRAP', 'y'),
               ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
 
