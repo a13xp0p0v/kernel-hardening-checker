@@ -132,6 +132,12 @@ class OptCheck:
         if with_results:
             print('| {}'.format(self.result), end='')
 
+    def json_dump(self, with_results):
+        dump = [self.name, self.type, self.expected, self.decision, self.reason]
+        if with_results:
+            dump.append(self.result)
+        return dump
+
 
 class KconfigCheck(OptCheck):
     def __init__(self, *args, **kwargs):
@@ -142,11 +148,11 @@ class KconfigCheck(OptCheck):
     def type(self):
         return 'kconfig'
 
-    def json_dump(self, with_results):
-        dump = [self.name, self.type, self.expected, self.decision, self.reason]
-        if with_results:
-            dump.append(self.result)
-        return dump
+
+class CmdlineCheck(OptCheck):
+    @property
+    def type(self):
+        return 'cmdline'
 
 
 class VersionCheck:
@@ -185,7 +191,7 @@ class ComplexOptCheck:
             sys.exit('[!] ERROR: empty {} check'.format(self.__class__.__name__))
         if len(self.opts) == 1:
             sys.exit('[!] ERROR: useless {} check'.format(self.__class__.__name__))
-        if not isinstance(opts[0], KconfigCheck):
+        if not isinstance(opts[0], KconfigCheck) and not isinstance(opts[0], CmdlineCheck):
             sys.exit('[!] ERROR: invalid {} check: {}'.format(self.__class__.__name__, opts))
         self.result = None
 
