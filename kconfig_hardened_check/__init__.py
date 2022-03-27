@@ -817,6 +817,8 @@ def main():
                         help='print security hardening preferences for the selected architecture')
     parser.add_argument('-c', '--config',
                         help='check the kernel kconfig file against these preferences')
+    parser.add_argument('-l', '--cmdline',
+                        help='check the kernel cmdline file against these preferences')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
     args = parser.parse_args()
@@ -832,6 +834,8 @@ def main():
     if args.config:
         if mode != 'json':
             print('[+] Kconfig file to check: {}'.format(args.config))
+            if args.cmdline:
+                print('[+] Kernel cmdline file to check: {}'.format(args.cmdline))
 
         arch, msg = detect_arch(args.config, supported_archs)
         if not arch:
@@ -863,6 +867,8 @@ def main():
         print_checklist(mode, config_checklist, True)
 
         sys.exit(0)
+    elif args.cmdline:
+        sys.exit('[!] ERROR: checking cmdline doesn\'t work without checking kconfig')
 
     if args.print:
         if mode in ('show_ok', 'show_fail'):
