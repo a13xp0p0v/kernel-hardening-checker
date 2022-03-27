@@ -656,6 +656,14 @@ def add_kconfig_checks(l, arch):
 #   l += [KconfigCheck('feature_test', 'my', 'LKDTM', 'm')] # only for debugging!
 
 
+def add_cmdline_checks(l, arch):
+    # Calling the CmdlineCheck class constructor:
+    #     CmdlineCheck(reason, decision, name, expected)
+
+    l += [CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'on')]
+    # TODO: add other
+
+
 def print_unknown_options(checklist, parsed_options):
     known_options = []
 
@@ -861,6 +869,7 @@ def main():
             sys.exit('[!] ERROR: wrong mode "{}" for --print'.format(mode))
         arch = args.print
         add_kconfig_checks(config_checklist, arch)
+        add_cmdline_checks(config_checklist, arch)
         if mode != 'json':
             print('[+] Printing kernel security hardening preferences for {}...'.format(arch))
         print_checklist(mode, config_checklist, False)
