@@ -85,7 +85,7 @@ import re
 import json
 from .__about__ import __version__
 
-TYPES_OF_CHECKS = ('kconfig', 'version')
+SIMPLE_OPTION_TYPES = ('kconfig', 'version', 'cmdline')
 
 class OptCheck:
     # Constructor without the 'expected' parameter is for option presence checks (any value is OK)
@@ -738,15 +738,15 @@ def print_checklist(mode, checklist, with_results):
 def populate_simple_opt_with_data(opt, data, data_type):
     if opt.type == 'complex':
         sys.exit('[!] ERROR: unexpected ComplexOptCheck {}: {}'.format(opt.name, vars(opt)))
-    if opt.type not in TYPES_OF_CHECKS:
+    if opt.type not in SIMPLE_OPTION_TYPES:
         sys.exit('[!] ERROR: invalid opt type "{}" for {}'.format(opt.type, opt.name))
-    if data_type not in TYPES_OF_CHECKS:
+    if data_type not in SIMPLE_OPTION_TYPES:
         sys.exit('[!] ERROR: invalid data type "{}"'.format(data_type))
 
     if data_type != opt.type:
         return
 
-    if data_type == 'kconfig':
+    if data_type in ('kconfig', 'cmdline'):
         opt.state = data.get(opt.name, None)
     elif data_type == 'version':
         opt.ver = data
@@ -763,7 +763,7 @@ def populate_opt_with_data(opt, data, data_type):
             else:
                 populate_simple_opt_with_data(o, data, data_type)
     else:
-        if opt.type != 'kconfig':
+        if opt.type not in ('kconfig', 'cmdline'):
             sys.exit('[!] ERROR: bad type "{}" for a simple check {}'.format(opt.type, opt.name))
         populate_simple_opt_with_data(opt, data, data_type)
 
@@ -800,6 +800,13 @@ def parse_kconfig_file(parsed_options, fname):
 
             if option:
                 parsed_options[option] = value
+
+
+def parse_cmdline_file(parsed_options, fname):
+    with open(fname, 'r') as f:
+        print('FIXME! cmdline file:')
+        for line in f.readlines():
+            print(line)
 
 
 def main():
@@ -857,6 +864,15 @@ def main():
         parse_kconfig_file(parsed_kconfig_options, args.config)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
         populate_with_data(config_checklist, kernel_version, 'version')
+
+        if args.cmdline:
+            # add relevant cmdline checks to the checklist
+            add_cmdline_checks(config_checklist, arch)
+
+            # populate the checklist with the parsed kconfig data
+            parsed_cmdline_options = OrderedDict()
+            parse_cmdline_file(parsed_cmdline_options, args.cmdline)
+            populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
         # now everything is ready for performing the checks
         perform_checks(config_checklist)
