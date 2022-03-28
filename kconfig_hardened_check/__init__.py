@@ -103,10 +103,6 @@ class OptCheck:
         else:
             self.result = 'FAIL: "' + self.state + '"'
 
-        if self.result.startswith('OK'):
-            return True
-        return False
-
     def table_print(self, _mode, with_results):
         print('{:<40}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
         if with_results:
@@ -142,15 +138,14 @@ class VersionCheck:
     def check(self):
         if self.ver[0] > self.ver_expected[0]:
             self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return True
+            return
         if self.ver[0] < self.ver_expected[0]:
             self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return False
+            return
         if self.ver[1] >= self.ver_expected[1]:
             self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-            return True
+            return
         self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-        return False
 
     def table_print(self, _mode, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
@@ -172,9 +167,8 @@ class PresenceCheck:
     def check(self):
         if self.state is None:
             self.result = 'FAIL: not present'
-            return False
+            return
         self.result = 'OK: is present'
-        return True
 
     def table_print(self, _mode, with_results):
         print('{:<91}'.format(self.name + ' is present'), end='')
@@ -239,22 +233,19 @@ class OR(ComplexOptCheck):
     # Use cases:
     #     OR(<X_is_hardened>, <X_is_disabled>)
     #     OR(<X_is_hardened>, <old_X_is_hardened>)
-
     def check(self):
         if not self.opts:
             sys.exit('[!] ERROR: invalid OR check')
-
         for i, opt in enumerate(self.opts):
-            ret = opt.check()
-            if ret:
+            opt.check()
+            if opt.result.startswith('OK'):
                 if opt.result == 'OK' and i != 0:
                     # Simple OK is not enough for additional checks, add more info:
                     self.result = 'OK: {} "{}"'.format(opt.name, opt.expected)
                 else:
                     self.result = opt.result
-                return True
+                return
         self.result = self.opts[0].result
-        return False
 
 
 class AND(ComplexOptCheck):
@@ -263,14 +254,13 @@ class AND(ComplexOptCheck):
     #     AND(<suboption>, <main_option>)
     #       Suboption is not checked if checking of the main_option is failed.
     #     AND(<X_is_disabled>, <old_X_is_disabled>)
-
     def check(self):
         for i, opt in reversed(list(enumerate(self.opts))):
-            ret = opt.check()
+            opt.check()
             if i == 0:
                 self.result = opt.result
-                return ret
-            if not ret:
+                return
+            if not opt.result.startswith('OK'):
                 # This FAIL is caused by additional checks,
                 # and not by the main option that this AND-check is about.
                 # Describe the reason of the FAIL.
@@ -281,8 +271,7 @@ class AND(ComplexOptCheck):
                 else:
                     # This FAIL message is self-explaining.
                     self.result = opt.result
-                return False
-
+                return
         sys.exit('[!] ERROR: invalid AND check')
 
 
@@ -771,8 +760,6 @@ def parse_kconfig_file(parsed_options, fname):
 
             if option:
                 parsed_options[option] = value
-
-        return parsed_options
 
 
 def main():
