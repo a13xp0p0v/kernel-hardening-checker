@@ -804,9 +804,20 @@ def parse_kconfig_file(parsed_options, fname):
 
 def parse_cmdline_file(parsed_options, fname):
     with open(fname, 'r') as f:
-        print('FIXME! cmdline file:')
-        for line in f.readlines():
-            print(line)
+        line = f.readline()
+        opts = line.split()
+
+        line = f.readline()
+        if line:
+            sys.exit('[!] ERROR: more than one line in "{}"'.format(fname))
+
+        for opt in opts:
+            if '=' in opt:
+                name, value = opt.split('=', 1)
+            else:
+                name = opt
+                value = '' # '' is not None
+            parsed_options[name] = value
 
 
 def main():
