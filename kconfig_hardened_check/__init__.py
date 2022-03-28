@@ -86,7 +86,10 @@ from .__about__ import __version__
 TYPES_OF_CHECKS = ('kconfig', 'version')
 
 class OptCheck:
-    def __init__(self, reason, decision, name, expected):
+    # Constructor without the 'expected' parameter is for option presence checks (any value is OK)
+    def __init__(self, reason, decision, name, expected=None):
+        if not reason or not decision or not name:
+            sys.exit('[!] ERROR: invalid {} check for "{}"'.format(self.__class__.__name__, name))
         self.name = name
         self.expected = expected
         self.decision = decision
@@ -95,6 +98,15 @@ class OptCheck:
         self.result = None
 
     def check(self):
+        # handle the option presence check
+        if self.expected is None:
+            if self.state is None:
+                self.result = 'FAIL: not present'
+            else:
+                self.result = 'OK: is present'
+            return
+
+        # handle the option value check
         if self.expected == self.state:
             self.result = 'OK'
         elif self.state is None:
@@ -106,7 +118,11 @@ class OptCheck:
             self.result = 'FAIL: "' + self.state + '"'
 
     def table_print(self, _mode, with_results):
-        print('{:<40}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
+        if self.expected is None:
+            expected = ''
+        else:
+            expected = self.expected
+        print('{:<40}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, expected, self.decision, self.reason), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -152,28 +168,6 @@ class VersionCheck:
     def table_print(self, _mode, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
         print('{:<91}'.format(ver_req), end='')
-        if with_results:
-            print('| {}'.format(self.result), end='')
-
-
-class PresenceCheck:
-    def __init__(self, name, type):
-        self.type = type
-        if self.type == 'kconfig':
-            self.name = 'CONFIG_' + name
-        else:
-            sys.exit('[!] ERROR: unsupported type "{}" for {}'.format(type, self.__class__.__name__))
-        self.state = None
-        self.result = None
-
-    def check(self):
-        if self.state is None:
-            self.result = 'FAIL: not present'
-            return
-        self.result = 'OK: is present'
-
-    def table_print(self, _mode, with_results):
-        print('{:<91}'.format(self.name + ' is present'), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -599,7 +593,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [AND(KconfigCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD', 'is not set'),
-              PresenceCheck('LDISC_AUTOLOAD', 'kconfig'))]
+              KconfigCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD'))] # option presence check
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
