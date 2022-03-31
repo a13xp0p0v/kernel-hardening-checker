@@ -21,7 +21,6 @@
 #    init_on_free=1 (since v5.3, otherwise slub_debug=P and page_poison=1)
 #    loadpin.enforce=1
 #    debugfs=no-mount (or off if possible)
-#    randomize_kstack_offset=1
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
@@ -439,7 +438,8 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [stackleak_is_set]
-        l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
+                 CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'))]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
@@ -660,7 +660,6 @@ def add_cmdline_checks(l, arch):
     # Calling the CmdlineCheck class constructor:
     #     CmdlineCheck(reason, decision, name, expected)
 
-    l += [CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'on')]
     # TODO: add other
 
 
