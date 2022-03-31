@@ -715,6 +715,8 @@ def populate_simple_opt_with_data(opt, data, data_type):
         opt.state = data.get(opt.name, None)
     elif data_type == 'version':
         opt.ver = data
+    else:
+        sys.exit('[!] ERROR: unexpected data type "{}"'.format(data_type))
 
 
 def populate_opt_with_data(opt, data, data_type):
