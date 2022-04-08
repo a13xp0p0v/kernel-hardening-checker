@@ -314,6 +314,7 @@ def add_kconfig_checks(l, arch):
 
     modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
+    bpf_syscall_not_set = KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set') # refers to LOCKDOWN
     efi_not_set = KconfigCheck('cut_attack_surface', 'my', 'EFI', 'is not set')
 
     # 'self_protection', 'defconfig'
@@ -494,7 +495,8 @@ def add_kconfig_checks(l, arch):
               loadpin_is_set)]
 
     # 'cut_attack_surface', 'defconfig'
-    l += [KconfigCheck('cut_attack_surface', 'defconfig', 'BPF_UNPRIV_DEFAULT_OFF', 'y')] # see unprivileged_bpf_disabled
+    l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'BPF_UNPRIV_DEFAULT_OFF', 'y'),
+             bpf_syscall_not_set)] # see unprivileged_bpf_disabled
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP', 'y')]
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP_FILTER', 'y')]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
@@ -596,8 +598,8 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
     # 'cut_attack_surface', 'lockdown'
+    l += [bpf_syscall_not_set] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'lockdown', 'KPROBES', 'is not set')] # refers to LOCKDOWN
 
