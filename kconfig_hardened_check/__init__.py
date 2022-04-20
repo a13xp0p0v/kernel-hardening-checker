@@ -421,6 +421,7 @@ def add_kconfig_checks(l, arch):
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [stackleak_is_set]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
     if arch in ('ARM64', 'ARM'):
