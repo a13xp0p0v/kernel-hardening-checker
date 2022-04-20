@@ -14,6 +14,8 @@
 #    slab_nomerge
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
+#    iommu.passthrough=0
+#    iommu.strict=1
 #    slub_debug=FZ (slow)
 #    init_on_alloc=1 (since v5.3)
 #    init_on_free=1 (since v5.3, otherwise slub_debug=P and page_poison=1)
@@ -389,6 +391,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_LATENT_ENTROPY', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
     randstruct_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y')
     l += [randstruct_is_set]
     hardened_usercopy_is_set = KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
