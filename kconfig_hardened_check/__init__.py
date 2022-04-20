@@ -235,11 +235,18 @@ class OR(ComplexOptCheck):
         for i, opt in enumerate(self.opts):
             opt.check()
             if opt.result.startswith('OK'):
-                if opt.result == 'OK' and i != 0:
-                    # Simple OK is not enough for additional checks, add more info:
-                    self.result = 'OK: {} "{}"'.format(opt.name, opt.expected)
-                else:
-                    self.result = opt.result
+                self.result = opt.result
+                # Add more info for additional checks:
+                if i != 0:
+                    if opt.result == 'OK':
+                        self.result = 'OK: {} "{}"'.format(opt.name, opt.expected)
+                    elif opt.result == 'OK: not found':
+                        self.result = 'OK: {} not found'.format(opt.name)
+                    elif opt.result == 'OK: is present':
+                        self.result = 'OK: {} is present'.format(opt.name)
+                    # VersionCheck provides enough info
+                    elif not opt.result.startswith('OK: version'):
+                        sys.exit('[!] ERROR: unexpected OK description "{}"'.format(opt.result))
                 return
         self.result = self.opts[0].result
 
@@ -265,8 +272,10 @@ class AND(ComplexOptCheck):
                 elif opt.result == 'FAIL: not present':
                     self.result = 'FAIL: {} not present'.format(opt.name)
                 else:
-                    # This FAIL message is self-explaining.
+                    # VersionCheck provides enough info
                     self.result = opt.result
+                    if not opt.result.startswith('FAIL: version'):
+                        sys.exit('[!] ERROR: unexpected FAIL description "{}"'.format(opt.result))
                 return
         sys.exit('[!] ERROR: invalid AND check')
 
