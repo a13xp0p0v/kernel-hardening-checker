@@ -395,6 +395,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
     randstruct_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y')
     l += [randstruct_is_set]
     hardened_usercopy_is_set = KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
