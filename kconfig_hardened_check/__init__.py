@@ -97,6 +97,10 @@ class OptCheck:
         self.state = None
         self.result = None
 
+    @property
+    def type(self):
+        return None
+
     def check(self):
         # handle the option presence check
         if self.expected is None:
@@ -715,6 +719,8 @@ def print_checklist(mode, checklist, with_results):
 def populate_simple_opt_with_data(opt, data, data_type):
     if opt.type == 'complex':
         sys.exit('[!] ERROR: unexpected ComplexOptCheck {}: {}'.format(opt.name, vars(opt)))
+    if opt.type not in TYPES_OF_CHECKS:
+        sys.exit('[!] ERROR: invalid opt type "{}" for {}'.format(opt.type, opt.name))
     if data_type not in TYPES_OF_CHECKS:
         sys.exit('[!] ERROR: invalid data type "{}"'.format(data_type))
 
