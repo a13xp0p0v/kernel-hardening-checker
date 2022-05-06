@@ -631,6 +631,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'my', 'FTRACE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'my', 'VIDEO_VIVID', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
+    l += [KconfigCheck('cut_attack_surface', 'my', 'KGDB', 'is not set')]
 
     # 'harden_userspace'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
