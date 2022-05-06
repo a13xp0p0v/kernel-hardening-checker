@@ -58,11 +58,9 @@
 #    what about bpf_jit_enable?
 #    kernel.unprivileged_bpf_disabled=1
 #    net.core.bpf_jit_harden=2
-#
 #    vm.unprivileged_userfaultfd=0
 #        (at first, it disabled unprivileged userfaultfd,
 #         and since v5.11 it enables unprivileged userfaultfd for user-mode only)
-#
 #    dev.tty.ldisc_autoload=0
 #    fs.protected_symlinks=1
 #    fs.protected_hardlinks=1
@@ -70,6 +68,7 @@
 #    fs.protected_regular=2
 #    fs.suid_dumpable=0
 #    kernel.modules_disabled=1
+#    kernel.randomize_va_space = 2
 
 
 # pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
