@@ -42,6 +42,7 @@
 #           nokaslr
 #           arm64.nobti
 #           arm64.nopauth
+#           arm64.nomte
 #
 #    Hardware tag-based KASAN with arm64 Memory Tagging Extension (MTE):
 #           kasan=on
