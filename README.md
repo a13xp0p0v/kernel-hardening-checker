@@ -18,7 +18,7 @@ against my security hardening preferences, which are based on the
   - [CLIP OS kernel configuration][2],
   - Last public [grsecurity][3] patch (options which they disable),
   - [SECURITY_LOCKDOWN_LSM][5] patchset,
-  - Direct feedback from Linux kernel maintainers (see [#38][6], [#53][15], [#54][16]).
+  - Direct feedback from Linux kernel maintainers (see [#38][6], [#53][15], [#54][16], [#62][17]).
 
 I also created [__Linux Kernel Defence Map__][4] that is a graphical representation of the
 relationships between security hardening features and the corresponding vulnerability classes
@@ -347,3 +347,4 @@ I highly recommend using [spectre-meltdown-checker][13] tool maintained by Stép
 [14]: https://github.com/speed47
 [15]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53
 [16]: https://github.com/a13xp0p0v/kconfig-hardened-check/pull/54
+[17]: https://github.com/a13xp0p0v/kconfig-hardened-check/pull/62
