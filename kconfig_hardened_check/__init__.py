@@ -40,6 +40,7 @@
 #
 #    Should NOT be set:
 #           nokaslr
+#           rodata=off
 #           arm64.nobti
 #           arm64.nopauth
 #           arm64.nomte
