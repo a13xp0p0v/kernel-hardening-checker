@@ -11,7 +11,6 @@
 #
 #
 # N.B Hardening command line parameters:
-#    slab_nomerge
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
 #    iommu.passthrough=0
@@ -21,14 +20,12 @@
 #    init_on_free=1 (since v5.3, otherwise slub_debug=P and page_poison=1)
 #    loadpin.enforce=1
 #    debugfs=no-mount (or off if possible)
-#    randomize_kstack_offset=1
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
 #           mitigations=auto,nosmt (nosmt is slow)
 #       X86:
 #           spectre_v2=on
-#           pti=on
 #           spec_store_bypass_disable=on
 #           l1tf=full,force
 #           l1d_flush=on (a part of the l1tf option)
@@ -39,6 +36,7 @@
 #           ssbd=force-on
 #
 #    Should NOT be set:
+#           slab_merge
 #           nokaslr
 #           rodata=off
 #           sysrq_always_enabled
@@ -85,7 +83,7 @@ import re
 import json
 from .__about__ import __version__
 
-TYPES_OF_CHECKS = ('kconfig', 'version')
+SIMPLE_OPTION_TYPES = ('kconfig', 'version', 'cmdline')
 
 class OptCheck:
     # Constructor without the 'expected' parameter is for option presence checks (any value is OK)
@@ -132,6 +130,12 @@ class OptCheck:
         if with_results:
             print('| {}'.format(self.result), end='')
 
+    def json_dump(self, with_results):
+        dump = [self.name, self.type, self.expected, self.decision, self.reason]
+        if with_results:
+            dump.append(self.result)
+        return dump
+
 
 class KconfigCheck(OptCheck):
     def __init__(self, *args, **kwargs):
@@ -142,11 +146,11 @@ class KconfigCheck(OptCheck):
     def type(self):
         return 'kconfig'
 
-    def json_dump(self, with_results):
-        dump = [self.name, self.type, self.expected, self.decision, self.reason]
-        if with_results:
-            dump.append(self.result)
-        return dump
+
+class CmdlineCheck(OptCheck):
+    @property
+    def type(self):
+        return 'cmdline'
 
 
 class VersionCheck:
@@ -185,7 +189,7 @@ class ComplexOptCheck:
             sys.exit('[!] ERROR: empty {} check'.format(self.__class__.__name__))
         if len(self.opts) == 1:
             sys.exit('[!] ERROR: useless {} check'.format(self.__class__.__name__))
-        if not isinstance(opts[0], KconfigCheck):
+        if not isinstance(opts[0], KconfigCheck) and not isinstance(opts[0], CmdlineCheck):
             sys.exit('[!] ERROR: invalid {} check: {}'.format(self.__class__.__name__, opts))
         self.result = None
 
@@ -433,7 +437,8 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [stackleak_is_set]
-        l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
+                 CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'))]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
@@ -461,7 +466,8 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [OR(KconfigCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y'),
              efi_not_set)]
-    l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')] # slab_nomerge
+    l += [OR(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
+             CmdlineCheck('self_protection', 'kspp', 'slab_nomerge'))] # option presence check
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set')]
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set')]
     l += [AND(KconfigCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
@@ -650,6 +656,15 @@ def add_kconfig_checks(l, arch):
 #   l += [KconfigCheck('feature_test', 'my', 'LKDTM', 'm')] # only for debugging!
 
 
+def add_cmdline_checks(l, arch):
+    # Calling the CmdlineCheck class constructor:
+    #     CmdlineCheck(reason, decision, name, expected)
+
+    if arch in ('X86_64', 'X86_32'):
+        l += [CmdlineCheck('self_protection', 'kspp', 'pti', 'on')]
+    # TODO: add other
+
+
 def print_unknown_options(checklist, parsed_options):
     known_options = []
 
@@ -724,15 +739,15 @@ def print_checklist(mode, checklist, with_results):
 def populate_simple_opt_with_data(opt, data, data_type):
     if opt.type == 'complex':
         sys.exit('[!] ERROR: unexpected ComplexOptCheck {}: {}'.format(opt.name, vars(opt)))
-    if opt.type not in TYPES_OF_CHECKS:
+    if opt.type not in SIMPLE_OPTION_TYPES:
         sys.exit('[!] ERROR: invalid opt type "{}" for {}'.format(opt.type, opt.name))
-    if data_type not in TYPES_OF_CHECKS:
+    if data_type not in SIMPLE_OPTION_TYPES:
         sys.exit('[!] ERROR: invalid data type "{}"'.format(data_type))
 
     if data_type != opt.type:
         return
 
-    if data_type == 'kconfig':
+    if data_type in ('kconfig', 'cmdline'):
         opt.state = data.get(opt.name, None)
     elif data_type == 'version':
         opt.ver = data
@@ -749,7 +764,7 @@ def populate_opt_with_data(opt, data, data_type):
             else:
                 populate_simple_opt_with_data(o, data, data_type)
     else:
-        if opt.type != 'kconfig':
+        if opt.type not in ('kconfig', 'cmdline'):
             sys.exit('[!] ERROR: bad type "{}" for a simple check {}'.format(opt.type, opt.name))
         populate_simple_opt_with_data(opt, data, data_type)
 
@@ -788,6 +803,24 @@ def parse_kconfig_file(parsed_options, fname):
                 parsed_options[option] = value
 
 
+def parse_cmdline_file(parsed_options, fname):
+    with open(fname, 'r') as f:
+        line = f.readline()
+        opts = line.split()
+
+        line = f.readline()
+        if line:
+            sys.exit('[!] ERROR: more than one line in "{}"'.format(fname))
+
+        for opt in opts:
+            if '=' in opt:
+                name, value = opt.split('=', 1)
+            else:
+                name = opt
+                value = '' # '' is not None
+            parsed_options[name] = value
+
+
 def main():
     # Report modes:
     #   * verbose mode for
@@ -803,6 +836,8 @@ def main():
                         help='print security hardening preferences for the selected architecture')
     parser.add_argument('-c', '--config',
                         help='check the kernel kconfig file against these preferences')
+    parser.add_argument('-l', '--cmdline',
+                        help='check the kernel cmdline file against these preferences')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
     args = parser.parse_args()
@@ -818,6 +853,8 @@ def main():
     if args.config:
         if mode != 'json':
             print('[+] Kconfig file to check: {}'.format(args.config))
+            if args.cmdline:
+                print('[+] Kernel cmdline file to check: {}'.format(args.cmdline))
 
         arch, msg = detect_arch(args.config, supported_archs)
         if not arch:
@@ -840,6 +877,15 @@ def main():
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
         populate_with_data(config_checklist, kernel_version, 'version')
 
+        if args.cmdline:
+            # add relevant cmdline checks to the checklist
+            add_cmdline_checks(config_checklist, arch)
+
+            # populate the checklist with the parsed kconfig data
+            parsed_cmdline_options = OrderedDict()
+            parse_cmdline_file(parsed_cmdline_options, args.cmdline)
+            populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
+
         # now everything is ready for performing the checks
         perform_checks(config_checklist)
 
@@ -849,12 +895,15 @@ def main():
         print_checklist(mode, config_checklist, True)
 
         sys.exit(0)
+    elif args.cmdline:
+        sys.exit('[!] ERROR: checking cmdline doesn\'t work without checking kconfig')
 
     if args.print:
         if mode in ('show_ok', 'show_fail'):
             sys.exit('[!] ERROR: wrong mode "{}" for --print'.format(mode))
         arch = args.print
         add_kconfig_checks(config_checklist, arch)
+        add_cmdline_checks(config_checklist, arch)
         if mode != 'json':
             print('[+] Printing kernel security hardening preferences for {}...'.format(arch))
         print_checklist(mode, config_checklist, False)
