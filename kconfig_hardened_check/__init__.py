@@ -26,7 +26,6 @@
 #           mitigations=auto,nosmt (nosmt is slow)
 #       X86:
 #           spectre_v2=on
-#           pti=on
 #           spec_store_bypass_disable=on
 #           l1tf=full,force
 #           l1d_flush=on (a part of the l1tf option)
@@ -661,6 +660,8 @@ def add_cmdline_checks(l, arch):
     # Calling the CmdlineCheck class constructor:
     #     CmdlineCheck(reason, decision, name, expected)
 
+    if arch in ('X86_64', 'X86_32'):
+        l += [CmdlineCheck('self_protection', 'kspp', 'pti', 'on')]
     # TODO: add other
 
 
