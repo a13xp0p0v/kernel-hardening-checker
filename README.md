@@ -5,13 +5,13 @@
 
 ## Motivation
 
-There are plenty of security hardening options in the Linux kernel. A lot of them are
+There are plenty of security hardening options for the Linux kernel. A lot of them are
 not enabled by the major distros. We have to enable these options ourselves to
 make our systems more secure.
 
 But nobody likes checking configs manually. So let the computers do their job!
 
-__kconfig-hardened-check.py__ helps me to check the Linux kernel Kconfig option list
+__kconfig-hardened-check.py__ helps me to check the Linux kernel options
 against my security hardening preferences, which are based on the
 
   - [KSPP recommended settings][1],
@@ -19,6 +19,8 @@ against my security hardening preferences, which are based on the
   - Last public [grsecurity][3] patch (options which they disable),
   - [SECURITY_LOCKDOWN_LSM][5] patchset,
   - Direct feedback from Linux kernel maintainers (see [#38][6], [#53][15], [#54][16], [#62][17]).
+
+This tool supports checking __Kconfig__ options and __kernel cmdline__ parameters.
 
 I also created [__Linux Kernel Defence Map__][4] that is a graphical representation of the
 relationships between security hardening features and the corresponding vulnerability classes
@@ -49,6 +51,7 @@ Some Linux distributions also provide `kconfig-hardened-check` as a package.
 ```
 usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}]
                               [-c CONFIG]
+                              [-l CMDLINE]
                               [-m {verbose,json,show_ok,show_fail}]
 
 A tool for checking the security hardening options of the Linux kernel
@@ -59,7 +62,9 @@ optional arguments:
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
                         print security hardening preferences for the selected architecture
   -c CONFIG, --config CONFIG
-                        check the kernel config file against these preferences
+                        check the kernel kconfig file against these preferences
+  -l CMDLINE, --cmdline CMDLINE
+                        check the kernel cmdline file against these preferences
   -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
                         choose the report mode
 ```
