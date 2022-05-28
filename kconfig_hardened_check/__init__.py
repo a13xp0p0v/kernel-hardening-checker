@@ -11,7 +11,6 @@
 #
 #
 # N.B Hardening command line parameters:
-#    slab_nomerge
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
 #    iommu.passthrough=0
@@ -38,6 +37,7 @@
 #           ssbd=force-on
 #
 #    Should NOT be set:
+#           slab_merge
 #           nokaslr
 #           rodata=off
 #           sysrq_always_enabled
@@ -467,7 +467,8 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [OR(KconfigCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y'),
              efi_not_set)]
-    l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')] # slab_nomerge
+    l += [OR(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
+             CmdlineCheck('self_protection', 'kspp', 'slab_nomerge'))] # option presence check
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set')]
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set')]
     l += [AND(KconfigCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
