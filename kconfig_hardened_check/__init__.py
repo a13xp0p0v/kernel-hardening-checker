@@ -851,6 +851,9 @@ def main():
     config_checklist = []
 
     if args.config:
+        if args.print:
+            sys.exit('[!] ERROR: --config and --print can\'t be used together')
+
         if mode != 'json':
             print('[+] Kconfig file to check: {}'.format(args.config))
             if args.cmdline:
