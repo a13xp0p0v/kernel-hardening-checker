@@ -94,6 +94,21 @@ jobs:
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline -m show_fail
         done
         echo -e "\n>>>>> checking $COUNT configs is done <<<<<"
+
+    - name: Collect coverage for error handling
+      run: |
+        echo ">>>>> lonely -l <<<<<"
+        ! coverage run -a --branch bin/kconfig-hardened-check -l /proc/cmdline
+
+        echo ">>>>> wrong modes for -p  <<<<<"
+        ! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_ok
+        ! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_fail
+
+        echo ">>>>> -p and -c together <<<<<"
+        ! ./bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config
+
+    - name: Prepare final coverage report
+      run: |
         coverage xml -i -o coverage.xml
 
     - name: Handle coverage
