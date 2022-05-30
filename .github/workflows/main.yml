@@ -30,13 +30,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install coverage
         pip --verbose install git+https://github.com/a13xp0p0v/kconfig-hardened-check
+        echo ">>>>> first start <<<<<"
         kconfig-hardened-check
 
     - name: Check all configs
       run: |
         echo ">>>>> check all configs <<<<<"
         CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
-        CONFIGS=`find $CONFIG_DIR -type f|grep "\.config"`
+        CONFIGS=`find $CONFIG_DIR -type f | grep "\.config"`
         COUNT=0
         for C in $CONFIGS
         do
@@ -51,10 +52,14 @@ jobs:
 
     - name: Collect coverage
       run: |
+        echo ">>>>> get help <<<<<"
         coverage run -a --branch bin/kconfig-hardened-check
         coverage run -a --branch bin/kconfig-hardened-check -h
+
+        echo ">>>>> get version <<<<<"
         coverage run -a --branch bin/kconfig-hardened-check --version
 
+        echo ">>>>> print the security hardening preferences <<<<<"
         coverage run -a --branch bin/kconfig-hardened-check -p X86_64
         coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m verbose
         coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m json
@@ -71,16 +76,21 @@ jobs:
         coverage run -a --branch bin/kconfig-hardened-check -p ARM -m verbose
         coverage run -a --branch bin/kconfig-hardened-check -p ARM -m json
 
-        CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
-        CONFIGS=`find $CONFIG_DIR -type f|grep "\.config"`
+        echo ">>>>> check the example kconfig files <<<<<"
+        CONFIG_DIR=`find . -name config_files`
+        CONFIGS=`find $CONFIG_DIR -type f | grep "\.config"`
+        COUNT=0
         for C in $CONFIGS
         do
+                COUNT=$(expr $COUNT + 1)
+                echo -e "\n>>>>> checking config number $COUNT <<<<<"
                 coverage run -a --branch bin/kconfig-hardened-check -c $C
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose > /dev/null
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -m json
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -m show_ok
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -m show_fail
         done
+        echo -e "\n>>>>> checking $COUNT configs is done <<<<<"
         coverage xml -i -o coverage.xml
 
     - name: Handle coverage
