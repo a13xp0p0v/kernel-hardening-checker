@@ -33,7 +33,7 @@ jobs:
         echo ">>>>> first start <<<<<"
         kconfig-hardened-check
 
-    - name: Check all configs
+    - name: Check all configs with the installed tool
       run: |
         echo ">>>>> check all configs <<<<<"
         CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
@@ -47,7 +47,7 @@ jobs:
         done
         echo -e "\n>>>>> checking $COUNT configs is done <<<<<"
 
-    - name: Get source code
+    - name: Get source code for collecting coverage
       uses: actions/checkout@v2
 
     - name: Collect coverage
