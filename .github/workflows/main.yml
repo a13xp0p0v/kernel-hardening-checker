@@ -50,7 +50,7 @@ jobs:
     - name: Get source code for collecting coverage
       uses: actions/checkout@v2
 
-    - name: Collect coverage
+    - name: Collect coverage for the basic functionality
       run: |
         echo ">>>>> get help <<<<<"
         coverage run -a --branch bin/kconfig-hardened-check
@@ -76,7 +76,10 @@ jobs:
         coverage run -a --branch bin/kconfig-hardened-check -p ARM -m verbose
         coverage run -a --branch bin/kconfig-hardened-check -p ARM -m json
 
-        echo ">>>>> check the example kconfig files <<<<<"
+        echo ">>>>> use local cmdline as an example <<<<<"
+        cat /proc/cmdline
+
+        echo ">>>>> check the example kconfig files and cmdline <<<<<"
         CONFIG_DIR=`find . -name config_files`
         CONFIGS=`find $CONFIG_DIR -type f | grep "\.config"`
         COUNT=0
@@ -84,11 +87,11 @@ jobs:
         do
                 COUNT=$(expr $COUNT + 1)
                 echo -e "\n>>>>> checking config number $COUNT <<<<<"
-                coverage run -a --branch bin/kconfig-hardened-check -c $C
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose > /dev/null
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -m json
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -m show_ok
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -m show_fail
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline -m verbose > /dev/null
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline -m json
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline -m show_ok
+                coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline -m show_fail
         done
         echo -e "\n>>>>> checking $COUNT configs is done <<<<<"
         coverage xml -i -o coverage.xml
