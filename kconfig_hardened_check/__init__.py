@@ -240,8 +240,6 @@ class OR(ComplexOptCheck):
     #     OR(<X_is_hardened>, <X_is_disabled>)
     #     OR(<X_is_hardened>, <old_X_is_hardened>)
     def check(self):
-        if not self.opts:
-            sys.exit('[!] ERROR: invalid OR check')
         for i, opt in enumerate(self.opts):
             opt.check()
             if opt.result.startswith('OK'):
@@ -287,7 +285,6 @@ class AND(ComplexOptCheck):
                     if not opt.result.startswith('FAIL: version'):
                         sys.exit('[!] ERROR: unexpected FAIL description "{}"'.format(opt.result))
                 return
-        sys.exit('[!] ERROR: invalid AND check')
 
 
 def detect_arch(fname, archs):
