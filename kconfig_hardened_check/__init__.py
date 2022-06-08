@@ -189,7 +189,7 @@ class ComplexOptCheck:
                'empty {} check'.format(self.__class__.__name__)
         assert(len(self.opts) != 1), \
                 'useless {} check: {}'.format(self.__class__.__name__, opts)
-        assert(isinstance(opts[0], KconfigCheck) or isinstance(opts[0], CmdlineCheck)), \
+        assert(isinstance(opts[0], (KconfigCheck, CmdlineCheck))), \
                'invalid {} check: {}'.format(self.__class__.__name__, opts)
         self.result = None
 
