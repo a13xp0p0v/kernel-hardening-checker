@@ -88,8 +88,8 @@ SIMPLE_OPTION_TYPES = ('kconfig', 'version', 'cmdline')
 class OptCheck:
     # Constructor without the 'expected' parameter is for option presence checks (any value is OK)
     def __init__(self, reason, decision, name, expected=None):
-        if not reason or not decision or not name:
-            sys.exit('[!] ERROR: invalid {} check for "{}"'.format(self.__class__.__name__, name))
+        assert(reason and decision and name), \
+               'invalid {} check for "{}"'.format(self.__class__.__name__, name)
         self.name = name
         self.expected = expected
         self.decision = decision
@@ -185,12 +185,12 @@ class VersionCheck:
 class ComplexOptCheck:
     def __init__(self, *opts):
         self.opts = opts
-        if not self.opts:
-            sys.exit('[!] ERROR: empty {} check'.format(self.__class__.__name__))
-        if len(self.opts) == 1:
-            sys.exit('[!] ERROR: useless {} check'.format(self.__class__.__name__))
-        if not isinstance(opts[0], KconfigCheck) and not isinstance(opts[0], CmdlineCheck):
-            sys.exit('[!] ERROR: invalid {} check: {}'.format(self.__class__.__name__, opts))
+        assert(self.opts), \
+               'empty {} check'.format(self.__class__.__name__)
+        assert(len(self.opts) != 1), \
+                'useless {} check: {}'.format(self.__class__.__name__, opts)
+        assert(isinstance(opts[0], KconfigCheck) or isinstance(opts[0], CmdlineCheck)), \
+               'invalid {} check: {}'.format(self.__class__.__name__, opts)
         self.result = None
 
     @property
