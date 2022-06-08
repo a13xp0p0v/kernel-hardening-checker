@@ -676,8 +676,8 @@ def print_unknown_options(checklist, parsed_options):
                     known_options.append(o2.name)
                 continue
             for o3 in o2.opts:
-                if o3.type == 'complex':
-                    sys.exit('[!] ERROR: unexpected ComplexOptCheck inside {}'.format(o2.name))
+                assert(o3.type != 'complex'), \
+                       'unexpected ComplexOptCheck inside {}'.format(o2.name)
                 if hasattr(o3, 'name'):
                     known_options.append(o3.name)
 
@@ -735,12 +735,12 @@ def print_checklist(mode, checklist, with_results):
 
 
 def populate_simple_opt_with_data(opt, data, data_type):
-    if opt.type == 'complex':
-        sys.exit('[!] ERROR: unexpected ComplexOptCheck {}: {}'.format(opt.name, vars(opt)))
-    if opt.type not in SIMPLE_OPTION_TYPES:
-        sys.exit('[!] ERROR: invalid opt type "{}" for {}'.format(opt.type, opt.name))
-    if data_type not in SIMPLE_OPTION_TYPES:
-        sys.exit('[!] ERROR: invalid data type "{}"'.format(data_type))
+    assert(opt.type != 'complex'), \
+           'unexpected ComplexOptCheck "{}"'.format(opt.name)
+    assert(opt.type in SIMPLE_OPTION_TYPES), \
+           'invalid opt type "{}"'.format(opt.type)
+    assert(data_type in SIMPLE_OPTION_TYPES), \
+           'invalid data type "{}"'.format(data_type)
 
     if data_type != opt.type:
         return
