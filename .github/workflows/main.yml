@@ -105,7 +105,30 @@ jobs:
         ! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_fail
 
         echo ">>>>> -p and -c together <<<<<"
-        ! ./bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config
+        ! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config
+
+        cp kconfig_hardened_check/config_files/distros/fedora_34.config ./test.config
+
+        echo ">>>>> no kernel version <<<<<"
+        sed '3d' test.config > error.config
+        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+
+        echo ">>>>> strange kernel version string <<<<<"
+        sed  '3 s/5./version 5./' test.config > error.config
+        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+
+        echo ">>>>> no arch <<<<<"
+        sed  '305d' test.config > error.config
+        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+
+        echo ">>>>> more than one arch <<<<<"
+        cp test.config error.config
+        echo  'CONFIG_ARM64=y' >> error.config
+        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+
+        echo ">>>>> invalid disabled kconfig option <<<<<"
+        sed  '28 s/is not set/is not set yet/' test.config > error.config
+        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
 
     - name: Prepare final coverage report
       run: |
