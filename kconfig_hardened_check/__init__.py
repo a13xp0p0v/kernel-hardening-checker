@@ -194,24 +194,16 @@ class ComplexOptCheck:
         self.result = None
 
     @property
-    def name(self):
-        return self.opts[0].name
-
-    @property
     def type(self):
         return 'complex'
 
     @property
+    def name(self):
+        return self.opts[0].name
+
+    @property
     def expected(self):
         return self.opts[0].expected
-
-    @property
-    def decision(self):
-        return self.opts[0].decision
-
-    @property
-    def reason(self):
-        return self.opts[0].reason
 
     def table_print(self, mode, with_results):
         if mode == 'verbose':
