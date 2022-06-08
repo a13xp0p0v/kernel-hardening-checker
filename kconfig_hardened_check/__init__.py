@@ -747,10 +747,10 @@ def populate_simple_opt_with_data(opt, data, data_type):
 
     if data_type in ('kconfig', 'cmdline'):
         opt.state = data.get(opt.name, None)
-    elif data_type == 'version':
-        opt.ver = data
     else:
-        sys.exit('[!] ERROR: unexpected data type "{}"'.format(data_type))
+        assert(data_type == 'version'), \
+               'unexpected data type "{}"'.format(data_type)
+        opt.ver = data
 
 
 def populate_opt_with_data(opt, data, data_type):
@@ -762,8 +762,8 @@ def populate_opt_with_data(opt, data, data_type):
             else:
                 populate_simple_opt_with_data(o, data, data_type)
     else:
-        if opt.type not in ('kconfig', 'cmdline'):
-            sys.exit('[!] ERROR: bad type "{}" for a simple check {}'.format(opt.type, opt.name))
+        assert(opt.type in ('kconfig', 'cmdline')), \
+               'bad type "{}" for a simple check'.format(opt.type)
         populate_simple_opt_with_data(opt, data, data_type)
 
 
