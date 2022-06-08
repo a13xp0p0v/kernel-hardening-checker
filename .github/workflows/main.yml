@@ -87,6 +87,7 @@ jobs:
         do
                 COUNT=$(expr $COUNT + 1)
                 echo -e "\n>>>>> checking config number $COUNT <<<<<"
+                coverage run -a --branch bin/kconfig-hardened-check -c $C
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline -m verbose > /dev/null
                 coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline -m json
@@ -129,6 +130,16 @@ jobs:
         echo ">>>>> invalid disabled kconfig option <<<<<"
         sed  '28 s/is not set/is not set yet/' test.config > error.config
         ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+
+        echo ">>>>> one config option multiple times <<<<<"
+        cp test.config error.config
+        echo  'CONFIG_BUG=y' >> error.config
+        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+
+        echo ">>>>> multi-line cmdline file <<<<<"
+        echo  'hey man 1' > cmdline
+        echo  'hey man 2' >> cmdline
+        ! coverage run -a --branch bin/kconfig-hardened-check -c test.config -l cmdline
 
     - name: Prepare final coverage report
       run: |
