@@ -252,9 +252,10 @@ class OR(ComplexOptCheck):
                         self.result = 'OK: {} not found'.format(opt.name)
                     elif opt.result == 'OK: is present':
                         self.result = 'OK: {} is present'.format(opt.name)
-                    # VersionCheck provides enough info
-                    elif not opt.result.startswith('OK: version'):
-                        sys.exit('[!] ERROR: unexpected OK description "{}"'.format(opt.result))
+                    else:
+                        # VersionCheck provides enough info
+                        assert(opt.result.startswith('OK: version')), \
+                               'unexpected OK description "{}"'.format(opt.result)
                 return
         self.result = self.opts[0].result
 
@@ -282,8 +283,8 @@ class AND(ComplexOptCheck):
                 else:
                     # VersionCheck provides enough info
                     self.result = opt.result
-                    if not opt.result.startswith('FAIL: version'):
-                        sys.exit('[!] ERROR: unexpected FAIL description "{}"'.format(opt.result))
+                    assert(opt.result.startswith('FAIL: version')), \
+                           'unexpected FAIL description "{}"'.format(opt.result)
                 return
 
 
