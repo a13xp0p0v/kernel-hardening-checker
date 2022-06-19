@@ -864,6 +864,10 @@ def main():
         # add relevant kconfig checks to the checklist
         add_kconfig_checks(config_checklist, arch)
 
+        if args.cmdline:
+            # add relevant cmdline checks to the checklist
+            add_cmdline_checks(config_checklist, arch)
+
         # populate the checklist with the parsed kconfig data
         parsed_kconfig_options = OrderedDict()
         parse_kconfig_file(parsed_kconfig_options, args.config)
@@ -871,9 +875,6 @@ def main():
         populate_with_data(config_checklist, kernel_version, 'version')
 
         if args.cmdline:
-            # add relevant cmdline checks to the checklist
-            add_cmdline_checks(config_checklist, arch)
-
             # populate the checklist with the parsed kconfig data
             parsed_cmdline_options = OrderedDict()
             parse_cmdline_file(parsed_cmdline_options, args.cmdline)
