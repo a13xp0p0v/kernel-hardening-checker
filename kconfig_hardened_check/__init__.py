@@ -16,7 +16,6 @@
 #    iommu.passthrough=0
 #    iommu.strict=1
 #    slub_debug=FZ (slow)
-#    init_on_alloc=1 (since v5.3)
 #    init_on_free=1 (since v5.3, otherwise slub_debug=P and page_poison=1)
 #    loadpin.enforce=1
 #    debugfs=no-mount (or off if possible)
@@ -649,6 +648,10 @@ def add_kconfig_checks(l, arch):
 def add_cmdline_checks(l, arch):
     # Calling the CmdlineCheck class constructor:
     #     CmdlineCheck(reason, decision, name, expected)
+
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
+             AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
+                 CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
 
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'kspp', 'pti', 'on')]
