@@ -784,6 +784,8 @@ def parse_kconfig_file(parsed_options, fname):
 
             if opt_is_on.match(line):
                 option, value = line.split('=', 1)
+                if value == 'is not set':
+                    sys.exit('[!] ERROR: bad enabled kconfig option "{}"'.format(line))
             elif opt_is_off.match(line):
                 option, value = line[2:].split(' ', 1)
                 if value != 'is not set':
