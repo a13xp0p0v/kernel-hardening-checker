@@ -35,7 +35,6 @@
 #           ssbd=force-on
 #
 #    Should NOT be set:
-#           slab_merge
 #           nokaslr
 #           rodata=off
 #           sysrq_always_enabled
@@ -454,8 +453,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [OR(KconfigCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y'),
              efi_not_set)]
-    l += [OR(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
-             CmdlineCheck('self_protection', 'kspp', 'slab_nomerge'))] # option presence check
+    l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set')]
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set')]
     l += [AND(KconfigCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
@@ -651,6 +649,9 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge'),
+             AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
+                 CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')))] # option presence check
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
