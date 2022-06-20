@@ -16,7 +16,7 @@
 #    iommu.passthrough=0
 #    iommu.strict=1
 #    slub_debug=FZ (slow)
-#    init_on_free=1 (since v5.3, otherwise slub_debug=P and page_poison=1)
+#    slub_debug=P
 #    loadpin.enforce=1
 #    debugfs=no-mount (or off if possible)
 #
@@ -650,6 +650,9 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_free', '1'),
+             AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'),
+                 CmdlineCheck('self_protection', 'kspp', 'init_on_free', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge'),
              AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')))] # option presence check
