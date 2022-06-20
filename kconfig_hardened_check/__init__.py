@@ -416,7 +416,8 @@ def add_kconfig_checks(l, arch):
     l += [OR(KconfigCheck('self_protection', 'kspp', 'INIT_STACK_ALL_ZERO', 'y'),
              KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'),
-             KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'))]
+             AND(KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'),
+                 CmdlineCheck('self_protection', 'kspp', 'page_poison', '1')))]
              # CONFIG_INIT_ON_FREE_DEFAULT_ON was added in v5.3.
              # CONFIG_PAGE_POISONING_ZERO was removed in v5.11.
              # Starting from v5.11 CONFIG_PAGE_POISONING unconditionally checks
