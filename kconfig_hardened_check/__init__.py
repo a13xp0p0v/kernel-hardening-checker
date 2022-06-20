@@ -426,8 +426,7 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [stackleak_is_set]
-        l += [OR(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
-                 CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'))]
+        l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
@@ -652,7 +651,10 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
-
+    if arch in ('X86_64', 'ARM64', 'X86_32'):
+        l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
+                 AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'kspp', 'pti', 'on')]
     # TODO: add other
