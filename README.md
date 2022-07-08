@@ -1,5 +1,6 @@
 # kconfig-hardened-check
 
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kconfig-hardened-check?label=release)
 ![functional test](https://github.com/a13xp0p0v/kconfig-hardened-check/workflows/functional%20test/badge.svg)
 [![Coverage Status](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/graph/badge.svg)](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check)
 
