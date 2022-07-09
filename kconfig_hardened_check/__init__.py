@@ -644,6 +644,8 @@ def add_kconfig_checks(l, arch):
 def add_cmdline_checks(l, arch):
     # Calling the CmdlineCheck class constructor:
     #     CmdlineCheck(reason, decision, name, expected)
+    # Don't add CmdlineChecks in add_kconfig_checks() to avoid wrong results
+    # when the tool doesn't check the cmdline.
 
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
