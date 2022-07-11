@@ -13,7 +13,6 @@
 # N.B Hardening command line parameters:
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
-#    iommu.passthrough=0
 #    slub_debug=FZ (slow)
 #    loadpin.enforce=1
 #    debugfs=no-mount (or off if possible)
@@ -662,6 +661,9 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', '0'),
+             AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
+                 CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', 'is not set')))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
