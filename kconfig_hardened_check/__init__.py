@@ -665,6 +665,12 @@ def add_cmdline_checks(l, arch):
                      CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'kspp', 'pti', 'on')]
+
+    if arch == 'X86_64':
+        l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
+                 AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
+                     CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'is not set')))]
+
     # TODO: add other
 
 
