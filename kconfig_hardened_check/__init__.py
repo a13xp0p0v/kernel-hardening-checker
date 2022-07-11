@@ -14,7 +14,6 @@
 #    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
 #    iommu.passthrough=0
-#    iommu.strict=1
 #    slub_debug=FZ (slow)
 #    loadpin.enforce=1
 #    debugfs=no-mount (or off if possible)
@@ -659,6 +658,9 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge'),
              AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')))] # option presence check
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
+             AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
+                 CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
