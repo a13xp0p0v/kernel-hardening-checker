@@ -33,7 +33,6 @@
 #
 #    Should NOT be set:
 #           nokaslr
-#           rodata=off
 #           sysrq_always_enabled
 #           arm64.nobti
 #           arm64.nopauth
@@ -645,6 +644,11 @@ def add_cmdline_checks(l, arch):
     #     CmdlineCheck(reason, decision, name, expected)
     # Don't add CmdlineChecks in add_kconfig_checks() to avoid wrong results
     # when the tool doesn't check the cmdline.
+
+    if arch == 'ARM64':
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
+                     CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set')))]
 
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
