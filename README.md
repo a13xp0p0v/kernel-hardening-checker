@@ -324,6 +324,13 @@ __A:__ Ike Devolder [@BlackIkeEagle][7] made some performance tests and describe
 
 <br />
 
+__Q:__ Can I easily check which kernel versions support some Kconfig option?
+
+__A:__ Yes, see the [LKDDb][18] project (Linux Kernel Driver Database) by Giacomo Catenazzi [@cateee][19].
+You can use it for the `mainline` or `stable` tree from [kernel.org][20] or for your custom kernel sources.
+
+<br />
+
 __Q:__ Why enabling `CONFIG_STATIC_USERMODEHELPER` breaks various things in my GNU/Linux system?
 Do I really need that feature?
 
@@ -357,3 +364,6 @@ I highly recommend using [spectre-meltdown-checker][13] tool maintained by Stép
 [15]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53
 [16]: https://github.com/a13xp0p0v/kconfig-hardened-check/pull/54
 [17]: https://github.com/a13xp0p0v/kconfig-hardened-check/pull/62
+[18]: https://cateee.net/lkddb/web-lkddb/
+[19]: https://github.com/cateee/lkddb
+[20]: https://kernel.org/
