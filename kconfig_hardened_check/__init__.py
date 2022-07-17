@@ -629,6 +629,8 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'INTEGRITY', 'y')]
     if arch == 'ARM':
         l += [KconfigCheck('harden_userspace', 'my', 'INTEGRITY', 'y')]
+    if arch == 'ARM64':
+        l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
     if arch in ('ARM', 'X86_32'):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     if arch in ('X86_64', 'ARM64'):
