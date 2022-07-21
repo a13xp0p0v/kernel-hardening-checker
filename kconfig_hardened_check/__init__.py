@@ -639,8 +639,6 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_32', 'ARM'):
         l += [KconfigCheck('harden_userspace', 'my', 'ARCH_MMAP_RND_BITS', '16')]
 
-#   l += [KconfigCheck('feature_test', 'my', 'LKDTM', 'm')] # only for debugging!
-
 
 def add_cmdline_checks(l, arch):
     # Calling the CmdlineCheck class constructor:
