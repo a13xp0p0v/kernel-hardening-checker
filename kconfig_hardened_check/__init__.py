@@ -321,7 +321,10 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'GCC_PLUGINS', 'y')]
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR', 'y'),
-             KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR', 'y'))]
+             KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR', 'y'),
+             KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_REGULAR', 'y'),
+             KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_AUTO', 'y'),
+             KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_STRONG', 'y'))]
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_STRONG', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_STRONG', 'y'))]
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STRICT_KERNEL_RWX', 'y'),
