@@ -378,7 +378,6 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_HISTORY', 'y')]
 
     # 'self_protection', 'kspp'
-    l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_DMESG_RESTRICT', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y')]
@@ -515,6 +514,7 @@ def add_kconfig_checks(l, arch):
                  devmem_not_set)] # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'kspp'
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'SECURITY_DMESG_RESTRICT', 'y')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'ACPI_CUSTOM_METHOD', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_BRK', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'DEVKMEM', 'is not set')] # refers to LOCKDOWN
