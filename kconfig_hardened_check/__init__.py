@@ -673,6 +673,9 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', '0'),
              AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', 'is not set')))]
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', '1'),
+             AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y'),
+                 CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', '0'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set')))]
