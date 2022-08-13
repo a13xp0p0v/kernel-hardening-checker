@@ -56,6 +56,7 @@
 #    vm.unprivileged_userfaultfd=0
 #        (at first, it disabled unprivileged userfaultfd,
 #         and since v5.11 it enables unprivileged userfaultfd for user-mode only)
+#    vm.mmap_min_addr has a good value
 #    dev.tty.ldisc_autoload=0
 #    fs.protected_symlinks=1
 #    fs.protected_hardlinks=1
