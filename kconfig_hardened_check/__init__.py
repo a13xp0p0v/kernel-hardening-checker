@@ -311,6 +311,9 @@ def detect_version(fname):
 def add_kconfig_checks(l, arch):
     # Calling the KconfigCheck class constructor:
     #     KconfigCheck(reason, decision, name, expected)
+    #
+    # [!] Don't add CmdlineChecks in add_kconfig_checks() to avoid wrong results
+    #     when the tool doesn't check the cmdline.
 
     modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
@@ -647,8 +650,19 @@ def add_kconfig_checks(l, arch):
 def add_cmdline_checks(l, arch):
     # Calling the CmdlineCheck class constructor:
     #     CmdlineCheck(reason, decision, name, expected)
-    # Don't add CmdlineChecks in add_kconfig_checks() to avoid wrong results
-    # when the tool doesn't check the cmdline.
+    #
+    # [!] Don't add CmdlineChecks in add_kconfig_checks() to avoid wrong results
+    #     when the tool doesn't check the cmdline.
+    #
+    # A common pattern for checking the 'param_x' cmdline parameter
+    # that __overrides__ the 'PARAM_X_DEFAULT' kconfig option:
+    #   l += [OR(CmdlineCheck(reason, decision, 'param_x', '1'),
+    #            AND(KconfigCheck(reason, decision, 'PARAM_X_DEFAULT_ON', 'y'),
+    #                CmdlineCheck(reason, decision, 'param_x, 'is not set')))]
+    #
+    # Here we don't check the kconfig options or minimal kernel version
+    # required for the cmdline parameters. That would make the checks
+    # very complex and not give a 100% guarantee anyway.
 
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
