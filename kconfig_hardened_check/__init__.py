@@ -654,6 +654,9 @@ def add_cmdline_checks(l, arch):
     # [!] Don't add CmdlineChecks in add_kconfig_checks() to avoid wrong results
     #     when the tool doesn't check the cmdline.
     #
+    # [!] Make sure that values of the options in CmdlineChecks need normalization.
+    #     For more info see normalize_cmdline_options().
+    #
     # A common pattern for checking the 'param_x' cmdline parameter
     # that __overrides__ the 'PARAM_X_DEFAULT' kconfig option:
     #   l += [OR(CmdlineCheck(reason, decision, 'param_x', '1'),
@@ -851,6 +854,24 @@ def parse_kconfig_file(parsed_options, fname):
                 parsed_options[option] = value
 
 
+def normalize_cmdline_options(option, value):
+    # Handle special cases
+    if option == 'pti':
+        # Don't normalize the pti value since
+        # the Linux kernel doesn't use kstrtobool() for pti.
+        # See pti_check_boottime_disable() in linux/arch/x86/mm/pti.c
+        return value
+
+    # Implement a limited part of the kstrtobool() logic
+    if value in ('1', 'on', 'ON', 'y', 'Y'):
+        return '1'
+    if value in ('0', 'off', 'OFF', 'n', 'N'):
+        return '0'
+
+    # Preserve unique values
+    return value
+
+
 def parse_cmdline_file(parsed_options, fname):
     with open(fname, 'r') as f:
         line = f.readline()
@@ -866,6 +887,7 @@ def parse_cmdline_file(parsed_options, fname):
             else:
                 name = opt
                 value = '' # '' is not None
+            value = normalize_cmdline_options(name, value)
             parsed_options[name] = value
 
 
