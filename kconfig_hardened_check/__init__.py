@@ -863,9 +863,9 @@ def normalize_cmdline_options(option, value):
         return value
 
     # Implement a limited part of the kstrtobool() logic
-    if value in ('1', 'on', 'ON', 'y', 'Y'):
+    if value in ('1', 'on', 'On', 'ON', 'y', 'Y', 'yes', 'Yes', 'YES'):
         return '1'
-    if value in ('0', 'off', 'OFF', 'n', 'N'):
+    if value in ('0', 'off', 'Off', 'OFF', 'n', 'N', 'no', 'No', 'NO'):
         return '0'
 
     # Preserve unique values
