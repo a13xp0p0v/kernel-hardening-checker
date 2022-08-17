@@ -11,7 +11,6 @@
 #
 #
 # N.B Hardening command line parameters:
-#    page_alloc.shuffle=1
 #    iommu=force (does it help against DMA attacks?)
 #    slub_debug=FZ (slow)
 #    loadpin.enforce=1
@@ -693,12 +692,17 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', '0'),
              AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', 'is not set')))]
+    # The cmdline checks based on the kconfig recommendations of the KSPP project:
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', '0'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set')))]
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1'),
+             AND(KconfigCheck('self_protection', 'kspp', 'SHUFFLE_PAGE_ALLOCATOR', 'y'),
+                 CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', 'is not set')))]
+    # The end
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
