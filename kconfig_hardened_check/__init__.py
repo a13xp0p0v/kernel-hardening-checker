@@ -666,6 +666,7 @@ def add_cmdline_checks(l, arch):
     # required for the cmdline parameters. That would make the checks
     # very complex and not give a 100% guarantee anyway.
 
+    # 'self_protection', 'defconfig'
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
@@ -674,6 +675,7 @@ def add_cmdline_checks(l, arch):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', '1'),
                  CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
 
+    # 'self_protection', 'kspp'
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
@@ -692,7 +694,7 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', '0'),
              AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', 'is not set')))]
-    # The cmdline checks based on the kconfig recommendations of the KSPP project:
+    # The cmdline checks compatible with the kconfig recommendations of the KSPP project...
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', 'is not set')))]
@@ -701,8 +703,7 @@ def add_cmdline_checks(l, arch):
                  CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'SHUFFLE_PAGE_ALLOCATOR', 'y'),
-                 CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', 'is not set')))]
-    # The end
+                 CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', 'is not set')))] # ... the end
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
@@ -710,12 +711,12 @@ def add_cmdline_checks(l, arch):
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'kspp', 'pti', 'on')]
 
+    # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
                      CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'is not set')))]
 
-    # TODO: add other
 
 
 def print_unknown_options(checklist, parsed_options):
