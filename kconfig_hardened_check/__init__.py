@@ -14,7 +14,6 @@
 #    iommu=force (does it help against DMA attacks?)
 #    slub_debug=FZ (slow)
 #    loadpin.enforce=1
-#    debugfs=no-mount (or off if possible)
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
@@ -717,6 +716,10 @@ def add_cmdline_checks(l, arch):
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
                      CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'is not set')))]
 
+    # 'cut_attack_surface', 'grsec'
+    # The cmdline checks compatible with the kconfig options disabled by grsecurity...
+    l += [OR(CmdlineCheck('cut_attack_surface', 'grsec', 'debugfs', 'off'),
+             KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set'))] # ... the end
 
 
 def print_unknown_options(checklist, parsed_options):
@@ -860,11 +863,13 @@ def parse_kconfig_file(parsed_options, fname):
 
 
 def normalize_cmdline_options(option, value):
-    # Handle special cases
+    # Don't normalize the cmdline option values if
+    # the Linux kernel doesn't use kstrtobool() for them
     if option == 'pti':
-        # Don't normalize the pti value since
-        # the Linux kernel doesn't use kstrtobool() for pti.
         # See pti_check_boottime_disable() in linux/arch/x86/mm/pti.c
+        return value
+    if option == 'debugfs':
+        # See debugfs_kernel() in fs/debugfs/inode.c
         return value
 
     # Implement a limited part of the kstrtobool() logic
