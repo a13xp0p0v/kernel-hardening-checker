@@ -12,7 +12,6 @@
 #
 # N.B Hardening command line parameters:
 #    iommu=force (does it help against DMA attacks?)
-#    slub_debug=FZ (slow)
 #    loadpin.enforce=1
 #
 #    Mitigations of CPU vulnerabilities:
