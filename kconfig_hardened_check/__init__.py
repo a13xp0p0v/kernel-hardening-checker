@@ -323,7 +323,8 @@ def add_kconfig_checks(l, arch):
     # 'self_protection', 'defconfig'
     l += [KconfigCheck('self_protection', 'defconfig', 'BUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y')]
-    l += [KconfigCheck('self_protection', 'defconfig', 'GCC_PLUGINS', 'y')]
+    l += [AND(KconfigCheck('self_protection', 'defconfig', 'GCC_PLUGINS', 'y'),
+              cc_is_gcc)]
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_REGULAR', 'y'),
@@ -394,14 +395,15 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_LATENT_ENTROPY', 'y')]
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_LATENT_ENTROPY', 'y'),
+              cc_is_gcc)]
     l += [KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
     l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
     randstruct_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y')
-    l += [randstruct_is_set]
+    l += [AND(randstruct_is_set, cc_is_gcc)]
     hardened_usercopy_is_set = KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
     l += [hardened_usercopy_is_set]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
@@ -427,7 +429,7 @@ def add_kconfig_checks(l, arch):
              # That brings higher performance penalty.
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
-        l += [stackleak_is_set]
+        l += [AND(stackleak_is_set, cc_is_gcc)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
