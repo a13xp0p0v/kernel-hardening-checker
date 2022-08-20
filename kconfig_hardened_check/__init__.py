@@ -698,16 +698,16 @@ def add_cmdline_checks(l, arch):
                  CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', '0'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
-                 CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1'),
-             AND(KconfigCheck('self_protection', 'kspp', 'SHUFFLE_PAGE_ALLOCATOR', 'y'),
-                 CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', 'is not set')))] # ... the end
+                 CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set')))] # ... the end
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'kspp', 'pti', 'on')]
+
+    # 'self_protection', 'clipos'
+    l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
 
     # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
