@@ -462,12 +462,15 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set')]
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set')]
     l += [AND(KconfigCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
-              randstruct_is_set)]
+              randstruct_is_set,
+              cc_is_gcc)]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [AND(KconfigCheck('self_protection', 'clipos', 'STACKLEAK_METRICS', 'is not set'),
-                  stackleak_is_set)]
+                  stackleak_is_set,
+                  cc_is_gcc)]
         l += [AND(KconfigCheck('self_protection', 'clipos', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'),
-                  stackleak_is_set)]
+                  stackleak_is_set,
+                  cc_is_gcc)]
     if arch in ('X86_64', 'X86_32'):
         l += [AND(KconfigCheck('self_protection', 'clipos', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                   iommu_support_is_set)]
