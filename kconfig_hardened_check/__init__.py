@@ -29,7 +29,6 @@
 #           ssbd=force-on
 #
 #    Should NOT be set:
-#           nokaslr
 #           sysrq_always_enabled
 #           arm64.nobti
 #           arm64.nopauth
@@ -701,6 +700,7 @@ def add_cmdline_checks(l, arch):
              AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', 'is not set')))]
     # The cmdline checks compatible with the kconfig recommendations of the KSPP project...
+    l += [CmdlineCheck('self_protection', 'kspp', 'nokaslr', 'is not set')]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', 'is not set')))]
