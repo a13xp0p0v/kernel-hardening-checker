@@ -719,6 +719,10 @@ def add_cmdline_checks(l, arch):
     # 'self_protection', 'clipos'
     l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
 
+    # 'self_protection', 'my'
+    l += [CmdlineCheck('self_protection', 'my', 'nosmep', 'is not set')]
+    l += [CmdlineCheck('self_protection', 'my', 'nosmap', 'is not set')]
+
     # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
