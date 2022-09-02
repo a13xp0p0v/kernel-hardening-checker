@@ -488,7 +488,7 @@ def add_kconfig_checks(l, arch):
         l += [AND(KconfigCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
                   iommu_support_is_set)]
     if arch == 'ARM64':
-        l += [KconfigCheck('self_protection', 'my', 'SHADOW_CALL_STACK', 'y')] # depends on clang, maybe it's alternative to STACKPROTECTOR_STRONG
+        l += [KconfigCheck('self_protection', 'my', 'SHADOW_CALL_STACK', 'y')] # maybe it's alternative to STACKPROTECTOR_STRONG
         l += [KconfigCheck('self_protection', 'my', 'KASAN_HW_TAGS', 'y')]
         cfi_clang_is_set = KconfigCheck('self_protection', 'my', 'CFI_CLANG', 'y')
         l += [cfi_clang_is_set]
