@@ -348,7 +348,8 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')] # is needed for mitigating CPU bugs
         l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'X86_SMAP', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_SMAP', 'y'),
+                 VersionCheck((5, 19)))] # X86_SMAP is enabled by default since v5.19
         l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y'))]
