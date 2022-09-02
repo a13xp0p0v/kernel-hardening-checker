@@ -501,6 +501,7 @@ def add_kconfig_checks(l, arch):
     if arch == 'ARM':
         l += [KconfigCheck('security_policy', 'kspp', 'SECURITY', 'y')] # and choose your favourite LSM
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_YAMA', 'y')]
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LANDLOCK', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DISABLE', 'is not set')]
     l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM', 'y')]
     l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
