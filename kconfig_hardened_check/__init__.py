@@ -288,7 +288,7 @@ def detect_arch(fname, archs):
         return arch, 'OK'
 
 
-def detect_version(fname):
+def detect_kernel_version(fname):
     with open(fname, 'r') as f:
         ver_pattern = re.compile("# Linux/.* Kernel Configuration")
         for line in f.readlines():
@@ -302,6 +302,26 @@ def detect_version(fname):
                     return None, msg
                 return (int(ver_numbers[0]), int(ver_numbers[1])), None
         return None, 'no kernel version detected'
+
+
+def detect_compiler(fname):
+    gcc_version = None
+    clang_version = None
+    with open(fname, 'r') as f:
+        gcc_version_pattern = re.compile("CONFIG_GCC_VERSION=[0-9]*")
+        clang_version_pattern = re.compile("CONFIG_CLANG_VERSION=[0-9]*")
+        for line in f.readlines():
+            if gcc_version_pattern.match(line):
+                gcc_version = line[19:-1]
+            if clang_version_pattern.match(line):
+                clang_version = line[21:-1]
+    if not gcc_version or not clang_version:
+        return None, 'no CONFIG_GCC_VERSION or CONFIG_CLANG_VERSION'
+    if gcc_version == '0' and clang_version != '0':
+        return 'CLANG ' + clang_version, 'OK'
+    if gcc_version != '0' and clang_version == '0':
+        return 'GCC ' + gcc_version, 'OK'
+    sys.exit('[!] ERROR: invalid GCC_VERSION and CLANG_VERSION: {} {}'.format(gcc_version, clang_version))
 
 
 def add_kconfig_checks(l, arch):
@@ -959,11 +979,18 @@ def main():
         if mode != 'json':
             print('[+] Detected architecture: {}'.format(arch))
 
-        kernel_version, msg = detect_version(args.config)
+        kernel_version, msg = detect_kernel_version(args.config)
         if not kernel_version:
             sys.exit('[!] ERROR: {}'.format(msg))
         if mode != 'json':
             print('[+] Detected kernel version: {}.{}'.format(kernel_version[0], kernel_version[1]))
+
+        compiler, msg = detect_compiler(args.config)
+        if mode != 'json':
+            if compiler:
+                print('[+] Detected compiler: {}'.format(compiler))
+            else:
+                print('[-] Can\'t detect the compiler: {}'.format(msg))
 
         # add relevant kconfig checks to the checklist
         add_kconfig_checks(config_checklist, arch)
