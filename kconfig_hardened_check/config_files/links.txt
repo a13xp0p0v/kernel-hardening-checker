@@ -32,8 +32,11 @@ https://raw.githubusercontent.com/pentoo/pentoo-livecd/master/livecd/amd64/kerne
 Debian Buster:
 https://packages.debian.org/buster/amd64/linux-image-4.19.0-8-amd64/download
 
-AOSP (the instruction for kernel config generation):
-https://source.android.com/devices/tech/debug/kasan-kcov
+Android Open Source Project (AOSP):
+https://source.android.com/docs/setup/build/building-kernels
+
+Android Generic Kernel Image (GKI):
+https://source.android.com/docs/core/architecture/kernel/gki-release-builds
 
 CLIP OS:
 https://docs.clip-os.org/clipos/kernel.html#configuration
