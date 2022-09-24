@@ -505,6 +505,9 @@ def add_kconfig_checks(l, arch):
     # 'self_protection', 'my'
     l += [OR(KconfigCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y'),
              efi_not_set)] # needs userspace support (systemd)
+    l += [OR(KconfigCheck('self_protection', 'my', 'UBSAN_LOCAL_BOUNDS', 'y'),
+             AND(ubsan_bounds_is_set,
+                 cc_is_gcc))]
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'my', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
