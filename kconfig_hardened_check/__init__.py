@@ -332,8 +332,8 @@ def add_kconfig_checks(l, arch):
     #     when the tool doesn't check the cmdline.
 
     efi_not_set = KconfigCheck('-', '-', 'EFI', 'is not set')
-    cc_is_gcc = KconfigCheck('-', '-', 'CC_IS_GCC', 'y')
-    cc_is_clang = KconfigCheck('-', '-', 'CC_IS_CLANG', 'y')
+    cc_is_gcc = KconfigCheck('-', '-', 'CC_IS_GCC', 'y') # exists since v4.18
+    cc_is_clang = KconfigCheck('-', '-', 'CC_IS_CLANG', 'y') # exists since v4.18
 
     modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
