@@ -18,7 +18,6 @@
 #       Аrch-independent:
 #           mitigations=auto,nosmt (nosmt is slow)
 #       X86:
-#           spectre_v2=on
 #           spec_store_bypass_disable=on
 #           l1tf=full,force
 #           l1d_flush=on (a part of the l1tf option)
@@ -747,7 +746,8 @@ def add_cmdline_checks(l, arch):
 
     # 'self_protection', 'clipos'
     l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
-
+    if arch in ('X86_64', 'X86_32'):
+        l += [CmdlineCheck('self_protection', 'clipos', 'spectre_v2', 'on')]
 
     # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
@@ -906,6 +906,9 @@ def normalize_cmdline_options(option, value):
     # the Linux kernel doesn't use kstrtobool() for them
     if option == 'pti':
         # See pti_check_boottime_disable() in linux/arch/x86/mm/pti.c
+        return value
+    if option == 'spectre_v2':
+        # See spectre_v2_parse_cmdline() in linux/arch/x86/kernel/cpu/bugs.c
         return value
     if option == 'debugfs':
         # See debugfs_kernel() in fs/debugfs/inode.c
