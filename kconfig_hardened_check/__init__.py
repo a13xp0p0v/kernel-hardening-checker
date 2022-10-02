@@ -700,6 +700,7 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'defconfig', 'nosmep', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nosmap', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nokaslr', 'is not set')]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')]
     if arch == 'ARM64':
@@ -736,13 +737,14 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', '0'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set')))]
-    if arch in ('X86_64', 'X86_32'):
-        l += [AND(CmdlineCheck('self_protection', 'kspp', 'pti', 'on'),
-                  CmdlineCheck('self_protection', 'kspp', 'nopti', 'is not set'))] # ... the end
+    # ... the end
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
+    if arch in ('X86_64', 'X86_32'):
+        l += [AND(CmdlineCheck('self_protection', 'kspp', 'pti', 'on'),
+                  CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set'))]
 
     # 'self_protection', 'clipos'
     l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
