@@ -749,7 +749,8 @@ def add_cmdline_checks(l, arch):
     # 'self_protection', 'clipos'
     l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
     if arch in ('X86_64', 'X86_32'):
-        l += [CmdlineCheck('self_protection', 'clipos', 'spectre_v2', 'on')]
+        l += [AND(CmdlineCheck('self_protection', 'clipos', 'spectre_v2', 'on'),
+                  CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set'))]
 
     # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
