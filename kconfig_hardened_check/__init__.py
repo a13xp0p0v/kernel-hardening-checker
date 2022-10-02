@@ -698,6 +698,8 @@ def add_cmdline_checks(l, arch):
     # very complex and not give a 100% guarantee anyway.
 
     # 'self_protection', 'defconfig'
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nosmep', 'is not set')]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nosmap', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
@@ -745,9 +747,6 @@ def add_cmdline_checks(l, arch):
     # 'self_protection', 'clipos'
     l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
 
-    # 'self_protection', 'my'
-    l += [CmdlineCheck('self_protection', 'my', 'nosmep', 'is not set')]
-    l += [CmdlineCheck('self_protection', 'my', 'nosmap', 'is not set')]
 
     # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
