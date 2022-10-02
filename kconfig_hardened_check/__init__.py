@@ -701,6 +701,7 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'defconfig', 'nosmep', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nosmap', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
