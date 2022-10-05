@@ -12,14 +12,14 @@ make our systems more secure.
 
 But nobody likes checking configs manually. So let the computers do their job!
 
-__kconfig-hardened-check.py__ helps me to check the Linux kernel options
+__kconfig-hardened-check__ helps me to check the Linux kernel options
 against my security hardening preferences, which are based on the
 
   - [KSPP recommended settings][1],
   - [CLIP OS kernel configuration][2],
   - Last public [grsecurity][3] patch (options which they disable),
   - [SECURITY_LOCKDOWN_LSM][5] patchset,
-  - Direct feedback from Linux kernel maintainers (see [#38][6], [#53][15], [#54][16], [#62][17]).
+  - [Direct feedback from the Linux kernel maintainers][23].
 
 This tool supports checking __Kconfig__ options and __kernel cmdline__ parameters.
 
@@ -34,7 +34,7 @@ or exploitation techniques.
   - ARM64
   - ARM
 
-TODO: RISC-V
+TODO: RISC-V (the issue [#56][22])
 
 ## Installation
 
@@ -87,7 +87,7 @@ CONFIG_DEVMEM                                | is not set  |   kspp   | cut_atta
   - `-m show_ok` for showing only the successful checks
   - `-m json` for printing the results in JSON format (for combining `kconfig-hardened-check` with other tools)
 
-## Example output for `Fedora 34` kernel config
+## Example output for `Fedora 34` kernel configuration
 ```
 $ ./bin/kconfig-hardened-check -c /boot/config-5.19.4-200.fc36.x86_64 -l /proc/cmdline
 [+] Kconfig file to check: /boot/config-5.19.4-200.fc36.x86_64
@@ -166,6 +166,7 @@ CONFIG_STACKLEAK_RUNTIME_DISABLE        |kconfig| is not set |  clipos  | self_p
 CONFIG_INTEL_IOMMU_DEFAULT_ON           |kconfig|     y      |  clipos  | self_protection  | FAIL: "is not set"
 CONFIG_INTEL_IOMMU_SVM                  |kconfig|     y      |  clipos  | self_protection  | OK
 CONFIG_RESET_ATTACK_MITIGATION          |kconfig|     y      |    my    | self_protection  | FAIL: "is not set"
+CONFIG_UBSAN_LOCAL_BOUNDS               |kconfig|     y      |    my    | self_protection  | FAIL: not found
 CONFIG_SLS                              |kconfig|     y      |    my    | self_protection  | OK
 CONFIG_AMD_IOMMU_V2                     |kconfig|     y      |    my    | self_protection  | FAIL: "m"
 CONFIG_SECURITY                         |kconfig|     y      |defconfig | security_policy  | OK
@@ -275,29 +276,33 @@ CONFIG_INPUT_EVBUG                      |kconfig| is not set |    my    |cut_att
 CONFIG_KGDB                             |kconfig| is not set |    my    |cut_attack_surface| FAIL: "y"
 CONFIG_INTEGRITY                        |kconfig|     y      |defconfig | harden_userspace | OK
 CONFIG_ARCH_MMAP_RND_BITS               |kconfig|     32     |  clipos  | harden_userspace | FAIL: "28"
+nosmep                                  |cmdline| is not set |defconfig | self_protection  | OK: not found
+nosmap                                  |cmdline| is not set |defconfig | self_protection  | OK: not found
+nokaslr                                 |cmdline| is not set |defconfig | self_protection  | OK: not found
+nopti                                   |cmdline| is not set |defconfig | self_protection  | OK: not found
+nospectre_v1                            |cmdline| is not set |defconfig | self_protection  | OK: not found
+nospectre_v2                            |cmdline| is not set |defconfig | self_protection  | OK: not found
 rodata                                  |cmdline|     1      |defconfig | self_protection  | OK: rodata not found
 init_on_alloc                           |cmdline|     1      |   kspp   | self_protection  | FAIL: not found
 init_on_free                            |cmdline|     1      |   kspp   | self_protection  | FAIL: not found
 slab_nomerge                            |cmdline|            |   kspp   | self_protection  | OK: CONFIG_SLAB_MERGE_DEFAULT "is not set"
 iommu.strict                            |cmdline|     1      |   kspp   | self_protection  | FAIL: not found
 iommu.passthrough                       |cmdline|     0      |   kspp   | self_protection  | OK: CONFIG_IOMMU_DEFAULT_PASSTHROUGH "is not set"
-nokaslr                                 |cmdline| is not set |   kspp   | self_protection  | OK: not found
 hardened_usercopy                       |cmdline|     1      |   kspp   | self_protection  | OK: CONFIG_HARDENED_USERCOPY "y"
 slab_common.usercopy_fallback           |cmdline|     0      |   kspp   | self_protection  | OK: CONFIG_HARDENED_USERCOPY_FALLBACK not found
 randomize_kstack_offset                 |cmdline|     1      |   kspp   | self_protection  | OK: CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT "y"
 pti                                     |cmdline|     on     |   kspp   | self_protection  | FAIL: not found
 page_alloc.shuffle                      |cmdline|     1      |  clipos  | self_protection  | FAIL: not found
-nosmep                                  |cmdline| is not set |    my    | self_protection  | OK: not found
-nosmap                                  |cmdline| is not set |    my    | self_protection  | OK: not found
+spectre_v2                              |cmdline|     on     |  clipos  | self_protection  | FAIL: not found
 vsyscall                                |cmdline|    none    |   kspp   |cut_attack_surface| FAIL: not found
 debugfs                                 |cmdline|    off     |  grsec   |cut_attack_surface| FAIL: not found
 
-[+] Config check is finished: 'OK' - 94 / 'FAIL' - 99
+[+] Config check is finished: 'OK' - 97 / 'FAIL' - 101
 ```
 
 ## kconfig-hardened-check versioning
 
-I usually update the kernel security hardening recommendations after each Linux kernel release.
+I usually update the kernel security hardening recommendations every few kernel releases.
 
 So the version of `kconfig-hardened-check` is associated with the corresponding version of the kernel.
 
@@ -330,15 +335,20 @@ try to install `gcc-7-plugin-dev` package, it should help.
 
 __Q:__ KSPP and CLIP OS recommend `CONFIG_PANIC_ON_OOPS=y`. Why doesn't this tool do the same?
 
-__A:__ I personally don't support this recommendation because it provides easy denial-of-service
-attacks for the whole system (kernel oops is not a rare situation). I think having `CONFIG_BUG` is enough here --
-if we have a kernel oops in the process context, the offending/attacking process is killed.
+__A:__ I personally don't support this recommendation because:
+  - It decreases system safety (kernel oops is still not a rare situation)
+  - It allows easier denial-of-service attacks for the whole system.
+
+I think having `CONFIG_BUG` is enough here.
+If a kernel oops happens in the process context, the offending/attacking process is killed.
+In other cases the kernel panics, which is similar to `CONFIG_PANIC_ON_OOPS=y`.
 
 <br />
 
 __Q:__ What about performance impact of these security hardening options?
 
 __A:__ Ike Devolder [@BlackIkeEagle][7] made some performance tests and described the results in [this article][8].
+A more detailed evaluation is in the TODO list (the issue [#66][21]).
 
 <br />
 
@@ -385,3 +395,6 @@ I highly recommend using [spectre-meltdown-checker][13] tool maintained by Stép
 [18]: https://cateee.net/lkddb/web-lkddb/
 [19]: https://github.com/cateee/lkddb
 [20]: https://kernel.org/
+[21]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/66
+[22]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/56
+[23]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues?q=label%3Akernel_maintainer_feedback
