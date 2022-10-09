@@ -12,7 +12,6 @@
 #
 # N.B Hardening command line parameters:
 #    iommu=force (does it help against DMA attacks?)
-#    loadpin.enforce=1
 #
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
@@ -540,11 +539,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('security_policy', 'clipos', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
     l += [KconfigCheck('security_policy', 'my', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
-    l += [KconfigCheck('security_policy', 'my', 'SECURITY_SAFESETID', 'y')]
-    loadpin_is_set = KconfigCheck('security_policy', 'my', 'SECURITY_LOADPIN', 'y')
-    l += [loadpin_is_set] # needs userspace support
-    l += [AND(KconfigCheck('security_policy', 'my', 'SECURITY_LOADPIN_ENFORCE', 'y'),
-              loadpin_is_set)]
 
     # 'cut_attack_surface', 'defconfig'
     l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'BPF_UNPRIV_DEFAULT_OFF', 'y'),
