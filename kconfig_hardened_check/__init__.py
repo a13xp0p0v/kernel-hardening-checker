@@ -484,6 +484,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set')]
     l += [KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set')]
+    l += [KconfigCheck('self_protection', 'clipos', 'CONFIG_HW_RANDOM_TPM', 'y')]
     l += [AND(KconfigCheck('self_protection', 'clipos', 'RANDSTRUCT_PERFORMANCE', 'is not set'),
               KconfigCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
               randstruct_is_set)]
