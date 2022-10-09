@@ -365,6 +365,9 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64'):
         l += [KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
     if arch in ('X86_64', 'X86_32'):
+        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')] # is needed for mitigating CPU bugs
         l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_SMAP', 'y'),
