@@ -534,6 +534,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_YAMA', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LANDLOCK', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DISABLE', 'is not set')]
+    l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
     l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM', 'y')]
     l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('security_policy', 'clipos', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
