@@ -110,6 +110,9 @@ CONFIG_THREAD_INFO_IN_TASK              |kconfig|     y      |defconfig | self_p
 CONFIG_IOMMU_SUPPORT                    |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_RANDOMIZE_BASE                   |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_VMAP_STACK                       |kconfig|     y      |defconfig | self_protection  | OK
+CONFIG_X86_MCE                          |kconfig|     y      |defconfig | self_protection  | OK
+CONFIG_X86_MCE_INTEL                    |kconfig|     y      |defconfig | self_protection  | OK
+CONFIG_X86_MCE_AMD                      |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_MICROCODE                        |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_RETPOLINE                        |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_X86_SMAP                         |kconfig|     y      |defconfig | self_protection  | OK: version >= 5.19
@@ -158,6 +161,7 @@ CONFIG_DEBUG_VIRTUAL                    |kconfig|     y      |  clipos  | self_p
 CONFIG_STATIC_USERMODEHELPER            |kconfig|     y      |  clipos  | self_protection  | FAIL: "is not set"
 CONFIG_EFI_DISABLE_PCI_DMA              |kconfig|     y      |  clipos  | self_protection  | FAIL: "is not set"
 CONFIG_SLAB_MERGE_DEFAULT               |kconfig| is not set |  clipos  | self_protection  | OK
+CONFIG_HW_RANDOM_TPM                    |kconfig|     y      |  clipos  | self_protection  | OK
 CONFIG_RANDOM_TRUST_BOOTLOADER          |kconfig| is not set |  clipos  | self_protection  | FAIL: "y"
 CONFIG_RANDOM_TRUST_CPU                 |kconfig| is not set |  clipos  | self_protection  | FAIL: "y"
 CONFIG_RANDSTRUCT_PERFORMANCE           |kconfig| is not set |  clipos  | self_protection  | FAIL: CONFIG_RANDSTRUCT_FULL not "y"
@@ -173,13 +177,12 @@ CONFIG_SECURITY                         |kconfig|     y      |defconfig | securi
 CONFIG_SECURITY_YAMA                    |kconfig|     y      |   kspp   | security_policy  | OK
 CONFIG_SECURITY_LANDLOCK                |kconfig|     y      |   kspp   | security_policy  | OK
 CONFIG_SECURITY_SELINUX_DISABLE         |kconfig| is not set |   kspp   | security_policy  | OK
+CONFIG_SECURITY_SELINUX_BOOTPARAM       |kconfig| is not set |  clipos  | security_policy  | FAIL: "y"
+CONFIG_SECURITY_SELINUX_DEVELOP         |kconfig| is not set |  clipos  | security_policy  | FAIL: "y"
 CONFIG_SECURITY_LOCKDOWN_LSM            |kconfig|     y      |  clipos  | security_policy  | OK
 CONFIG_SECURITY_LOCKDOWN_LSM_EARLY      |kconfig|     y      |  clipos  | security_policy  | OK
 CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|kconfig|     y      |  clipos  | security_policy  | FAIL: "is not set"
 CONFIG_SECURITY_WRITABLE_HOOKS          |kconfig| is not set |    my    | security_policy  | OK: not found
-CONFIG_SECURITY_SAFESETID               |kconfig|     y      |    my    | security_policy  | FAIL: "is not set"
-CONFIG_SECURITY_LOADPIN                 |kconfig|     y      |    my    | security_policy  | FAIL: "is not set"
-CONFIG_SECURITY_LOADPIN_ENFORCE         |kconfig|     y      |    my    | security_policy  | FAIL: CONFIG_SECURITY_LOADPIN not "y"
 CONFIG_BPF_UNPRIV_DEFAULT_OFF           |kconfig|     y      |defconfig |cut_attack_surface| OK
 CONFIG_SECCOMP                          |kconfig|     y      |defconfig |cut_attack_surface| OK
 CONFIG_SECCOMP_FILTER                   |kconfig|     y      |defconfig |cut_attack_surface| OK
@@ -259,6 +262,7 @@ CONFIG_X86_CPUID                        |kconfig| is not set |  clipos  |cut_att
 CONFIG_X86_IOPL_IOPERM                  |kconfig| is not set |  clipos  |cut_attack_surface| FAIL: "y"
 CONFIG_ACPI_TABLE_UPGRADE               |kconfig| is not set |  clipos  |cut_attack_surface| FAIL: "y"
 CONFIG_EFI_CUSTOM_SSDT_OVERLAYS         |kconfig| is not set |  clipos  |cut_attack_surface| FAIL: "y"
+CONFIG_COREDUMP                         |kconfig| is not set |  clipos  |cut_attack_surface| FAIL: "y"
 CONFIG_LDISC_AUTOLOAD                   |kconfig| is not set |  clipos  |cut_attack_surface| FAIL: "y"
 CONFIG_X86_INTEL_TSX_MODE_OFF           |kconfig|     y      |  clipos  |cut_attack_surface| OK
 CONFIG_BPF_SYSCALL                      |kconfig| is not set | lockdown |cut_attack_surface| FAIL: "y"
@@ -297,7 +301,7 @@ spectre_v2                              |cmdline|     on     |  clipos  | self_p
 vsyscall                                |cmdline|    none    |   kspp   |cut_attack_surface| FAIL: not found
 debugfs                                 |cmdline|    off     |  grsec   |cut_attack_surface| FAIL: not found
 
-[+] Config check is finished: 'OK' - 97 / 'FAIL' - 101
+[+] Config check is finished: 'OK' - 101 / 'FAIL' - 101
 ```
 
 ## kconfig-hardened-check versioning
