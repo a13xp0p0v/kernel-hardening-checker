@@ -15,15 +15,15 @@ But nobody likes checking configs manually. So let the computers do their job!
 __kconfig-hardened-check__ helps me to check the Linux kernel options
 against my security hardening preferences, which are based on the
 
-  - [KSPP recommended settings][1],
-  - [CLIP OS kernel configuration][2],
-  - Last public [grsecurity][3] patch (options which they disable),
-  - [SECURITY_LOCKDOWN_LSM][5] patchset,
-  - [Direct feedback from the Linux kernel maintainers][23].
+  - [KSPP recommended settings][1]
+  - [CLIP OS kernel configuration][2]
+  - Last public [grsecurity][3] patch (options which they disable)
+  - [SECURITY_LOCKDOWN_LSM][5] patchset
+  - [Direct feedback from the Linux kernel maintainers][23]
 
 This tool supports checking __Kconfig__ options and __kernel cmdline__ parameters.
 
-I also created [__Linux Kernel Defence Map__][4] that is a graphical representation of the
+I also created the [__Linux Kernel Defence Map__][4], which is a graphical representation of the
 relationships between security hardening features and the corresponding vulnerability classes
 or exploitation techniques.
 
@@ -34,7 +34,7 @@ or exploitation techniques.
   - ARM64
   - ARM
 
-TODO: RISC-V (the issue [#56][22])
+TODO: RISC-V (issue [#56][22])
 
 ## Installation
 
@@ -318,7 +318,7 @@ but the tool recommends disabling it to cut the attack surface __of the kernel__
 
 The rationale:
 
-  - A nice LWN article about the corresponding LKML discussion: https://lwn.net/Articles/673597/
+  - An LWN article about the corresponding LKML discussion: https://lwn.net/Articles/673597/
 
   - A twitter thread about `CONFIG_USER_NS` and security: https://twitter.com/robertswiecki/status/1095447678949953541
 
@@ -337,11 +337,11 @@ __Q:__ KSPP and CLIP OS recommend `CONFIG_PANIC_ON_OOPS=y`. Why doesn't this too
 
 __A:__ I personally don't support this recommendation because:
   - It decreases system safety (kernel oops is still not a rare situation)
-  - It allows easier denial-of-service attacks for the whole system.
+  - It allows easier denial-of-service attacks for the whole system
 
 I think having `CONFIG_BUG` is enough here.
 If a kernel oops happens in the process context, the offending/attacking process is killed.
-In other cases the kernel panics, which is similar to `CONFIG_PANIC_ON_OOPS=y`.
+In other cases, the kernel panics, which is similar to `CONFIG_PANIC_ON_OOPS=y`.
 
 <br />
 
@@ -354,7 +354,7 @@ A more detailed evaluation is in the TODO list (the issue [#66][21]).
 
 __Q:__ Can I easily check which kernel versions support some Kconfig option?
 
-__A:__ Yes, see the [LKDDb][18] project (Linux Kernel Driver Database) by Giacomo Catenazzi [@cateee][19].
+__A:__ Yes. See the [LKDDb][18] project (Linux Kernel Driver Database) by Giacomo Catenazzi [@cateee][19].
 You can use it for the `mainline` or `stable` tree from [kernel.org][20] or for your custom kernel sources.
 
 <br />
