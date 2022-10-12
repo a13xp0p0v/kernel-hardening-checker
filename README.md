@@ -27,6 +27,11 @@ I also created the [__Linux Kernel Defence Map__][4], which is a graphical repre
 relationships between security hardening features and the corresponding vulnerability classes
 or exploitation techniques.
 
+__Attention!__ Changing Linux kernel security parameters may also affect system performance
+and functionality of userspace software. So for choosing these parameters consider
+the threat model of your Linux-based information system and perform thorough testing
+of its typical workload.
+
 ## Supported microarchitectures
 
   - X86_64
@@ -315,6 +320,13 @@ The version format is: __[major_number].[kernel_version].[kernel_patchlevel]__
 
 ## Questions and answers
 
+__Q:__ How all these kernel parameters influence the Linux kernel security?
+
+__A:__ To answer this question, you can use the `kconfig-hardened-check` [sources of recommendations][24]
+and the [Linux Kernel Defence Map][4] with its references.
+
+<br />
+
 __Q:__ How disabling `CONFIG_USER_NS` cuts the attack surface? It's needed for containers!
 
 __A:__ Yes, the `CONFIG_USER_NS` option provides some isolation between the userspace programs,
@@ -330,13 +342,6 @@ The rationale:
 
 <br />
 
-__Q:__ Why `CONFIG_GCC_PLUGINS` is automatically disabled during the kernel compilation?
-
-__A:__ It means that your gcc doesn't support plugins. For example, if you have `gcc-7` on Ubuntu,
-try to install `gcc-7-plugin-dev` package, it should help.
-
-<br />
-
 __Q:__ KSPP and CLIP OS recommend `CONFIG_PANIC_ON_OOPS=y`. Why doesn't this tool do the same?
 
 __A:__ I personally don't support this recommendation because:
@@ -346,6 +351,16 @@ __A:__ I personally don't support this recommendation because:
 I think having `CONFIG_BUG` is enough here.
 If a kernel oops happens in the process context, the offending/attacking process is killed.
 In other cases, the kernel panics, which is similar to `CONFIG_PANIC_ON_OOPS=y`.
+
+<br />
+
+__Q:__ Why enabling `CONFIG_STATIC_USERMODEHELPER` breaks various things in my GNU/Linux system?
+Do I really need that feature?
+
+__A:__ Linux kernel usermode helpers can be used for privilege escalation in kernel exploits
+([example 1][9], [example 2][10]). `CONFIG_STATIC_USERMODEHELPER` prevents that method. But it
+requires the corresponding support in the userspace: see the [example implementation][11] by
+Tycho Andersen [@tych0][12].
 
 <br />
 
@@ -363,20 +378,17 @@ You can use it for the `mainline` or `stable` tree from [kernel.org][20] or for 
 
 <br />
 
-__Q:__ Why enabling `CONFIG_STATIC_USERMODEHELPER` breaks various things in my GNU/Linux system?
-Do I really need that feature?
-
-__A:__ Linux kernel usermode helpers can be used for privilege escalation in kernel exploits
-([example 1][9], [example 2][10]). `CONFIG_STATIC_USERMODEHELPER` prevents that method. But it
-requires the corresponding support in the userspace: see the [example implementation][11] by
-Tycho Andersen [@tych0][12].
-
-<br />
-
 __Q:__ Does my kernel have all those mitigations of Transient Execution Vulnerabilities in my hardware?
 
 __A:__ Checking the kernel config is not enough to answer this question.
 I highly recommend using [spectre-meltdown-checker][13] tool maintained by Stéphane Lesimple [@speed47][14].
+
+<br />
+
+__Q:__ Why the `CONFIG_GCC_PLUGINS` option is automatically disabled during the kernel compilation?
+
+__A:__ It means that your gcc doesn't support plugins. For example, if you have `gcc-7` on Ubuntu,
+try to install `gcc-7-plugin-dev` package, it should help.
 
 
 [1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
@@ -402,3 +414,4 @@ I highly recommend using [spectre-meltdown-checker][13] tool maintained by Stép
 [21]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/66
 [22]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/56
 [23]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues?q=label%3Akernel_maintainer_feedback
+[24]: https://github.com/a13xp0p0v/kconfig-hardened-check#motivation
