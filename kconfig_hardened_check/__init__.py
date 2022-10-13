@@ -449,7 +449,22 @@ def add_kconfig_checks(l, arch):
              # Starting from v5.11 CONFIG_PAGE_POISONING unconditionally checks
              # the 0xAA poison pattern on allocation.
              # That brings higher performance penalty.
+    ubsan_bounds_is_set = KconfigCheck('self_protection', 'kspp', 'UBSAN_BOUNDS', 'y')
+    l += [ubsan_bounds_is_set]
+    l += [OR(KconfigCheck('self_protection', 'kspp', 'UBSAN_LOCAL_BOUNDS', 'y'),
+             AND(ubsan_bounds_is_set,
+                 cc_is_gcc))]
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'UBSAN_TRAP', 'y'),
+              ubsan_bounds_is_set,
+              KconfigCheck('self_protection', 'kspp', 'UBSAN_SHIFT', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'UBSAN_DIV_ZERO', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'UBSAN_UNREACHABLE', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'UBSAN_BOOL', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'UBSAN_ENUM', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'UBSAN_ALIGNMENT', 'is not set'))] # only array index bounds checking with traps
     if arch in ('X86_64', 'ARM64', 'X86_32'):
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'UBSAN_SANITIZE_ALL', 'y'),
+                  ubsan_bounds_is_set)] # ARCH_HAS_UBSAN_SANITIZE_ALL is not enabled for ARM
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [AND(stackleak_is_set, gcc_plugins_support_is_set)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
@@ -465,15 +480,6 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
-
-    # 'self_protection', 'maintainer'
-    ubsan_bounds_is_set = KconfigCheck('self_protection', 'maintainer', 'UBSAN_BOUNDS', 'y') # only array index bounds checking
-    l += [ubsan_bounds_is_set] # recommended by Kees Cook in /issues/53
-    if arch in ('X86_64', 'ARM64', 'X86_32'):  # ARCH_HAS_UBSAN_SANITIZE_ALL is not enabled for ARM
-        l += [AND(KconfigCheck('self_protection', 'maintainer', 'UBSAN_SANITIZE_ALL', 'y'),
-                  ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
-    l += [AND(KconfigCheck('self_protection', 'maintainer', 'UBSAN_TRAP', 'y'),
-              ubsan_bounds_is_set)] # recommended by Kees Cook in /issues/53
 
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y')]
@@ -510,9 +516,6 @@ def add_kconfig_checks(l, arch):
     # 'self_protection', 'my'
     l += [OR(KconfigCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y'),
              efi_not_set)] # needs userspace support (systemd)
-    l += [OR(KconfigCheck('self_protection', 'my', 'UBSAN_LOCAL_BOUNDS', 'y'),
-             AND(ubsan_bounds_is_set,
-                 cc_is_gcc))]
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'my', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
