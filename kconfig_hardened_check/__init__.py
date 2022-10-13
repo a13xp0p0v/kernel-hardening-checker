@@ -533,12 +533,12 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_YAMA', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LANDLOCK', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DISABLE', 'is not set')]
-    l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
-    l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_SELINUX_DEVELOP', 'is not set')]
-    l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM', 'y')]
-    l += [KconfigCheck('security_policy', 'clipos', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
-    l += [KconfigCheck('security_policy', 'clipos', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
-    l += [KconfigCheck('security_policy', 'my', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEVELOP', 'is not set')]
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LOCKDOWN_LSM', 'y')]
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
+    l += [KconfigCheck('security_policy', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
 
     # 'cut_attack_surface', 'defconfig'
     l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'BPF_UNPRIV_DEFAULT_OFF', 'y'),
