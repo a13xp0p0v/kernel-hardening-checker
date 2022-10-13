@@ -427,6 +427,9 @@ def add_kconfig_checks(l, arch):
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
     l += [randstruct_is_set]
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_PERFORMANCE', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
+              randstruct_is_set)]
     hardened_usercopy_is_set = KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
     l += [hardened_usercopy_is_set]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
@@ -450,6 +453,8 @@ def add_kconfig_checks(l, arch):
              # Starting from v5.11 CONFIG_PAGE_POISONING unconditionally checks
              # the 0xAA poison pattern on allocation.
              # That brings higher performance penalty.
+    l += [OR(KconfigCheck('self_protection', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
+             efi_not_set)]
     ubsan_bounds_is_set = KconfigCheck('self_protection', 'kspp', 'UBSAN_BOUNDS', 'y')
     l += [ubsan_bounds_is_set]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'UBSAN_LOCAL_BOUNDS', 'y'),
@@ -468,6 +473,12 @@ def add_kconfig_checks(l, arch):
                   ubsan_bounds_is_set)] # ARCH_HAS_UBSAN_SANITIZE_ALL is not enabled for ARM
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [AND(stackleak_is_set, gcc_plugins_support_is_set)]
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'STACKLEAK_METRICS', 'is not set'),
+                  stackleak_is_set,
+                  gcc_plugins_support_is_set)]
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'),
+                  stackleak_is_set,
+                  gcc_plugins_support_is_set)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
@@ -485,19 +496,7 @@ def add_kconfig_checks(l, arch):
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y')]
     l += [KconfigCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
-    l += [OR(KconfigCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y'),
-             efi_not_set)]
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
-    l += [AND(KconfigCheck('self_protection', 'clipos', 'RANDSTRUCT_PERFORMANCE', 'is not set'),
-              KconfigCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
-              randstruct_is_set)]
-    if arch in ('X86_64', 'ARM64', 'X86_32'):
-        l += [AND(KconfigCheck('self_protection', 'clipos', 'STACKLEAK_METRICS', 'is not set'),
-                  stackleak_is_set,
-                  gcc_plugins_support_is_set)]
-        l += [AND(KconfigCheck('self_protection', 'clipos', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'),
-                  stackleak_is_set,
-                  gcc_plugins_support_is_set)]
     if arch in ('X86_64', 'X86_32'):
         l += [AND(KconfigCheck('self_protection', 'clipos', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                   iommu_support_is_set)]
