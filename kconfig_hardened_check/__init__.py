@@ -412,6 +412,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'SHUFFLE_PAGE_ALLOCATOR', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'FORTIFY_SOURCE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_VIRTUAL', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_SG', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y')]
@@ -424,6 +425,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
     l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
     l += [randstruct_is_set]
@@ -455,6 +457,8 @@ def add_kconfig_checks(l, arch):
              # That brings higher performance penalty.
     l += [OR(KconfigCheck('self_protection', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
              efi_not_set)]
+    l += [OR(KconfigCheck('self_protection', 'kspp', 'RESET_ATTACK_MITIGATION', 'y'),
+             efi_not_set)] # needs userspace support (systemd)
     ubsan_bounds_is_set = KconfigCheck('self_protection', 'kspp', 'UBSAN_BOUNDS', 'y')
     l += [ubsan_bounds_is_set]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'UBSAN_LOCAL_BOUNDS', 'y'),
@@ -494,8 +498,6 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
 
     # 'self_protection', 'clipos'
-    l += [KconfigCheck('self_protection', 'clipos', 'DEBUG_VIRTUAL', 'y')]
-    l += [KconfigCheck('self_protection', 'clipos', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
     if arch in ('X86_64', 'X86_32'):
         l += [AND(KconfigCheck('self_protection', 'clipos', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
@@ -508,8 +510,6 @@ def add_kconfig_checks(l, arch):
                   iommu_support_is_set)]
 
     # 'self_protection', 'my'
-    l += [OR(KconfigCheck('self_protection', 'my', 'RESET_ATTACK_MITIGATION', 'y'),
-             efi_not_set)] # needs userspace support (systemd)
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'my', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
