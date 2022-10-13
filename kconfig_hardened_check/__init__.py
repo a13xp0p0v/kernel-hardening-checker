@@ -423,6 +423,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
     l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
     l += [randstruct_is_set]
@@ -487,12 +488,6 @@ def add_kconfig_checks(l, arch):
     l += [OR(KconfigCheck('self_protection', 'clipos', 'EFI_DISABLE_PCI_DMA', 'y'),
              efi_not_set)]
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
-    hw_random_tpm_is_set = KconfigCheck('self_protection', 'clipos', 'HW_RANDOM_TPM', 'y')
-    l += [hw_random_tpm_is_set]
-    l += [AND(KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_BOOTLOADER', 'is not set'),
-              hw_random_tpm_is_set)]
-    l += [AND(KconfigCheck('self_protection', 'clipos', 'RANDOM_TRUST_CPU', 'is not set'),
-              hw_random_tpm_is_set)]
     l += [AND(KconfigCheck('self_protection', 'clipos', 'RANDSTRUCT_PERFORMANCE', 'is not set'),
               KconfigCheck('self_protection', 'clipos', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
               randstruct_is_set)]
