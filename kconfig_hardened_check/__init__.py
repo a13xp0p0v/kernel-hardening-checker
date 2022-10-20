@@ -660,6 +660,13 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'my', 'VIDEO_VIVID', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
     l += [KconfigCheck('cut_attack_surface', 'my', 'KGDB', 'is not set')]
+    
+    # 'cut_attack_surface', 'manouchehri'
+    if arch in ('X86_64', 'ARM64'):
+        l += [KconfigCheck('cut_attack_surface', 'manouchehri', 'COMPAT', 'is not set')] 
+        # ASLR on 32-bit is broken by design.
+        # Mitigates multiple CVEs (historically) that are only reachable through compatibility mode.
+        # Reduces the odds of shooting yourself in the foot with things like seccomp being different.
 
     # 'harden_userspace'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
