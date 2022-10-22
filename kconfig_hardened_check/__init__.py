@@ -490,6 +490,8 @@ def add_kconfig_checks(l, arch):
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
+    if arch == 'X86_64':
+        l += [KconfigCheck('self_protection', 'kspp', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
     if arch == 'X86_32':
@@ -511,7 +513,6 @@ def add_kconfig_checks(l, arch):
 
     # 'self_protection', 'my'
     if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'my', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
                   iommu_support_is_set)]
     if arch == 'ARM64':
@@ -567,6 +568,8 @@ def add_kconfig_checks(l, arch):
     l += [devmem_not_set]
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'),
              devmem_not_set)] # refers to LOCKDOWN
+    l += [AND(KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is not set'),
+              KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD'))] # option presence check
     if arch == 'ARM':
         l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
                  devmem_not_set)] # refers to LOCKDOWN
@@ -638,8 +641,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'COREDUMP', 'is not set')] # cut userspace attack surface
-    l += [AND(KconfigCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD', 'is not set'),
-              KconfigCheck('cut_attack_surface', 'clipos', 'LDISC_AUTOLOAD'))] # option presence check
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
