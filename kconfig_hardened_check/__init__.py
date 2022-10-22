@@ -487,34 +487,30 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
+                  iommu_support_is_set)]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'kspp', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
+                  iommu_support_is_set)]
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
+                  iommu_support_is_set)]
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
     if arch == 'X86_32':
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
+                  iommu_support_is_set)]
 
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
-    if arch in ('X86_64', 'X86_32'):
-        l += [AND(KconfigCheck('self_protection', 'clipos', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
-                  iommu_support_is_set)]
-    if arch == 'X86_64':
-        l += [AND(KconfigCheck('self_protection', 'clipos', 'INTEL_IOMMU_SVM', 'y'),
-                  iommu_support_is_set)]
-    if arch == 'X86_32':
-        l += [AND(KconfigCheck('self_protection', 'clipos', 'INTEL_IOMMU', 'y'),
-                  iommu_support_is_set)]
 
     # 'self_protection', 'my'
-    if arch == 'X86_64':
-        l += [AND(KconfigCheck('self_protection', 'my', 'AMD_IOMMU_V2', 'y'),
-                  iommu_support_is_set)]
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'my', 'SHADOW_CALL_STACK', 'y')] # maybe it's alternative to STACKPROTECTOR_STRONG
         l += [KconfigCheck('self_protection', 'my', 'KASAN_HW_TAGS', 'y')]
