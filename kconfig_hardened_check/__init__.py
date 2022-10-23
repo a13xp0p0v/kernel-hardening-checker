@@ -387,6 +387,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_EPAN', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'UNMAP_KERNEL_AT_EL0', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_E0PD', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y'),
                      VersionCheck((5, 9))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
