@@ -484,6 +484,11 @@ def add_kconfig_checks(l, arch):
                   stackleak_is_set,
                   gcc_plugins_support_is_set)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
+    if arch in ('X86_64', 'ARM64'):
+        cfi_clang_is_set = KconfigCheck('self_protection', 'kspp', 'CFI_CLANG', 'y')
+        l += [cfi_clang_is_set]
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'CFI_PERMISSIVE', 'is not set'),
+                  cfi_clang_is_set)]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
@@ -500,6 +505,8 @@ def add_kconfig_checks(l, arch):
                   iommu_support_is_set)]
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')]
     if arch == 'X86_32':
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
@@ -509,15 +516,6 @@ def add_kconfig_checks(l, arch):
 
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
-
-    # 'self_protection', 'my'
-    if arch == 'ARM64':
-        l += [KconfigCheck('self_protection', 'my', 'SHADOW_CALL_STACK', 'y')] # maybe it's alternative to STACKPROTECTOR_STRONG
-        l += [KconfigCheck('self_protection', 'my', 'KASAN_HW_TAGS', 'y')]
-        cfi_clang_is_set = KconfigCheck('self_protection', 'my', 'CFI_CLANG', 'y')
-        l += [cfi_clang_is_set]
-        l += [AND(KconfigCheck('self_protection', 'my', 'CFI_PERMISSIVE', 'is not set'),
-                  cfi_clang_is_set)]
 
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
