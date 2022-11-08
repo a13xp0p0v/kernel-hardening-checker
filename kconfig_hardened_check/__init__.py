@@ -77,12 +77,30 @@ SIMPLE_OPTION_TYPES = ('kconfig', 'version', 'cmdline')
 class OptCheck:
     # Constructor without the 'expected' parameter is for option presence checks (any value is OK)
     def __init__(self, reason, decision, name, expected=None):
-        assert(reason and decision and name), \
-               'invalid {} check for "{}"'.format(self.__class__.__name__, name)
+        assert(name and name == name.strip() and len(name.split()) == 1), \
+               'invalid name "{}" for {}'.format(name, self.__class__.__name__)
         self.name = name
-        self.expected = expected
+
+        assert(decision and decision == decision.strip() and len(decision.split()) == 1), \
+               'invalid decision "{}" for "{}" check'.format(decision, name)
         self.decision = decision
+
+        assert(reason and reason == reason.strip() and len(reason.split()) == 1), \
+               'invalid reason "{}" for "{}" check'.format(reason, name)
         self.reason = reason
+
+        if expected:
+            assert(expected == expected.strip()), \
+                   'invalid expected value "{}" for "{}" check (1)'.format(expected, name)
+            val_len = len(expected.split())
+            if val_len == 3:
+                assert(expected == 'is not set'), \
+                   'invalid expected value "{}" for "{}" check (2)'.format(expected, name)
+            else:
+                assert(val_len == 1), \
+                   'invalid expected value "{}" for "{}" check (3)'.format(expected, name)
+        self.expected = expected
+
         self.state = None
         self.result = None
 
@@ -144,6 +162,8 @@ class CmdlineCheck(OptCheck):
 
 class VersionCheck:
     def __init__(self, ver_expected):
+        assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 2), \
+               'invalid version "{}" for VersionCheck'.format(ver_expected)
         self.ver_expected = ver_expected
         self.ver = ()
         self.result = None
