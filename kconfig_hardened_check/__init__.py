@@ -94,7 +94,7 @@ class OptCheck:
                    'invalid expected value "{}" for "{}" check (1)'.format(expected, name)
             val_len = len(expected.split())
             if val_len == 3:
-                assert(expected == 'is not set'), \
+                assert(expected == 'is not set' or expected == 'is not off'), \
                    'invalid expected value "{}" for "{}" check (2)'.format(expected, name)
             else:
                 assert(val_len == 1), \
@@ -115,6 +115,16 @@ class OptCheck:
                 self.result = 'FAIL: is not present'
             else:
                 self.result = 'OK: is present'
+            return
+
+        # handle the 'is not off' option check
+        if self.expected == 'is not off':
+            if self.state == 'off':
+                self.result = 'FAIL: is off'
+            elif self.state is None:
+                self.result = 'FAIL: is off, not found'
+            else:
+                self.result = 'OK: is not off, "' + self.state + '"'
             return
 
         # handle the option value check
@@ -253,6 +263,8 @@ class OR(ComplexOptCheck):
                         self.result = 'OK: {} is not found'.format(opt.name)
                     elif opt.result == 'OK: is present':
                         self.result = 'OK: {} is present'.format(opt.name)
+                    elif opt.result.startswith('OK: is not off'):
+                        self.result = 'OK: {} is not off'.format(opt.name)
                     else:
                         # VersionCheck provides enough info
                         assert(opt.result.startswith('OK: version')), \
@@ -281,6 +293,10 @@ class AND(ComplexOptCheck):
                     self.result = 'FAIL: {} is not "{}"'.format(opt.name, opt.expected)
                 elif opt.result == 'FAIL: is not present':
                     self.result = 'FAIL: {} is not present'.format(opt.name)
+                elif opt.result == 'FAIL: is off':
+                    self.result = 'FAIL: {} is off'.format(opt.name)
+                elif opt.result == 'FAIL: is off, not found':
+                    self.result = 'FAIL: {} is off, not found'.format(opt.name)
                 else:
                     # VersionCheck provides enough info
                     self.result = opt.result
