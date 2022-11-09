@@ -745,6 +745,7 @@ def add_cmdline_checks(l, arch):
                  CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
 
     # 'self_protection', 'kspp'
+    l += [CmdlineCheck('self_protection', 'kspp', 'nosmt')] # option presence check
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
