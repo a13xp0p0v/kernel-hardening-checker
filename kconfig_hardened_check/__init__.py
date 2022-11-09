@@ -112,7 +112,7 @@ class OptCheck:
         # handle the option presence check
         if self.expected is None:
             if self.state is None:
-                self.result = 'FAIL: not present'
+                self.result = 'FAIL: is not present'
             else:
                 self.result = 'OK: is present'
             return
@@ -122,9 +122,9 @@ class OptCheck:
             self.result = 'OK'
         elif self.state is None:
             if self.expected == 'is not set':
-                self.result = 'OK: not found'
+                self.result = 'OK: is not found'
             else:
-                self.result = 'FAIL: not found'
+                self.result = 'FAIL: is not found'
         else:
             self.result = 'FAIL: "' + self.state + '"'
 
@@ -248,9 +248,9 @@ class OR(ComplexOptCheck):
                 # Add more info for additional checks:
                 if i != 0:
                     if opt.result == 'OK':
-                        self.result = 'OK: {} "{}"'.format(opt.name, opt.expected)
-                    elif opt.result == 'OK: not found':
-                        self.result = 'OK: {} not found'.format(opt.name)
+                        self.result = 'OK: {} is "{}"'.format(opt.name, opt.expected)
+                    elif opt.result == 'OK: is not found':
+                        self.result = 'OK: {} is not found'.format(opt.name)
                     elif opt.result == 'OK: is present':
                         self.result = 'OK: {} is present'.format(opt.name)
                     else:
@@ -277,10 +277,10 @@ class AND(ComplexOptCheck):
                 # This FAIL is caused by additional checks,
                 # and not by the main option that this AND-check is about.
                 # Describe the reason of the FAIL.
-                if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: not found':
-                    self.result = 'FAIL: {} not "{}"'.format(opt.name, opt.expected)
-                elif opt.result == 'FAIL: not present':
-                    self.result = 'FAIL: {} not present'.format(opt.name)
+                if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: is not found':
+                    self.result = 'FAIL: {} is not "{}"'.format(opt.name, opt.expected)
+                elif opt.result == 'FAIL: is not present':
+                    self.result = 'FAIL: {} is not present'.format(opt.name)
                 else:
                     # VersionCheck provides enough info
                     self.result = opt.result
