@@ -16,7 +16,6 @@
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
 #       X86:
-#           spec_store_bypass_disable=on
 #           l1tf=full,force
 #           l1d_flush=on (a part of the l1tf option)
 #           mds=full,nosmt
@@ -732,10 +731,13 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospec_store_bypass_disable', 'is not set')]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not set'))]
+    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
+             CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set'))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
@@ -949,6 +951,9 @@ def normalize_cmdline_options(option, value):
         return value
     if option == 'mitigations':
         # See mitigations_parse_cmdline() in linux/kernel/cpu.c
+        return value
+    if option == 'spec_store_bypass_disable':
+        # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
         return value
 
     # Implement a limited part of the kstrtobool() logic
