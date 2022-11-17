@@ -744,6 +744,8 @@ def add_cmdline_checks(l, arch):
              CmdlineCheck('self_protection', 'defconfig', 'mds', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'tsx_async_abort', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'tsx_async_abort', 'is not set'))]
+    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not off'),
+             CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not set'))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
@@ -972,6 +974,9 @@ def normalize_cmdline_options(option, value):
         return value
     if option == 'tsx_async_abort':
         # See tsx_async_abort_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+        return value
+    if option == 'mmio_stale_data':
+        # See mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
         return value
 
     # Implement a limited part of the kstrtobool() logic
