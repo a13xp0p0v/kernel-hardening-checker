@@ -736,6 +736,8 @@ def add_cmdline_checks(l, arch):
              CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not set'))]
+    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not off'),
+             CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set'))]
     if arch == 'ARM64':
@@ -951,6 +953,9 @@ def normalize_cmdline_options(option, value):
         return value
     if option == 'spectre_v2':
         # See spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+        return value
+    if option == 'spectre_v2_user':
+        # See spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
         return value
     if option == 'spec_store_bypass_disable':
         # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
