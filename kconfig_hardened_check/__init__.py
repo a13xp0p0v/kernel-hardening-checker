@@ -16,7 +16,6 @@
 #    Mitigations of CPU vulnerabilities:
 #       Аrch-independent:
 #       X86:
-#           l1tf=full,force
 #           l1d_flush=on (a part of the l1tf option)
 #           mds=full,nosmt
 #           tsx=off
@@ -740,6 +739,8 @@ def add_cmdline_checks(l, arch):
              CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set'))]
+    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'l1tf', 'is not off'),
+             CmdlineCheck('self_protection', 'defconfig', 'l1tf', 'is not set'))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
@@ -959,6 +960,9 @@ def normalize_cmdline_options(option, value):
         return value
     if option == 'spec_store_bypass_disable':
         # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+        return value
+    if option == 'l1tf':
+        # See l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
         return value
 
     # Implement a limited part of the kstrtobool() logic
