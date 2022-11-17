@@ -940,17 +940,17 @@ def parse_kconfig_file(parsed_options, fname):
 def normalize_cmdline_options(option, value):
     # Don't normalize the cmdline option values if
     # the Linux kernel doesn't use kstrtobool() for them
-    if option == 'pti':
-        # See pti_check_boottime_disable() in linux/arch/x86/mm/pti.c
-        return value
-    if option == 'spectre_v2':
-        # See spectre_v2_parse_cmdline() in linux/arch/x86/kernel/cpu/bugs.c
-        return value
     if option == 'debugfs':
         # See debugfs_kernel() in fs/debugfs/inode.c
         return value
     if option == 'mitigations':
-        # See mitigations_parse_cmdline() in linux/kernel/cpu.c
+        # See mitigations_parse_cmdline() in kernel/cpu.c
+        return value
+    if option == 'pti':
+        # See pti_check_boottime_disable() in arch/x86/mm/pti.c
+        return value
+    if option == 'spectre_v2':
+        # See spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
         return value
     if option == 'spec_store_bypass_disable':
         # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
