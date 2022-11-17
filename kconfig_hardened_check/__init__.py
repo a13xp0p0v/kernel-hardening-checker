@@ -74,8 +74,7 @@ from .__about__ import __version__
 SIMPLE_OPTION_TYPES = ('kconfig', 'version', 'cmdline')
 
 class OptCheck:
-    # Constructor without the 'expected' parameter is for option presence checks (any value is OK)
-    def __init__(self, reason, decision, name, expected=None):
+    def __init__(self, reason, decision, name, expected):
         assert(name and name == name.strip() and len(name.split()) == 1), \
                'invalid name "{}" for {}'.format(name, self.__class__.__name__)
         self.name = name
@@ -88,16 +87,18 @@ class OptCheck:
                'invalid reason "{}" for "{}" check'.format(reason, name)
         self.reason = reason
 
-        if expected:
-            assert(expected == expected.strip()), \
-                   'invalid expected value "{}" for "{}" check (1)'.format(expected, name)
-            val_len = len(expected.split())
-            if val_len == 3:
-                assert(expected == 'is not set' or expected == 'is not off'), \
+        assert(expected and expected == expected.strip()), \
+               'invalid expected value "{}" for "{}" check (1)'.format(expected, name)
+        val_len = len(expected.split())
+        if val_len == 3:
+            assert(expected == 'is not set' or expected == 'is not off'), \
                    'invalid expected value "{}" for "{}" check (2)'.format(expected, name)
-            else:
-                assert(val_len == 1), \
+        elif val_len == 2:
+            assert(expected == 'is present'), \
                    'invalid expected value "{}" for "{}" check (3)'.format(expected, name)
+        else:
+            assert(val_len == 1), \
+                   'invalid expected value "{}" for "{}" check (4)'.format(expected, name)
         self.expected = expected
 
         self.state = None
@@ -108,8 +109,8 @@ class OptCheck:
         return None
 
     def check(self):
-        # handle the option presence check
-        if self.expected is None:
+        # handle the 'is present' check
+        if self.expected == 'is present':
             if self.state is None:
                 self.result = 'FAIL: is not present'
             else:
@@ -138,11 +139,7 @@ class OptCheck:
             self.result = 'FAIL: "' + self.state + '"'
 
     def table_print(self, _mode, with_results):
-        if self.expected is None:
-            expected = ''
-        else:
-            expected = self.expected
-        print('{:<40}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, expected, self.decision, self.reason), end='')
+        print('{:<40}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
         if with_results:
             print('| {}'.format(self.result), end='')
 
@@ -599,7 +596,7 @@ def add_kconfig_checks(l, arch):
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'),
              devmem_not_set)] # refers to LOCKDOWN
     l += [AND(KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is not set'),
-              KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD'))] # option presence check
+              KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is present'))]
     if arch == 'ARM':
         l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
                  devmem_not_set)] # refers to LOCKDOWN
@@ -746,7 +743,7 @@ def add_cmdline_checks(l, arch):
                  CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
 
     # 'self_protection', 'kspp'
-    l += [CmdlineCheck('self_protection', 'kspp', 'nosmt')] # option presence check
+    l += [CmdlineCheck('self_protection', 'kspp', 'nosmt', 'is present')]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
@@ -756,9 +753,9 @@ def add_cmdline_checks(l, arch):
              AND(CmdlineCheck('self_protection', 'kspp', 'page_poison', '1'),
                  KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'slub_debug', 'P')))]
-    l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge'),
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
              AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
-                 CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')))] # option presence check
+                 CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
