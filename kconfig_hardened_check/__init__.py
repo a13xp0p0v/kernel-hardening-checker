@@ -734,6 +734,8 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))]
+    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
+             CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not set'))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
@@ -780,9 +782,6 @@ def add_cmdline_checks(l, arch):
 
     # 'self_protection', 'clipos'
     l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
-    if arch in ('X86_64', 'X86_32'):
-        l += [AND(CmdlineCheck('self_protection', 'clipos', 'spectre_v2', 'on'),
-                  CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set'))]
 
     # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
