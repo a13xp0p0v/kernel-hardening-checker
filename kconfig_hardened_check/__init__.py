@@ -20,7 +20,6 @@
 #           tsx=off
 #       ARM64:
 #           kpti=on
-#           ssbd=force-on
 #
 #    Should NOT be set:
 #           sysrq_always_enabled
@@ -751,6 +750,9 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not set'))]
     if arch == 'ARM64':
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'kernel'),
+                 CmdlineCheck('self_protection', 'my', 'ssbd', 'force-on'),
+                 CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'is not set'))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
                      CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set')))]
