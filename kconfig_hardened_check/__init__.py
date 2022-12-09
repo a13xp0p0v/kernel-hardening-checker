@@ -22,7 +22,6 @@
 #           kpti=on
 #
 #    Should NOT be set:
-#           sysrq_always_enabled
 #           arm64.nobti
 #           arm64.nopauth
 #           arm64.nomte
@@ -810,6 +809,8 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('cut_attack_surface', 'grsec', 'debugfs', 'off'),
              KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set'))] # ... the end
 
+    # 'cut_attack_surface', 'my'
+    l += [CmdlineCheck('cut_attack_surface', 'my', 'sysrq_always_enabled', 'is not set')]
 
 def print_unknown_options(checklist, parsed_options):
     known_options = []
