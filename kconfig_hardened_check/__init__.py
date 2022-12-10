@@ -563,6 +563,8 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'STRICT_DEVMEM', 'y'),
                  devmem_not_set)] # refers to LOCKDOWN
+    if arch in ('X86_64', 'X86_32'):
+        l += [KconfigCheck('cut_attack_surface', 'defconfig', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
     # 'cut_attack_surface', 'kspp'
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'SECURITY_DMESG_RESTRICT', 'y')]
@@ -658,8 +660,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'COREDUMP', 'is not set')] # cut userspace attack surface
 #   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')] # no, IKCONFIG is needed for this check :)
-    if arch in ('X86_64', 'X86_32'):
-        l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
     # 'cut_attack_surface', 'lockdown'
     l += [KconfigCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
