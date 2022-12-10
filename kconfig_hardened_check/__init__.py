@@ -13,10 +13,27 @@
 # N.B Hardening command line parameters:
 #    iommu=force (does it help against DMA attacks?)
 #
-#    Mitigations of CPU vulnerabilities:
-#       Аrch-independent:
-#       X86:
-#           l1d_flush=on (a part of the l1tf option)
+# The list of disabled mitigations of CPU vulnerabilities:
+#   mitigations=off
+#   pti=off
+#   spectre_v2=off
+#   spectre_v2_user=off
+#   spec_store_bypass_disable=off
+#   l1tf=off
+#   mds=off
+#   tsx_async_abort=off
+#   srbds=off
+#   mmio_stale_data=off
+#   retbleed=off
+#     nopti
+#     nokaslr
+#     nospectre_v1
+#     nospectre_v2
+#     nospectre_bhb
+#     nospec_store_bypass_disable
+#       kpti=0
+#       ssbd=force-off
+#       nosmt (enabled)
 #
 #    Hardware tag-based KASAN with arm64 Memory Tagging Extension (MTE):
 #           kasan=on
