@@ -17,7 +17,6 @@
 #       Аrch-independent:
 #       X86:
 #           l1d_flush=on (a part of the l1tf option)
-#           tsx=off
 #       ARM64:
 #           kpti=on
 #
@@ -796,6 +795,12 @@ def add_cmdline_checks(l, arch):
     # 'self_protection', 'clipos'
     l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
 
+    # 'cut_attack_surface', 'defconfig'
+    if arch in ('X86_64', 'X86_32'):
+        l += [OR(CmdlineCheck('cut_attack_surface', 'defconfig', 'tsx', 'off'),
+                 AND(KconfigCheck('cut_attack_surface', 'defconfig', 'X86_INTEL_TSX_MODE_OFF', 'y'),
+                     CmdlineCheck('cut_attack_surface', 'defconfig', 'tsx', 'is not set')))]
+
     # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
@@ -988,6 +993,9 @@ def normalize_cmdline_options(option, value):
         return value
     if option == 'retbleed':
         # See retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+        return value
+    if option == 'tsx':
+        # See tsx_init() in arch/x86/kernel/cpu/tsx.c
         return value
 
     # Implement a limited part of the kstrtobool() logic
