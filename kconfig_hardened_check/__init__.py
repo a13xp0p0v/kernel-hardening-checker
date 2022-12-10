@@ -40,6 +40,7 @@
 #    fs.suid_dumpable=0
 #    kernel.modules_disabled=1
 #    kernel.randomize_va_space = 2
+#    nosmt sysfs control file
 
 
 # pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
