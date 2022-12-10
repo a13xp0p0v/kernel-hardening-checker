@@ -21,8 +21,6 @@
 #       ARM64:
 #           kpti=on
 #
-#           arm64.nomte
-#
 #    Hardware tag-based KASAN with arm64 Memory Tagging Extension (MTE):
 #           kasan=on
 #           kasan.stacktrace=off
@@ -727,6 +725,7 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospec_store_bypass_disable', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nobti', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nopauth', 'is not set')]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nomte', 'is not set')]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
