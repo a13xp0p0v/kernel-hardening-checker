@@ -721,6 +721,7 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_bhb', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospec_store_bypass_disable', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nobti', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nopauth', 'is not set')]
