@@ -17,8 +17,6 @@
 #       Аrch-independent:
 #       X86:
 #           l1d_flush=on (a part of the l1tf option)
-#       ARM64:
-#           kpti=on
 #
 #    Hardware tag-based KASAN with arm64 Memory Tagging Extension (MTE):
 #           kasan=on
@@ -747,6 +745,8 @@ def add_cmdline_checks(l, arch):
              CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not set'))]
+    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
+             CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set'))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'kernel'),
                  CmdlineCheck('self_protection', 'my', 'ssbd', 'force-on'),
