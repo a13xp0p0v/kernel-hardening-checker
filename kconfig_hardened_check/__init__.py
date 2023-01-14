@@ -575,8 +575,10 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'PROC_KCORE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_PTYS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'HIBERNATION', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_X32', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_X32_ABI', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'MODIFY_LDT_SYSCALL', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'OABI_COMPAT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_MSR', 'is not set')] # refers to LOCKDOWN
