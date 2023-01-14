@@ -382,6 +382,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y')]
@@ -436,7 +437,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
     l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
@@ -514,6 +514,7 @@ def add_kconfig_checks(l, arch):
                   iommu_support_is_set)]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch == 'X86_64':
