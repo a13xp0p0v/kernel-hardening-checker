@@ -381,6 +381,7 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64'):
         l += [KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
     if arch in ('X86_64', 'X86_32'):
+        l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y')]
@@ -423,7 +424,6 @@ def add_kconfig_checks(l, arch):
 
     # 'self_protection', 'kspp'
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_HARDENED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_RANDOM', 'y')]
@@ -513,6 +513,7 @@ def add_kconfig_checks(l, arch):
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                   iommu_support_is_set)]
     if arch in ('ARM64', 'ARM'):
+        l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch == 'X86_64':
