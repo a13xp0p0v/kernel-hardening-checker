@@ -378,7 +378,7 @@ def add_kconfig_checks(l, arch):
              VersionCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
-    if arch in ('X86_64', 'ARM64'):
+    if arch in ('X86_64', 'ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
