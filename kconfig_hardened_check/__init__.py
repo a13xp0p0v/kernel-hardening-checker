@@ -10,9 +10,6 @@
 # Please don't cry if my Python code looks like C.
 #
 #
-# N.B Missing hardening command line parameters:
-#    iommu=force (does it help against DMA attacks?)
-#
 #    Hardware tag-based KASAN with arm64 Memory Tagging Extension (MTE):
 #           kasan=on
 #           kasan.stacktrace=off
@@ -796,6 +793,8 @@ def add_cmdline_checks(l, arch):
 
     # 'self_protection', 'clipos'
     l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
+    if arch in ('X86_64', 'X86_32'):
+        l += [CmdlineCheck('self_protection', 'clipos', 'iommu', 'force')]
 
     # 'cut_attack_surface', 'defconfig'
     if arch in ('X86_64', 'X86_32'):
