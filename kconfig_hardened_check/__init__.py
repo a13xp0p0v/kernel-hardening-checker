@@ -763,7 +763,8 @@ def add_cmdline_checks(l, arch):
                  CmdlineCheck('self_protection', 'kspp', 'slub_debug', 'P')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
              AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
-                 CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')))]
+                 CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set'),
+                 CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
