@@ -1105,12 +1105,16 @@ def main():
             parse_cmdline_file(parsed_cmdline_options, args.cmdline)
             populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
-        # now everything is ready for performing the checks
+        # now everything is ready, perform the checks
         perform_checks(config_checklist)
 
-        # finally print the results
         if mode == 'verbose':
-            print_unknown_options(config_checklist, parsed_kconfig_options)
+            # print the parsed options without the checks (for debugging)
+            all_parsed_options = parsed_kconfig_options # assignment does not copy
+            all_parsed_options.update(parsed_cmdline_options)
+            print_unknown_options(config_checklist, all_parsed_options)
+
+        # finally print the results
         print_checklist(mode, config_checklist, True)
 
         sys.exit(0)
