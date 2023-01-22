@@ -66,7 +66,7 @@ class OptCheck:
                'invalid expected value "{}" for "{}" check (1)'.format(expected, name)
         val_len = len(expected.split())
         if val_len == 3:
-            assert(expected == 'is not set' or expected == 'is not off'), \
+            assert(expected in ('is not set', 'is not off')), \
                    'invalid expected value "{}" for "{}" check (2)'.format(expected, name)
         elif val_len == 2:
             assert(expected == 'is present'), \
@@ -266,7 +266,7 @@ class AND(ComplexOptCheck):
                     self.result = 'FAIL: {} is not "{}"'.format(opt.name, opt.expected)
                 elif opt.result == 'FAIL: is not present':
                     self.result = 'FAIL: {} is not present'.format(opt.name)
-                elif opt.result == 'FAIL: is off' or opt.result == 'FAIL: is off, "0"':
+                elif opt.result in ('FAIL: is off', 'FAIL: is off, "0"'):
                     self.result = 'FAIL: {} is off'.format(opt.name)
                 elif opt.result == 'FAIL: is off, not found':
                     self.result = 'FAIL: {} is off, not found'.format(opt.name)
