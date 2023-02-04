@@ -635,6 +635,8 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'VT', 'is not set')] # recommended by Daniel Vetter in /issues/38
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD', 'is not set')] # recommended by Denis Efremov in /pull/54
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD_RAWCMD', 'is not set')] # recommended by Denis Efremov in /pull/62
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'NOUVEAU_LEGACY_CTX_SUPPORT', 'is not set')]
+                                            # recommended by Dave Airlie in kernel commit b30a43ac7132cdda
 
     # 'cut_attack_surface', 'clipos'
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
