@@ -1108,7 +1108,8 @@ def main():
         if mode == 'verbose':
             # print the parsed options without the checks (for debugging)
             all_parsed_options = parsed_kconfig_options # assignment does not copy
-            all_parsed_options.update(parsed_cmdline_options)
+            if args.cmdline:
+                all_parsed_options.update(parsed_cmdline_options)
             print_unknown_options(config_checklist, all_parsed_options)
 
         # finally print the results
