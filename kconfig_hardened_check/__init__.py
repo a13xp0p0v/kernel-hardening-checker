@@ -13,7 +13,7 @@
 # N.B. Hardening sysctls:
 #    kernel.kptr_restrict=2 (or 1?)
 #    kernel.dmesg_restrict=1 (also see the kconfig option)
-#    kernel.perf_event_paranoid=3
+#    kernel.perf_event_paranoid=2 (or 3 with a custom patch, see https://lwn.net/Articles/696216/)
 #    kernel.kexec_load_disabled=1
 #    kernel.yama.ptrace_scope=3
 #    user.max_user_namespaces=0
