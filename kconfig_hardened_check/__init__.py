@@ -720,8 +720,6 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nobti', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nopauth', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nomte', 'is not set')]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not off'),
-             CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
              CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not set'))]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not off'),
@@ -757,6 +755,7 @@ def add_cmdline_checks(l, arch):
 
     # 'self_protection', 'kspp'
     l += [CmdlineCheck('self_protection', 'kspp', 'nosmt', 'is present')]
+    l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')] # 'nosmt' by kspp + 'auto' by defconfig
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
