@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 
-
-# pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
-# pylint: disable=line-too-long,invalid-name,too-many-branches,too-many-statements
 """
 This tool helps me to check Linux kernel options against
 my security hardening preferences for X86_64, ARM64, X86_32, and ARM.
@@ -13,6 +10,7 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module performs input/output.
 """
 
+# pylint: disable=missing-function-docstring,line-too-long,invalid-name,too-many-branches,too-many-statements
 
 import sys
 from argparse import ArgumentParser

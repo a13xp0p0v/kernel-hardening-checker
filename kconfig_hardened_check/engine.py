@@ -10,8 +10,8 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module is the engine of checks.
 """
 
-# pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
-# pylint: disable=line-too-long,invalid-name,too-many-branches,too-many-statements
+# pylint: disable=missing-class-docstring,missing-function-docstring
+# pylint: disable=line-too-long,invalid-name,too-many-branches
 
 
 class OptCheck:

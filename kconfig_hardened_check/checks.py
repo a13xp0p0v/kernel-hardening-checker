@@ -43,8 +43,8 @@ This module contains knowledge for checks.
 #    amd_iommu=on
 #    efi=disable_early_pci_dma
 
-# pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
-# pylint: disable=line-too-long,invalid-name,too-many-branches,too-many-statements
+# pylint: disable=missing-function-docstring,line-too-long,invalid-name
+# pylint: disable=too-many-branches,too-many-statements,too-many-return-statements
 
 from .engine import KconfigCheck, CmdlineCheck, VersionCheck, OR, AND
 
