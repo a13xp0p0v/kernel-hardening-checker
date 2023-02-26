@@ -51,29 +51,29 @@ SIMPLE_OPTION_TYPES = ('kconfig', 'version', 'cmdline')
 class OptCheck:
     def __init__(self, reason, decision, name, expected):
         assert(name and name == name.strip() and len(name.split()) == 1), \
-               'invalid name "{}" for {}'.format(name, self.__class__.__name__)
+               f'invalid name "{name}" for {self.__class__.__name__}'
         self.name = name
 
         assert(decision and decision == decision.strip() and len(decision.split()) == 1), \
-               'invalid decision "{}" for "{}" check'.format(decision, name)
+               f'invalid decision "{decision}" for "{name}" check'
         self.decision = decision
 
         assert(reason and reason == reason.strip() and len(reason.split()) == 1), \
-               'invalid reason "{}" for "{}" check'.format(reason, name)
+               f'invalid reason "{reason}" for "{name}" check'
         self.reason = reason
 
         assert(expected and expected == expected.strip()), \
-               'invalid expected value "{}" for "{}" check (1)'.format(expected, name)
+               f'invalid expected value "{expected}" for "{name}" check (1)'
         val_len = len(expected.split())
         if val_len == 3:
             assert(expected in ('is not set', 'is not off')), \
-                   'invalid expected value "{}" for "{}" check (2)'.format(expected, name)
+                   f'invalid expected value "{expected}" for "{name}" check (2)'
         elif val_len == 2:
             assert(expected == 'is present'), \
-                   'invalid expected value "{}" for "{}" check (3)'.format(expected, name)
+                   f'invalid expected value "{expected}" for "{name}" check (3)'
         else:
             assert(val_len == 1), \
-                   'invalid expected value "{}" for "{}" check (4)'.format(expected, name)
+                   f'invalid expected value "{expected}" for "{name}" check (4)'
         self.expected = expected
 
         self.state = None
@@ -146,7 +146,7 @@ class CmdlineCheck(OptCheck):
 class VersionCheck:
     def __init__(self, ver_expected):
         assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 2), \
-               'invalid version "{}" for VersionCheck'.format(ver_expected)
+               f'invalid version "{ver_expected}" for VersionCheck'
         self.ver_expected = ver_expected
         self.ver = ()
         self.result = None
@@ -178,11 +178,11 @@ class ComplexOptCheck:
     def __init__(self, *opts):
         self.opts = opts
         assert(self.opts), \
-               'empty {} check'.format(self.__class__.__name__)
+               f'empty {self.__class__.__name__} check'
         assert(len(self.opts) != 1), \
-                'useless {} check: {}'.format(self.__class__.__name__, opts)
+               f'useless {self.__class__.__name__} check: {opts}'
         assert(isinstance(opts[0], (KconfigCheck, CmdlineCheck))), \
-               'invalid {} check: {}'.format(self.__class__.__name__, opts)
+               f'invalid {self.__class__.__name__} check: {opts}'
         self.result = None
 
     @property
@@ -241,7 +241,7 @@ class OR(ComplexOptCheck):
                     else:
                         # VersionCheck provides enough info
                         assert(opt.result.startswith('OK: version')), \
-                               'unexpected OK description "{}"'.format(opt.result)
+                               f'unexpected OK description "{opt.result}"'
                 return
         self.result = self.opts[0].result
 
@@ -274,7 +274,7 @@ class AND(ComplexOptCheck):
                     # VersionCheck provides enough info
                     self.result = opt.result
                     assert(opt.result.startswith('FAIL: version')), \
-                           'unexpected FAIL description "{}"'.format(opt.result)
+                           f'unexpected FAIL description "{opt.result}"'
                 return
 
 
@@ -830,7 +830,7 @@ def print_unknown_options(checklist, parsed_options):
                 continue
             for o3 in o2.opts:
                 assert(o3.type != 'complex'), \
-                       'unexpected ComplexOptCheck inside {}'.format(o2.name)
+                       f'unexpected ComplexOptCheck inside {o2.name}'
                 if hasattr(o3, 'name'):
                     known_options.append(o3.name)
 
@@ -889,11 +889,11 @@ def print_checklist(mode, checklist, with_results):
 
 def populate_simple_opt_with_data(opt, data, data_type):
     assert(opt.type != 'complex'), \
-           'unexpected ComplexOptCheck "{}"'.format(opt.name)
+           f'unexpected ComplexOptCheck "{opt.name}"'
     assert(opt.type in SIMPLE_OPTION_TYPES), \
-           'invalid opt type "{}"'.format(opt.type)
+           f'invalid opt type "{opt.type}"'
     assert(data_type in SIMPLE_OPTION_TYPES), \
-           'invalid data type "{}"'.format(data_type)
+           f'invalid data type "{data_type}"'
 
     if data_type != opt.type:
         return
@@ -902,7 +902,7 @@ def populate_simple_opt_with_data(opt, data, data_type):
         opt.state = data.get(opt.name, None)
     else:
         assert(data_type == 'version'), \
-               'unexpected data type "{}"'.format(data_type)
+               f'unexpected data type "{data_type}"'
         opt.ver = data
 
 
@@ -916,7 +916,7 @@ def populate_opt_with_data(opt, data, data_type):
                 populate_simple_opt_with_data(o, data, data_type)
     else:
         assert(opt.type in ('kconfig', 'cmdline')), \
-               'bad type "{}" for a simple check'.format(opt.type)
+               f'bad type "{opt.type}" for a simple check'
         populate_simple_opt_with_data(opt, data, data_type)
 
 
