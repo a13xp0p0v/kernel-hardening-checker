@@ -328,7 +328,7 @@ def detect_compiler(fname):
         return 'CLANG ' + clang_version, 'OK'
     if gcc_version != '0' and clang_version == '0':
         return 'GCC ' + gcc_version, 'OK'
-    sys.exit('[!] ERROR: invalid GCC_VERSION and CLANG_VERSION: {} {}'.format(gcc_version, clang_version))
+    sys.exit(f'[!] ERROR: invalid GCC_VERSION and CLANG_VERSION: {gcc_version} {clang_version}')
 
 
 def add_kconfig_checks(l, arch):
@@ -943,14 +943,14 @@ def parse_kconfig_file(parsed_options, fname):
             if opt_is_on.match(line):
                 option, value = line.split('=', 1)
                 if value == 'is not set':
-                    sys.exit('[!] ERROR: bad enabled kconfig option "{}"'.format(line))
+                    sys.exit(f'[!] ERROR: bad enabled kconfig option "{line}"')
             elif opt_is_off.match(line):
                 option, value = line[2:].split(' ', 1)
                 if value != 'is not set':
-                    sys.exit('[!] ERROR: bad disabled kconfig option "{}"'.format(line))
+                    sys.exit(f'[!] ERROR: bad disabled kconfig option "{line}"')
 
             if option in parsed_options:
-                sys.exit('[!] ERROR: kconfig option "{}" exists multiple times'.format(line))
+                sys.exit(f'[!] ERROR: kconfig option "{line}" exists multiple times')
 
             if option:
                 parsed_options[option] = value
@@ -1016,7 +1016,7 @@ def parse_cmdline_file(parsed_options, fname):
 
         line = f.readline()
         if line:
-            sys.exit('[!] ERROR: more than one line in "{}"'.format(fname))
+            sys.exit(f'[!] ERROR: more than one line in "{fname}"')
 
         for opt in opts:
             if '=' in opt:
@@ -1068,13 +1068,13 @@ def main():
 
         arch, msg = detect_arch(args.config, supported_archs)
         if not arch:
-            sys.exit('[!] ERROR: {}'.format(msg))
+            sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
             print(f'[+] Detected architecture: {arch}')
 
         kernel_version, msg = detect_kernel_version(args.config)
         if not kernel_version:
-            sys.exit('[!] ERROR: {}'.format(msg))
+            sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
             print(f'[+] Detected kernel version: {kernel_version[0]}.{kernel_version[1]}')
 
@@ -1123,7 +1123,7 @@ def main():
 
     if args.print:
         if mode in ('show_ok', 'show_fail'):
-            sys.exit('[!] ERROR: wrong mode "{}" for --print'.format(mode))
+            sys.exit(f'[!] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
