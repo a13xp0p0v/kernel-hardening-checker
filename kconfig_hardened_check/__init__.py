@@ -279,7 +279,7 @@ class AND(ComplexOptCheck):
 
 
 def detect_arch(fname, archs):
-    with open(fname, 'r') as f:
+    with open(fname, 'r', encoding='utf-8') as f:
         arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]*=y")
         arch = None
         for line in f.readlines():
@@ -296,7 +296,7 @@ def detect_arch(fname, archs):
 
 
 def detect_kernel_version(fname):
-    with open(fname, 'r') as f:
+    with open(fname, 'r', encoding='utf-8') as f:
         ver_pattern = re.compile("# Linux/.* Kernel Configuration")
         for line in f.readlines():
             if ver_pattern.match(line):
@@ -314,7 +314,7 @@ def detect_kernel_version(fname):
 def detect_compiler(fname):
     gcc_version = None
     clang_version = None
-    with open(fname, 'r') as f:
+    with open(fname, 'r', encoding='utf-8') as f:
         gcc_version_pattern = re.compile("CONFIG_GCC_VERSION=[0-9]*")
         clang_version_pattern = re.compile("CONFIG_CLANG_VERSION=[0-9]*")
         for line in f.readlines():
@@ -931,7 +931,7 @@ def perform_checks(checklist):
 
 
 def parse_kconfig_file(parsed_options, fname):
-    with open(fname, 'r') as f:
+    with open(fname, 'r', encoding='utf-8') as f:
         opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
         opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
 
@@ -1010,7 +1010,7 @@ def normalize_cmdline_options(option, value):
 
 
 def parse_cmdline_file(parsed_options, fname):
-    with open(fname, 'r') as f:
+    with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
         opts = line.split()
 
