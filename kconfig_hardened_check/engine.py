@@ -1,5 +1,15 @@
 #!/usr/bin/python3
 
+"""
+This tool helps me to check Linux kernel options against
+my security hardening preferences for X86_64, ARM64, X86_32, and ARM.
+Let the computers do their job!
+
+Author: Alexander Popov <alex.popov@linux.com>
+
+This module is the engine of checks.
+"""
+
 # pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring
 # pylint: disable=line-too-long,invalid-name,too-many-branches,too-many-statements
 
