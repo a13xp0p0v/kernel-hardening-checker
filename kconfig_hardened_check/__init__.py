@@ -116,9 +116,9 @@ class OptCheck:
             self.result = 'FAIL: "' + self.state + '"'
 
     def table_print(self, _mode, with_results):
-        print('{:<40}|{:^7}|{:^12}|{:^10}|{:^18}'.format(self.name, self.type, self.expected, self.decision, self.reason), end='')
+        print(f'{self.name:<40}|{self.type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
         if with_results:
-            print('| {}'.format(self.result), end='')
+            print(f'| {self.result}', end='')
 
     def json_dump(self, with_results):
         dump = [self.name, self.type, self.expected, self.decision, self.reason]
@@ -169,9 +169,9 @@ class VersionCheck:
 
     def table_print(self, _mode, with_results):
         ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
-        print('{:<91}'.format(ver_req), end='')
+        print(f'{ver_req:<91}', end='')
         if with_results:
-            print('| {}'.format(self.result), end='')
+            print(f'| {self.result}', end='')
 
 
 class ComplexOptCheck:
@@ -199,9 +199,9 @@ class ComplexOptCheck:
 
     def table_print(self, mode, with_results):
         if mode == 'verbose':
-            print('    {:87}'.format('<<< ' + self.__class__.__name__ + ' >>>'), end='')
+            print(f"    {'<<< ' + self.__class__.__name__ + ' >>>':87}", end='')
             if with_results:
-                print('| {}'.format(self.result), end='')
+                print(f'| {self.result}', end='')
             for o in self.opts:
                 print()
                 o.table_print(mode, with_results)
@@ -209,7 +209,7 @@ class ComplexOptCheck:
             o = self.opts[0]
             o.table_print(mode, False)
             if with_results:
-                print('| {}'.format(self.result), end='')
+                print(f'| {self.result}', end='')
 
     def json_dump(self, with_results):
         dump = self.opts[0].json_dump(False)
@@ -836,7 +836,7 @@ def print_unknown_options(checklist, parsed_options):
 
     for option, value in parsed_options.items():
         if option not in known_options:
-            print('[?] No check for option {} ({})'.format(option, value))
+            print(f'[?] No check for option {option} ({value})')
 
 
 def print_checklist(mode, checklist, with_results):
@@ -852,9 +852,9 @@ def print_checklist(mode, checklist, with_results):
     if with_results:
         sep_line_len += 30
     print('=' * sep_line_len)
-    print('{:^40}|{:^7}|{:^12}|{:^10}|{:^18}'.format('option name', 'type', 'desired val', 'decision', 'reason'), end='')
+    print(f"{'option name':^40}|{'type':^7}|{'desired val':^12}|{'decision':^10}|{'reason':^18}", end='')
     if with_results:
-        print('| {}'.format('check result'), end='')
+        print('| check result', end='')
     print()
     print('=' * sep_line_len)
 
@@ -884,7 +884,7 @@ def print_checklist(mode, checklist, with_results):
         if mode == 'show_fail':
             ok_suppressed = ' (suppressed in output)'
         if mode != 'json':
-            print('[+] Config check is finished: \'OK\' - {}{} / \'FAIL\' - {}{}'.format(ok_count, ok_suppressed, fail_count, fail_suppressed))
+            print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
 def populate_simple_opt_with_data(opt, data, data_type):
@@ -1053,7 +1053,7 @@ def main():
     if args.mode:
         mode = args.mode
         if mode != 'json':
-            print('[+] Special report mode: {}'.format(mode))
+            print(f'[+] Special report mode: {mode}')
 
     config_checklist = []
 
@@ -1062,28 +1062,28 @@ def main():
             sys.exit('[!] ERROR: --config and --print can\'t be used together')
 
         if mode != 'json':
-            print('[+] Kconfig file to check: {}'.format(args.config))
+            print(f'[+] Kconfig file to check: {args.config}')
             if args.cmdline:
-                print('[+] Kernel cmdline file to check: {}'.format(args.cmdline))
+                print(f'[+] Kernel cmdline file to check: {args.cmdline}')
 
         arch, msg = detect_arch(args.config, supported_archs)
         if not arch:
             sys.exit('[!] ERROR: {}'.format(msg))
         if mode != 'json':
-            print('[+] Detected architecture: {}'.format(arch))
+            print(f'[+] Detected architecture: {arch}')
 
         kernel_version, msg = detect_kernel_version(args.config)
         if not kernel_version:
             sys.exit('[!] ERROR: {}'.format(msg))
         if mode != 'json':
-            print('[+] Detected kernel version: {}.{}'.format(kernel_version[0], kernel_version[1]))
+            print(f'[+] Detected kernel version: {kernel_version[0]}.{kernel_version[1]}')
 
         compiler, msg = detect_compiler(args.config)
         if mode != 'json':
             if compiler:
-                print('[+] Detected compiler: {}'.format(compiler))
+                print(f'[+] Detected compiler: {compiler}')
             else:
-                print('[-] Can\'t detect the compiler: {}'.format(msg))
+                print(f'[-] Can\'t detect the compiler: {msg}')
 
         # add relevant kconfig checks to the checklist
         add_kconfig_checks(config_checklist, arch)
@@ -1128,7 +1128,7 @@ def main():
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
         if mode != 'json':
-            print('[+] Printing kernel security hardening preferences for {}...'.format(arch))
+            print(f'[+] Printing kernel security hardening preferences for {arch}...')
         print_checklist(mode, config_checklist, False)
         sys.exit(0)
 
