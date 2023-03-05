@@ -32,10 +32,11 @@ and functionality of userspace software. So for choosing these parameters consid
 the threat model of your Linux-based information system and perform thorough testing
 of its typical workload.
 
-## Repository mirrors
+## Repositories
 
- - At Codeberg: [https://codeberg.org/a13xp0p0v/kconfig-hardened-check](https://codeberg.org/a13xp0p0v/kconfig-hardened-check)
- - At GitFlic: [https://gitflic.ru/project/a13xp0p0v/kconfig-hardened-check](https://gitflic.ru/project/a13xp0p0v/kconfig-hardened-check)
+ - Main at GitHub <https://github.com/a13xp0p0v/kconfig-hardened-check>
+ - Mirror at Codeberg: <https://codeberg.org/a13xp0p0v/kconfig-hardened-check>
+ - Mirror at GitFlic: <https://gitflic.ru/project/a13xp0p0v/kconfig-hardened-check>
 
 ## Supported microarchitectures
 
