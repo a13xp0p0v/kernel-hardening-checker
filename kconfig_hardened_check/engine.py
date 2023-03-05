@@ -67,7 +67,7 @@ class OptCheck:
             elif self.state is None:
                 self.result = 'FAIL: is off, not found'
             else:
-                self.result = 'OK: is not off, "' + self.state + '"'
+                self.result = f'OK: is not off, "{self.state}"'
             return
 
         # handle the option value check
@@ -79,7 +79,7 @@ class OptCheck:
             else:
                 self.result = 'FAIL: is not found'
         else:
-            self.result = 'FAIL: "' + self.state + '"'
+            self.result = f'FAIL: "{self.state}"'
 
     def table_print(self, _mode, with_results):
         print(f'{self.name:<40}|{self.type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
@@ -123,18 +123,18 @@ class VersionCheck:
 
     def check(self):
         if self.ver[0] > self.ver_expected[0]:
-            self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+            self.result = f'OK: version >= {self.ver_expected[0]}.{self.ver_expected[1]}'
             return
         if self.ver[0] < self.ver_expected[0]:
-            self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+            self.result = f'FAIL: version < {self.ver_expected[0]}.{self.ver_expected[1]}'
             return
         if self.ver[1] >= self.ver_expected[1]:
-            self.result = 'OK: version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+            self.result = f'OK: version >= {self.ver_expected[0]}.{self.ver_expected[1]}'
             return
-        self.result = 'FAIL: version < ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+        self.result = f'FAIL: version < {self.ver_expected[0]}.{self.ver_expected[1]}'
 
     def table_print(self, _mode, with_results):
-        ver_req = 'kernel version >= ' + str(self.ver_expected[0]) + '.' + str(self.ver_expected[1])
+        ver_req = f'kernel version >= {self.ver_expected[0]}.{self.ver_expected[1]}'
         print(f'{ver_req:<91}', end='')
         if with_results:
             print(f'| {self.result}', end='')
@@ -165,7 +165,7 @@ class ComplexOptCheck:
 
     def table_print(self, mode, with_results):
         if mode == 'verbose':
-            print(f"    {'<<< ' + self.__class__.__name__ + ' >>>':87}", end='')
+            print(f'    {"<<< " + self.__class__.__name__ + " >>>":87}', end='')
             if with_results:
                 print(f'| {self.result}', end='')
             for o in self.opts:

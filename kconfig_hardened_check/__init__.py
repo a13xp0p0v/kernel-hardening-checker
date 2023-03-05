@@ -49,7 +49,7 @@ def detect_kernel_version(fname):
                 ver_str = parts[2]
                 ver_numbers = ver_str.split('.')
                 if len(ver_numbers) < 3 or not ver_numbers[0].isdigit() or not ver_numbers[1].isdigit():
-                    msg = 'failed to parse the version "' + ver_str + '"'
+                    msg = f'failed to parse the version "{ver_str}"'
                     return None, msg
                 return (int(ver_numbers[0]), int(ver_numbers[1])), None
         return None, 'no kernel version detected'
@@ -111,7 +111,7 @@ def print_checklist(mode, checklist, with_results):
     if with_results:
         sep_line_len += 30
     print('=' * sep_line_len)
-    print(f"{'option name':^40}|{'type':^7}|{'desired val':^12}|{'decision':^10}|{'reason':^18}", end='')
+    print(f'{"option name":^40}|{"type":^7}|{"desired val":^12}|{"decision":^10}|{"reason":^18}', end='')
     if with_results:
         print('| check result', end='')
     print()
