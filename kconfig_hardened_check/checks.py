@@ -486,6 +486,12 @@ def add_cmdline_checks(l, arch):
     # 'self_protection', 'kspp'
     l += [CmdlineCheck('self_protection', 'kspp', 'nosmt', 'is present')]
     l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')] # 'nosmt' by kspp + 'auto' by defconfig
+    l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
+    l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
+             AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
+                 CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set'),
+                 CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
@@ -495,10 +501,6 @@ def add_cmdline_checks(l, arch):
              AND(CmdlineCheck('self_protection', 'kspp', 'page_poison', '1'),
                  KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'slub_debug', 'P')))]
-    l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
-             AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
-                 CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set'),
-                 CmdlineCheck('self_protection', 'clipos', 'slub_merge', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
