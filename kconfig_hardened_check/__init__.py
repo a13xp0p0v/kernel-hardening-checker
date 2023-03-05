@@ -30,11 +30,11 @@ def detect_arch(fname, archs):
             if arch_pattern.match(line):
                 option, _ = line[7:].split('=', 1)
                 if option in archs:
-                    if not arch:
+                    if arch is None:
                         arch = option
                     else:
                         return None, 'more than one supported architecture is detected'
-        if not arch:
+        if arch is None:
             return None, 'failed to detect architecture'
         return arch, 'OK'
 
@@ -66,7 +66,7 @@ def detect_compiler(fname):
                 gcc_version = line[19:-1]
             if clang_version_pattern.match(line):
                 clang_version = line[21:-1]
-    if not gcc_version or not clang_version:
+    if gcc_version is None or clang_version is None:
         return None, 'no CONFIG_GCC_VERSION or CONFIG_CLANG_VERSION'
     if gcc_version == '0' and clang_version != '0':
         return 'CLANG ' + clang_version, 'OK'
@@ -230,13 +230,13 @@ def main():
                 print(f'[+] Kernel cmdline file to check: {args.cmdline}')
 
         arch, msg = detect_arch(args.config, supported_archs)
-        if not arch:
+        if arch is None:
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
             print(f'[+] Detected architecture: {arch}')
 
         kernel_version, msg = detect_kernel_version(args.config)
-        if not kernel_version:
+        if kernel_version is None:
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
             print(f'[+] Detected kernel version: {kernel_version[0]}.{kernel_version[1]}')
