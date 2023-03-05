@@ -62,7 +62,7 @@ class OptCheck:
         if self.expected == 'is not off':
             if self.state == 'off':
                 self.result = 'FAIL: is off'
-            if self.state == '0':
+            elif self.state == '0':
                 self.result = 'FAIL: is off, "0"'
             elif self.state is None:
                 self.result = 'FAIL: is off, not found'
