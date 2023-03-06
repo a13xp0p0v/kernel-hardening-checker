@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      max-parallel: 4
+      max-parallel: 3
       fail-fast: false
       matrix:
         # Current ubuntu-latest (Ubuntu 22.04) provides the following versions of Python:
