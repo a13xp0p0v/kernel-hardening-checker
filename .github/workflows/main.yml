@@ -21,7 +21,7 @@ jobs:
     steps:
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -48,7 +48,7 @@ jobs:
         echo -e "\n>>>>> checking $COUNT configs is done <<<<<"
 
     - name: Get source code for collecting coverage
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Collect coverage for the basic functionality
       run: |
@@ -157,9 +157,9 @@ jobs:
         coverage xml -i -o coverage.xml
 
     - name: Handle coverage
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
       with:
-        file: ./coverage.xml
+        files: ./coverage.xml
         flags: functional_test
         name: codecov-umbrella
         fail_ci_if_error: true
