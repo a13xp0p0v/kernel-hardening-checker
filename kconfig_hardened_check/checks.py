@@ -468,9 +468,6 @@ def add_cmdline_checks(l, arch):
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
              AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                  CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kvm.nx_huge_pages', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'kvm.nx_huge_pages', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'kernel'),
                  CmdlineCheck('self_protection', 'my', 'ssbd', 'force-on'),
