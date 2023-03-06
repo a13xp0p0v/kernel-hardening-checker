@@ -142,8 +142,7 @@ def print_checklist(mode, checklist, with_results):
             fail_suppressed = ' (suppressed in output)'
         if mode == 'show_fail':
             ok_suppressed = ' (suppressed in output)'
-        if mode != 'json':
-            print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
+        print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
 def parse_kconfig_file(parsed_options, fname):
