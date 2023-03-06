@@ -44,7 +44,7 @@ This module contains knowledge for checks.
 #    efi=disable_early_pci_dma
 
 # pylint: disable=missing-function-docstring,line-too-long,invalid-name
-# pylint: disable=too-many-branches,too-many-statements,too-many-return-statements
+# pylint: disable=too-many-branches,too-many-statements
 
 from .engine import KconfigCheck, CmdlineCheck, VersionCheck, OR, AND
 
@@ -546,47 +546,27 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('cut_attack_surface', 'my', 'sysrq_always_enabled', 'is not set')]
 
 
+no_kstrtobool_options = [
+    'debugfs', # See debugfs_kernel() in fs/debugfs/inode.c
+    'mitigations', # See mitigations_parse_cmdline() in kernel/cpu.c
+    'pti', # See pti_check_boottime_disable() in arch/x86/mm/pti.c
+    'spectre_v2', # See spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spectre_v2_user', # See spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spec_store_bypass_disable', # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'l1tf', # See l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'mds', # See mds_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'tsx_async_abort', # See tsx_async_abort_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'srbds', # See srbds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'mmio_stale_data', # See mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'retbleed', # See retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'tsx' # See tsx_init() in arch/x86/kernel/cpu/tsx.c
+]
+
+
 def normalize_cmdline_options(option, value):
     # Don't normalize the cmdline option values if
     # the Linux kernel doesn't use kstrtobool() for them
-    if option == 'debugfs':
-        # See debugfs_kernel() in fs/debugfs/inode.c
-        return value
-    if option == 'mitigations':
-        # See mitigations_parse_cmdline() in kernel/cpu.c
-        return value
-    if option == 'pti':
-        # See pti_check_boottime_disable() in arch/x86/mm/pti.c
-        return value
-    if option == 'spectre_v2':
-        # See spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'spectre_v2_user':
-        # See spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'spec_store_bypass_disable':
-        # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'l1tf':
-        # See l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'mds':
-        # See mds_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'tsx_async_abort':
-        # See tsx_async_abort_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'srbds':
-        # See srbds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'mmio_stale_data':
-        # See mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'retbleed':
-        # See retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-        return value
-    if option == 'tsx':
-        # See tsx_init() in arch/x86/kernel/cpu/tsx.c
+    if option in no_kstrtobool_options:
         return value
 
     # Implement a limited part of the kstrtobool() logic
