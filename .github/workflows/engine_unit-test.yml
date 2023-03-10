@@ -31,3 +31,12 @@ jobs:
       run: |
         coverage run --include=kconfig_hardened_check/engine.py,kconfig_hardened_check/test_engine.py -m unittest -v
         coverage xml -i -o coverage_unittest.xml
+
+    - name: Handle coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage_unittest.xml
+        flags: engine_unit-test
+        name: codecov-umbrella
+        fail_ci_if_error: true
+        verbose: true
