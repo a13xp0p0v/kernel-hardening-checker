@@ -19,4 +19,3 @@ class TestEngine(unittest.TestCase):
 
     def test_isupper(self):
         self.assertTrue('FOO'.isupper())
-        self.assertTrue('Foo'.isupper())
