@@ -27,6 +27,11 @@ jobs:
     - name: Get source code for collecting coverage
       uses: actions/checkout@v3
 
+    - name: Install coverage
+      run: |
+        python -m pip install --upgrade pip
+        pip install coverage
+
     - name: Run unit-tests and collect coverage
       run: |
         coverage run --include=kconfig_hardened_check/engine.py,kconfig_hardened_check/test_engine.py -m unittest -v
