@@ -2,8 +2,9 @@
 
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kconfig-hardened-check?label=release)](https://github.com/a13xp0p0v/kconfig-hardened-check/tags)
 [![functional test](https://github.com/a13xp0p0v/kconfig-hardened-check/workflows/functional%20test/badge.svg)](https://github.com/a13xp0p0v/kconfig-hardened-check/actions/workflows/functional_test.yml)
+[![functional test coverage](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/graph/badge.svg?flag=functional_test)](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check)
 [![engine unit-test](https://github.com/a13xp0p0v/kconfig-hardened-check/workflows/engine%20unit-test/badge.svg)](https://github.com/a13xp0p0v/kconfig-hardened-check/actions/workflows/engine_unit-test.yml)
-[![Coverage Status](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/graph/badge.svg)](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check)
+[![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/graph/badge.svg?flag=engine_unit-test)](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check)
 
 ## Motivation
 
