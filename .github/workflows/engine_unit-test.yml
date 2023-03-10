@@ -1,0 +1,33 @@
+name: engine unit-test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  engine_unit-test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        python-version: ['3.11']
+
+    steps:
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Get source code for collecting coverage
+      uses: actions/checkout@v3
+
+    - name: Run unit-tests and collect coverage
+      run: |
+        coverage run --include=kconfig_hardened_check/engine.py,kconfig_hardened_check/test_engine.py -m unittest -v
+        coverage xml -i -o coverage_unittest.xml

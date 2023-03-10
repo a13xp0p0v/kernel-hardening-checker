@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  check_all_configs:
+  functional_test:
 
     runs-on: ubuntu-latest
 
@@ -165,13 +165,3 @@ jobs:
         name: codecov-umbrella
         fail_ci_if_error: true
         verbose: true
-
-    - name: Erase coverage
-      run: |
-        coverage erase
-        rm ./coverage.xml
-
-    - name: Run unit-tests and collect coverage
-      run: |
-        coverage run --include=kconfig_hardened_check/engine.py,kconfig_hardened_check/test_engine.py -m unittest -v
-        coverage xml -i -o coverage_unittest.xml
