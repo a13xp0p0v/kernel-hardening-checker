@@ -162,6 +162,6 @@ jobs:
       with:
         files: ./coverage.xml
         flags: functional_test
-        name: codecov-umbrella
+        name: functional_test_upload
         fail_ci_if_error: true
         verbose: true
