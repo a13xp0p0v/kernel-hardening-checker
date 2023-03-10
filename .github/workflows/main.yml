@@ -166,3 +166,7 @@ jobs:
         fail_ci_if_error: true
         verbose: true
 
+    - name: Erase coverage
+      run: |
+        coverage erase
+        rm ./coverage.xml
