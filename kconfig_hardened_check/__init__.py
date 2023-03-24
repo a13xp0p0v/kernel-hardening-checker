@@ -101,8 +101,8 @@ def print_unknown_options(checklist, parsed_options):
 def print_checklist(mode, checklist, with_results):
     if mode == 'json':
         output = []
-        for o in checklist:
-            output.append(o.json_dump(with_results))
+        for opt in checklist:
+            output.append(opt.json_dump(with_results))
         print(json.dumps(output))
         return
 
@@ -258,10 +258,12 @@ def main():
         parsed_kconfig_options = OrderedDict()
         parse_kconfig_file(parsed_kconfig_options, args.config)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
+
+        # populate the checklist with the kernel version data
         populate_with_data(config_checklist, kernel_version, 'version')
 
         if args.cmdline:
-            # populate the checklist with the parsed kconfig data
+            # populate the checklist with the parsed cmdline data
             parsed_cmdline_options = OrderedDict()
             parse_cmdline_file(parsed_cmdline_options, args.cmdline)
             populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
