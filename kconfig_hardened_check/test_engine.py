@@ -92,5 +92,21 @@ class TestEngine(unittest.TestCase):
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"]]
         )
 
+    def test_kconfig_fail(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2')]
 
+        # 2. prepare the parsed kconfig options
+        parsed_kconfig_options = OrderedDict()
+        parsed_kconfig_options['CONFIG_NAME_2'] = 'UNexpected_2'
 
+        # 3. run the engine
+        result = []
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None, result)
+
+        # 4. check that the results are correct
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_2", "kconfig", "expected_2", "decision_2", "reason_2", "FAIL: \"UNexpected_2\""]]
+        )
