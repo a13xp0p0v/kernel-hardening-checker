@@ -10,6 +10,8 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module performs unit-testing of the kconfig-hardened-check engine.
 """
 
+# pylint: disable=missing-function-docstring,line-too-long
+
 import unittest
 from collections import OrderedDict
 import json
