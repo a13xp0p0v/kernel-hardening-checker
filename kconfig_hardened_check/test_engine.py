@@ -16,7 +16,8 @@ import json
 from .engine import KconfigCheck, CmdlineCheck, populate_with_data, perform_checks
 
 class TestEngine(unittest.TestCase):
-    def run_engine(self, checklist, parsed_kconfig_options, parsed_cmdline_options, kernel_version):
+    @staticmethod
+    def run_engine(checklist, parsed_kconfig_options, parsed_cmdline_options, kernel_version):
         # populate the checklist with data
         populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
         populate_with_data(checklist, parsed_cmdline_options, 'cmdline')
