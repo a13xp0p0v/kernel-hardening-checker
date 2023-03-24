@@ -53,9 +53,12 @@ class TestEngine(unittest.TestCase):
                    parsed_kconfig_options, parsed_cmdline_options, kernel_version,
                    result):
         # populate the checklist with data
-        populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
-        populate_with_data(checklist, parsed_cmdline_options, 'cmdline')
-        populate_with_data(checklist, kernel_version, 'version')
+        if parsed_kconfig_options:
+            populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
+        if parsed_cmdline_options:
+            populate_with_data(checklist, parsed_cmdline_options, 'cmdline')
+        if kernel_version:
+            populate_with_data(checklist, kernel_version, 'version')
 
         # now everything is ready, perform the checks
         perform_checks(checklist)
