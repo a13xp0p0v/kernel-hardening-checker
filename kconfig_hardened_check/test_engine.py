@@ -47,7 +47,9 @@ class TestEngine(unittest.TestCase):
     """
 
     @staticmethod
-    def run_engine(checklist, parsed_kconfig_options, parsed_cmdline_options, kernel_version):
+    def run_engine(checklist,
+                   parsed_kconfig_options, parsed_cmdline_options, kernel_version,
+                   result):
         # populate the checklist with data
         populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
         populate_with_data(checklist, parsed_cmdline_options, 'cmdline')
@@ -56,18 +58,17 @@ class TestEngine(unittest.TestCase):
         # now everything is ready, perform the checks
         perform_checks(checklist)
 
-        # print the results in JSON
-        output = []
-        print('JSON:')
-        for opt in checklist:
-            output.append(opt.json_dump(True)) # with_results
-        print(json.dumps(output))
-
         # print the table with the results
         print('TABLE:')
         for opt in checklist:
             opt.table_print(None, True) # default mode, with_results
             print()
+
+        # print the results in JSON
+        print('JSON:')
+        for opt in checklist:
+            result.append(opt.json_dump(True)) # with_results
+        print(json.dumps(result))
         print()
 
     def test_1(self):
