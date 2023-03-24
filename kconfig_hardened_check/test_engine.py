@@ -151,3 +151,20 @@ class TestEngine(unittest.TestCase):
                 result,
                 [["name_4", "cmdline", "expected_4", "decision_4", "reason_4", "FAIL: \"UNexpected_4\""]]
         )
+
+    def test_kconfig_not_found(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5')]
+        config_checklist += [KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'is not set')]
+
+        # 2. run the engine
+        result = []
+        self.run_engine(config_checklist, None, None, None, result)
+
+        # 3. check that the results are correct
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: is not found"],
+                 ["CONFIG_NAME_6", "kconfig", "is not set", "decision_6", "reason_6", "OK: is not found"]]
+        )
