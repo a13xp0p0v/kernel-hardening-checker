@@ -110,3 +110,41 @@ class TestEngine(unittest.TestCase):
                 result,
                 [["CONFIG_NAME_2", "kconfig", "expected_2", "decision_2", "reason_2", "FAIL: \"UNexpected_2\""]]
         )
+
+    def test_cmdline_ok(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [CmdlineCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
+
+        # 2. prepare the parsed cmdline options
+        parsed_cmdline_options = OrderedDict()
+        parsed_cmdline_options['name_3'] = 'expected_3'
+
+        # 3. run the engine
+        result = []
+        self.run_engine(config_checklist, None, parsed_cmdline_options, None, result)
+
+        # 4. check that the results are correct
+        self.assertEqual(
+                result,
+                [["name_3", "cmdline", "expected_3", "decision_3", "reason_3", "OK"]]
+        )
+
+    def test_cmdline_fail(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [CmdlineCheck('reason_4', 'decision_4', 'name_4', 'expected_4')]
+
+        # 2. prepare the parsed cmdline options
+        parsed_cmdline_options = OrderedDict()
+        parsed_cmdline_options['name_4'] = 'UNexpected_4'
+
+        # 3. run the engine
+        result = []
+        self.run_engine(config_checklist, None, parsed_cmdline_options, None, result)
+
+        # 4. check that the results are correct
+        self.assertEqual(
+                result,
+                [["name_4", "cmdline", "expected_4", "decision_4", "reason_4", "FAIL: \"UNexpected_4\""]]
+        )
