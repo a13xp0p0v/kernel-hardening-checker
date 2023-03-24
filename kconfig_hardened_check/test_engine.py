@@ -15,7 +15,7 @@ This module performs unit-testing of the kconfig-hardened-check engine.
 import unittest
 from collections import OrderedDict
 import json
-from .engine import KconfigCheck, CmdlineCheck, populate_with_data, perform_checks
+from .engine import KconfigCheck, CmdlineCheck, OR, AND, populate_with_data, perform_checks
 
 
 class TestEngine(unittest.TestCase):
@@ -127,4 +127,66 @@ class TestEngine(unittest.TestCase):
                  ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"UNexpected_2\""],
                  ["name_3", "cmdline", "expected_3", "decision_3", "reason_3", "FAIL: is not found"],
                  ["name_4", "cmdline", "is not set", "decision_4", "reason_4", "OK: is not found"]]
+        )
+
+    def test_OR(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
+                                KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'))]
+        config_checklist += [OR(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
+                                KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'))]
+        config_checklist += [OR(KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5'),
+                                KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'))]
+
+        # 2. prepare the parsed kconfig options
+        parsed_kconfig_options = OrderedDict()
+        parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
+        parsed_kconfig_options['CONFIG_NAME_2'] = 'UNexpected_2'
+        parsed_kconfig_options['CONFIG_NAME_3'] = 'UNexpected_3'
+        parsed_kconfig_options['CONFIG_NAME_4'] = 'expected_4'
+        parsed_kconfig_options['CONFIG_NAME_5'] = 'UNexpected_5'
+        parsed_kconfig_options['CONFIG_NAME_6'] = 'UNexpected_6'
+
+        # 3. run the engine
+        result = []
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None, result)
+
+        # 4. check that the results are correct
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
+                 ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "OK: CONFIG_NAME_4 is \"expected_4\""],
+                 ["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: \"UNexpected_5\""]]
+        )
+
+    def test_AND(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [AND(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
+                                KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'))]
+        config_checklist += [AND(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
+                                KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'))]
+        config_checklist += [AND(KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5'),
+                                KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'))]
+
+        # 2. prepare the parsed kconfig options
+        parsed_kconfig_options = OrderedDict()
+        parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
+        parsed_kconfig_options['CONFIG_NAME_2'] = 'expected_2'
+        parsed_kconfig_options['CONFIG_NAME_3'] = 'expected_3'
+        parsed_kconfig_options['CONFIG_NAME_4'] = 'UNexpected_4'
+        parsed_kconfig_options['CONFIG_NAME_5'] = 'UNexpected_5'
+        parsed_kconfig_options['CONFIG_NAME_6'] = 'expected_6'
+
+        # 3. run the engine
+        result = []
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None, result)
+
+        # 4. check that the results are correct
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
+                 ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "FAIL: CONFIG_NAME_4 is not \"expected_4\""],
+                 ["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: \"UNexpected_5\""]]
         )
