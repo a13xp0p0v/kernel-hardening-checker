@@ -71,28 +71,24 @@ class TestEngine(unittest.TestCase):
         print(json.dumps(result))
         print()
 
-    def test_1(self):
+    def test_kconfig_ok(self):
         # 1. prepare the checklist
         config_checklist = []
-        config_checklist += [KconfigCheck('reason_1', 'decision_1', 'KCONFIG_NAME', 'expected_1')]
-        config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'cmdline_name', 'expected_2')]
+        config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
-        parsed_kconfig_options['CONFIG_KCONFIG_NAME'] = 'UNexpected_1'
+        parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
 
-        # 3. prepare the parsed cmdline options
-        parsed_cmdline_options = OrderedDict()
-        parsed_cmdline_options['cmdline_name'] = 'expected_2'
+        # 3. run the engine
+        result = []
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None, result)
 
-        # 4. prepare the kernel version
-        kernel_version = (42, 43)
+        # 4. check that the results are correct
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"]]
+        )
 
-        # 5. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, kernel_version)
 
-        # 6. check that the results are correct
-        self.assertEqual('foo'.upper(), 'FOO')
 
-    def test_2(self):
-        self.assertTrue('FOO'.isupper())
