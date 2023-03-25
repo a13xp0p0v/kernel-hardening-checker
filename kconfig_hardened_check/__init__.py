@@ -12,6 +12,7 @@ This module performs input/output.
 
 # pylint: disable=missing-function-docstring,line-too-long,invalid-name,too-many-branches,too-many-statements
 
+import gzip
 import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
@@ -22,8 +23,16 @@ from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_op
 from .engine import populate_with_data, perform_checks
 
 
+def _open(file: str, *args, **kwargs):
+    open_method = open
+    if file.endswith(".gz"):
+        open_method = gzip.open
+
+    return open_method(file, *args, **kwargs)
+
+
 def detect_arch(fname, archs):
-    with open(fname, 'r', encoding='utf-8') as f:
+    with _open(fname, 'rt', encoding='utf-8') as f:
         arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]*=y")
         arch = None
         for line in f.readlines():
@@ -40,7 +49,7 @@ def detect_arch(fname, archs):
 
 
 def detect_kernel_version(fname):
-    with open(fname, 'r', encoding='utf-8') as f:
+    with _open(fname, 'rt', encoding='utf-8') as f:
         ver_pattern = re.compile("# Linux/.* Kernel Configuration")
         for line in f.readlines():
             if ver_pattern.match(line):
@@ -58,7 +67,7 @@ def detect_kernel_version(fname):
 def detect_compiler(fname):
     gcc_version = None
     clang_version = None
-    with open(fname, 'r', encoding='utf-8') as f:
+    with _open(fname, 'rt', encoding='utf-8') as f:
         gcc_version_pattern = re.compile("CONFIG_GCC_VERSION=[0-9]*")
         clang_version_pattern = re.compile("CONFIG_CLANG_VERSION=[0-9]*")
         for line in f.readlines():
@@ -146,7 +155,7 @@ def print_checklist(mode, checklist, with_results):
 
 
 def parse_kconfig_file(parsed_options, fname):
-    with open(fname, 'r', encoding='utf-8') as f:
+    with _open(fname, 'rt', encoding='utf-8') as f:
         opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
         opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
 
