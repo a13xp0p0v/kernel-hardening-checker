@@ -15,7 +15,7 @@ This module performs unit-testing of the kconfig-hardened-check engine.
 import unittest
 from collections import OrderedDict
 import json
-from .engine import KconfigCheck, CmdlineCheck, OR, AND, populate_with_data, perform_checks
+from .engine import KconfigCheck, CmdlineCheck, VersionCheck, OR, AND, populate_with_data, perform_checks
 
 
 class TestEngine(unittest.TestCase):
@@ -245,3 +245,37 @@ class TestEngine(unittest.TestCase):
                  ["CONFIG_NAME_10", "kconfig", "expected_10", "decision_10", "reason_10", "FAIL: CONFIG_NAME_11 is off"],
                  ["CONFIG_NAME_12", "kconfig", "expected_12", "decision_12", "reason_12", "FAIL: CONFIG_NAME_13 is off, not found"]]
         )
+
+    def test_version(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
+                                VersionCheck((41, 101)))]
+        config_checklist += [AND(KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'),
+                                VersionCheck((44, 1)))]
+        config_checklist += [AND(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
+                                VersionCheck((42, 44)))]
+        config_checklist += [OR(KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'),
+                                VersionCheck((42, 43)))]
+
+        # 2. prepare the parsed kconfig options
+        parsed_kconfig_options = OrderedDict()
+        parsed_kconfig_options['CONFIG_NAME_2'] = 'expected_2'
+        parsed_kconfig_options['CONFIG_NAME_3'] = 'expected_3'
+
+        # 3. prepare the kernel version
+        kernel_version = (42, 43)
+
+        # 4. run the engine
+        result = []
+        self.run_engine(config_checklist, parsed_kconfig_options, None, kernel_version, result)
+
+        # 5. check that the results are correct
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK: version >= 41.101"],
+                 ["CONFIG_NAME_2", "kconfig", "expected_2", "decision_2", "reason_2", "FAIL: version < 44.1"],
+                 ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "FAIL: version < 42.44"],
+                 ["CONFIG_NAME_4", "kconfig", "expected_4", "decision_4", "reason_4", "OK: version >= 42.43"]]
+        )
+
