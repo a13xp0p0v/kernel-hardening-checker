@@ -85,12 +85,19 @@ class TestEngine(unittest.TestCase):
         config_checklist += [KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'is not set')]
         config_checklist += [KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'is present')]
         config_checklist += [KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'is present')]
+        config_checklist += [KconfigCheck('reason_7', 'decision_7', 'NAME_7', 'is not off')]
+        config_checklist += [KconfigCheck('reason_8', 'decision_8', 'NAME_8', 'is not off')]
+        config_checklist += [KconfigCheck('reason_9', 'decision_9', 'NAME_9', 'is not off')]
+        config_checklist += [KconfigCheck('reason_10', 'decision_10', 'NAME_10', 'is not off')]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
         parsed_kconfig_options['CONFIG_NAME_2'] = 'UNexpected_2'
         parsed_kconfig_options['CONFIG_NAME_5'] = 'UNexpected_5'
+        parsed_kconfig_options['CONFIG_NAME_7'] = 'really_not_off'
+        parsed_kconfig_options['CONFIG_NAME_8'] = 'off'
+        parsed_kconfig_options['CONFIG_NAME_9'] = '0'
 
         # 3. run the engine
         result = []
@@ -104,7 +111,11 @@ class TestEngine(unittest.TestCase):
                  ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "FAIL: is not found"],
                  ["CONFIG_NAME_4", "kconfig", "is not set", "decision_4", "reason_4", "OK: is not found"],
                  ["CONFIG_NAME_5", "kconfig", "is present", "decision_5", "reason_5", "OK: is present"],
-                 ["CONFIG_NAME_6", "kconfig", "is present", "decision_6", "reason_6", "FAIL: is not present"]]
+                 ["CONFIG_NAME_6", "kconfig", "is present", "decision_6", "reason_6", "FAIL: is not present"],
+                 ["CONFIG_NAME_7", "kconfig", "is not off", "decision_7", "reason_7", "OK: is not off, \"really_not_off\""],
+                 ["CONFIG_NAME_8", "kconfig", "is not off", "decision_8", "reason_8", "FAIL: is off"],
+                 ["CONFIG_NAME_9", "kconfig", "is not off", "decision_9", "reason_9", "FAIL: is off, \"0\""],
+                 ["CONFIG_NAME_10", "kconfig", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
         )
 
     def test_single_cmdline(self):
@@ -116,12 +127,19 @@ class TestEngine(unittest.TestCase):
         config_checklist += [CmdlineCheck('reason_4', 'decision_4', 'name_4', 'is not set')]
         config_checklist += [CmdlineCheck('reason_5', 'decision_5', 'name_5', 'is present')]
         config_checklist += [CmdlineCheck('reason_6', 'decision_6', 'name_6', 'is present')]
+        config_checklist += [CmdlineCheck('reason_7', 'decision_7', 'name_7', 'is not off')]
+        config_checklist += [CmdlineCheck('reason_8', 'decision_8', 'name_8', 'is not off')]
+        config_checklist += [CmdlineCheck('reason_9', 'decision_9', 'name_9', 'is not off')]
+        config_checklist += [CmdlineCheck('reason_10', 'decision_10', 'name_10', 'is not off')]
 
         # 2. prepare the parsed cmdline options
         parsed_cmdline_options = OrderedDict()
         parsed_cmdline_options['name_1'] = 'expected_1'
         parsed_cmdline_options['name_2'] = 'UNexpected_2'
         parsed_cmdline_options['name_5'] = ''
+        parsed_cmdline_options['name_7'] = ''
+        parsed_cmdline_options['name_8'] = 'off'
+        parsed_cmdline_options['name_9'] = '0'
 
         # 3. run the engine
         result = []
@@ -135,7 +153,11 @@ class TestEngine(unittest.TestCase):
                  ["name_3", "cmdline", "expected_3", "decision_3", "reason_3", "FAIL: is not found"],
                  ["name_4", "cmdline", "is not set", "decision_4", "reason_4", "OK: is not found"],
                  ["name_5", "cmdline", "is present", "decision_5", "reason_5", "OK: is present"],
-                 ["name_6", "cmdline", "is present", "decision_6", "reason_6", "FAIL: is not present"]]
+                 ["name_6", "cmdline", "is present", "decision_6", "reason_6", "FAIL: is not present"],
+                 ["name_7", "cmdline", "is not off", "decision_7", "reason_7", "OK: is not off, \"\""],
+                 ["name_8", "cmdline", "is not off", "decision_8", "reason_8", "FAIL: is off"],
+                 ["name_9", "cmdline", "is not off", "decision_9", "reason_9", "FAIL: is off, \"0\""],
+                 ["name_10", "cmdline", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
         )
 
     def test_OR(self):
