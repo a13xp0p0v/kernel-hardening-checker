@@ -138,6 +138,8 @@ class TestEngine(unittest.TestCase):
                                 KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'))]
         config_checklist += [OR(KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5'),
                                 KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'))]
+        config_checklist += [OR(KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'),
+                                KconfigCheck('reason_7', 'decision_7', 'NAME_7', 'is not set'))]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
@@ -157,7 +159,8 @@ class TestEngine(unittest.TestCase):
                 result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
                  ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "OK: CONFIG_NAME_4 is \"expected_4\""],
-                 ["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: \"UNexpected_5\""]]
+                 ["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: \"UNexpected_5\""],
+                 ["CONFIG_NAME_6", "kconfig", "expected_6", "decision_6", "reason_6", "OK: CONFIG_NAME_7 is not found"]]
         )
 
     def test_AND(self):
