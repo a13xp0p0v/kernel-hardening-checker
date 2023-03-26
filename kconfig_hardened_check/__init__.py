@@ -213,7 +213,7 @@ def main():
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print security hardening preferences for the selected architecture')
     parser.add_argument('-c', '--config',
-                        help='check the kernel kconfig file against these preferences')
+                        help='check the kernel kconfig file against these preferences (also supports *.gz files)')
     parser.add_argument('-l', '--cmdline',
                         help='check the kernel cmdline file against these preferences')
     parser.add_argument('-m', '--mode', choices=report_modes,

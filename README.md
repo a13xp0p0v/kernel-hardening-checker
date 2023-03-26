@@ -63,20 +63,19 @@ Some Linux distributions also provide `kconfig-hardened-check` as a package.
 
 ## Usage
 ```
-usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}]
-                              [-c CONFIG]
-                              [-l CMDLINE]
-                              [-m {verbose,json,show_ok,show_fail}]
+usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}] [-c CONFIG]
+                              [-l CMDLINE] [-m {verbose,json,show_ok,show_fail}]
 
 A tool for checking the security hardening options of the Linux kernel
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
                         print security hardening preferences for the selected architecture
   -c CONFIG, --config CONFIG
-                        check the kernel kconfig file against these preferences
+                        check the kernel kconfig file against these preferences (also supports
+                        *.gz files)
   -l CMDLINE, --cmdline CMDLINE
                         check the kernel cmdline file against these preferences
   -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
