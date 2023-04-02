@@ -98,7 +98,7 @@ class TestEngine(unittest.TestCase):
         sys.stdout = stdout_backup
         result.append(captured_output.getvalue())
 
-    def test_single_kconfig(self):
+    def test_simple_kconfig(self):
         # 1. prepare the checklist
         config_checklist = []
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
@@ -141,7 +141,7 @@ class TestEngine(unittest.TestCase):
                  ["CONFIG_NAME_10", "kconfig", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
         )
 
-    def test_single_cmdline(self):
+    def test_simple_cmdline(self):
         # 1. prepare the checklist
         config_checklist = []
         config_checklist += [CmdlineCheck('reason_1', 'decision_1', 'name_1', 'expected_1')]
@@ -184,7 +184,7 @@ class TestEngine(unittest.TestCase):
                  ["name_10", "cmdline", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
         )
 
-    def test_OR(self):
+    def test_complex_or(self):
         # 1. prepare the checklist
         config_checklist = []
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
@@ -227,7 +227,7 @@ class TestEngine(unittest.TestCase):
                  ["CONFIG_NAME_10", "kconfig", "expected_10", "decision_10", "reason_10", "OK: CONFIG_NAME_11 is not off"]]
         )
 
-    def test_AND(self):
+    def test_complex_and(self):
         # 1. prepare the checklist
         config_checklist = []
         config_checklist += [AND(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
