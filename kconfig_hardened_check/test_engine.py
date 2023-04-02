@@ -306,7 +306,7 @@ class TestEngine(unittest.TestCase):
                  ["CONFIG_NAME_4", "kconfig", "expected_4", "decision_4", "reason_4", "OK: version >= 42.43"]]
         )
 
-    def test_verbose(self):
+    def test_stdout(self):
         # 1. prepare the checklist
         config_checklist = []
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
@@ -330,6 +330,17 @@ class TestEngine(unittest.TestCase):
                 json_result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "FAIL: is not found"],
                  ["name_4", "cmdline", "expected_4", "decision_4", "reason_4", "FAIL: is not found"]]
+        )
+
+        stdout_result = []
+        self.get_engine_result(config_checklist, stdout_result, 'stdout')
+        self.assertEqual(
+                stdout_result,
+                [
+"\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | FAIL: is not found\
+name_4                                  |cmdline| expected_4 |decision_4|     reason_4     | FAIL: is not found\
+"               ]
         )
 
         stdout_result = []
