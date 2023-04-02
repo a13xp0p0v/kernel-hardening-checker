@@ -39,19 +39,16 @@ class TestEngine(unittest.TestCase):
         kernel_version = (42, 43)
 
         # 5. run the engine
-        result = []
-        self.run_engine(config_checklist,
-                        parsed_kconfig_options, parsed_cmdline_options, kernel_version,
-                        result)
+        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, kernel_version)
 
         # 6. check that the results are correct
-        # self.assertEqual(...
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
+        self.assertEqual(...
     """
 
     @staticmethod
-    def run_engine(checklist,
-                   parsed_kconfig_options, parsed_cmdline_options, kernel_version,
-                   result):
+    def run_engine(checklist, parsed_kconfig_options, parsed_cmdline_options, kernel_version):
         # populate the checklist with data
         if parsed_kconfig_options:
             populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
@@ -71,10 +68,19 @@ class TestEngine(unittest.TestCase):
 
         # print the results in JSON
         print('JSON:')
+        result = []
         for opt in checklist:
             result.append(opt.json_dump(True)) # with_results
         print(json.dumps(result))
         print()
+
+    @staticmethod
+    def get_engine_result(checklist, result, result_type):
+        assert(result_type in ('table', 'json')), \
+               f'invalid result type "{result_type}"'
+        if result_type == 'json':
+            for opt in checklist:
+                result.append(opt.json_dump(True)) # with_results
 
     def test_single_kconfig(self):
         # 1. prepare the checklist
@@ -100,10 +106,11 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_9'] = '0'
 
         # 3. run the engine
-        result = []
-        self.run_engine(config_checklist, parsed_kconfig_options, None, None, result)
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None)
 
         # 4. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
@@ -142,10 +149,11 @@ class TestEngine(unittest.TestCase):
         parsed_cmdline_options['name_9'] = '0'
 
         # 3. run the engine
-        result = []
-        self.run_engine(config_checklist, None, parsed_cmdline_options, None, result)
+        self.run_engine(config_checklist, None, parsed_cmdline_options, None)
 
         # 4. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
                 [["name_1", "cmdline", "expected_1", "decision_1", "reason_1", "OK"],
@@ -188,10 +196,11 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_11'] = 'really_not_off'
 
         # 3. run the engine
-        result = []
-        self.run_engine(config_checklist, parsed_kconfig_options, None, None, result)
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None)
 
         # 4. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
@@ -232,10 +241,11 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_12'] = 'expected_12'
 
         # 3. run the engine
-        result = []
-        self.run_engine(config_checklist, parsed_kconfig_options, None, None, result)
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None)
 
         # 4. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
@@ -267,10 +277,11 @@ class TestEngine(unittest.TestCase):
         kernel_version = (42, 43)
 
         # 4. run the engine
-        result = []
-        self.run_engine(config_checklist, parsed_kconfig_options, None, kernel_version, result)
+        self.run_engine(config_checklist, parsed_kconfig_options, None, kernel_version)
 
         # 5. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK: version >= 41.101"],
