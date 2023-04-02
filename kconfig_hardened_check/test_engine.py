@@ -13,6 +13,8 @@ This module performs unit-testing of the kconfig-hardened-check engine.
 # pylint: disable=missing-function-docstring,line-too-long
 
 import unittest
+import io
+import sys
 from collections import OrderedDict
 import json
 from .engine import KconfigCheck, CmdlineCheck, VersionCheck, OR, AND, populate_with_data, perform_checks
@@ -63,8 +65,9 @@ class TestEngine(unittest.TestCase):
         # print the table with the results
         print('TABLE:')
         for opt in checklist:
-            opt.table_print(None, True) # default mode, with_results
+            opt.table_print('verbose', True) # verbose mode, with_results
             print()
+            print('=' * 121)
 
         # print the results in JSON
         print('JSON:')
@@ -76,11 +79,21 @@ class TestEngine(unittest.TestCase):
 
     @staticmethod
     def get_engine_result(checklist, result, result_type):
-        assert(result_type in ('table', 'json')), \
+        assert(result_type in ('json', 'stdout')), \
                f'invalid result type "{result_type}"'
+
         if result_type == 'json':
             for opt in checklist:
                 result.append(opt.json_dump(True)) # with_results
+            return
+
+        captured_output = io.StringIO()
+        stdout_backup = sys.stdout
+        sys.stdout = captured_output
+        for opt in checklist:
+            opt.table_print('verbose', True) # verbose mode, with_results
+        sys.stdout = stdout_backup
+        result.append(captured_output.getvalue())
 
     def test_single_kconfig(self):
         # 1. prepare the checklist
