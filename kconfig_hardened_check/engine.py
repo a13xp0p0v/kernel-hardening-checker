@@ -255,7 +255,7 @@ def populate_simple_opt_with_data(opt, data, data_type):
     assert(data_type in SIMPLE_OPTION_TYPES), \
            f'invalid data type "{data_type}"'
     assert(data), \
-           f'empty data'
+           'empty data'
 
     if data_type != opt.type:
         return
