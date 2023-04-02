@@ -79,7 +79,7 @@ class TestEngine(unittest.TestCase):
 
     @staticmethod
     def get_engine_result(checklist, result, result_type):
-        assert(result_type in ('json', 'stdout')), \
+        assert(result_type in ('json', 'stdout', 'stdout_verbose')), \
                f'invalid result type "{result_type}"'
 
         if result_type == 'json':
@@ -91,7 +91,10 @@ class TestEngine(unittest.TestCase):
         stdout_backup = sys.stdout
         sys.stdout = captured_output
         for opt in checklist:
-            opt.table_print('verbose', True) # verbose mode, with_results
+            if result_type == 'stdout_verbose':
+                opt.table_print('verbose', True) # verbose mode, with_results
+            else:
+                opt.table_print(None, True) # normal mode, with_results
         sys.stdout = stdout_backup
         result.append(captured_output.getvalue())
 
@@ -330,7 +333,7 @@ class TestEngine(unittest.TestCase):
         )
 
         stdout_result = []
-        self.get_engine_result(config_checklist, stdout_result, 'stdout')
+        self.get_engine_result(config_checklist, stdout_result, 'stdout_verbose')
         self.assertEqual(
                 stdout_result,
                 [
