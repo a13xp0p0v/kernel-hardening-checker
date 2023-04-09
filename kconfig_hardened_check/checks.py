@@ -394,10 +394,6 @@ def add_kconfig_checks(l, arch):
              modules_not_set)]
 
     # 'harden_userspace'
-    if arch in ('X86_64', 'ARM64', 'X86_32'):
-        l += [KconfigCheck('harden_userspace', 'defconfig', 'INTEGRITY', 'y')]
-    if arch == 'ARM':
-        l += [KconfigCheck('harden_userspace', 'my', 'INTEGRITY', 'y')]
     if arch == 'ARM64':
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_BTI', 'y')]
