@@ -31,8 +31,9 @@ This module contains knowledge for checks.
 #    fs.protected_regular=2
 #    fs.suid_dumpable=0
 #    kernel.modules_disabled=1
-#    kernel.randomize_va_space = 2
+#    kernel.randomize_va_space=2
 #    nosmt sysfs control file
+#    dev.tty.legacy_tiocsti=0
 #
 # Think of these boot params:
 #    module.sig_enforce=1
@@ -378,6 +379,7 @@ def add_kconfig_checks(l, arch):
     l += [bpf_syscall_not_set] # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'my'
+    l += [KconfigCheck('cut_attack_surface', 'my', 'LEGACY_TIOCSTI', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'my', 'LIVEPATCH', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'IP_DCCP', 'is not set')]
