@@ -283,6 +283,14 @@ def populate_with_data(checklist, data, data_type):
         populate_opt_with_data(opt, data, data_type)
 
 
+def override_expected_value(checklist, name, new_val):
+    for opt in checklist:
+        if opt.name == name:
+            assert(opt.type in ('kconfig', 'cmdline')), \
+                   f'overriding an expected value for "{opt.type}" checks is not supported yet'
+            opt.expected = new_val
+
+
 def perform_checks(checklist):
     for opt in checklist:
         opt.check()
