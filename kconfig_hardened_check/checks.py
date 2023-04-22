@@ -545,6 +545,9 @@ def add_cmdline_checks(l, arch):
     # 'cut_attack_surface', 'my'
     l += [CmdlineCheck('cut_attack_surface', 'my', 'sysrq_always_enabled', 'is not set')]
 
+    # 'harden_userspace'
+    l += [CmdlineCheck('harden_userspace', 'defconfig', 'norandmaps', 'is not set')]
+
 
 no_kstrtobool_options = [
     'debugfs', # See debugfs_kernel() in fs/debugfs/inode.c
