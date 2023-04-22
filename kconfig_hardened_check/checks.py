@@ -34,6 +34,7 @@ This module contains knowledge for checks.
 #    kernel.randomize_va_space=2
 #    nosmt sysfs control file
 #    dev.tty.legacy_tiocsti=0
+#    vm.mmap_rnd_bits=max (?)
 #
 # Think of these boot params:
 #    module.sig_enforce=1
@@ -404,10 +405,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_BTI', 'y')]
     if arch in ('ARM', 'X86_32'):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
-    if arch in ('X86_64', 'ARM64'):
-        l += [KconfigCheck('harden_userspace', 'clipos', 'ARCH_MMAP_RND_BITS', '32')]
-    if arch in ('X86_32', 'ARM'):
-        l += [KconfigCheck('harden_userspace', 'my', 'ARCH_MMAP_RND_BITS', '16')]
+    l += [KconfigCheck('harden_userspace', 'my', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
 
 
 def add_cmdline_checks(l, arch):

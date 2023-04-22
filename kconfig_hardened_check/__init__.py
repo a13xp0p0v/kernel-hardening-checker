@@ -20,7 +20,7 @@ import re
 import json
 from .__about__ import __version__
 from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options
-from .engine import populate_with_data, perform_checks
+from .engine import populate_with_data, perform_checks, override_expected_value
 
 
 def _open(file: str, *args, **kwargs):
@@ -276,6 +276,11 @@ def main():
             parsed_cmdline_options = OrderedDict()
             parse_cmdline_file(parsed_cmdline_options, args.cmdline)
             populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
+
+        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
+        mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
+        if mmap_rnd_bits_max:
+            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
 
         # now everything is ready, perform the checks
         perform_checks(config_checklist)
