@@ -253,9 +253,9 @@ def add_kconfig_checks(l, arch):
 
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
-        l += [KconfigCheck('security_policy', 'defconfig', 'SECURITY', 'y')] # and choose your favourite LSM
+        l += [KconfigCheck('security_policy', 'defconfig', 'SECURITY', 'y')]
     if arch == 'ARM':
-        l += [KconfigCheck('security_policy', 'kspp', 'SECURITY', 'y')] # and choose your favourite LSM
+        l += [KconfigCheck('security_policy', 'kspp', 'SECURITY', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_YAMA', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LANDLOCK', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DISABLE', 'is not set')]
@@ -265,6 +265,10 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
+    l += [OR(KconfigCheck('security_policy', 'my', 'SECURITY_SELINUX', 'y'),
+             KconfigCheck('security_policy', 'my', 'SECURITY_APPARMOR', 'y'),
+             KconfigCheck('security_policy', 'my', 'SECURITY_SMACK', 'y'),
+             KconfigCheck('security_policy', 'my', 'SECURITY_TOMOYO', 'y'))] # one of major LSMs implementing MAC
 
     # 'cut_attack_surface', 'defconfig'
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP', 'y')]
