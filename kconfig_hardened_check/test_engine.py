@@ -17,7 +17,7 @@ import io
 import sys
 from collections import OrderedDict
 import json
-from .engine import KconfigCheck, CmdlineCheck, VersionCheck, OR, AND, populate_with_data, perform_checks
+from .engine import KconfigCheck, CmdlineCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
 
 
 class TestEngine(unittest.TestCase):
@@ -363,4 +363,56 @@ name_4                                  |cmdline| expected_4 |decision_4|     re
 CONFIG_NAME_5                           |kconfig| expected_5 |decision_5|     reason_5     | FAIL: is not found\n\
 name_6                                  |cmdline| expected_6 |decision_6|     reason_6     | FAIL: \"UNexpected_6\"\
 "               ]
+        )
+
+    def test_value_overriding(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
+        config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
+
+        # 2. prepare the parsed kconfig options
+        parsed_kconfig_options = OrderedDict()
+        parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1_new'
+
+        # 3. prepare the parsed cmdline options
+        parsed_cmdline_options = OrderedDict()
+        parsed_cmdline_options['name_2'] = 'expected_2_new'
+
+        # 4. run the engine
+        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, None)
+
+        # 5. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "FAIL: \"expected_1_new\""],
+                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"expected_2_new\""]]
+        )
+
+        # 6. override expected value and perform the checks again
+        override_expected_value(config_checklist, "CONFIG_NAME_1", "expected_1_new")
+        perform_checks(config_checklist)
+
+        # 7. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_1", "kconfig", "expected_1_new", "decision_1", "reason_1", "OK"],
+                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"expected_2_new\""]]
+        )
+
+        # 8. override expected value and perform the checks again
+        override_expected_value(config_checklist, "name_2", "expected_2_new")
+        perform_checks(config_checklist)
+
+        # 9. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_1", "kconfig", "expected_1_new", "decision_1", "reason_1", "OK"],
+                 ["name_2", "cmdline", "expected_2_new", "decision_2", "reason_2", "OK"]]
         )
