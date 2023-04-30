@@ -308,8 +308,6 @@ def add_kconfig_checks(l, arch):
              devmem_not_set)] # refers to LOCKDOWN
     l += [AND(KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is not set'),
               KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is present'))]
-    if arch == 'X86_64':
-        l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y')] # 'vsyscall=none'
     if arch == 'ARM':
         l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
                  devmem_not_set)] # refers to LOCKDOWN
@@ -368,7 +366,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KSM', 'is not set')] # to prevent FLUSH+RELOAD attack
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KALLSYMS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_VSYSCALL_EMULATION', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KEXEC_FILE', 'is not set')] # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'USER_NS', 'is not set')] # user.max_user_namespaces=0
@@ -378,6 +375,11 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'COREDUMP', 'is not set')] # cut userspace attack surface
 #   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')] # no, IKCONFIG is needed for this check :)
+    if arch == 'X86_64':
+        l += [OR(KconfigCheck('cut_attack_surface', 'clipos', 'X86_VSYSCALL_EMULATION', 'is not set'),
+                 KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'))]
+                 # disabling X86_VSYSCALL_EMULATION turns vsyscall off completely,
+                 # and LEGACY_VSYSCALL_NONE can be changed at boot time via the cmdline parameter
 
     # 'cut_attack_surface', 'lockdown'
     l += [KconfigCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
@@ -537,6 +539,7 @@ def add_cmdline_checks(l, arch):
     # 'cut_attack_surface', 'kspp'
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
+                 KconfigCheck('cut_attack_surface', 'clipos', 'X86_VSYSCALL_EMULATION', 'is not set'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
                      CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'is not set')))]
 
