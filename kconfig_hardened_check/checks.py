@@ -35,6 +35,7 @@ This module contains knowledge for checks.
 #    nosmt sysfs control file
 #    dev.tty.legacy_tiocsti=0
 #    vm.mmap_rnd_bits=max (?)
+#    kernel.sysrq=0
 #
 # Think of these boot params:
 #    module.sig_enforce=1
