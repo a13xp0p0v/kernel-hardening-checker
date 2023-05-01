@@ -36,6 +36,7 @@ This module contains knowledge for checks.
 #    dev.tty.legacy_tiocsti=0
 #    vm.mmap_rnd_bits=max (?)
 #    kernel.sysrq=0
+#    abi.vsyscall32 (any value except 2)
 #
 # Think of these boot params:
 #    module.sig_enforce=1
@@ -545,6 +546,18 @@ def add_cmdline_checks(l, arch):
                  KconfigCheck('cut_attack_surface', 'clipos', 'X86_VSYSCALL_EMULATION', 'is not set'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
                      CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'is not set')))]
+        l += [OR(CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
+                 CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '0'),
+                 AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
+                     CmdlineCheck('cut_attack_surface', 'my', 'vdso32', 'is not set')))] # the vdso32 parameter must not be 2
+    if arch == 'X86_32':
+        l += [OR(CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
+                 CmdlineCheck('cut_attack_surface', 'my', 'vdso', '1'),
+                 CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '0'),
+                 CmdlineCheck('cut_attack_surface', 'my', 'vdso', '0'),
+                 AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
+                     CmdlineCheck('cut_attack_surface', 'my', 'vdso32', 'is not set'),
+                     CmdlineCheck('cut_attack_surface', 'my', 'vdso', 'is not set')))] # the vdso and vdso32 parameters must not be 2
 
     # 'cut_attack_surface', 'grsec'
     # The cmdline checks compatible with the kconfig options disabled by grsecurity...
