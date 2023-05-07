@@ -1,16 +1,13 @@
 # .woodpecker.yml
 pipeline:
-  hello-step:
+  unit-test:
     image: python:3
+    pull: true
     commands:
-      - echo "Hello, this is the engine unit-test"
-  build:
-    image: python:3
-    commands:
-      - echo "Building..."
+      - echo "Prepare the engine unit-test..."
       - python --version
-  a-test-step:
-    image: python:3
-    commands:
-      - echo "Testing..."
-      - ./bin/kconfig-hardened-check
+      - pip install --no-cache-dir coverage
+      - echo "Run unit-tests and collect coverage..."
+      - coverage run --include=kconfig_hardened_check/engine.py,kconfig_hardened_check/test_engine.py -m unittest -v -b
+      - echo "Show the coverage report..."
+      - coverage report
