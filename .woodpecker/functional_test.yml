@@ -1,0 +1,16 @@
+# .woodpecker.yml
+pipeline:
+  hello-step:
+    image: python:3
+    commands:
+      - echo "Hello, this is the functional test"
+  build:
+    image: python:3
+    commands:
+      - echo "Building..."
+      - python --version
+  a-test-step:
+    image: python:3
+    commands:
+      - echo "Testing..."
+      - ./bin/kconfig-hardened-check
