@@ -1,16 +1,16 @@
 # .woodpecker.yml
 pipeline:
-  hello-step:
+  installation-test:
     image: python:3
+    pull: true
     commands:
-      - echo "Hello, this is the functional test"
-  build:
-    image: python:3
-    commands:
-      - echo "Building..."
+      - echo "Prepare for the installation..."
+      - cd ..
+      - pwd
+      - ls -la
       - python --version
-  a-test-step:
-    image: python:3
-    commands:
-      - echo "Testing..."
-      - ./bin/kconfig-hardened-check
+      - echo "Install package via pip..."
+      - pip --verbose install --no-cache-dir git+https://github.com/a13xp0p0v/kconfig-hardened-check
+      - echo "Run the installed tool..."
+      - which kconfig-hardened-check
+      - kconfig-hardened-check
