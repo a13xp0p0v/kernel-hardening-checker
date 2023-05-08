@@ -37,7 +37,7 @@ jobs:
       run: |
         echo ">>>>> check all configs <<<<<"
         CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
-        KCONFIGS=`find $CONFIG_DIR -type f | grep "\.config"`
+        KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
         COUNT=0
         for C in $KCONFIGS
         do
@@ -50,108 +50,9 @@ jobs:
     - name: Get source code for collecting coverage
       uses: actions/checkout@v3
 
-    - name: Collect coverage for the basic functionality
+    - name: Run the functional tests and collect the coverage
       run: |
-        echo ">>>>> get help <<<<<"
-        coverage run -a --branch bin/kconfig-hardened-check
-        coverage run -a --branch bin/kconfig-hardened-check -h
-
-        echo ">>>>> get version <<<<<"
-        coverage run -a --branch bin/kconfig-hardened-check --version
-
-        echo ">>>>> print the security hardening preferences <<<<<"
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_64
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m verbose
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m json
-
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_32
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_32 -m verbose
-        coverage run -a --branch bin/kconfig-hardened-check -p X86_32 -m json
-
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM64
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM64 -m verbose
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM64 -m json
-
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM -m verbose
-        coverage run -a --branch bin/kconfig-hardened-check -p ARM -m json
-
-        echo ">>>>> check the example kconfig files and cmdline <<<<<"
-        cat /proc/cmdline
-        echo "l1tf=off mds=full randomize_kstack_offset=on iommu.passthrough=0" > ./cmdline_example
-        cat ./cmdline_example
-        CONFIG_DIR=`find . -name config_files`
-        KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
-        COUNT=0
-        for C in $KCONFIGS
-        do
-                COUNT=$(expr $COUNT + 1)
-                echo -e "\n>>>>> checking config number $COUNT <<<<<"
-                coverage run -a --branch bin/kconfig-hardened-check -c $C
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose > /dev/null
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -m verbose > /dev/null
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -m json
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -m show_ok
-                coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -m show_fail
-        done
-        echo -e "\n>>>>> checking $COUNT configs is done <<<<<"
-
-    - name: Collect coverage for error handling
-      run: |
-        echo ">>>>> lonely -l <<<<<"
-        ! coverage run -a --branch bin/kconfig-hardened-check -l /proc/cmdline
-
-        echo ">>>>> wrong modes for -p <<<<<"
-        ! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_ok
-        ! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_fail
-
-        echo ">>>>> -p and -c together <<<<<"
-        ! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config
-
-        cp kconfig_hardened_check/config_files/distros/fedora_34.config ./test.config
-
-        echo ">>>>> no kernel version <<<<<"
-        sed '3d' test.config > error.config
-        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
-
-        echo ">>>>> strange kernel version string <<<<<"
-        sed '3 s/5./version 5./' test.config > error.config
-        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
-
-        echo ">>>>> no arch <<<<<"
-        sed '305d' test.config > error.config
-        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
-
-        echo ">>>>> more than one arch <<<<<"
-        cp test.config error.config
-        echo 'CONFIG_ARM64=y' >> error.config
-        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
-
-        echo ">>>>> invalid disabled kconfig option <<<<<"
-        sed '28 s/is not set/is not set yet/' test.config > error.config
-        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
-
-        echo ">>>>> invalid enabled kconfig option <<<<<"
-        cp test.config error.config
-        echo 'CONFIG_FOO=is not set' >> error.config
-        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
-
-        echo ">>>>> one config option multiple times <<<<<"
-        cp test.config error.config
-        echo 'CONFIG_BUG=y' >> error.config
-        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
-
-        echo ">>>>> invalid compiler versions <<<<<"
-        cp test.config error.config
-        sed '8 s/CONFIG_CLANG_VERSION=0/CONFIG_CLANG_VERSION=120000/' test.config > error.config
-        ! coverage run -a --branch bin/kconfig-hardened-check -c error.config
-
-        echo ">>>>> multi-line cmdline file <<<<<"
-        echo 'hey man 1' > cmdline
-        echo 'hey man 2' >> cmdline
-        ! coverage run -a --branch bin/kconfig-hardened-check -c test.config -l cmdline
+        sh .github/workflows/functional_test.sh
 
     - name: Prepare final coverage report
       run: |
