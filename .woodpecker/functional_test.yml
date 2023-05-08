@@ -9,8 +9,14 @@ pipeline:
       - pwd
       - ls -la
       - python --version
-      - echo "Install package via pip..."
+      - echo "Install the package via pip..."
       - pip --verbose install --no-cache-dir git+https://github.com/a13xp0p0v/kconfig-hardened-check
       - echo "Run the installed tool..."
       - which kconfig-hardened-check
       - kconfig-hardened-check
+      - echo "Check all configs with the installed tool..."
+      - CONFIG_DIR=`find /usr/local/lib/ -name config_files`
+      - KCONFIGS=`find $CONFIG_DIR -type f | grep "\.config"`
+      - COUNT=0
+      - for C in $KCONFIGS; do COUNT=$(expr $COUNT + 1); echo ">>>>> checking kconfig number $COUNT <<<<<"; kconfig-hardened-check -c $C -l /proc/cmdline; done
+      - echo ">>>>> have checked $COUNT kconfigs <<<<<"
