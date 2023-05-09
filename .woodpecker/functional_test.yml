@@ -19,7 +19,7 @@ pipeline:
       - KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
       - COUNT=0
       - for C in $KCONFIGS; do COUNT=$(expr $COUNT + 1); echo ">>>>> checking kconfig number $COUNT <<<<<"; kconfig-hardened-check -c $C -l /proc/cmdline; done
-      - echo ">>>>> have checked $COUNT kconfigs <<<<<"
+      - echo "Have checked $COUNT kconfigs"
   functional-test-with-coverage:
     image: python:3
     pull: true
@@ -29,4 +29,5 @@ pipeline:
       - pip install --no-cache-dir coverage
       - echo "Run the functional tests and collect the coverage..."
       - sh .github/workflows/functional_test.sh
+      - echo "Show the coverage report..."
       - coverage report
