@@ -16,7 +16,7 @@ This module contains knowledge for checks.
 #    kernel.perf_event_paranoid=2 (or 3 with a custom patch, see https://lwn.net/Articles/696216/)
 #    kernel.kexec_load_disabled=1
 #    kernel.yama.ptrace_scope=3
-#    user.max_user_namespaces=0
+#    user.max_user_namespaces=0 (for Debian, also see kernel.unprivileged_userns_clone)
 #    what about bpf_jit_enable?
 #    kernel.unprivileged_bpf_disabled=1
 #    net.core.bpf_jit_harden=2
