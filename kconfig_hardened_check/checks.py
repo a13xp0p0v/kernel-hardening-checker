@@ -166,9 +166,9 @@ def add_kconfig_checks(l, arch):
     hardened_usercopy_is_set = KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
     l += [hardened_usercopy_is_set]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
-              hardened_usercopy_is_set)]
+              hardened_usercopy_is_set)] # usercopy whitelist violations should be prohibited
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_PAGESPAN', 'is not set'),
-              hardened_usercopy_is_set)]
+              hardened_usercopy_is_set)] # this debugging for HARDENED_USERCOPY is not needed for security
     l += [AND(KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_LATENT_ENTROPY', 'y'),
               gcc_plugins_support_is_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG', 'y'),
