@@ -37,6 +37,8 @@ This module contains knowledge for checks.
 #    vm.mmap_rnd_bits=max (?)
 #    kernel.sysrq=0
 #    abi.vsyscall32 (any value except 2)
+#    kernel.oops_limit (think about a proper value)
+#    kernel.warn_limit (think about a proper value)
 #
 # Think of these boot params:
 #    module.sig_enforce=1
