@@ -48,6 +48,7 @@ This module contains knowledge for checks.
 #    intel_iommu=on
 #    amd_iommu=on
 #    efi=disable_early_pci_dma
+#    cfi=
 
 # pylint: disable=missing-function-docstring,line-too-long,invalid-name
 # pylint: disable=too-many-branches,too-many-statements
