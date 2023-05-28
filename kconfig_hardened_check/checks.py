@@ -116,6 +116,7 @@ def add_kconfig_checks(l, arch):
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'AMD_IOMMU', 'y'),
