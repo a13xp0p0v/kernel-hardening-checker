@@ -588,6 +588,7 @@ no_kstrtobool_options = [
     'srbds', # See srbds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'mmio_stale_data', # See mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'retbleed', # See retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
     'tsx' # See tsx_init() in arch/x86/kernel/cpu/tsx.c
 ]
 
