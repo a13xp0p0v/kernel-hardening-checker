@@ -490,7 +490,7 @@ def add_cmdline_checks(l, arch):
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
                      CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set')))]
     else:
-        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', '1'),
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'on'),
                  CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
 
     # 'self_protection', 'kspp'
@@ -588,6 +588,7 @@ no_kstrtobool_options = [
     'srbds', # See srbds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'mmio_stale_data', # See mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'retbleed', # See retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'rodata', # See set_debug_rodata() in init/main.c
     'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
     'tsx' # See tsx_init() in arch/x86/kernel/cpu/tsx.c
 ]
