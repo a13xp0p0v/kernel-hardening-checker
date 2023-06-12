@@ -165,14 +165,14 @@ def parse_kconfig_file(parsed_options, fname):
             if opt_is_on.match(line):
                 option, value = line.split('=', 1)
                 if value == 'is not set':
-                    sys.exit(f'[!] ERROR: bad enabled kconfig option "{line}"')
+                    sys.exit(f'[!] ERROR: bad enabled Kconfig option "{line}"')
             elif opt_is_off.match(line):
                 option, value = line[2:].split(' ', 1)
                 if value != 'is not set':
-                    sys.exit(f'[!] ERROR: bad disabled kconfig option "{line}"')
+                    sys.exit(f'[!] ERROR: bad disabled Kconfig option "{line}"')
 
             if option in parsed_options:
-                sys.exit(f'[!] ERROR: kconfig option "{line}" exists multiple times')
+                sys.exit(f'[!] ERROR: Kconfig option "{line}" exists multiple times')
 
             if option:
                 parsed_options[option] = value
@@ -200,7 +200,7 @@ def parse_cmdline_file(parsed_options, fname):
 def main():
     # Report modes:
     #   * verbose mode for
-    #     - reporting about unknown kernel options in the kconfig
+    #     - reporting about unknown kernel options in the Kconfig
     #     - verbose printing of ComplexOptCheck items
     #   * json mode for printing the results in JSON format
     report_modes = ['verbose', 'json', 'show_ok', 'show_fail']
@@ -208,14 +208,14 @@ def main():
     parser = ArgumentParser(prog='kconfig-hardened-check',
                             description='A tool for checking the security hardening options of the Linux kernel')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
-    parser.add_argument('-p', '--print', choices=supported_archs,
-                        help='print the security hardening recommendations for the selected microarchitecture')
-    parser.add_argument('-c', '--config',
-                        help='check the security hardening options in the kernel kconfig file (also supports *.gz files)')
-    parser.add_argument('-l', '--cmdline',
-                        help='check the security hardening options in the kernel cmdline file')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
+    parser.add_argument('-c', '--config',
+                        help='check the security hardening options in the kernel Kconfig file (also supports *.gz files)')
+    parser.add_argument('-l', '--cmdline',
+                        help='check the security hardening options in the kernel cmdline file')
+    parser.add_argument('-p', '--print', choices=supported_archs,
+                        help='print the security hardening recommendations for the selected microarchitecture')
     args = parser.parse_args()
 
     mode = None
@@ -254,14 +254,14 @@ def main():
             else:
                 print(f'[-] Can\'t detect the compiler: {msg}')
 
-        # add relevant kconfig checks to the checklist
+        # add relevant Kconfig checks to the checklist
         add_kconfig_checks(config_checklist, arch)
 
         if args.cmdline:
             # add relevant cmdline checks to the checklist
             add_cmdline_checks(config_checklist, arch)
 
-        # populate the checklist with the parsed kconfig data
+        # populate the checklist with the parsed Kconfig data
         parsed_kconfig_options = OrderedDict()
         parse_kconfig_file(parsed_kconfig_options, args.config)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
@@ -295,10 +295,11 @@ def main():
 
         sys.exit(0)
     elif args.cmdline:
-        sys.exit('[!] ERROR: checking cmdline doesn\'t work without checking kconfig')
+        sys.exit('[!] ERROR: checking cmdline doesn\'t work without checking Kconfig')
 
     if args.print:
-        if mode in ('show_ok', 'show_fail'):
+        assert(args.config is None and args.cmdline is None), 'unexpected args'
+        if mode and mode not in ('verbose', 'json'):
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         add_kconfig_checks(config_checklist, arch)
