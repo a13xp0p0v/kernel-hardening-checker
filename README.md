@@ -63,24 +63,28 @@ Some Linux distributions also provide `kconfig-hardened-check` as a package.
 
 ## Usage
 ```
-usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}] [-c CONFIG]
-                              [-l CMDLINE] [-m {verbose,json,show_ok,show_fail}]
+usage: kconfig-hardened-check [-h] [--version] [-m {verbose,json,show_ok,show_fail}]
+                              [-c CONFIG] [-l CMDLINE] [-p {X86_64,X86_32,ARM64,ARM}]
+                              [-g {X86_64,X86_32,ARM64,ARM}]
 
 A tool for checking the security hardening options of the Linux kernel
 
 options:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
+  -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
+                        choose the report mode
+  -c CONFIG, --config CONFIG
+                        check the security hardening options in the kernel Kconfig file
+                        (also supports *.gz files)
+  -l CMDLINE, --cmdline CMDLINE
+                        check the security hardening options in the kernel cmdline file
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
                         print the security hardening recommendations for the selected
                         microarchitecture
-  -c CONFIG, --config CONFIG
-                        check the security hardening options in the kernel kconfig file (also
-                        supports *.gz files)
-  -l CMDLINE, --cmdline CMDLINE
-                        check the security hardening options in the kernel cmdline file
-  -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
-                        choose the report mode
+  -g {X86_64,X86_32,ARM64,ARM}, --generate {X86_64,X86_32,ARM64,ARM}
+                        generate a Kconfig fragment with the security hardening options for
+                        the selected microarchitecture
 ```
 
 ## Output modes
@@ -338,14 +342,22 @@ sysrq_always_enabled                    |cmdline| is not set |    my    |cut_att
 [+] Config check is finished: 'OK' - 122 / 'FAIL' - 101
 ```
 
-## kconfig-hardened-check versioning
+## Generating a Kconfig fragment with the security hardening options
 
-I usually update the kernel security hardening recommendations every few kernel releases.
+With the `-g` argument the tool generates a Kconfig fragment with the security hardening options for the selected microarchitecture.
 
-So the version of `kconfig-hardened-check` is associated with the corresponding version of the kernel.
-
-The version format is: __[major_number].[kernel_version].[kernel_patchlevel]__
-
+This Kconfig fragment can be merged with the existing Linux kernel config:
+```
+$ ./bin/kconfig-hardened-check -g X86_64 > /tmp/fragment
+$ cd ~/linux-src/
+$ ./scripts/kconfig/merge_config.sh .config /tmp/fragment
+Using .config as base
+Merging /tmp/fragment
+Value of CONFIG_BUG_ON_DATA_CORRUPTION is redefined by fragment /tmp/fragment:
+Previous value: # CONFIG_BUG_ON_DATA_CORRUPTION is not set
+New value: CONFIG_BUG_ON_DATA_CORRUPTION=y
+ ...
+```
 
 ## Questions and answers
 
