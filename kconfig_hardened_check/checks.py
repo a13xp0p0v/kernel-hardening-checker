@@ -589,6 +589,7 @@ no_kstrtobool_options = [
     'rodata', # See set_debug_rodata() in init/main.c
     'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
     'slub_debug', # See setup_slub_debug() in mm/slub.c
+    'iommu', # See iommu_setup() in arch/x86/kernel/pci-dma.c
     'tsx' # See tsx_init() in arch/x86/kernel/cpu/tsx.c
 ]
 
