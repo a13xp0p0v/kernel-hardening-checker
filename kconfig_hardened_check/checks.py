@@ -590,6 +590,7 @@ no_kstrtobool_options = [
     'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
     'slub_debug', # See setup_slub_debug() in mm/slub.c
     'iommu', # See iommu_setup() in arch/x86/kernel/pci-dma.c
+    'vsyscall', # See vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
     'tsx' # See tsx_init() in arch/x86/kernel/cpu/tsx.c
 ]
 
