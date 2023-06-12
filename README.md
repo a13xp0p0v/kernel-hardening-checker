@@ -14,8 +14,8 @@ make our systems more secure.
 
 But nobody likes checking configs manually. So let the computers do their job!
 
-__kconfig-hardened-check__ helps me to check the Linux kernel options
-against my security hardening preferences, which are based on the
+__kconfig-hardened-check__ is a tool for checking the security hardening options of the Linux kernel.
+The recommendations are based on
 
   - [KSPP recommended settings][1]
   - [CLIP OS kernel configuration][2]
@@ -63,8 +63,8 @@ Some Linux distributions also provide `kconfig-hardened-check` as a package.
 
 ## Usage
 ```
-usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}] [-c CONFIG]
-                              [-l CMDLINE] [-m {verbose,json,show_ok,show_fail}]
+usage: kconfig-hardened-check [-h] [--version] [-p {X86_64,X86_32,ARM64,ARM}] [-c CONFIG] [-l CMDLINE]
+                              [-m {verbose,json,show_ok,show_fail}]
 
 A tool for checking the security hardening options of the Linux kernel
 
@@ -72,12 +72,11 @@ options:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
-                        print security hardening preferences for the selected architecture
+                        print security hardening options for the selected architecture
   -c CONFIG, --config CONFIG
-                        check the kernel kconfig file against these preferences (also supports
-                        *.gz files)
+                        check security hardening options in the kernel kconfig file (also supports *.gz files)
   -l CMDLINE, --cmdline CMDLINE
-                        check the kernel cmdline file against these preferences
+                        check security hardening options in the kernel cmdline file
   -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
                         choose the report mode
 ```

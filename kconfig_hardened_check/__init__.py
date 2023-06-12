@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 
 """
-This tool helps me to check Linux kernel options against
-my security hardening preferences for X86_64, ARM64, X86_32, and ARM.
-Let the computers do their job!
+This tool is for checking the security hardening options of the Linux kernel.
 
 Author: Alexander Popov <alex.popov@linux.com>
 
@@ -211,11 +209,11 @@ def main():
                             description='A tool for checking the security hardening options of the Linux kernel')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument('-p', '--print', choices=supported_archs,
-                        help='print security hardening preferences for the selected architecture')
+                        help='print security hardening options for the selected architecture')
     parser.add_argument('-c', '--config',
-                        help='check the kernel kconfig file against these preferences (also supports *.gz files)')
+                        help='check security hardening options in the kernel kconfig file (also supports *.gz files)')
     parser.add_argument('-l', '--cmdline',
-                        help='check the kernel cmdline file against these preferences')
+                        help='check security hardening options in the kernel cmdline file')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
     args = parser.parse_args()
@@ -306,7 +304,7 @@ def main():
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
         if mode != 'json':
-            print(f'[+] Printing kernel security hardening preferences for {arch}...')
+            print(f'[+] Printing kernel security hardening options for {arch}...')
         print_checklist(mode, config_checklist, False)
         sys.exit(0)
 
