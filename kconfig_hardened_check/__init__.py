@@ -40,9 +40,9 @@ def detect_arch(fname, archs):
                     if arch is None:
                         arch = option
                     else:
-                        return None, 'more than one supported architecture is detected'
+                        return None, 'more than one supported microarchitecture is detected'
         if arch is None:
-            return None, 'failed to detect architecture'
+            return None, 'failed to detect microarchitecture'
         return arch, 'OK'
 
 
@@ -209,11 +209,11 @@ def main():
                             description='A tool for checking the security hardening options of the Linux kernel')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument('-p', '--print', choices=supported_archs,
-                        help='print security hardening options for the selected architecture')
+                        help='print the security hardening recommendations for the selected microarchitecture')
     parser.add_argument('-c', '--config',
-                        help='check security hardening options in the kernel kconfig file (also supports *.gz files)')
+                        help='check the security hardening options in the kernel kconfig file (also supports *.gz files)')
     parser.add_argument('-l', '--cmdline',
-                        help='check security hardening options in the kernel cmdline file')
+                        help='check the security hardening options in the kernel cmdline file')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
     args = parser.parse_args()
@@ -239,7 +239,7 @@ def main():
         if arch is None:
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
-            print(f'[+] Detected architecture: {arch}')
+            print(f'[+] Detected microarchitecture: {arch}')
 
         kernel_version, msg = detect_kernel_version(args.config)
         if kernel_version is None:
