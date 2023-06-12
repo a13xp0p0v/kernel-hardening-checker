@@ -216,6 +216,8 @@ def main():
                         help='check the security hardening options in the kernel cmdline file')
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print the security hardening recommendations for the selected microarchitecture')
+    parser.add_argument('-g', '--generate', choices=supported_archs,
+                        help='generate a Kconfig fragment with the security hardening options for the selected microarchitecture')
     args = parser.parse_args()
 
     mode = None
@@ -229,6 +231,9 @@ def main():
     if args.config:
         if args.print:
             sys.exit('[!] ERROR: --config and --print can\'t be used together')
+
+        if args.generate:
+            sys.exit('[!] ERROR: --config and --generate can\'t be used together')
 
         if mode != 'json':
             print(f'[+] Kconfig file to check: {args.config}')
@@ -307,6 +312,21 @@ def main():
         if mode != 'json':
             print(f'[+] Printing kernel security hardening options for {arch}...')
         print_checklist(mode, config_checklist, False)
+        sys.exit(0)
+
+    if args.generate:
+        assert(args.config is None and args.cmdline is None), 'unexpected args'
+        if mode:
+            sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
+        arch = args.generate
+        add_kconfig_checks(config_checklist, arch)
+        for opt in config_checklist:
+            if opt.name == 'CONFIG_ARCH_MMAP_RND_BITS':
+                continue # don't add CONFIG_ARCH_MMAP_RND_BITS because its value needs refinement
+            if opt.expected == 'is not set':
+                print(f'# {opt.name} is not set')
+            else:
+                print(f'{opt.name}={opt.expected}')
         sys.exit(0)
 
     parser.print_help()
