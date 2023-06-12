@@ -12,7 +12,7 @@ coverage run -a --branch bin/kconfig-hardened-check -h
 echo ">>>>> get version <<<<<"
 coverage run -a --branch bin/kconfig-hardened-check --version
 
-echo ">>>>> print the security hardening preferences <<<<<"
+echo ">>>>> print the security hardening recommendations <<<<<"
 coverage run -a --branch bin/kconfig-hardened-check -p X86_64
 coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m verbose
 coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m json
@@ -28,6 +28,12 @@ coverage run -a --branch bin/kconfig-hardened-check -p ARM64 -m json
 coverage run -a --branch bin/kconfig-hardened-check -p ARM
 coverage run -a --branch bin/kconfig-hardened-check -p ARM -m verbose
 coverage run -a --branch bin/kconfig-hardened-check -p ARM -m json
+
+echo ">>>>> generate the Kconfig fragment <<<<<"
+coverage run -a --branch bin/kconfig-hardened-check -g X86_64
+coverage run -a --branch bin/kconfig-hardened-check -g X86_32
+coverage run -a --branch bin/kconfig-hardened-check -g ARM64
+coverage run -a --branch bin/kconfig-hardened-check -g ARM
 
 echo ">>>>> check the example kconfig files and cmdline <<<<<"
 cat /proc/cmdline
@@ -61,6 +67,12 @@ echo ">>>>> wrong modes for -p <<<<<"
 
 echo ">>>>> -p and -c together <<<<<"
 ! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config
+
+echo ">>>>> wrong mode for -g <<<<<"
+! coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -m show_ok
+
+echo ">>>>> -g and -c together <<<<<"
+! coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config
 
 cp kconfig_hardened_check/config_files/distros/fedora_34.config ./test.config
 
