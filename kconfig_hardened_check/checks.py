@@ -8,46 +8,6 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module contains knowledge for checks.
 """
 
-# N.B. Hardening sysctls:
-#    kernel.kptr_restrict=2 (or 1?)
-#    kernel.dmesg_restrict=1 (also see the kconfig option)
-#    kernel.perf_event_paranoid=2 (or 3 with a custom patch, see https://lwn.net/Articles/696216/)
-#    kernel.kexec_load_disabled=1
-#    kernel.yama.ptrace_scope=3
-#    user.max_user_namespaces=0 (for Debian, also see kernel.unprivileged_userns_clone)
-#    what about bpf_jit_enable?
-#    kernel.unprivileged_bpf_disabled=1
-#    net.core.bpf_jit_harden=2
-#    vm.unprivileged_userfaultfd=0
-#        (at first, it disabled unprivileged userfaultfd,
-#         and since v5.11 it enables unprivileged userfaultfd for user-mode only)
-#    vm.mmap_min_addr has a good value
-#    dev.tty.ldisc_autoload=0
-#    fs.protected_symlinks=1
-#    fs.protected_hardlinks=1
-#    fs.protected_fifos=2
-#    fs.protected_regular=2
-#    fs.suid_dumpable=0
-#    kernel.modules_disabled=1
-#    kernel.randomize_va_space=2
-#    nosmt sysfs control file
-#    dev.tty.legacy_tiocsti=0
-#    vm.mmap_rnd_bits=max (?)
-#    kernel.sysrq=0
-#    abi.vsyscall32 (any value except 2)
-#    kernel.oops_limit (think about a proper value)
-#    kernel.warn_limit (think about a proper value)
-#
-# Think of these boot params:
-#    module.sig_enforce=1
-#    lockdown=confidentiality
-#    mce=0
-#    nosmt=force
-#    intel_iommu=on
-#    amd_iommu=on
-#    efi=disable_early_pci_dma
-#    cfi=
-
 # pylint: disable=missing-function-docstring,line-too-long,invalid-name
 # pylint: disable=too-many-branches,too-many-statements
 
@@ -611,3 +571,36 @@ def normalize_cmdline_options(option, value):
 
     # Preserve unique values
     return value
+
+
+# def add_sysctl_checks(l, arch):
+# TODO: draft of security hardening sysctls:
+#    kernel.kptr_restrict=2 (or 1?)
+#    kernel.dmesg_restrict=1 (also see the kconfig option)
+#    kernel.perf_event_paranoid=2 (or 3 with a custom patch, see https://lwn.net/Articles/696216/)
+#    kernel.kexec_load_disabled=1
+#    kernel.yama.ptrace_scope=3
+#    user.max_user_namespaces=0 (for Debian, also see kernel.unprivileged_userns_clone)
+#    what about bpf_jit_enable?
+#    kernel.unprivileged_bpf_disabled=1
+#    net.core.bpf_jit_harden=2
+#    vm.unprivileged_userfaultfd=0
+#        (at first, it disabled unprivileged userfaultfd,
+#         and since v5.11 it enables unprivileged userfaultfd for user-mode only)
+#    vm.mmap_min_addr has a good value
+#    dev.tty.ldisc_autoload=0
+#    fs.protected_symlinks=1
+#    fs.protected_hardlinks=1
+#    fs.protected_fifos=2
+#    fs.protected_regular=2
+#    fs.suid_dumpable=0
+#    kernel.modules_disabled=1
+#    kernel.randomize_va_space=2
+#    nosmt sysfs control file
+#    dev.tty.legacy_tiocsti=0
+#    vm.mmap_rnd_bits=max (?)
+#    kernel.sysrq=0
+#    abi.vsyscall32 (any value except 2)
+#    kernel.oops_limit (think about a proper value)
+#    kernel.warn_limit (think about a proper value)
+#    net.ipv4.tcp_syncookies=1 (?)
