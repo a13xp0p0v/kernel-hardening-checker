@@ -79,12 +79,13 @@ options:
                         (also supports *.gz files)
   -l CMDLINE, --cmdline CMDLINE
                         check the security hardening options in the kernel cmdline file
+                        (contents of /proc/cmdline)
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
                         print the security hardening recommendations for the selected
                         microarchitecture
   -g {X86_64,X86_32,ARM64,ARM}, --generate {X86_64,X86_32,ARM64,ARM}
-                        generate a Kconfig fragment with the security hardening options for
-                        the selected microarchitecture
+                        generate a Kconfig fragment with the security hardening options
+                        for the selected microarchitecture
 ```
 
 ## Output modes
@@ -344,7 +345,7 @@ sysrq_always_enabled                    |cmdline| is not set |    my    |cut_att
 
 ## Generating a Kconfig fragment with the security hardening options
 
-With the `-g` argument the tool generates a Kconfig fragment with the security hardening options for the selected microarchitecture.
+With the `-g` argument, the tool generates a Kconfig fragment with the security hardening options for the selected microarchitecture.
 
 This Kconfig fragment can be merged with the existing Linux kernel config:
 ```
