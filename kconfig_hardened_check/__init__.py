@@ -213,7 +213,7 @@ def main():
     parser.add_argument('-c', '--config',
                         help='check the security hardening options in the kernel Kconfig file (also supports *.gz files)')
     parser.add_argument('-l', '--cmdline',
-                        help='check the security hardening options in the kernel cmdline file')
+                        help='check the security hardening options in the kernel cmdline file (contents of /proc/cmdline)')
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print the security hardening recommendations for the selected microarchitecture')
     parser.add_argument('-g', '--generate', choices=supported_archs,
