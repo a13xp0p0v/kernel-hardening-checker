@@ -320,6 +320,7 @@ def main():
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
         arch = args.generate
         add_kconfig_checks(config_checklist, arch)
+        print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the microarchitecture
         for opt in config_checklist:
             if opt.name == 'CONFIG_ARCH_MMAP_RND_BITS':
                 continue # don't add CONFIG_ARCH_MMAP_RND_BITS because its value needs refinement
