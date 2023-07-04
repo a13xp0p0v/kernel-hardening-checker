@@ -365,6 +365,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'my', 'KGDB', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'AIO', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'CORESIGHT', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'my', 'XFS_SUPPORT_V4', 'is not set')]
     l += [OR(KconfigCheck('cut_attack_surface', 'my', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
 
