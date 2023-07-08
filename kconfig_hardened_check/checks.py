@@ -11,7 +11,7 @@ This module contains knowledge for checks.
 # pylint: disable=missing-function-docstring,line-too-long,invalid-name
 # pylint: disable=too-many-branches,too-many-statements
 
-from .engine import KconfigCheck, CmdlineCheck, VersionCheck, OR, AND
+from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
 
 
 def add_kconfig_checks(l, arch):
@@ -574,10 +574,9 @@ def normalize_cmdline_options(option, value):
     return value
 
 
-# def add_sysctl_checks(l, arch):
+def add_sysctl_checks(l, arch):
 # TODO: draft of security hardening sysctls:
 #    kernel.kptr_restrict=2 (or 1?)
-#    kernel.dmesg_restrict=1 (also see the kconfig option)
 #    kernel.perf_event_paranoid=2 (or 3 with a custom patch, see https://lwn.net/Articles/696216/)
 #    kernel.kexec_load_disabled=1
 #    kernel.yama.ptrace_scope=3
@@ -605,3 +604,7 @@ def normalize_cmdline_options(option, value):
 #    kernel.oops_limit (think about a proper value)
 #    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
+#
+# Calling the SysctlCheck class constructor:
+#   SysctlCheck(reason, decision, name, expected)
+    l += [SysctlCheck('self_protection', 'kspp', 'kernel.dmesg_restrict', '1')]

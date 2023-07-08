@@ -17,7 +17,7 @@ from collections import OrderedDict
 import re
 import json
 from .__about__ import __version__
-from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options
+from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options, add_sysctl_checks
 from .engine import populate_with_data, perform_checks, override_expected_value
 
 
@@ -197,6 +197,10 @@ def parse_cmdline_file(parsed_options, fname):
             parsed_options[name] = value
 
 
+def parse_sysctl_file(parsed_options, fname):
+    print('parse_sysctl_file: TODO')
+
+
 def main():
     # Report modes:
     #   * verbose mode for
@@ -214,11 +218,14 @@ def main():
                         help='check the security hardening options in the kernel Kconfig file (also supports *.gz files)')
     parser.add_argument('-l', '--cmdline',
                         help='check the security hardening options in the kernel cmdline file (contents of /proc/cmdline)')
+#   parser.add_argument('-s', '--sysctl',
+#                       help='check the security hardening options in the sysctl output file (`sudo sysctl -a > file`)')
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print the security hardening recommendations for the selected microarchitecture')
     parser.add_argument('-g', '--generate', choices=supported_archs,
                         help='generate a Kconfig fragment with the security hardening options for the selected microarchitecture')
     args = parser.parse_args()
+    args.sysctl = None # FIXME
 
     mode = None
     if args.mode:
@@ -239,6 +246,8 @@ def main():
             print(f'[+] Kconfig file to check: {args.config}')
             if args.cmdline:
                 print(f'[+] Kernel cmdline file to check: {args.cmdline}')
+            if args.sysctl:
+                print(f'[+] Kernel sysctl output file to check: {args.sysctl}')
 
         arch, msg = detect_arch(args.config, supported_archs)
         if arch is None:
@@ -266,6 +275,10 @@ def main():
             # add relevant cmdline checks to the checklist
             add_cmdline_checks(config_checklist, arch)
 
+        if args.sysctl:
+            # add relevant sysctl checks to the checklist
+            add_sysctl_checks(config_checklist, arch)
+
         # populate the checklist with the parsed Kconfig data
         parsed_kconfig_options = OrderedDict()
         parse_kconfig_file(parsed_kconfig_options, args.config)
@@ -280,6 +293,12 @@ def main():
             parse_cmdline_file(parsed_cmdline_options, args.cmdline)
             populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
+        if args.sysctl:
+            # populate the checklist with the parsed sysctl data
+            parsed_sysctl_options = OrderedDict()
+            parse_sysctl_file(parsed_sysctl_options, args.sysctl)
+            populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
+
         # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
         mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
         if mmap_rnd_bits_max:
@@ -293,6 +312,8 @@ def main():
             all_parsed_options = parsed_kconfig_options # assignment does not copy
             if args.cmdline:
                 all_parsed_options.update(parsed_cmdline_options)
+            if args.sysctl:
+                all_parsed_options.update(parsed_sysctl_options)
             print_unknown_options(config_checklist, all_parsed_options)
 
         # finally print the results
@@ -300,22 +321,26 @@ def main():
 
         sys.exit(0)
     elif args.cmdline:
-        sys.exit('[!] ERROR: checking cmdline doesn\'t work without checking Kconfig')
+        sys.exit('[!] ERROR: checking cmdline depends on checking Kconfig')
+    elif args.sysctl:
+        # TODO: sysctl check should also work separately
+        sys.exit('[!] ERROR: checking sysctl depends on checking Kconfig')
 
     if args.print:
-        assert(args.config is None and args.cmdline is None), 'unexpected args'
+        assert(args.config is None and args.cmdline is None and args.sysctl is None), 'unexpected args'
         if mode and mode not in ('verbose', 'json'):
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
+        add_sysctl_checks(config_checklist, arch)
         if mode != 'json':
             print(f'[+] Printing kernel security hardening options for {arch}...')
         print_checklist(mode, config_checklist, False)
         sys.exit(0)
 
     if args.generate:
-        assert(args.config is None and args.cmdline is None), 'unexpected args'
+        assert(args.config is None and args.cmdline is None and args.sysctl is None), 'unexpected args'
         if mode:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
         arch = args.generate
