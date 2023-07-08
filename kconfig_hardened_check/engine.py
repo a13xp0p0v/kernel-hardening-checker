@@ -103,6 +103,12 @@ class CmdlineCheck(OptCheck):
         return 'cmdline'
 
 
+class SysctlCheck(OptCheck):
+    @property
+    def type(self):
+        return 'sysctl'
+
+
 class VersionCheck:
     def __init__(self, ver_expected):
         assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 2), \
@@ -141,7 +147,7 @@ class ComplexOptCheck:
                f'empty {self.__class__.__name__} check'
         assert(len(self.opts) != 1), \
                f'useless {self.__class__.__name__} check: {opts}'
-        assert(isinstance(opts[0], (KconfigCheck, CmdlineCheck))), \
+        assert(isinstance(opts[0], (KconfigCheck, CmdlineCheck, SysctlCheck))), \
                f'invalid {self.__class__.__name__} check: {opts}'
         self.result = None
 
@@ -238,7 +244,7 @@ class AND(ComplexOptCheck):
                 return
 
 
-SIMPLE_OPTION_TYPES = ('kconfig', 'version', 'cmdline')
+SIMPLE_OPTION_TYPES = ('kconfig', 'cmdline', 'sysctl', 'version')
 
 
 def populate_simple_opt_with_data(opt, data, data_type):
@@ -254,7 +260,7 @@ def populate_simple_opt_with_data(opt, data, data_type):
     if data_type != opt.type:
         return
 
-    if data_type in ('kconfig', 'cmdline'):
+    if data_type in ('kconfig', 'cmdline', 'sysctl'):
         opt.state = data.get(opt.name, None)
     else:
         assert(data_type == 'version'), \
@@ -271,8 +277,8 @@ def populate_opt_with_data(opt, data, data_type):
             else:
                 populate_simple_opt_with_data(o, data, data_type)
     else:
-        assert(opt.type in ('kconfig', 'cmdline')), \
-               f'bad type "{opt.type}" for a simple check'
+        assert(opt.type != 'version'), \
+               'a simple check with a single VersionCheck is useless'
         populate_simple_opt_with_data(opt, data, data_type)
 
 
@@ -284,7 +290,7 @@ def populate_with_data(checklist, data, data_type):
 def override_expected_value(checklist, name, new_val):
     for opt in checklist:
         if opt.name == name:
-            assert(opt.type in ('kconfig', 'cmdline')), \
+            assert(opt.type in ('kconfig', 'cmdline', 'sysctl')), \
                    f'overriding an expected value for "{opt.type}" checks is not supported yet'
             opt.expected = new_val
 
