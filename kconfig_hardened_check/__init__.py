@@ -193,6 +193,8 @@ def parse_cmdline_file(parsed_options, fname):
             else:
                 name = opt
                 value = '' # '' is not None
+            if name in parsed_options:
+                sys.exit(f'[!] ERROR: cmdline option "{name}" exists multiple times')
             value = normalize_cmdline_options(name, value)
             parsed_options[name] = value
 
