@@ -31,7 +31,7 @@ def _open(file: str, *args, **kwargs):
 
 def detect_arch(fname, archs):
     with _open(fname, 'rt', encoding='utf-8') as f:
-        arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]*=y")
+        arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]+=y$")
         arch = None
         for line in f.readlines():
             if arch_pattern.match(line):
@@ -40,7 +40,7 @@ def detect_arch(fname, archs):
                     if arch is None:
                         arch = option
                     else:
-                        return None, 'more than one supported microarchitecture is detected'
+                        return None, 'detected more than one microarchitecture'
         if arch is None:
             return None, 'failed to detect microarchitecture'
         return arch, 'OK'
@@ -48,7 +48,7 @@ def detect_arch(fname, archs):
 
 def detect_kernel_version(fname):
     with _open(fname, 'rt', encoding='utf-8') as f:
-        ver_pattern = re.compile("# Linux/.* Kernel Configuration")
+        ver_pattern = re.compile("# Linux/.+ Kernel Configuration$")
         for line in f.readlines():
             if ver_pattern.match(line):
                 line = line.strip()
