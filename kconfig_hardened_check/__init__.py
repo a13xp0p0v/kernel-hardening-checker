@@ -66,12 +66,10 @@ def detect_compiler(fname):
     gcc_version = None
     clang_version = None
     with _open(fname, 'rt', encoding='utf-8') as f:
-        gcc_version_pattern = re.compile("CONFIG_GCC_VERSION=[0-9]*")
-        clang_version_pattern = re.compile("CONFIG_CLANG_VERSION=[0-9]*")
         for line in f.readlines():
-            if gcc_version_pattern.match(line):
+            if line.startswith('CONFIG_GCC_VERSION='):
                 gcc_version = line[19:-1]
-            if clang_version_pattern.match(line):
+            if line.startswith('CONFIG_CLANG_VERSION='):
                 clang_version = line[21:-1]
     if gcc_version is None or clang_version is None:
         return None, 'no CONFIG_GCC_VERSION or CONFIG_CLANG_VERSION'
