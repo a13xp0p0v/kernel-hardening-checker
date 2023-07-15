@@ -59,62 +59,62 @@ echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 
 echo "Collect coverage for error handling"
 echo ">>>>> lonely -l <<<<<"
-! coverage run -a --branch bin/kconfig-hardened-check -l /proc/cmdline
+coverage run -a --branch bin/kconfig-hardened-check -l /proc/cmdline && exit 1
 
 echo ">>>>> wrong modes for -p <<<<<"
-! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_ok
-! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_fail
+coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_ok && exit 1
+coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_fail && exit 1
 
 echo ">>>>> -p and -c together <<<<<"
-! coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config
+coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config && exit 1
 
 echo ">>>>> wrong mode for -g <<<<<"
-! coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -m show_ok
+coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -m show_ok && exit 1
 
 echo ">>>>> -g and -c together <<<<<"
-! coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config
+coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config && exit 1
 
 cp kconfig_hardened_check/config_files/distros/fedora_34.config ./test.config
 
 echo ">>>>> no kernel version <<<<<"
 sed '3d' test.config > error.config
-! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
 echo ">>>>> strange kernel version string <<<<<"
 sed '3 s/5./version 5./' test.config > error.config
-! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
 echo ">>>>> no arch <<<<<"
 sed '305d' test.config > error.config
-! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
 echo ">>>>> more than one arch <<<<<"
 cp test.config error.config
 echo 'CONFIG_ARM64=y' >> error.config
-! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
 echo ">>>>> invalid disabled kconfig option <<<<<"
 sed '28 s/is not set/is not set yet/' test.config > error.config
-! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
 echo ">>>>> invalid enabled kconfig option <<<<<"
 cp test.config error.config
 echo 'CONFIG_FOO=is not set' >> error.config
-! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
 echo ">>>>> one config option multiple times <<<<<"
 cp test.config error.config
 echo 'CONFIG_BUG=y' >> error.config
-! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
 echo ">>>>> invalid compiler versions <<<<<"
 cp test.config error.config
 sed '8 s/CONFIG_CLANG_VERSION=0/CONFIG_CLANG_VERSION=120000/' test.config > error.config
-! coverage run -a --branch bin/kconfig-hardened-check -c error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
 echo ">>>>> multi-line cmdline file <<<<<"
 echo 'hey man 1' > cmdline
 echo 'hey man 2' >> cmdline
-! coverage run -a --branch bin/kconfig-hardened-check -c test.config -l cmdline
+coverage run -a --branch bin/kconfig-hardened-check -c test.config -l cmdline && exit 1
 
 echo "The end of the functional tests"
