@@ -152,8 +152,8 @@ def print_checklist(mode, checklist, with_results):
 
 def parse_kconfig_file(parsed_options, fname):
     with _open(fname, 'rt', encoding='utf-8') as f:
-        opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]*=[a-zA-Z0-9_\"]*")
-        opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]* is not set")
+        opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]+=.+$")
+        opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]+ is not set$")
 
         for line in f.readlines():
             line = line.strip()
@@ -166,8 +166,10 @@ def parse_kconfig_file(parsed_options, fname):
                     sys.exit(f'[!] ERROR: bad enabled Kconfig option "{line}"')
             elif opt_is_off.match(line):
                 option, value = line[2:].split(' ', 1)
-                if value != 'is not set':
-                    sys.exit(f'[!] ERROR: bad disabled Kconfig option "{line}"')
+                assert(value == 'is not set'), \
+                       f'unexpected value of disabled Kconfig option "{line}"'
+            elif line != '' and not line.startswith('#'):
+                print(f'[!] WARNING: strange line in Kconfig file: "{line}"')
 
             if option in parsed_options:
                 sys.exit(f'[!] ERROR: Kconfig option "{line}" exists multiple times')
