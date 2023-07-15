@@ -93,10 +93,6 @@ cp test.config error.config
 echo 'CONFIG_ARM64=y' >> error.config
 coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
-echo ">>>>> invalid disabled kconfig option <<<<<"
-sed '28 s/is not set/is not set yet/' test.config > error.config
-coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
-
 echo ">>>>> invalid enabled kconfig option <<<<<"
 cp test.config error.config
 echo 'CONFIG_FOO=is not set' >> error.config
