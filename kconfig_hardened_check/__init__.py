@@ -150,7 +150,7 @@ def print_checklist(mode, checklist, with_results):
         print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
-def parse_kconfig_file(parsed_options, fname):
+def parse_kconfig_file(mode, parsed_options, fname):
     with _open(fname, 'rt', encoding='utf-8') as f:
         opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]+=.+$")
         opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]+ is not set$")
@@ -168,17 +168,17 @@ def parse_kconfig_file(parsed_options, fname):
                 option, value = line[2:].split(' ', 1)
                 assert(value == 'is not set'), \
                        f'unexpected value of disabled Kconfig option "{line}"'
-            elif line != '' and not line.startswith('#'):
+            elif line != '' and not line.startswith('#') and mode != 'json':
                 print(f'[!] WARNING: strange line in Kconfig file: "{line}"')
 
             if option in parsed_options:
-                sys.exit(f'[!] ERROR: Kconfig option "{line}" exists multiple times')
+                sys.exit(f'[!] ERROR: Kconfig option "{line}" is found multiple times')
 
             if option:
                 parsed_options[option] = value
 
 
-def parse_cmdline_file(parsed_options, fname):
+def parse_cmdline_file(mode, parsed_options, fname):
     with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
         opts = line.split()
@@ -193,13 +193,13 @@ def parse_cmdline_file(parsed_options, fname):
             else:
                 name = opt
                 value = '' # '' is not None
-            if name in parsed_options:
-                print(f'[!] WARNING: cmdline option "{name}" exists multiple times')
+            if name in parsed_options and mode != 'json':
+                print(f'[!] WARNING: cmdline option "{name}" is found multiple times')
             value = normalize_cmdline_options(name, value)
             parsed_options[name] = value
 
 
-def parse_sysctl_file(parsed_options, fname):
+def parse_sysctl_file(mode, parsed_options, fname):
     with open(fname, 'r', encoding='utf-8') as f:
         sysctl_pattern = re.compile("[a-zA-Z0-9\._-]+ =.*$")
         for line in f.readlines():
@@ -218,7 +218,7 @@ def parse_sysctl_file(parsed_options, fname):
         sys.exit(f'[!] ERROR: {fname} doesn\'t look like a sysctl output file, please try `sudo sysctl -a > {fname}`')
 
     # let's check the presence of a sysctl option available for root
-    if 'net.core.bpf_jit_harden' not in parsed_options:
+    if 'net.core.bpf_jit_harden' not in parsed_options and mode != 'json':
         print(f'[!] WARNING: sysctl option "net.core.bpf_jit_harden" available for root is not found in {fname}, please try `sudo sysctl -a > {fname}`')
 
 
@@ -268,7 +268,7 @@ def main():
             if args.cmdline:
                 print(f'[+] Kernel cmdline file to check: {args.cmdline}')
             if args.sysctl:
-                print(f'[+] Kernel sysctl output file to check: {args.sysctl}')
+                print(f'[+] Sysctl output file to check: {args.sysctl}')
 
         arch, msg = detect_arch(args.config, supported_archs)
         if arch is None:
@@ -302,7 +302,7 @@ def main():
 
         # populate the checklist with the parsed Kconfig data
         parsed_kconfig_options = OrderedDict()
-        parse_kconfig_file(parsed_kconfig_options, args.config)
+        parse_kconfig_file(mode, parsed_kconfig_options, args.config)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
 
         # populate the checklist with the kernel version data
@@ -311,13 +311,13 @@ def main():
         if args.cmdline:
             # populate the checklist with the parsed cmdline data
             parsed_cmdline_options = OrderedDict()
-            parse_cmdline_file(parsed_cmdline_options, args.cmdline)
+            parse_cmdline_file(mode, parsed_cmdline_options, args.cmdline)
             populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
         if args.sysctl:
             # populate the checklist with the parsed sysctl data
             parsed_sysctl_options = OrderedDict()
-            parse_sysctl_file(parsed_sysctl_options, args.sysctl)
+            parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
             populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
 
         # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
