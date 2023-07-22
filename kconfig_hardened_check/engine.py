@@ -269,17 +269,16 @@ def populate_simple_opt_with_data(opt, data, data_type):
 
 
 def populate_opt_with_data(opt, data, data_type):
-    if opt.type == 'complex':
+    assert(opt.type != 'version'), 'a single VersionCheck is useless'
+    if opt.type != 'complex':
+        populate_simple_opt_with_data(opt, data, data_type)
+    else:
         for o in opt.opts:
-            if o.type == 'complex':
+            if o.type != 'complex':
+                populate_simple_opt_with_data(o, data, data_type)
+            else:
                 # Recursion for nested ComplexOptCheck objects
                 populate_opt_with_data(o, data, data_type)
-            else:
-                populate_simple_opt_with_data(o, data, data_type)
-    else:
-        assert(opt.type != 'version'), \
-               'a simple check with a single VersionCheck is useless'
-        populate_simple_opt_with_data(opt, data, data_type)
 
 
 def populate_with_data(checklist, data, data_type):
