@@ -579,7 +579,6 @@ def add_sysctl_checks(l, arch):
 #    kernel.kptr_restrict=2 (or 1?)
 #    kernel.yama.ptrace_scope=3
 #    what about bpf_jit_enable?
-#    kernel.unprivileged_bpf_disabled=1
 #    vm.unprivileged_userfaultfd=0
 #        (at first, it disabled unprivileged userfaultfd,
 #         and since v5.11 it enables unprivileged userfaultfd for user-mode only)
@@ -610,3 +609,4 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
+    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.unprivileged_bpf_disabled', '1')]
