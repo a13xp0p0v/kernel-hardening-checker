@@ -422,6 +422,7 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
         config_checklist = []
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
+        config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
@@ -431,40 +432,61 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
         parsed_cmdline_options = OrderedDict()
         parsed_cmdline_options['name_2'] = 'expected_2_new'
 
-        # 4. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, None, None)
+        # 4. prepare the parsed sysctl options
+        parsed_sysctl_options = OrderedDict()
+        parsed_sysctl_options['name_3'] = 'expected_3_new'
 
-        # 5. check that the results are correct
+        # 5. run the engine
+        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, None)
+
+        # 6. check that the results are correct
         result = []
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "FAIL: \"expected_1_new\""],
-                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"expected_2_new\""]]
+                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"expected_2_new\""],
+                 ["name_3", "sysctl", "expected_3", "decision_3", "reason_3", "FAIL: \"expected_3_new\""]]
         )
 
-        # 6. override expected value and perform the checks again
+        # 7. override expected value and perform the checks again
         override_expected_value(config_checklist, "CONFIG_NAME_1", "expected_1_new")
         perform_checks(config_checklist)
 
-        # 7. check that the results are correct
+        # 8. check that the results are correct
         result = []
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1_new", "decision_1", "reason_1", "OK"],
-                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"expected_2_new\""]]
+                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"expected_2_new\""],
+                 ["name_3", "sysctl", "expected_3", "decision_3", "reason_3", "FAIL: \"expected_3_new\""]]
         )
 
-        # 8. override expected value and perform the checks again
+        # 9. override expected value and perform the checks again
         override_expected_value(config_checklist, "name_2", "expected_2_new")
         perform_checks(config_checklist)
 
-        # 9. check that the results are correct
+        # 10. check that the results are correct
         result = []
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
                 [["CONFIG_NAME_1", "kconfig", "expected_1_new", "decision_1", "reason_1", "OK"],
-                 ["name_2", "cmdline", "expected_2_new", "decision_2", "reason_2", "OK"]]
+                 ["name_2", "cmdline", "expected_2_new", "decision_2", "reason_2", "OK"],
+                 ["name_3", "sysctl", "expected_3", "decision_3", "reason_3", "FAIL: \"expected_3_new\""]]
+        )
+
+        # 11. override expected value and perform the checks again
+        override_expected_value(config_checklist, "name_3", "expected_3_new")
+        perform_checks(config_checklist)
+
+        # 12. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
+        self.assertEqual(
+                result,
+                [["CONFIG_NAME_1", "kconfig", "expected_1_new", "decision_1", "reason_1", "OK"],
+                 ["name_2", "cmdline", "expected_2_new", "decision_2", "reason_2", "OK"],
+                 ["name_3", "sysctl", "expected_3_new", "decision_3", "reason_3", "OK"]]
         )
