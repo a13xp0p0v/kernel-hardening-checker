@@ -15,7 +15,7 @@ import io
 import sys
 from collections import OrderedDict
 import json
-from .engine import KconfigCheck, CmdlineCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
+from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
 
 
 class TestEngine(unittest.TestCase):
@@ -26,6 +26,7 @@ class TestEngine(unittest.TestCase):
         config_checklist = []
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'KCONFIG_NAME', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'cmdline_name', 'expected_2')]
+        config_checklist += [SysctlCheck('reason_3', 'decision_3', 'sysctl_name', 'expected_3')]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
@@ -35,25 +36,31 @@ class TestEngine(unittest.TestCase):
         parsed_cmdline_options = OrderedDict()
         parsed_cmdline_options['cmdline_name'] = 'expected_2'
 
-        # 4. prepare the kernel version
+        # 4. prepare the parsed sysctl options
+        parsed_sysctl_options = OrderedDict()
+        parsed_sysctl_options['sysctl_name'] = 'expected_3'
+
+        # 5. prepare the kernel version
         kernel_version = (42, 43)
 
-        # 5. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, kernel_version)
+        # 6. run the engine
+        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, kernel_version)
 
-        # 6. check that the results are correct
+        # 7. check that the results are correct
         result = []
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(...
     """
 
     @staticmethod
-    def run_engine(checklist, parsed_kconfig_options, parsed_cmdline_options, kernel_version):
+    def run_engine(checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, kernel_version):
         # populate the checklist with data
         if parsed_kconfig_options:
             populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
         if parsed_cmdline_options:
             populate_with_data(checklist, parsed_cmdline_options, 'cmdline')
+        if parsed_sysctl_options:
+            populate_with_data(checklist, parsed_sysctl_options, 'sysctl')
         if kernel_version:
             populate_with_data(checklist, kernel_version, 'version')
 
@@ -120,7 +127,7 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_9'] = '0'
 
         # 3. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, None, None)
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
         result = []
@@ -163,7 +170,7 @@ class TestEngine(unittest.TestCase):
         parsed_cmdline_options['name_9'] = '0'
 
         # 3. run the engine
-        self.run_engine(config_checklist, None, parsed_cmdline_options, None)
+        self.run_engine(config_checklist, None, parsed_cmdline_options, None, None)
 
         # 4. check that the results are correct
         result = []
@@ -210,7 +217,7 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_11'] = 'really_not_off'
 
         # 3. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, None, None)
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
         result = []
@@ -255,7 +262,7 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_12'] = 'expected_12'
 
         # 3. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, None, None)
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
         result = []
@@ -291,7 +298,7 @@ class TestEngine(unittest.TestCase):
         kernel_version = (42, 43)
 
         # 4. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, None, kernel_version)
+        self.run_engine(config_checklist, parsed_kconfig_options, None, None, kernel_version)
 
         # 5. check that the results are correct
         result = []
@@ -320,7 +327,7 @@ class TestEngine(unittest.TestCase):
         parsed_cmdline_options['name_6'] = 'UNexpected_6'
 
         # 3. run the engine
-        self.run_engine(config_checklist, None, parsed_cmdline_options, None)
+        self.run_engine(config_checklist, None, parsed_cmdline_options, None, None)
 
         # 4. check that the results are correct
         json_result = []
@@ -378,7 +385,7 @@ name_6                                  |cmdline| expected_6 |decision_6|     re
         parsed_cmdline_options['name_2'] = 'expected_2_new'
 
         # 4. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, None)
+        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, None, None)
 
         # 5. check that the results are correct
         result = []
