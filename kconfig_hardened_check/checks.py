@@ -584,7 +584,6 @@ def add_sysctl_checks(l, arch):
 #        (at first, it disabled unprivileged userfaultfd,
 #         and since v5.11 it enables unprivileged userfaultfd for user-mode only)
 #    vm.mmap_min_addr has a good value
-#    dev.tty.ldisc_autoload=0
 #    fs.protected_symlinks=1
 #    fs.protected_hardlinks=1
 #    fs.protected_fifos=2
@@ -610,3 +609,4 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0')]
+    l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
