@@ -359,20 +359,24 @@ class TestEngine(unittest.TestCase):
         config_checklist = []
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 AND(CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2'),
-                                    KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3')))]
+                                    SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')))]
         config_checklist += [AND(CmdlineCheck('reason_4', 'decision_4', 'name_4', 'expected_4'),
                                  OR(KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5'),
-                                    CmdlineCheck('reason_6', 'decision_6', 'name_6', 'expected_6')))]
+                                    SysctlCheck('reason_6', 'decision_6', 'name_6', 'expected_6')))]
 
         # 2. prepare the parsed cmdline options
         parsed_cmdline_options = OrderedDict()
         parsed_cmdline_options['name_4'] = 'expected_4'
-        parsed_cmdline_options['name_6'] = 'UNexpected_6'
 
-        # 3. run the engine
-        self.run_engine(config_checklist, None, parsed_cmdline_options, None, None)
+        # 3. prepare the parsed sysctl options
+        parsed_sysctl_options = OrderedDict()
+        parsed_sysctl_options['name_3'] = 'UNexpected_3'
+        parsed_sysctl_options['name_6'] = 'UNexpected_6'
 
-        # 4. check that the results are correct
+        # 4. run the engine
+        self.run_engine(config_checklist, None, parsed_cmdline_options, parsed_sysctl_options, None)
+
+        # 5. check that the results are correct
         json_result = []
         self.get_engine_result(config_checklist, json_result, 'json')
         self.assertEqual(
@@ -400,16 +404,16 @@ name_4                                  |cmdline| expected_4 |decision_4|     re
 "\
     <<< OR >>>                                                                             | FAIL: is not found\n\
 CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | FAIL: is not found\n\
-    <<< AND >>>                                                                            | FAIL: CONFIG_NAME_3 is not \"expected_3\"\n\
+    <<< AND >>>                                                                            | FAIL: name_3 is not \"expected_3\"\n\
 name_2                                  |cmdline| expected_2 |decision_2|     reason_2     | None\n\
-CONFIG_NAME_3                           |kconfig| expected_3 |decision_3|     reason_3     | FAIL: is not found\
+name_3                                  |sysctl | expected_3 |decision_3|     reason_3     | FAIL: \"UNexpected_3\"\
 "\
 "\
     <<< AND >>>                                                                            | FAIL: CONFIG_NAME_5 is not \"expected_5\"\n\
 name_4                                  |cmdline| expected_4 |decision_4|     reason_4     | None\n\
     <<< OR >>>                                                                             | FAIL: is not found\n\
 CONFIG_NAME_5                           |kconfig| expected_5 |decision_5|     reason_5     | FAIL: is not found\n\
-name_6                                  |cmdline| expected_6 |decision_6|     reason_6     | FAIL: \"UNexpected_6\"\
+name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | FAIL: \"UNexpected_6\"\
 "               ]
         )
 
