@@ -609,4 +609,4 @@ def add_sysctl_checks(l, arch):
 
     l += [SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2')]
 
-    l += [SysctlCheck('self_protection', 'kspp', 'kernel.dmesg_restrict', '1')]
+    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
