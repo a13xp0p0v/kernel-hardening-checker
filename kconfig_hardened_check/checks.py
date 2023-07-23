@@ -583,7 +583,6 @@ def add_sysctl_checks(l, arch):
 #    user.max_user_namespaces=0 (for Debian, also see kernel.unprivileged_userns_clone)
 #    what about bpf_jit_enable?
 #    kernel.unprivileged_bpf_disabled=1
-#    net.core.bpf_jit_harden=2
 #    vm.unprivileged_userfaultfd=0
 #        (at first, it disabled unprivileged userfaultfd,
 #         and since v5.11 it enables unprivileged userfaultfd for user-mode only)
@@ -607,4 +606,7 @@ def add_sysctl_checks(l, arch):
 #
 # Calling the SysctlCheck class constructor:
 #   SysctlCheck(reason, decision, name, expected)
+
+    l += [SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2')]
+
     l += [SysctlCheck('self_protection', 'kspp', 'kernel.dmesg_restrict', '1')]
