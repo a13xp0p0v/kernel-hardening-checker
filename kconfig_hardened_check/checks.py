@@ -577,7 +577,6 @@ def normalize_cmdline_options(option, value):
 def add_sysctl_checks(l, arch):
 # TODO: draft of security hardening sysctls:
 #    kernel.kptr_restrict=2 (or 1?)
-#    kernel.perf_event_paranoid=2 (or 3 with a custom patch, see https://lwn.net/Articles/696216/)
 #    kernel.kexec_load_disabled=1
 #    kernel.yama.ptrace_scope=3
 #    user.max_user_namespaces=0 (for Debian, also see kernel.unprivileged_userns_clone)
@@ -610,3 +609,4 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2')]
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
+    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
