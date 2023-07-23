@@ -189,6 +189,49 @@ class TestEngine(unittest.TestCase):
                  ["name_10", "cmdline", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
         )
 
+    def test_simple_sysctl(self):
+        # 1. prepare the checklist
+        config_checklist = []
+        config_checklist += [SysctlCheck('reason_1', 'decision_1', 'name_1', 'expected_1')]
+        config_checklist += [SysctlCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
+        config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
+        config_checklist += [SysctlCheck('reason_4', 'decision_4', 'name_4', 'is not set')]
+        config_checklist += [SysctlCheck('reason_5', 'decision_5', 'name_5', 'is present')]
+        config_checklist += [SysctlCheck('reason_6', 'decision_6', 'name_6', 'is present')]
+        config_checklist += [SysctlCheck('reason_7', 'decision_7', 'name_7', 'is not off')]
+        config_checklist += [SysctlCheck('reason_8', 'decision_8', 'name_8', 'is not off')]
+        config_checklist += [SysctlCheck('reason_9', 'decision_9', 'name_9', 'is not off')]
+        config_checklist += [SysctlCheck('reason_10', 'decision_10', 'name_10', 'is not off')]
+
+        # 2. prepare the parsed sysctl options
+        parsed_sysctl_options = OrderedDict()
+        parsed_sysctl_options['name_1'] = 'expected_1'
+        parsed_sysctl_options['name_2'] = 'UNexpected_2'
+        parsed_sysctl_options['name_5'] = ''
+        parsed_sysctl_options['name_7'] = ''
+        parsed_sysctl_options['name_8'] = 'off'
+        parsed_sysctl_options['name_9'] = '0'
+
+        # 3. run the engine
+        self.run_engine(config_checklist, None, None, parsed_sysctl_options, None)
+
+        # 4. check that the results are correct
+        result = []
+        self.get_engine_result(config_checklist, result, 'json')
+        self.assertEqual(
+                result,
+                [["name_1", "sysctl", "expected_1", "decision_1", "reason_1", "OK"],
+                 ["name_2", "sysctl", "expected_2", "decision_2", "reason_2", "FAIL: \"UNexpected_2\""],
+                 ["name_3", "sysctl", "expected_3", "decision_3", "reason_3", "FAIL: is not found"],
+                 ["name_4", "sysctl", "is not set", "decision_4", "reason_4", "OK: is not found"],
+                 ["name_5", "sysctl", "is present", "decision_5", "reason_5", "OK: is present"],
+                 ["name_6", "sysctl", "is present", "decision_6", "reason_6", "FAIL: is not present"],
+                 ["name_7", "sysctl", "is not off", "decision_7", "reason_7", "OK: is not off, \"\""],
+                 ["name_8", "sysctl", "is not off", "decision_8", "reason_8", "FAIL: is off"],
+                 ["name_9", "sysctl", "is not off", "decision_9", "reason_9", "FAIL: is off, \"0\""],
+                 ["name_10", "sysctl", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
+        )
+
     def test_complex_or(self):
         # 1. prepare the checklist
         config_checklist = []
