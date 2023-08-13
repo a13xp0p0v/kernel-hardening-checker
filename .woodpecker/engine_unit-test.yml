@@ -1,5 +1,5 @@
 # .woodpecker.yml
-pipeline:
+steps:
   unit-test:
     image: python:3
     pull: true
