@@ -1,5 +1,5 @@
 # .woodpecker.yml
-pipeline:
+steps:
   installation-test:
     image: python:3
     pull: true
