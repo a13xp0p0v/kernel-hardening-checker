@@ -41,6 +41,7 @@ echo "l1tf=off mds=full randomize_kstack_offset=on iommu.passthrough=0" > ./cmdl
 cat ./cmdline_example
 sysctl -a > /tmp/sysctls
 CONFIG_DIR=`find . -name config_files`
+SYSCTL_EXAMPLE=$CONFIG_DIR/distros/example_sysctls.txt
 KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
 COUNT=0
 for C in $KCONFIGS
@@ -51,11 +52,11 @@ do
         coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose > /dev/null
         coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline > /dev/null
         coverage run -a --branch bin/kconfig-hardened-check -c $C -s /tmp/sysctls > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls -m verbose > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls -m json > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls -m show_ok > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls -m show_fail > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m verbose > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m json > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_ok > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_fail > /dev/null
 done
 echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 
