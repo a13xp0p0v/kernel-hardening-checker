@@ -201,7 +201,7 @@ def parse_cmdline_file(mode, parsed_options, fname):
 
 def parse_sysctl_file(mode, parsed_options, fname):
     with open(fname, 'r', encoding='utf-8') as f:
-        sysctl_pattern = re.compile("[a-zA-Z0-9\._-]+ =.*$")
+        sysctl_pattern = re.compile("[a-zA-Z0-9/\._-]+ =.*$")
         for line in f.readlines():
             line = line.strip()
             if not sysctl_pattern.match(line):
