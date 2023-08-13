@@ -58,21 +58,25 @@ done
 echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 
 echo "Collect coverage for error handling"
-echo ">>>>> lonely -l <<<<<"
+
+echo ">>>>> -c and -p together <<<<<"
+coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config && exit 1
+
+echo ">>>>> -c and -g together <<<<<"
+coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config && exit 1
+
+echo ">>>>> -p and -g together <<<<<"
+coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -g X86_64 && exit 1
+
+echo ">>>>> -l without -c <<<<<"
 coverage run -a --branch bin/kconfig-hardened-check -l /proc/cmdline && exit 1
 
 echo ">>>>> wrong modes for -p <<<<<"
 coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_ok && exit 1
 coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_fail && exit 1
 
-echo ">>>>> -p and -c together <<<<<"
-coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config && exit 1
-
 echo ">>>>> wrong mode for -g <<<<<"
 coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -m show_ok && exit 1
-
-echo ">>>>> -g and -c together <<<<<"
-coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config && exit 1
 
 cp kconfig_hardened_check/config_files/distros/fedora_34.config ./test.config
 
