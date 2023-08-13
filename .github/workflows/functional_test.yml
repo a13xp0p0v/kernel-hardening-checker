@@ -36,6 +36,7 @@ jobs:
     - name: Check all configs with the installed tool
       run: |
         echo "Check all configs with the installed tool..."
+        sysctl -a > /tmp/sysctls
         CONFIG_DIR=`find /opt/hostedtoolcache/Python/ -name config_files`
         KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
         COUNT=0
@@ -43,7 +44,7 @@ jobs:
         do
                 COUNT=$(expr $COUNT + 1)
                 echo -e "\n>>>>> checking kconfig number $COUNT <<<<<"
-                kconfig-hardened-check -c $C -l /proc/cmdline
+                kconfig-hardened-check -c $C -l /proc/cmdline -s /tmp/sysctls
         done
         echo -e "\nHave checked $COUNT kconfigs"
 

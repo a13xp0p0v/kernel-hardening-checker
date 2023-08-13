@@ -35,10 +35,11 @@ coverage run -a --branch bin/kconfig-hardened-check -g X86_32
 coverage run -a --branch bin/kconfig-hardened-check -g ARM64
 coverage run -a --branch bin/kconfig-hardened-check -g ARM
 
-echo ">>>>> check the example kconfig files and cmdline <<<<<"
+echo ">>>>> check the example kconfig files, cmdline, and sysctl <<<<<"
 cat /proc/cmdline
 echo "l1tf=off mds=full randomize_kstack_offset=on iommu.passthrough=0" > ./cmdline_example
 cat ./cmdline_example
+sysctl -a > /tmp/sysctls
 CONFIG_DIR=`find . -name config_files`
 KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
 COUNT=0
@@ -49,11 +50,12 @@ do
         coverage run -a --branch bin/kconfig-hardened-check -c $C > /dev/null
         coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose > /dev/null
         coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -m verbose > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -m json > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -m show_ok > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -m show_fail > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -s /tmp/sysctls > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls -m verbose > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls -m json > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls -m show_ok > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s /tmp/sysctls -m show_fail > /dev/null
 done
 echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 

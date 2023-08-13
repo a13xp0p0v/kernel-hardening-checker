@@ -15,10 +15,11 @@ steps:
       - which kconfig-hardened-check
       - kconfig-hardened-check
       - echo "Check all configs with the installed tool..."
+      - sysctl -a > /tmp/sysctls
       - CONFIG_DIR=`find /usr/local/lib/ -name config_files`
       - KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
       - COUNT=0
-      - for C in $KCONFIGS; do COUNT=$(expr $COUNT + 1); echo ">>>>> checking kconfig number $COUNT <<<<<"; kconfig-hardened-check -c $C -l /proc/cmdline; done
+      - for C in $KCONFIGS; do COUNT=$(expr $COUNT + 1); echo ">>>>> checking kconfig number $COUNT <<<<<"; kconfig-hardened-check -c $C -l /proc/cmdline -s /tmp/sysctls; done
       - echo "Have checked $COUNT kconfigs"
   functional-test-with-coverage:
     image: python:3
