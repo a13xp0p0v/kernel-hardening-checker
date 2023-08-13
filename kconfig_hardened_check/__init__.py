@@ -348,6 +348,8 @@ def main():
 
     if args.print:
         assert(args.config is None and args.cmdline is None and args.sysctl is None), 'unexpected args'
+        if args.generate:
+            sys.exit('[!] ERROR: --print and --generate can\'t be used together')
         if mode and mode not in ('verbose', 'json'):
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
@@ -360,7 +362,7 @@ def main():
         sys.exit(0)
 
     if args.generate:
-        assert(args.config is None and args.cmdline is None and args.sysctl is None), 'unexpected args'
+        assert(args.config is None and args.cmdline is None and args.sysctl is None and args.print is None), 'unexpected args'
         if mode:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
         arch = args.generate
