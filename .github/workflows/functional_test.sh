@@ -40,7 +40,7 @@ coverage run -a --branch bin/kconfig-hardened-check -g ARM
 
 echo ">>>>> check the example kconfig files, cmdline, and sysctl <<<<<"
 cat /proc/cmdline
-echo "l1tf=off mds=full randomize_kstack_offset=on iommu.passthrough=0" > ./cmdline_example
+echo "l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0" > ./cmdline_example
 cat ./cmdline_example
 sysctl -a > /tmp/sysctls
 CONFIG_DIR=`find . -name config_files`
