@@ -12,5 +12,4 @@ sys.path.insert(0, parent_dir)
 
 import kconfig_hardened_check
 
-if __name__ == "__main__":
-    kconfig_hardened_check.main()
+kconfig_hardened_check.main()
