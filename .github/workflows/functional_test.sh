@@ -125,4 +125,9 @@ echo 'hey man 1' > cmdline
 echo 'hey man 2' >> cmdline
 coverage run -a --branch bin/kconfig-hardened-check -c test.config -l cmdline && exit 1
 
+echo ">>>>> unexpected line in the sysctl file <<<<<"
+cp $SYSCTL_EXAMPLE error_sysctls
+echo 'some strange line' >> error_sysctls
+coverage run -a --branch bin/kconfig-hardened-check -c test.config -s error_sysctls && exit 1
+
 echo "The end of the functional tests"

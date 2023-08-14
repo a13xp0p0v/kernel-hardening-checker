@@ -205,7 +205,7 @@ def parse_sysctl_file(mode, parsed_options, fname):
         for line in f.readlines():
             line = line.strip()
             if not sysctl_pattern.match(line):
-                sys.exit(f'[!] ERROR: unexpected line in sysctl file: {line}')
+                sys.exit(f'[!] ERROR: unexpected line in sysctl file: "{line}"')
             option, value = line.split('=', 1)
             option = option.strip()
             value = value.strip()
