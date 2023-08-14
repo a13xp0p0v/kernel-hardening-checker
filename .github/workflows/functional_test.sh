@@ -3,6 +3,9 @@
 set -x
 set -e
 
+git status
+git show -s
+
 echo "Beginning of the functional tests"
 
 echo ">>>>> get help <<<<<"
