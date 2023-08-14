@@ -130,4 +130,8 @@ cp $SYSCTL_EXAMPLE error_sysctls
 echo 'some strange line' >> error_sysctls
 coverage run -a --branch bin/kconfig-hardened-check -c test.config -s error_sysctls && exit 1
 
+echo ">>>>> invalid sysctl file <<<<<"
+touch empty_file
+coverage run -a --branch bin/kconfig-hardened-check -c test.config -s empty_file && exit 1
+
 echo "The end of the functional tests"
