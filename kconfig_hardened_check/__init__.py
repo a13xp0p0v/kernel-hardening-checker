@@ -168,8 +168,8 @@ def parse_kconfig_file(mode, parsed_options, fname):
                 option, value = line[2:].split(' ', 1)
                 assert(value == 'is not set'), \
                        f'unexpected value of disabled Kconfig option "{line}"'
-            elif line != '' and not line.startswith('#') and mode != 'json':
-                print(f'[!] WARNING: strange line in Kconfig file: "{line}"')
+            elif line != '' and not line.startswith('#'):
+                sys.exit(f'[!] ERROR: unexpected line in Kconfig file: "{line}"')
 
             if option in parsed_options:
                 sys.exit(f'[!] ERROR: Kconfig option "{line}" is found multiple times')
