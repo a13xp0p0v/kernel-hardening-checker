@@ -115,6 +115,11 @@ cp test.config error.config
 sed '8 s/CONFIG_CLANG_VERSION=0/CONFIG_CLANG_VERSION=120000/' test.config > error.config
 coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
 
+echo ">>>>> unexpected line in the kconfig file <<<<<"
+cp test.config error.config
+echo 'some strange line' >> error.config
+coverage run -a --branch bin/kconfig-hardened-check -c error.config && exit 1
+
 echo ">>>>> multi-line cmdline file <<<<<"
 echo 'hey man 1' > cmdline
 echo 'hey man 2' >> cmdline
