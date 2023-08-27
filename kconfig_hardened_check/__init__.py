@@ -258,7 +258,6 @@ def main():
     if args.config:
         if args.print:
             sys.exit('[!] ERROR: --config and --print can\'t be used together')
-
         if args.generate:
             sys.exit('[!] ERROR: --config and --generate can\'t be used together')
 
@@ -338,13 +337,38 @@ def main():
 
         # finally print the results
         print_checklist(mode, config_checklist, True)
-
         sys.exit(0)
     elif args.cmdline:
         sys.exit('[!] ERROR: checking cmdline depends on checking Kconfig')
     elif args.sysctl:
-        # TODO: sysctl check should also work separately
-        sys.exit('[!] ERROR: checking sysctl depends on checking Kconfig')
+        # separate sysctl checking (without kconfig)
+        assert(args.config is None and args.cmdline is None), 'unexpected args'
+        if args.print:
+            sys.exit('[!] ERROR: --sysctl and --print can\'t be used together')
+        if args.generate:
+            sys.exit('[!] ERROR: --sysctl and --generate can\'t be used together')
+
+        if mode != 'json':
+            print(f'[+] Sysctl output file to check: {args.sysctl}')
+
+        # add relevant sysctl checks to the checklist
+        add_sysctl_checks(config_checklist, None)
+
+        # populate the checklist with the parsed sysctl data
+        parsed_sysctl_options = OrderedDict()
+        parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
+        populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
+
+        # now everything is ready, perform the checks
+        perform_checks(config_checklist)
+
+        if mode == 'verbose':
+            # print the parsed options without the checks (for debugging)
+            print_unknown_options(config_checklist, parsed_sysctl_options)
+
+        # finally print the results
+        print_checklist(mode, config_checklist, True)
+        sys.exit(0)
 
     if args.print:
         assert(args.config is None and args.cmdline is None and args.sysctl is None), 'unexpected args'

@@ -15,6 +15,8 @@ from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, A
 
 
 def add_kconfig_checks(l, arch):
+    assert(arch), 'empty arch'
+
     # Calling the KconfigCheck class constructor:
     #     KconfigCheck(reason, decision, name, expected)
     #
@@ -379,6 +381,8 @@ def add_kconfig_checks(l, arch):
 
 
 def add_cmdline_checks(l, arch):
+    assert(arch), 'empty arch'
+
     # Calling the CmdlineCheck class constructor:
     #     CmdlineCheck(reason, decision, name, expected)
     #
@@ -574,7 +578,6 @@ def normalize_cmdline_options(option, value):
     return value
 
 
-def add_sysctl_checks(l, arch):
 # TODO: draft of security hardening sysctls:
 #    kernel.kptr_restrict=2 (or 1?)
 #    kernel.yama.ptrace_scope=3
@@ -598,7 +601,10 @@ def add_sysctl_checks(l, arch):
 #    kernel.oops_limit (think about a proper value)
 #    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
-#
+
+def add_sysctl_checks(l, arch):
+# This function may be called with arch=None
+
 # Calling the SysctlCheck class constructor:
 #   SysctlCheck(reason, decision, name, expected)
 
