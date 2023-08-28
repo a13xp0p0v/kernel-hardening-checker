@@ -63,6 +63,13 @@ do
 done
 echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 
+echo ">>>>> check sysctl separately <<<<<"
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE > /dev/null
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m verbose > /dev/null
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m json > /dev/null
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m show_ok > /dev/null
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m show_fail > /dev/null
+
 echo "Collect coverage for error handling"
 
 echo ">>>>> -c and -p together <<<<<"
