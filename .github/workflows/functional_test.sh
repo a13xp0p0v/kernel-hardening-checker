@@ -51,24 +51,24 @@ for C in $KCONFIGS
 do
         COUNT=$(expr $COUNT + 1)
         echo "\n>>>>> checking kconfig number $COUNT <<<<<"
-        coverage run -a --branch bin/kconfig-hardened-check -c $C > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C
         coverage run -a --branch bin/kconfig-hardened-check -c $C -m verbose > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -s /tmp/sysctls > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l /proc/cmdline
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -s /tmp/sysctls
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE
         coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m verbose > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m json > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_ok > /dev/null
-        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_fail > /dev/null
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m json
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_ok
+        coverage run -a --branch bin/kconfig-hardened-check -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_fail
 done
 echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 
 echo ">>>>> check sysctl separately <<<<<"
-coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE > /dev/null
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE
 coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m verbose > /dev/null
-coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m json > /dev/null
-coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m show_ok > /dev/null
-coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m show_fail > /dev/null
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m json
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m show_ok
+coverage run -a --branch bin/kconfig-hardened-check -s $SYSCTL_EXAMPLE -m show_fail
 
 echo "Collect coverage for error handling"
 
