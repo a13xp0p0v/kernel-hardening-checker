@@ -78,11 +78,17 @@ coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -c kconfig_hardene
 echo ">>>>> -c and -g together <<<<<"
 coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -c kconfig_hardened_check/config_files/distros/fedora_34.config && exit 1
 
-echo ">>>>> -p and -g together <<<<<"
-coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -g X86_64 && exit 1
-
 echo ">>>>> -l without -c <<<<<"
 coverage run -a --branch bin/kconfig-hardened-check -l /proc/cmdline && exit 1
+
+echo ">>>>> -s and -p together <<<<<"
+coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -s $SYSCTL_EXAMPLE && exit 1
+
+echo ">>>>> -s and -g together <<<<<"
+coverage run -a --branch bin/kconfig-hardened-check -g X86_64 -s $SYSCTL_EXAMPLE && exit 1
+
+echo ">>>>> -p and -g together <<<<<"
+coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -g X86_64 && exit 1
 
 echo ">>>>> wrong modes for -p <<<<<"
 coverage run -a --branch bin/kconfig-hardened-check -p X86_64 -m show_ok && exit 1
