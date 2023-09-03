@@ -414,37 +414,38 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nobti', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nopauth', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nomte', 'is not set')]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'l1tf', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'l1tf', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mds', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'mds', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'tsx_async_abort', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'tsx_async_abort', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'srbds', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'srbds', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                 CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set')))]
+    if arch in ('X86_64', 'X86_32'):
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'l1tf', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'l1tf', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mds', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'mds', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'tsx_async_abort', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'tsx_async_abort', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'srbds', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'srbds', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not set')))]
     if arch == 'ARM64':
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'kernel'),
                  CmdlineCheck('self_protection', 'my', 'ssbd', 'force-on'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -474,12 +475,6 @@ def add_cmdline_checks(l, arch):
              AND(CmdlineCheck('self_protection', 'kspp', 'page_poison', '1'),
                  KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'slub_debug', 'P')))]
-    l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
-             AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
-                 CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
-    l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', '0'),
-             AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
-                 CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', 'is not set')))]
     # The cmdline checks compatible with the kconfig recommendations of the KSPP project...
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y'),
@@ -489,6 +484,12 @@ def add_cmdline_checks(l, arch):
                  CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set')))]
     # ... the end
     if arch in ('X86_64', 'ARM64', 'X86_32'):
+        l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
+                 AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', '0'),
+                 AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
+                     CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
