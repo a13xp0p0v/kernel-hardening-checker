@@ -663,7 +663,10 @@ def add_sysctl_checks(l, _arch):
 # Calling the SysctlCheck class constructor:
 #   SysctlCheck(reason, decision, name, expected)
 
-    l += [SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2')]
+    l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
+             AND(KconfigCheck('cut_attack_surface', 'kspp', 'BPF_JIT', 'is not set'),
+                 # use an omnipresent config symbol to see if we have a config file to check BPF_JIT.
+                 KconfigCheck('cut_attack_surface', 'kspp', 'DEFAULT_INIT', 'is present')))]
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
