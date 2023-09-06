@@ -663,14 +663,17 @@ def add_sysctl_checks(l, _arch):
 # Calling the SysctlCheck class constructor:
 #   SysctlCheck(reason, decision, name, expected)
 
+    # use an omnipresent config symbol to see if we have a config file
+    have_config_file = KconfigCheck('-', '-', 'DEFAULT_INIT', 'is present')
     l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
              AND(KconfigCheck('cut_attack_surface', 'kspp', 'BPF_JIT', 'is not set'),
-                 # use an omnipresent config symbol to see if we have a config file to check BPF_JIT.
-                 KconfigCheck('cut_attack_surface', 'kspp', 'DEFAULT_INIT', 'is present')))]
+                 have_config_file))]
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
-    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1')]
+    l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1'),
+             AND(KconfigCheck('cut_attack_surfice', 'kspp', 'KEXEC_CORE', 'is not set'),
+                 have_config_file))]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0')] # may break the upower daemon in Ubuntu
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.unprivileged_bpf_disabled', '1')]
