@@ -207,11 +207,11 @@ def add_kconfig_checks(l, arch):
                   cc_is_gcc)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'ARM64'):
-        l += [AND(cfi_clang_is_set,
-                  cc_is_clang)]
+        cfi_clang_or_gcc = OR(cfi_clang_is_set,
+                              cc_is_gcc)
+        l += [cfi_clang_or_gcc]
         l += [AND(cfi_clang_permissive_not_set,
-                  cfi_clang_is_set,
-                  cc_is_clang)]
+                  cfi_clang_or_gcc)]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
