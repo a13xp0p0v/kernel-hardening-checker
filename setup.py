@@ -3,7 +3,7 @@
 from setuptools import setup
 
 about = {}
-with open("kconfig_hardened_check/__about__.py") as f:
+with open("kernel_hardening_checker/__about__.py") as f:
     exec(f.read(), about)
 
 print('v: "{}"'.format(about['__version__']))

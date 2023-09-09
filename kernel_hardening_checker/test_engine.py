@@ -5,7 +5,7 @@ This tool is for checking the security hardening options of the Linux kernel.
 
 Author: Alexander Popov <alex.popov@linux.com>
 
-This module performs unit-testing of the kconfig-hardened-check engine.
+This module performs unit-testing of the kernel-hardening-checker engine.
 """
 
 # pylint: disable=missing-function-docstring,line-too-long

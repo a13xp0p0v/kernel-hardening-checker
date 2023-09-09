@@ -1,10 +1,10 @@
-# kconfig-hardened-check
+# kernel-hardening-checker (formerly kconfig-hardened-check)
 
-[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kconfig-hardened-check?label=release)](https://github.com/a13xp0p0v/kconfig-hardened-check/tags)<br />
-[![functional test](https://github.com/a13xp0p0v/kconfig-hardened-check/workflows/functional%20test/badge.svg)](https://github.com/a13xp0p0v/kconfig-hardened-check/actions/workflows/functional_test.yml)
-[![functional test coverage](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/graph/badge.svg?flag=functional_test)](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check)<br />
-[![engine unit-test](https://github.com/a13xp0p0v/kconfig-hardened-check/workflows/engine%20unit-test/badge.svg)](https://github.com/a13xp0p0v/kconfig-hardened-check/actions/workflows/engine_unit-test.yml)
-[![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/graph/badge.svg?flag=engine_unit-test)](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kernel-hardening-checker?label=release)](https://github.com/a13xp0p0v/kernel-hardening-checker/tags)<br />
+[![functional test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/functional%20test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/functional_test.yml)
+[![functional test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=functional_test)](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker)<br />
+[![engine unit-test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/engine%20unit-test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/engine_unit-test.yml)
+[![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=engine_unit-test)](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker)
 
 ## Motivation
 
@@ -14,7 +14,7 @@ make our systems more secure.
 
 But nobody likes checking configs manually. So let the computers do their job!
 
-__kconfig-hardened-check__ is a tool for checking the security hardening options of the Linux kernel. It supports checking:
+__kernel-hardening-checker__ is a tool for checking the security hardening options of the Linux kernel. It supports checking:
 
   - Kconfig options (compile-time)
   - Kernel cmdline arguments (boot-time)
@@ -39,9 +39,9 @@ of its typical workload.
 
 ## Repositories
 
- - Main at GitHub <https://github.com/a13xp0p0v/kconfig-hardened-check>
- - Mirror at Codeberg: <https://codeberg.org/a13xp0p0v/kconfig-hardened-check>
- - Mirror at GitFlic: <https://gitflic.ru/project/a13xp0p0v/kconfig-hardened-check>
+ - Main at GitHub <https://github.com/a13xp0p0v/kernel-hardening-checker>
+ - Mirror at Codeberg: <https://codeberg.org/a13xp0p0v/kernel-hardening-checker>
+ - Mirror at GitFlic: <https://gitflic.ru/project/a13xp0p0v/kernel-hardening-checker>
 
 ## Supported microarchitectures
 
@@ -57,16 +57,16 @@ TODO: RISC-V (issue [#56][22])
 You can install the package:
 
 ```
-pip install git+https://github.com/a13xp0p0v/kconfig-hardened-check
+pip install git+https://github.com/a13xp0p0v/kernel-hardening-checker
 ```
 
-or simply run `./bin/kconfig-hardened-check` from the cloned repository.
+or simply run `./bin/kernel-hardening-checker` from the cloned repository.
 
-Some Linux distributions also provide `kconfig-hardened-check` as a package.
+Some Linux distributions also provide `kernel-hardening-checker` as a package.
 
 ## Usage
 ```
-usage: kconfig-hardened-check [-h] [--version] [-m {verbose,json,show_ok,show_fail}]
+usage: kernel-hardening-checker [-h] [--version] [-m {verbose,json,show_ok,show_fail}]
                               [-c CONFIG] [-l CMDLINE] [-s SYSCTL]
                               [-p {X86_64,X86_32,ARM64,ARM}]
                               [-g {X86_64,X86_32,ARM64,ARM}]
@@ -110,14 +110,14 @@ CONFIG_DEVMEM                           |kconfig| is not set |   kspp   |cut_att
 ```
   - `-m show_fail` for showing only the failed checks
   - `-m show_ok` for showing only the successful checks
-  - `-m json` for printing the results in JSON format (for combining `kconfig-hardened-check` with other tools)
+  - `-m json` for printing the results in JSON format (for combining `kernel-hardening-checker` with other tools)
 
 ## Example output for `Fedora 38` kernel configuration
 ```
-$ ./bin/kconfig-hardened-check -c kconfig_hardened_check/config_files/distros/fedora_38.config -l /proc/cmdline -s kconfig_hardened_check/config_files/distros/example_sysctls.txt 
-[+] Kconfig file to check: kconfig_hardened_check/config_files/distros/fedora_38.config
+$ ./bin/kernel-hardening-checker -c kernel_hardening_checker/config_files/distros/fedora_38.config -l /proc/cmdline -s kernel_hardening_checker/config_files/distros/example_sysctls.txt 
+[+] Kconfig file to check: kernel_hardening_checker/config_files/distros/fedora_38.config
 [+] Kernel cmdline file to check: /proc/cmdline
-[+] Sysctl output file to check: kconfig_hardened_check/config_files/distros/example_sysctls.txt
+[+] Sysctl output file to check: kernel_hardening_checker/config_files/distros/example_sysctls.txt
 [+] Detected microarchitecture: X86_64
 [+] Detected kernel version: 6.3
 [+] Detected compiler: GCC 130101
@@ -374,7 +374,7 @@ With the `-g` argument, the tool generates a Kconfig fragment with the security 
 
 This Kconfig fragment can be merged with the existing Linux kernel config:
 ```
-$ ./bin/kconfig-hardened-check -g X86_64 > /tmp/fragment
+$ ./bin/kernel-hardening-checker -g X86_64 > /tmp/fragment
 $ cd ~/linux-src/
 $ ./scripts/kconfig/merge_config.sh .config /tmp/fragment
 Using .config as base
@@ -389,7 +389,7 @@ New value: CONFIG_BUG_ON_DATA_CORRUPTION=y
 
 __Q:__ How all these kernel parameters influence the Linux kernel security?
 
-__A:__ To answer this question, you can use the `kconfig-hardened-check` [sources of recommendations][24]
+__A:__ To answer this question, you can use the `kernel-hardening-checker` [sources of recommendations][24]
 and the [Linux Kernel Defence Map][4] with its references.
 
 <br />
@@ -463,7 +463,7 @@ try to install `gcc-7-plugin-dev` package, it should help.
 [3]: https://grsecurity.net/
 [4]: https://github.com/a13xp0p0v/linux-kernel-defence-map
 [5]: https://lwn.net/Articles/791863/
-[6]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38
+[6]: https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38
 [7]: https://github.com/BlackIkeEagle
 [8]: https://blog.herecura.eu/blog/2020-05-30-kconfig-hardening-tests/
 [9]: https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
@@ -472,13 +472,13 @@ try to install `gcc-7-plugin-dev` package, it should help.
 [12]: https://github.com/tych0
 [13]: https://github.com/speed47/spectre-meltdown-checker
 [14]: https://github.com/speed47
-[15]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53
-[16]: https://github.com/a13xp0p0v/kconfig-hardened-check/pull/54
-[17]: https://github.com/a13xp0p0v/kconfig-hardened-check/pull/62
+[15]: https://github.com/a13xp0p0v/kernel-hardening-checker/issues/53
+[16]: https://github.com/a13xp0p0v/kernel-hardening-checker/pull/54
+[17]: https://github.com/a13xp0p0v/kernel-hardening-checker/pull/62
 [18]: https://cateee.net/lkddb/web-lkddb/
 [19]: https://github.com/cateee/lkddb
 [20]: https://kernel.org/
-[21]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/66
-[22]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues/56
-[23]: https://github.com/a13xp0p0v/kconfig-hardened-check/issues?q=label%3Akernel_maintainer_feedback
-[24]: https://github.com/a13xp0p0v/kconfig-hardened-check#motivation
+[21]: https://github.com/a13xp0p0v/kernel-hardening-checker/issues/66
+[22]: https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56
+[23]: https://github.com/a13xp0p0v/kernel-hardening-checker/issues?q=label%3Akernel_maintainer_feedback
+[24]: https://github.com/a13xp0p0v/kernel-hardening-checker#motivation
