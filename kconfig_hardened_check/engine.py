@@ -23,9 +23,7 @@ def colorize_result(input):
         color = RED_COLOR
     else:
         assert(False), f'unexpected result "{input}"'
-    colored_result = f'{color}{input}{COLOR_END}'
-
-    print(f'| {colored_result}', end='')  
+    return f'{color}{input}{COLOR_END}'
 
 
 class OptCheck:
@@ -94,7 +92,7 @@ class OptCheck:
     def table_print(self, _mode, with_results):
         print(f'{self.name:<40}|{self.type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
         if with_results:
-            colorize_result(self.result)
+            print(f'| {colorize_result(self.result)}', end='') 
 
     def json_dump(self, with_results):
         dump = [self.name, self.type, self.expected, self.decision, self.reason]
@@ -153,7 +151,7 @@ class VersionCheck:
         ver_req = f'kernel version >= {self.ver_expected[0]}.{self.ver_expected[1]}'
         print(f'{ver_req:<91}', end='')
         if with_results:
-            colorize_result(self.result)
+            print(f'| {colorize_result(self.result)}', end='') 
 
 
 class ComplexOptCheck:
@@ -183,8 +181,7 @@ class ComplexOptCheck:
         if mode == 'verbose':
             print(f'    {"<<< " + self.__class__.__name__ + " >>>":87}', end='')
             if with_results:
-                colorize_result(self.result)
-
+                print(f'| {colorize_result(self.result)}', end='') 
             for o in self.opts:
                 print()
                 o.table_print(mode, with_results)
@@ -192,10 +189,7 @@ class ComplexOptCheck:
             o = self.opts[0]
             o.table_print(mode, False)
             if with_results:
-                 colorize_result(self.result)
-
-
-
+                 print(f'| {colorize_result(self.result)}', end='') 
 
     def json_dump(self, with_results):
         dump = self.opts[0].json_dump(False)
