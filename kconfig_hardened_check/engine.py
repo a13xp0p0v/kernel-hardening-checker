@@ -16,7 +16,6 @@ RED_COLOR = '\x1b[31m'
 COLOR_END = '\x1b[0m'
 
 def colorize_result(input):
-
     if input.startswith('OK'):
         color = GREEN_COLOR
     elif input.startswith('FAIL:'):
