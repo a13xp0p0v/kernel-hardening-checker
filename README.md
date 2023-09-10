@@ -1,10 +1,11 @@
-# kernel-hardening-checker (formerly kconfig-hardened-check)
+# kernel-hardening-checker
 
-[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kernel-hardening-checker?label=release)](https://github.com/a13xp0p0v/kernel-hardening-checker/tags)<br />
+__(formerly kconfig-hardened-check)__<br />
 [![functional test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/functional%20test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/functional_test.yml)
 [![functional test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=functional_test)](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker)<br />
 [![engine unit-test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/engine%20unit-test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/engine_unit-test.yml)
-[![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=engine_unit-test)](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker)
+[![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=engine_unit-test)](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker)<br />
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kernel-hardening-checker?label=release)](https://github.com/a13xp0p0v/kernel-hardening-checker/tags)
 
 ## Motivation
 
@@ -14,7 +15,7 @@ make our systems more secure.
 
 But nobody likes checking configs manually. So let the computers do their job!
 
-__kernel-hardening-checker__ is a tool for checking the security hardening options of the Linux kernel. It supports checking:
+__kernel-hardening-checker__ (formerly __kconfig-hardened-check__) is a tool for checking the security hardening options of the Linux kernel. It supports checking:
 
   - Kconfig options (compile-time)
   - Kernel cmdline arguments (boot-time)
