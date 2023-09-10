@@ -188,7 +188,7 @@ class ComplexOptCheck:
             o = self.opts[0]
             o.table_print(mode, False)
             if with_results:
-                 print(f'| {colorize_result(self.result)}', end=')
+                 print(f'| {colorize_result(self.result)}', end='')
 
     def json_dump(self, with_results):
         dump = self.opts[0].json_dump(False)
