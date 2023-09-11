@@ -15,14 +15,16 @@ GREEN_COLOR = '\x1b[32m'
 RED_COLOR = '\x1b[31m'
 COLOR_END = '\x1b[0m'
 
-def colorize_result(input):
-    if input.startswith('OK'):
+def colorize_result(input_text):
+    if input_text is None:
+        return input_text
+    if input_text.startswith('OK'):
         color = GREEN_COLOR
-    elif input.startswith('FAIL:'):
+    elif input_text.startswith('FAIL:'):
         color = RED_COLOR
     else:
-        assert(False), f'unexpected result "{input}"'
-    return f'{color}{input}{COLOR_END}'
+        assert(False), f'unexpected result "{input_text}"'
+    return f'{color}{input_text}{COLOR_END}'
 
 
 class OptCheck:
@@ -188,7 +190,7 @@ class ComplexOptCheck:
             o = self.opts[0]
             o.table_print(mode, False)
             if with_results:
-                 print(f'| {colorize_result(self.result)}', end='')
+                print(f'| {colorize_result(self.result)}', end='')
 
     def json_dump(self, with_results):
         dump = self.opts[0].json_dump(False)
