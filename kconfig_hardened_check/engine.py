@@ -11,6 +11,21 @@ This module is the engine of checks.
 # pylint: disable=missing-class-docstring,missing-function-docstring
 # pylint: disable=line-too-long,invalid-name,too-many-branches
 
+GREEN_COLOR = '\x1b[32m'
+RED_COLOR = '\x1b[31m'
+COLOR_END = '\x1b[0m'
+
+def colorize_result(input_text):
+    if input_text is None:
+        return input_text
+    if input_text.startswith('OK'):
+        color = GREEN_COLOR
+    elif input_text.startswith('FAIL:'):
+        color = RED_COLOR
+    else:
+        assert(False), f'unexpected result "{input_text}"'
+    return f'{color}{input_text}{COLOR_END}'
+
 
 class OptCheck:
     def __init__(self, reason, decision, name, expected):
@@ -78,7 +93,7 @@ class OptCheck:
     def table_print(self, _mode, with_results):
         print(f'{self.name:<40}|{self.type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
         if with_results:
-            print(f'| {self.result}', end='')
+            print(f'| {colorize_result(self.result)}', end='')
 
     def json_dump(self, with_results):
         dump = [self.name, self.type, self.expected, self.decision, self.reason]
@@ -137,7 +152,7 @@ class VersionCheck:
         ver_req = f'kernel version >= {self.ver_expected[0]}.{self.ver_expected[1]}'
         print(f'{ver_req:<91}', end='')
         if with_results:
-            print(f'| {self.result}', end='')
+            print(f'| {colorize_result(self.result)}', end='')
 
 
 class ComplexOptCheck:
@@ -167,7 +182,7 @@ class ComplexOptCheck:
         if mode == 'verbose':
             print(f'    {"<<< " + self.__class__.__name__ + " >>>":87}', end='')
             if with_results:
-                print(f'| {self.result}', end='')
+                print(f'| {colorize_result(self.result)}', end='')
             for o in self.opts:
                 print()
                 o.table_print(mode, with_results)
@@ -175,7 +190,7 @@ class ComplexOptCheck:
             o = self.opts[0]
             o.table_print(mode, False)
             if with_results:
-                print(f'| {self.result}', end='')
+                print(f'| {colorize_result(self.result)}', end='')
 
     def json_dump(self, with_results):
         dump = self.opts[0].json_dump(False)

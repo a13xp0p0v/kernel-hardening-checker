@@ -16,6 +16,7 @@ import sys
 from collections import OrderedDict
 import json
 from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
+import re
 
 
 class TestEngine(unittest.TestCase):
@@ -387,8 +388,9 @@ class TestEngine(unittest.TestCase):
 
         stdout_result = []
         self.get_engine_result(config_checklist, stdout_result, 'stdout')
+        stdout_result_clean = [re.sub(r'\x1b(\[.*?[@-~]|\].*?(\x07|\x1b\\))', '', s) for s in stdout_result]
         self.assertEqual(
-                stdout_result,
+                stdout_result_clean,
                 [
 "\
 CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | FAIL: is not found\
@@ -398,8 +400,9 @@ name_4                                  |cmdline| expected_4 |decision_4|     re
 
         stdout_result = []
         self.get_engine_result(config_checklist, stdout_result, 'stdout_verbose')
+        stdout_result_clean = [re.sub(r'\x1b(\[.*?[@-~]|\].*?(\x07|\x1b\\))', '', s) for s in stdout_result]
         self.assertEqual(
-                stdout_result,
+                stdout_result_clean,
                 [
 "\
     <<< OR >>>                                                                             | FAIL: is not found\n\
