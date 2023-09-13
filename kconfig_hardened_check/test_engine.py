@@ -16,7 +16,6 @@ import sys
 from collections import OrderedDict
 import json
 from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
-import re
 
 
 class TestEngine(unittest.TestCase):
@@ -388,35 +387,33 @@ class TestEngine(unittest.TestCase):
 
         stdout_result = []
         self.get_engine_result(config_checklist, stdout_result, 'stdout')
-        stdout_result_clean = [re.sub(r'\x1b(\[.*?[@-~]|\].*?(\x07|\x1b\\))', '', s) for s in stdout_result]
         self.assertEqual(
-                stdout_result_clean,
+                stdout_result,
                 [
 "\
-CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | FAIL: is not found\
-name_4                                  |cmdline| expected_4 |decision_4|     reason_4     | FAIL: CONFIG_NAME_5 is not \"expected_5\"\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[31mFAIL: is not found\x1b[0m\
+name_4                                  |cmdline| expected_4 |decision_4|     reason_4     | \x1b[31mFAIL: CONFIG_NAME_5 is not \"expected_5\"\x1b[0m\
 "               ]
         )
 
         stdout_result = []
         self.get_engine_result(config_checklist, stdout_result, 'stdout_verbose')
-        stdout_result_clean = [re.sub(r'\x1b(\[.*?[@-~]|\].*?(\x07|\x1b\\))', '', s) for s in stdout_result]
         self.assertEqual(
-                stdout_result_clean,
+                stdout_result,
                 [
 "\
-    <<< OR >>>                                                                             | FAIL: is not found\n\
-CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | FAIL: is not found\n\
-    <<< AND >>>                                                                            | FAIL: name_3 is not \"expected_3\"\n\
+    <<< OR >>>                                                                             | \x1b[31mFAIL: is not found\x1b[0m\n\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[31mFAIL: is not found\x1b[0m\n\
+    <<< AND >>>                                                                            | \x1b[31mFAIL: name_3 is not \"expected_3\"\x1b[0m\n\
 name_2                                  |cmdline| expected_2 |decision_2|     reason_2     | None\n\
-name_3                                  |sysctl | expected_3 |decision_3|     reason_3     | FAIL: \"UNexpected_3\"\
+name_3                                  |sysctl | expected_3 |decision_3|     reason_3     | \x1b[31mFAIL: \"UNexpected_3\"\x1b[0m\
 "\
 "\
-    <<< AND >>>                                                                            | FAIL: CONFIG_NAME_5 is not \"expected_5\"\n\
+    <<< AND >>>                                                                            | \x1b[31mFAIL: CONFIG_NAME_5 is not \"expected_5\"\x1b[0m\n\
 name_4                                  |cmdline| expected_4 |decision_4|     reason_4     | None\n\
-    <<< OR >>>                                                                             | FAIL: is not found\n\
-CONFIG_NAME_5                           |kconfig| expected_5 |decision_5|     reason_5     | FAIL: is not found\n\
-name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | FAIL: \"UNexpected_6\"\
+    <<< OR >>>                                                                             | \x1b[31mFAIL: is not found\x1b[0m\n\
+CONFIG_NAME_5                           |kconfig| expected_5 |decision_5|     reason_5     | \x1b[31mFAIL: is not found\x1b[0m\n\
+name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | \x1b[31mFAIL: \"UNexpected_6\"\x1b[0m\
 "               ]
         )
 
