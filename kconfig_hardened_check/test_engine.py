@@ -241,12 +241,12 @@ class TestEngine(unittest.TestCase):
                                 KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'))]
         config_checklist += [OR(KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5'),
                                 KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'))]
-        config_checklist += [OR(KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'),
-                                KconfigCheck('reason_7', 'decision_7', 'NAME_7', 'is not set'))]
-        config_checklist += [OR(KconfigCheck('reason_8', 'decision_8', 'NAME_8', 'expected_8'),
-                                KconfigCheck('reason_9', 'decision_9', 'NAME_9', 'is present'))]
-        config_checklist += [OR(KconfigCheck('reason_10', 'decision_10', 'NAME_10', 'expected_10'),
-                                KconfigCheck('reason_11', 'decision_11', 'NAME_11', 'is not off'))]
+        config_checklist += [OR(KconfigCheck('reason_7', 'decision_7', 'NAME_7', 'expected_7'),
+                                KconfigCheck('reason_8', 'decision_8', 'NAME_8', 'is not set'))]
+        config_checklist += [OR(KconfigCheck('reason_9', 'decision_9', 'NAME_9', 'expected_9'),
+                                KconfigCheck('reason_10', 'decision_10', 'NAME_10', 'is present'))]
+        config_checklist += [OR(KconfigCheck('reason_11', 'decision_11', 'NAME_11', 'expected_11'),
+                                KconfigCheck('reason_12', 'decision_12', 'NAME_12', 'is not off'))]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
@@ -256,8 +256,8 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_4'] = 'expected_4'
         parsed_kconfig_options['CONFIG_NAME_5'] = 'UNexpected_5'
         parsed_kconfig_options['CONFIG_NAME_6'] = 'UNexpected_6'
-        parsed_kconfig_options['CONFIG_NAME_9'] = 'UNexpected_9'
-        parsed_kconfig_options['CONFIG_NAME_11'] = 'really_not_off'
+        parsed_kconfig_options['CONFIG_NAME_10'] = 'UNexpected_10'
+        parsed_kconfig_options['CONFIG_NAME_12'] = 'really_not_off'
 
         # 3. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
@@ -270,9 +270,9 @@ class TestEngine(unittest.TestCase):
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
                  ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "OK: CONFIG_NAME_4 is \"expected_4\""],
                  ["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: \"UNexpected_5\""],
-                 ["CONFIG_NAME_6", "kconfig", "expected_6", "decision_6", "reason_6", "OK: CONFIG_NAME_7 is not found"],
-                 ["CONFIG_NAME_8", "kconfig", "expected_8", "decision_8", "reason_8", "OK: CONFIG_NAME_9 is present"],
-                 ["CONFIG_NAME_10", "kconfig", "expected_10", "decision_10", "reason_10", "OK: CONFIG_NAME_11 is not off"]]
+                 ["CONFIG_NAME_7", "kconfig", "expected_7", "decision_7", "reason_7", "OK: CONFIG_NAME_8 is not found"],
+                 ["CONFIG_NAME_9", "kconfig", "expected_9", "decision_9", "reason_9", "OK: CONFIG_NAME_10 is present"],
+                 ["CONFIG_NAME_11", "kconfig", "expected_11", "decision_11", "reason_11", "OK: CONFIG_NAME_12 is not off"]]
         )
 
     def test_complex_and(self):
@@ -284,12 +284,12 @@ class TestEngine(unittest.TestCase):
                                  KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'))]
         config_checklist += [AND(KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5'),
                                  KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'))]
-        config_checklist += [AND(KconfigCheck('reason_8', 'decision_8', 'NAME_8', 'expected_8'),
-                                 KconfigCheck('reason_9', 'decision_9', 'NAME_9', 'is present'))]
-        config_checklist += [AND(KconfigCheck('reason_10', 'decision_10', 'NAME_10', 'expected_10'),
-                                 KconfigCheck('reason_11', 'decision_11', 'NAME_11', 'is not off'))]
-        config_checklist += [AND(KconfigCheck('reason_12', 'decision_12', 'NAME_12', 'expected_12'),
-                                 KconfigCheck('reason_13', 'decision_13', 'NAME_13', 'is not off'))]
+        config_checklist += [AND(KconfigCheck('reason_7', 'decision_7', 'NAME_7', 'expected_7'),
+                                 KconfigCheck('reason_8', 'decision_8', 'NAME_8', 'is present'))]
+        config_checklist += [AND(KconfigCheck('reason_9', 'decision_9', 'NAME_9', 'expected_9'),
+                                 KconfigCheck('reason_10', 'decision_10', 'NAME_10', 'is not off'))]
+        config_checklist += [AND(KconfigCheck('reason_11', 'decision_11', 'NAME_11', 'expected_11'),
+                                 KconfigCheck('reason_12', 'decision_12', 'NAME_12', 'is not off'))]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
@@ -299,10 +299,10 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_4'] = 'UNexpected_4'
         parsed_kconfig_options['CONFIG_NAME_5'] = 'UNexpected_5'
         parsed_kconfig_options['CONFIG_NAME_6'] = 'expected_6'
-        parsed_kconfig_options['CONFIG_NAME_8'] = 'expected_8'
-        parsed_kconfig_options['CONFIG_NAME_10'] = 'expected_10'
-        parsed_kconfig_options['CONFIG_NAME_11'] = '0'
-        parsed_kconfig_options['CONFIG_NAME_12'] = 'expected_12'
+        parsed_kconfig_options['CONFIG_NAME_7'] = 'expected_7'
+        parsed_kconfig_options['CONFIG_NAME_9'] = 'expected_9'
+        parsed_kconfig_options['CONFIG_NAME_10'] = '0'
+        parsed_kconfig_options['CONFIG_NAME_11'] = 'expected_11'
 
         # 3. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
@@ -315,9 +315,9 @@ class TestEngine(unittest.TestCase):
                 [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
                  ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "FAIL: CONFIG_NAME_4 is not \"expected_4\""],
                  ["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: \"UNexpected_5\""],
-                 ["CONFIG_NAME_8", "kconfig", "expected_8", "decision_8", "reason_8", "FAIL: CONFIG_NAME_9 is not present"],
-                 ["CONFIG_NAME_10", "kconfig", "expected_10", "decision_10", "reason_10", "FAIL: CONFIG_NAME_11 is off"],
-                 ["CONFIG_NAME_12", "kconfig", "expected_12", "decision_12", "reason_12", "FAIL: CONFIG_NAME_13 is off, not found"]]
+                 ["CONFIG_NAME_7", "kconfig", "expected_7", "decision_7", "reason_7", "FAIL: CONFIG_NAME_8 is not present"],
+                 ["CONFIG_NAME_9", "kconfig", "expected_9", "decision_9", "reason_9", "FAIL: CONFIG_NAME_10 is off"],
+                 ["CONFIG_NAME_11", "kconfig", "expected_11", "decision_11", "reason_11", "FAIL: CONFIG_NAME_12 is off, not found"]]
         )
 
     def test_version(self):
