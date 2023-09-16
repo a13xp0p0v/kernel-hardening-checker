@@ -358,31 +358,35 @@ class TestEngine(unittest.TestCase):
         # 1. prepare the checklist
         config_checklist = []
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
-                                AND(CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2'),
-                                    SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')))]
-        config_checklist += [AND(CmdlineCheck('reason_4', 'decision_4', 'name_4', 'expected_4'),
-                                 OR(KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5'),
-                                    SysctlCheck('reason_6', 'decision_6', 'name_6', 'expected_6')))]
+                                CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2'),
+                                SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3'))]
+        config_checklist += [AND(KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'),
+                                 CmdlineCheck('reason_5', 'decision_5', 'name_5', 'expected_5'),
+                                 SysctlCheck('reason_6', 'decision_6', 'name_6', 'expected_6'))]
 
-        # 2. prepare the parsed cmdline options
+        # 2. prepare the parsed kconfig options
+        parsed_kconfig_options = OrderedDict()
+        parsed_kconfig_options['CONFIG_NAME_1'] = 'UNexpected_1'
+
+        # 3. prepare the parsed cmdline options
         parsed_cmdline_options = OrderedDict()
-        parsed_cmdline_options['name_4'] = 'expected_4'
+        parsed_cmdline_options['name_2'] = 'expected_2'
+        parsed_cmdline_options['name_5'] = 'UNexpected_5'
 
-        # 3. prepare the parsed sysctl options
+        # 4. prepare the parsed sysctl options
         parsed_sysctl_options = OrderedDict()
-        parsed_sysctl_options['name_3'] = 'UNexpected_3'
-        parsed_sysctl_options['name_6'] = 'UNexpected_6'
+        parsed_sysctl_options['name_6'] = 'expected_6'
 
-        # 4. run the engine
-        self.run_engine(config_checklist, None, parsed_cmdline_options, parsed_sysctl_options, None)
+        # 5. run the engine
+        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, None)
 
-        # 5. check that the results are correct
+        # 6. check that the results are correct
         json_result = []
         self.get_engine_result(config_checklist, json_result, 'json')
         self.assertEqual(
                 json_result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "FAIL: is not found"],
-                 ["name_4", "cmdline", "expected_4", "decision_4", "reason_4", "FAIL: CONFIG_NAME_5 is not \"expected_5\""]]
+                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK: name_2 is \"expected_2\""],
+                 ["CONFIG_NAME_4", "kconfig", "expected_4", "decision_4", "reason_4", "FAIL: name_5 is not \"expected_5\""]]
         )
 
         stdout_result = []
@@ -391,8 +395,8 @@ class TestEngine(unittest.TestCase):
                 stdout_result,
                 [
 "\
-CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[31mFAIL: is not found\x1b[0m\
-name_4                                  |cmdline| expected_4 |decision_4|     reason_4     | \x1b[31mFAIL: CONFIG_NAME_5 is not \"expected_5\"\x1b[0m\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[32mOK: name_2 is \"expected_2\"\x1b[0m\
+CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | \x1b[31mFAIL: name_5 is not \"expected_5\"\x1b[0m\
 "               ]
         )
 
@@ -402,18 +406,16 @@ name_4                                  |cmdline| expected_4 |decision_4|     re
                 stdout_result,
                 [
 "\
-    <<< OR >>>                                                                             | \x1b[31mFAIL: is not found\x1b[0m\n\
-CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[31mFAIL: is not found\x1b[0m\n\
-    <<< AND >>>                                                                            | \x1b[31mFAIL: name_3 is not \"expected_3\"\x1b[0m\n\
-name_2                                  |cmdline| expected_2 |decision_2|     reason_2     | None\n\
-name_3                                  |sysctl | expected_3 |decision_3|     reason_3     | \x1b[31mFAIL: \"UNexpected_3\"\x1b[0m\
+    <<< OR >>>                                                                             | \x1b[32mOK: name_2 is \"expected_2\"\x1b[0m\n\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[31mFAIL: \"UNexpected_1\"\x1b[0m\n\
+name_2                                  |cmdline| expected_2 |decision_2|     reason_2     | \x1b[32mOK\x1b[0m\n\
+name_3                                  |sysctl | expected_3 |decision_3|     reason_3     | None\
 "\
 "\
-    <<< AND >>>                                                                            | \x1b[31mFAIL: CONFIG_NAME_5 is not \"expected_5\"\x1b[0m\n\
-name_4                                  |cmdline| expected_4 |decision_4|     reason_4     | None\n\
-    <<< OR >>>                                                                             | \x1b[31mFAIL: is not found\x1b[0m\n\
-CONFIG_NAME_5                           |kconfig| expected_5 |decision_5|     reason_5     | \x1b[31mFAIL: is not found\x1b[0m\n\
-name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | \x1b[31mFAIL: \"UNexpected_6\"\x1b[0m\
+    <<< AND >>>                                                                            | \x1b[31mFAIL: name_5 is not \"expected_5\"\x1b[0m\n\
+CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | None\n\
+name_5                                  |cmdline| expected_5 |decision_5|     reason_5     | \x1b[31mFAIL: \"UNexpected_5\"\x1b[0m\n\
+name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | \x1b[32mOK\x1b[0m\
 "               ]
         )
 
