@@ -15,6 +15,7 @@ import io
 import sys
 from collections import OrderedDict
 import json
+import inspect
 from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
 
 
@@ -68,14 +69,14 @@ class TestEngine(unittest.TestCase):
         perform_checks(checklist)
 
         # print the table with the results
-        print('TABLE:')
+        print(f'\n{inspect.stack()[1].function}():')
+        print('=' * 121)
         for opt in checklist:
             opt.table_print('verbose', True) # verbose mode, with_results
             print()
             print('=' * 121)
 
         # print the results in JSON
-        print('JSON:')
         result = []
         for opt in checklist:
             result.append(opt.json_dump(True)) # with_results
