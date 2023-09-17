@@ -34,7 +34,7 @@ jobs:
 
     - name: Run unit-tests and collect coverage
       run: |
-        coverage run --include=kconfig_hardened_check/engine.py,kconfig_hardened_check/test_engine.py -m unittest -v -b
+        coverage run --include=kernel_hardening_checker/engine.py,kernel_hardening_checker/test_engine.py -m unittest -v -b
         coverage xml -i -o coverage_unittest.xml
 
     - name: Handle coverage

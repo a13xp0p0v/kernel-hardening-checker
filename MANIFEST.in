@@ -1,3 +1,3 @@
 include README.md
 include LICENSE.txt
-recursive-include kconfig_hardened_check *
+recursive-include kernel_hardening_checker *

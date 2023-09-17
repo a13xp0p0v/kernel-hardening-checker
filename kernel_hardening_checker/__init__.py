@@ -230,7 +230,7 @@ def main():
     #   * json mode for printing the results in JSON format
     report_modes = ['verbose', 'json', 'show_ok', 'show_fail']
     supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
-    parser = ArgumentParser(prog='kconfig-hardened-check',
+    parser = ArgumentParser(prog='kernel-hardening-checker',
                             description='A tool for checking the security hardening options of the Linux kernel')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument('-m', '--mode', choices=report_modes,
