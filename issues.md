@@ -1,8 +1,681 @@
-Export of Github issues for [a13xp0p0v/kconfig-hardened-check](https://github.com/a13xp0p0v/kconfig-hardened-check).
+Export of Github issues for [a13xp0p0v/kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker). Generated on 2023.09.18 at 01:51:32.
 
-# [\#76 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/76) `open`: iommu=force
+# [\#87 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/87) `open`: Add a check for IA32_EMULATION
 
-#### <img src="https://avatars.githubusercontent.com/u/74207682?u=e2caba41d5de242cc07db2138f9fe9dc997a7300&v=4" width="50">[d4rklynk](https://github.com/d4rklynk) opened issue at [2022-12-13 17:58](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/76):
+#### <img src="https://avatars.githubusercontent.com/u/325724?u=4446b76c0f4ebcbecb2678759f8d13817a67f85d&v=4" width="50">[jvoisin](https://github.com/jvoisin) opened issue at [2023-09-14 12:36](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/87):
+
+As [reported by phoronix](https://www.phoronix.com/news/Linux-6.7-ia32_emulation-Boot), it's now possible to disable 32b support on amd64, to reduce attack surface.
+
+
+
+
+-------------------------------------------------------------------------------
+
+# [\#86 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86) `merged`: Add colors to output
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) opened issue at [2023-09-10 17:49](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86):
+
+Shows OK in green and FAIL in red
+
+<img width="1047" alt="image" src="https://github.com/a13xp0p0v/kconfig-hardened-check/assets/5826484/d098d14f-2e1a-4569-af22-54ef2bc0eecb">
+
+fixes #81
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-10 19:25](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86#issuecomment-1712916729):
+
+@frakman1, thanks for the pull request!
+
+There are some small mistakes that break the tests.
+
+Looking forward to your fixes.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-11 18:25](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86#issuecomment-1714376333):
+
+Hello @frakman1, the CI tests are broken again.
+
+Please see, the argument of `colorize_result()` may be None in the verbose mode of the tool.
+So we need to add something like that at the beginning of the function:
+```
+    if input is None:
+        return input
+```
+
+Also please fix two pylint warnings added by this PR:
+
+1) W0311: Bad indentation. Found 17 spaces, expected 16 (bad-indentation)
+
+2) W0622: Redefining built-in 'input' (redefined-builtin).
+To fix this, you need to rename the argument of the function.
+
+Thanks again!
+Looking forward to the fixes.
+
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2023-09-11 23:05](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86#issuecomment-1714703072):
+
+## [Codecov](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/86?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
+> Merging [#86](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/86?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (374aee3) into [master](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/108eb7374967b0f66e70b68cca60a0548f12844c?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (108eb73) will **decrease** coverage by `1.32%`.
+> The diff coverage is `87.50%`.
+
+:exclamation: Your organization needs to install the [Codecov GitHub app](https://github.com/apps/codecov/installations/select_target) to enable full functionality.
+
+```diff
+@@             Coverage Diff             @@
+##            master      #86      +/-   ##
+===========================================
+- Coverage   100.00%   98.68%   -1.32%     
+===========================================
+  Files            6        5       -1     
+  Lines         1049      839     -210     
+  Branches       184      187       +3     
+===========================================
+- Hits          1049      828     -221     
+- Misses           0        5       +5     
+- Partials         0        6       +6     
+```
+
+| [Flag](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/86/flags?src=pr&el=flags&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | Coverage Δ | |
+|---|---|---|
+| [engine_unit-test](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/86/flags?src=pr&el=flag&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | `?` | |
+| [functional_test](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/86/flags?src=pr&el=flag&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | `98.68% <87.50%> (-0.23%)` | :arrow_down: |
+
+Flags with carried forward coverage won't be shown. [Click here](https://docs.codecov.io/docs/carryforward-flags?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#carryforward-flags-in-the-pull-request-comment) to find out more.
+
+| [Files Changed](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/86?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | Coverage Δ | |
+|---|---|---|
+| [kconfig\_hardened\_check/engine.py](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/86?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#diff-a2NvbmZpZ19oYXJkZW5lZF9jaGVjay9lbmdpbmUucHk=) | `94.58% <87.50%> (-5.42%)` | :arrow_down: |
+
+... and [1 file with indirect coverage changes](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/86/indirect-changes?src=pr&el=tree-more&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov)
+
+:mega: We’re building smart automated test selection to slash your CI/CD build times. [Learn more](https://about.codecov.io/iterative-testing/?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov)
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-12 17:40](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86#issuecomment-1716159903):
+
+@frakman1, thanks for the fixes!
+
+I think we should better add colors to the `stdout_result` in the unit tests instead of filtering them out before `assertEqual()`.
+
+That would allow to test that `colorize_result()` works as expected.
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-12 22:12](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86#issuecomment-1716580970):
+
+I'm sorry, this is outside the scope of my knowledge or effort. Not intersted in re-writing test cases.
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-13 22:14](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86#issuecomment-1718385583):
+
+Thank you!
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-13 22:50](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/86#issuecomment-1718412639):
+
+Added f8f7033.
+
+Thanks for you contribution, @frakman1!
+
+
+-------------------------------------------------------------------------------
+
+# [\#85 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/85) `merged`: Rename kconfig-hardened-check into kernel-hardening-checker
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2023-09-10 12:18](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/85):
+
+**kconfig-hardened-check** is a tool for checking the security hardening options of the Linux kernel.
+
+In addition to Kconfig options, it now can check kernel cmdline arguments and sysctl parameters.
+
+It's time to give this project a new name that describes it better: **kernel-hardening-checker**.
+
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2023-09-10 12:19](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/85#issuecomment-1712799348):
+
+## [Codecov](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
+> Merging [#85](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (032f67f) into [master](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/f8e47e12ddf6b5c7b7562af6b85b8f65481e4b07?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (f8e47e1) will **decrease** coverage by `0.04%`.
+> The diff coverage is `n/a`.
+
+:exclamation: Your organization needs to install the [Codecov GitHub app](https://github.com/apps/codecov/installations/select_target) to enable full functionality.
+
+```diff
+@@            Coverage Diff             @@
+##           master      #85      +/-   ##
+==========================================
+- Coverage   99.81%   99.77%   -0.04%     
+==========================================
+  Files           6        2       -4     
+  Lines        1087      451     -636     
+  Branches      174        0     -174     
+==========================================
+- Hits         1085      450     -635     
+  Misses          1        1              
++ Partials        1        0       -1     
+```
+
+| [Flag](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85/flags?src=pr&el=flags&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | Coverage Δ | |
+|---|---|---|
+| [engine_unit-test](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85/flags?src=pr&el=flag&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | `99.77% <ø> (ø)` | |
+| [functional_test](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85/flags?src=pr&el=flag&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | `?` | |
+
+Flags with carried forward coverage won't be shown. [Click here](https://docs.codecov.io/docs/carryforward-flags?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#carryforward-flags-in-the-pull-request-comment) to find out more.
+
+| [Files Changed](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | Coverage Δ | |
+|---|---|---|
+| [kernel\_hardening\_checker/engine.py](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#diff-a2VybmVsX2hhcmRlbmluZ19jaGVja2VyL2VuZ2luZS5weQ==) | `99.50% <ø> (ø)` | |
+| [kernel\_hardening\_checker/test\_engine.py](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#diff-a2VybmVsX2hhcmRlbmluZ19jaGVja2VyL3Rlc3RfZW5naW5lLnB5) | `100.00% <ø> (ø)` | |
+
+... and [4 files with indirect coverage changes](https://app.codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/85/indirect-changes?src=pr&el=tree-more&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov)
+
+:mega: We’re building smart automated test selection to slash your CI/CD build times. [Learn more](https://about.codecov.io/iterative-testing/?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov)
+
+
+-------------------------------------------------------------------------------
+
+# [\#84 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/84) `open`: Add RDK Linux Hardening specification flags
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) opened issue at [2023-09-01 12:48](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/84):
+
+The [RDK Linux Hardening specification](https://developer.rdkcentral.com/documentation/documentation/licensee_specific_subsystems/rdk_security_concepts/rdk_software_security_specifications/rdk_linux_hardening_specification/) lists many flags that are not checked in this tool. The first five I looked for were not there: `CONFIG_DEBUG_KERNEL` `CONFIG_MARKERS` `CONFIG_DEBUG_MEMLEAK` and `CONFIG_ELF_CORE`
+
+Perhaps these can be added as part of a new 'RDK security policy' check for the 'decision' column
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-05 14:23](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/84#issuecomment-1706723756):
+
+Link no longer appears to be up. I saved a cache for reference:
+
+----
+
+RDK Linux Hardening specification 
+Created on June 21, 2022 
+1.	Ensure no hard-coded credentials are present in the clear
+2.	Ensure compliance with Comcast specifications for crypto and TLS 
+o	All STB connections to servers must be secured using TLS 1.2 or above, and verified to be correctly performing server certificate chain validation
+3.	Build with stack-smashing (at least for modules implementing security) 
+o	Enable CONFIG_CC_STACKPROTECTOR, -fstack-protector-all, -Wstack-protector
+o	Libc function buffer overrun checks: _FORTIFY_SOURCE=2
+o	Initial requirement would be to enable this for all security sensitive modules with follow up to enable for the entire build.
+4.	Scan all non-OSS sources with static analyzer
+5.	Network port blocking 
+o	All ports not specifically used must be blocked by ipTables rules 
+6.	Disable all unused devices (USB, Bluetooth, etc)
+7.	Implement multiuser/sandbox strategy (Restrict Linux process privileges) 
+o	No applications/utilities within a sandbox should run as root or have any means to achieve root privileges.  Sandbox shall not contains hard links to outside files.  Every sandbox connected to external network shall contain its own firewall and shall be configured using a whitelist.
+o	Configure processes to the minimum capabilities and resources required for their operation.  Have unique user and group own service components/applications that need to be isolated.  Users have permissions to access the required device files only.  Shared files are access controlled using group permissions. Default permissions for newly created files include read/write/exec permissions for the owner only.  Always use setresuid() and setresgid() functions to change the current user and group. Always confirm the change with getresuid() and getresgid() function.  Users and groups must have unique ID’s
+o	In progress, containerization via LXC is being implemented for subset of RDK processes.  OEM may choose to use a technology other than LXC to sandbox their processes.
+8.	Vet all open source 
+o	Currently being done using Whitesource tool
+9.	Disable kernel module load 
+o	Making modules statically linked to the kernel would be a significant effort.
+o	Disable module load after boot using /proc/sys/kernel/module_disabled 
+10.	Disable kernel module unload 
+o	Set CONFIG_MODULE_UNLOAD
+11.	Kernel module parameters must be R/O or trusted 
+o	Audit boot scripts to ensure loadable kernel module parameters are hard coded and don’t rely on data from persistent storage or other writable source
+12.	Remove kernel debugging and profiling options 
+o	CONFIG_DEBUG_KERNEL CONFIG_MARKERS CONFIG_DEBUG_MEMLEAK CONFIG_KPROBES
+o	CONFIG_SLUB_DEBUG CONFIG_PROFILING CONFIG_DEBUG_FS CONFIG_KPTRACE
+o	CONFIG_KALLSYMS CONFIG_LTT CONFIG_UNUSED_SYMBOLS CONFIG_TRACE_IRQFLAGS_SUPPORT
+o	CONFIG_RELAY CONFIG_MAGIC_SYSRQ CONFIG_VM_EVENT_COUNTERS CONFIGU_UNWIND_INFO
+o	CONFIG_BPA2_ALLOC_TRACE CONFIG_PRINTK
+o	CONFIG_CRASH_DUMP CONFIG_BUG CONFIG_SCSI_LOGGING CONFIG_ELF_CORE CONFIG_FULL_PANIC
+o	CONFIG_TASKSTATUS CONFIG_AUDIT CONFIG_BSD_PROCESS_ACCT CONFIG_KEXEC
+o	CONFIG_EARLY_PRINTK CONFIG_IKCONFIG CONFIG_NETFILTER_DEBUG
+o	CONFIG_MTD_UBI_DEBUG CONFIG_B43_DEBUG CONFIG_SSB_DEBUG CONFIG_FB_INTEL_DEBUG
+o	CONFIG_TRACING CONFIG_PERF_EVENTS 
+13.	Disable unused file system and block device support
+14.	Enable heap protection and pointer obfuscation features. 
+o	Enabled by default in glibc.  Protects heap from buffer overflows.  Available in glibc 2.3.4 or above, Enabled using environment variable malloc_check_
+15.	Restrict /dev/mem to minimal regions of memory required
+16.	Remove support for /dev/kmem
+17.	Remove support for /dev/kcore 
+o	Kernel core dumping should be disabled in production
+18.	Enable format, buffer, and object size checks
+19.	Restrict /proc to process owners (except for IDS)
+20.	Disable kernel configfs 
+o	Allows modification of kernel objects
+21.	Remove ldconfig from target filesystem and [ld.so](http://ld.so/).conf and [ld.so](http://ld.so/).cache should be empty 
+o	Removes caching of symbolic links.  Will cause a performance hit.
+o	Impact: glibc changes. Would allow loading libraries from a non-standard library path even if we don’t use LD_LIBRARY_PATH.
+22.	Security critical software are compiled as PIE (Position Independent Executable), if supported
+23.	Kernel boots with “ro” in command line  
+o	Mount filesystem as readonly. 
+24.	Mount filesystems with minimal privileges. For example, filesystem containing no executable code shall have “noexec” option specified. 
+25.	Mount temporary storage (/tmp) shall in dedicated filesystem (eg. tmpfs) and its contents does not survive reboots
+26.	Flush cache after accessing sensitive data
+27.	No overlay of writable mounts on read-only data 
+28.	system directories such as /proc or /dev shall not be writable within a sandbox
+29.	Applications and utilities shall not have the setgid or setuid bit set
+30.	Configure default shell to /dev/null
+31.	Remove all unused executables and libraries
+32.	Disable PTRACE, General restriction on PTRACE should be applied at kernel level with Yama LSM  
+o	http://linux-audit.com/protect-ptrace-processes-kernel-yama-ptrace_scope/ 
+o	PTRACE is used by GDB.  Disable only for production builds.  Both compile time and runtime changes required (can restrict PTRACE to root if required)
+33.	Don’t use LD_LIBRARY_PATH (loads libraries from default locations only)
+34.	Full runtime path for non-standard libraries included in code image 
+o	Use -rpath and -rpath-link
+35.	Mount filesystems with ro option and change permission temporarily when needed
+36.	Kernel init parameters / command line must be R/O and trusted
+37.	Restrict kernel syslog (dmesg) to root user only
+38.	Disable kernel debugfs 
+o	Part of sysfs used to enable kernel debug messaging.  If printk is disabled this becomes irrelevant
+39.	Use ELF format only 
+o	May break scripts like Python
+40.	Dynamic linker configuration changes 
+o	Remove LD_DEBUG support from dynamic linker 
+o	Remove LD_PRELOAD support from dynamic linker 
+o	Remove LD_PROFILE support from the dynamic linker 
+o	Remove LD_AUDIT support from the dynamic linker 
+o	Remove LD_SHOW_AUXV support from the dynamic linker
+o	Remove LD_TRACE_LOADED_OBJECTS support from the dynamic linker 
+o	Link dynamic programs with -z now and -z relro options 
+41.	Hide restricted kernel pointers 
+o	Restricted pointers replaced with 0’s.
+o	Relates to printk handling of printing pointer values.  This is a runtime setting, enable/disable via /proc/sys/kernel/kptr_restrict
+42.	Review use of SYSFS, disable it if possible
+43.	Mark unchanging files in writable partition with “immutable”
+44.	Use all compiler security features 
+o	Compile -wall, -Werror and fail on warnings (and possibly -Wextra)
+45.	Replace strcpy with strncpy 
+o	All code should use safer, bounds checking versions of string library functions (such as strncpy instead of strcpy) to avoid potential buffer overruns.
+46.	Prevent file races, open temp files with O_CREAT | O_EXCL 
+o	Makes check for file existence and creation atomic.  Prevents multiple threads creating same file. 
+47.	Set sticky bit for temporary directories to prevent acc
+idental deletion
+o	Only owner and root can delete directory
+48.	Restrict kernel network settings to be the most restrictive possible
+49.	Limit temporary storage (tmpfs) memory size 
+50.	Enable kernel ABI Version Check
+51.	Disable kernel symbol resolution 
+o	Disable CONFIG_KALLSYMS
+o	Limits our ability to debug kernel crash dumps
+52.	Disable kernel crashdump 
+o	Disable CONFIG_CRASH_DUMP 
+53.	Minimum MMAPable address set to 4K min. 
+o	This prevents mapping NULL address
+
+
+-------------------------------------------------------------------------------
+
+# [\#83 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/83) `open`: Enhancement add kmalloc hardening
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/77795961?v=4" width="50">[osevan](https://github.com/osevan) opened issue at [2023-08-29 23:53](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/83):
+
+https://www.phoronix.com/news/Linux-Randomize-Kmalloc-Cache
+
+Thanks and
+Best regards
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-03 15:45](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/83#issuecomment-1704338755):
+
+@osevan, thanks!
+I'll consider it during preparing the next release of the tool.
+
+
+-------------------------------------------------------------------------------
+
+# [\#82 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/82) `open`: Consider removing/not recommending CONFIG_ZERO_CALL_USED_REGS
+**Labels**: `question`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/325724?u=4446b76c0f4ebcbecb2678759f8d13817a67f85d&v=4" width="50">[jvoisin](https://github.com/jvoisin) opened issue at [2023-05-08 12:38](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/82):
+
+CONFIG_ZERO_CALL_USED_REGS is [useless at best](https://dustri.org/b/paper-notes-clean-the-scratch-registers-a-way-to-mitigate-return-oriented-programming-attacks.html), with a **significant** performance impact.
+
+This is a security theatre knob, and the performance budget would be better spent elsewhere.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-03 15:52](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/82#issuecomment-1704340181):
+
+@jvoisin, thanks for the article!
+It looks reasonable, we'll discuss it.
+
+
+-------------------------------------------------------------------------------
+
+# [\#81 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81) `closed`: Color indicators for "check result" column
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/4941656?v=4" width="50">[harisphnx](https://github.com/harisphnx) opened issue at [2023-04-27 13:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81):
+
+Would the maintainers be open to adding colors to the output of the "check result" column? For example, the output would be red for FAIL, and green for OK?
+
+#### <img src="https://avatars.githubusercontent.com/u/4941656?v=4" width="50">[harisphnx](https://github.com/harisphnx) commented at [2023-04-27 13:17](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1525681451):
+
+If so, I can make the change and create a PR
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-05-07 16:41](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1537488610):
+
+Yes, it would be nice.
+Looking forward to your PR.
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-01 17:04](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1703069739):
+
+Has anyone done this yet?
+I made a hacky attempt of this last year before the `sysctl` support was added. I added different colors for the two sections too:
+
+<img width="1282" alt="image" src="https://github.com/a13xp0p0v/kconfig-hardened-check/assets/5826484/e880006a-5f1d-4580-b3e2-dcc0b104b089">
+
+I just tried to overlay it onto the latest code but it's too different now. My changes were in `kconfig_hardened_check/__init__.py` but everything has moved since then. Unfortunately, not an easy merge.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-03 15:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1704337689):
+
+@frakman1 thanks, it looks nice.
+Could you give a link to your commit? I'll help to rebase it.
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-03 16:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1704345063):
+
+Thank you @a13xp0p0v. 
+I just checked and my changes were based on [this](https://github.com/a13xp0p0v/kconfig-hardened-check/blob/899752c13f4d1260d1a33985672b72b3a9cb60ec/kconfig_hardened_check/__init__.py) commit:
+```
+* 899752c - (Sun Oct 2 21:45:13 2022 +0300) Also check 'nospectre_v2' with 'spectre_v2' - <Alexander Popov> (HEAD -> master, origin/master, origin/HEAD)
+```
+Unfortunately, I never commited it and just stashed it before doing a `git pull`
+
+Original File (rename to .py):
+[__init__.txt](https://github.com/a13xp0p0v/kconfig-hardened-check/files/12506520/__init__.txt)
+
+
+Colored File (rename to .py):
+[__init__.color.txt](https://github.com/a13xp0p0v/kconfig-hardened-check/files/12506521/__init__.color.txt)
+
+I created a patch file using:
+```
+git diff --no-index --patch --output=color.diff __init__.py __init__.color.py
+```
+
+patch file (optionally rename to .diff):
+[color.txt](https://github.com/a13xp0p0v/kconfig-hardened-check/files/12506530/color.txt)
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-03 19:51](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1704387355):
+
+Thanks, I see the approach.
+
+Let's print OK results in green and FAIL results in red.
+
+We need to modify the `table_print()` method of classes in [engine.py](https://github.com/a13xp0p0v/kconfig-hardened-check/blob/master/kconfig_hardened_check/engine.py).
+
+I would recommend something like that:
+
+1) defining ANSI escape sequences at the beginning of the file:
+```
+GREEN_COLOR = '\x1b[32m'
+RED_COLOR = '\x1b[31m'
+COLOR_END = '\x1b[0m'
+```
+
+2) modify printing methods this way:
+```
+if with_results:
+    if self.result.startswith('OK'):
+        color = GREEN_COLOR
+    elif self.result.startswith('FAIL:'):
+        color = RED_COLOR
+    else:
+        assert(False), f'unexpected result "{self.result}"'
+    colored_result = f'{color}{self.result}{COLOR_END}'
+    print(f'| {colored_result}', end='')
+```
+
+What do you think?
+Would you like to prepare a pull request?
+
+Thanks!
+
+#### <img src="https://avatars.githubusercontent.com/u/141440559?u=a2256f43745996b332a33cc986eb796c084caed2&v=4" width="50">[trclst](https://github.com/trclst) commented at [2023-09-03 23:34](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1704435599):
+
+I would only going to color `OK `and `FAIL` not full line.
+Besides, I don't know if there aren't more important things a `| grep FAIL` can do.
+Maybe it is better to keep the code small, the information is still there whether in color or not.
+Anyway hope it looks fancy.
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-04 05:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1704624719):
+
+If you only want to see the failures, you can use the `-m show_fail` option
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-04 18:33](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1705607069):
+
+> What do you think? Would you like to prepare a pull request?
+
+I like it. Thank you for the guidance. I just attempted it and it seems I have to repeat that logic in three places before I could get all the prints.
+
+sample output:
+
+<img width="1047" alt="image" src="https://github.com/a13xp0p0v/kconfig-hardened-check/assets/5826484/d098d14f-2e1a-4569-af22-54ef2bc0eecb">
+
+Diffs located in my fork ~~[here](https://github.com/frakman1/kconfig-hardened-check/compare/108eb7374967b0f66e70b68cca60a0548f12844c...71c8e35842b805e8e6b819bf599b07fdd0d48479)~~
+
+@a13xp0p0v Let me know if that looks good. If so, I will issue a pull request.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-09 16:56](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1712554168):
+
+Thanks @frakman1 !
+
+I would propose creating a function `colorize_result()` and call several times to avoid copying the code.
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-09 18:20](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1712570988):
+
+I've updated the code with your recommendations. See changes [here](https://github.com/frakman1/kconfig-hardened-check/commit/fb9aeb5392762c6ea3aa67096a18e163e63ec6ea)
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-09 19:17](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1712582213):
+
+I've left some comments. The main point: it's better to leave printing inside of the `table_print()` method. The `colorize_result()` function should only return the colored string.
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-09 21:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1712623127):
+
+Changes applied [here](https://github.com/frakman1/kconfig-hardened-check/compare/108eb7374967b0f66e70b68cca60a0548f12844c..b317b9f)
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-09-10 11:04](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1712783879):
+
+Good!
+
+Please remove the unneeded whitespaces and send the pull request.
+
+Looking forward to it.
+
+#### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) commented at [2023-09-10 17:49](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/81#issuecomment-1712896232):
+
+Done.
+https://github.com/a13xp0p0v/kconfig-hardened-check/pull/86
+
+
+-------------------------------------------------------------------------------
+
+# [\#80 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/80) `merged`: Added support for gzipped config (eg. /proc/config.gz)
+
+#### <img src="https://avatars.githubusercontent.com/u/3389586?u=71aa9a963297407bb515b073245e398e8049d582&v=4" width="50">[nE0sIghT](https://github.com/nE0sIghT) opened issue at [2023-03-25 09:41](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/80):
+
+
+
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2023-03-26 15:02](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/80#issuecomment-1484123415):
+
+## [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/80?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
+> Merging [#80](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/80?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (8def541) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/b65af76d6e84b4cd80f4fb4c72799bdd49237024?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (b65af76) will **decrease** coverage by `0.24%`.
+> The diff coverage is `80.00%`.
+
+:mega: This organization is not using Codecov’s [GitHub App Integration](https://github.com/apps/codecov). We recommend you install it so Codecov can continue to function properly for your repositories. [Learn more](https://about.codecov.io/blog/codecov-is-updating-its-github-integration/?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov)
+
+```diff
+@@            Coverage Diff             @@
+##           master      #80      +/-   ##
+==========================================
+- Coverage   98.39%   98.16%   -0.24%     
+==========================================
+  Files           6        6              
+  Lines         812      818       +6     
+  Branches      160      161       +1     
+==========================================
++ Hits          799      803       +4     
+- Misses          7        8       +1     
+- Partials        6        7       +1     
+```
+
+| Flag | Coverage Δ | |
+|---|---|---|
+| engine_unit-test | `76.80% <ø> (ø)` | |
+| functional_test | `97.97% <80.00%> (-0.26%)` | :arrow_down: |
+
+Flags with carried forward coverage won't be shown. [Click here](https://docs.codecov.io/docs/carryforward-flags?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#carryforward-flags-in-the-pull-request-comment) to find out more.
+
+| [Impacted Files](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/80?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | Coverage Δ | |
+|---|---|---|
+| [kconfig\_hardened\_check/\_\_init\_\_.py](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/80?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#diff-a2NvbmZpZ19oYXJkZW5lZF9jaGVjay9fX2luaXRfXy5weQ==) | `99.10% <80.00%> (-0.90%)` | :arrow_down: |
+
+:mega: We’re building smart automated test selection to slash your CI/CD build times. [Learn more](https://about.codecov.io/iterative-testing/?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov)
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-03-26 16:01](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/80#issuecomment-1484141857):
+
+Hello @nE0sIghT,
+
+I've merged your pull request and added:
+ - informing about supporting *.gz kconfig files,
+ - functional testing of this feature.
+
+Thanks!
+Alexander
+
+
+-------------------------------------------------------------------------------
+
+# [\#79 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/79) `closed`: Create unit-tests for the engine checking the correctness
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2023-03-06 08:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/79):
+
+That would prevent the bug in cb779a71bf57d95b. See the fix d006bfa48e87.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-04-02 12:51](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/79#issuecomment-1493323795):
+
+Good. This task is completed.
+
+Unit-tests for the `kconfig-hardened-check` engine are created:
+[kconfig_hardened_check/test_engine.py](https://github.com/a13xp0p0v/kconfig-hardened-check/blob/master/kconfig_hardened_check/test_engine.py)
+
+CI performs unit-testing on each repository push:
+https://github.com/a13xp0p0v/kconfig-hardened-check/actions/workflows/engine_unit-test.yml
+
+These unit-tests check the correctness of the engine results and cover 100% of the engine code.
+
+Reverting the aforementioned fix https://github.com/a13xp0p0v/kconfig-hardened-check/commit/d006bfa48e87600e70aae1a696ede3182f6c1cbd is detected by these unit-tests:
+```
+======================================================================
+FAIL: test_simple_kconfig (kconfig_hardened_check.test_engine.TestEngine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/a13x/land/Develop/Linux_Kernel/kconfig-hardened-check/kconfig_hardened_check/test_engine.py", line 130, in test_simple_kconfig
+    self.assertEqual(
+AssertionError: Lists differ: [['CO[701 chars]8', 'OK: is not off, "off"'], ['CONFIG_NAME_9'[169 chars]nd']] != [['CO[701 chars]8', 'FAIL: is off'], ['CONFIG_NAME_9', 'kconfi[160 chars]nd']]
+
+First differing element 7:
+['CON[25 chars]is not off', 'decision_8', 'reason_8', 'OK: is not off, "off"']
+['CON[25 chars]is not off', 'decision_8', 'reason_8', 'FAIL: is off']
+```
+
+
+-------------------------------------------------------------------------------
+
+# [\#78 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/78) `closed`: Fix nixos integration
+
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) opened issue at [2022-12-29 10:00](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/78):
+
+
+
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2022-12-29 10:02](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/78#issuecomment-1367203889):
+
+# [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/78?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
+> Merging [#78](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/78?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (6fde9d6) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/6211b6852b6b35f6f5d18ec2f0e713d2afea5a87?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (6211b68) will **increase** coverage by `0.40%`.
+> The diff coverage is `n/a`.
+
+```diff
+@@            Coverage Diff             @@
+##           master      #78      +/-   ##
+==========================================
++ Coverage   92.79%   93.20%   +0.40%     
+==========================================
+  Files           3        3              
+  Lines         736      736              
+  Branches      171      171              
+==========================================
++ Hits          683      686       +3     
++ Misses         26       24       -2     
++ Partials       27       26       -1     
+```
+
+| Flag | Coverage Δ | |
+|---|---|---|
+| functional_test | `93.20% <ø> (+0.40%)` | :arrow_up: |
+
+Flags with carried forward coverage won't be shown. [Click here](https://docs.codecov.io/docs/carryforward-flags?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#carryforward-flags-in-the-pull-request-comment) to find out more.
+
+| [Impacted Files](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/78?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) | Coverage Δ | |
+|---|---|---|
+| [kconfig\_hardened\_check/\_\_init\_\_.py](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/78/diff?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#diff-a2NvbmZpZ19oYXJkZW5lZF9jaGVjay9fX2luaXRfXy5weQ==) | `93.25% <0.00%> (+0.41%)` | :arrow_up: |
+
+:mega: We’re building smart automated test selection to slash your CI/CD build times. [Learn more](https://about.codecov.io/iterative-testing/?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov)
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-01-19 19:58](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/78#issuecomment-1397525515):
+
+Hello @Mic92,
+
+Closing, this issue has been fixed in https://github.com/a13xp0p0v/kconfig-hardened-check/pull/77.
+
+Thanks!
+
+
+-------------------------------------------------------------------------------
+
+# [\#77 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/77) `merged`: add get-nixos-kconfig nix script
+
+#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) opened issue at [2022-12-29 09:15](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/77):
+
+Hello,
+
+This nix script, when run with `nix-build get-nixos-kconfig.nix` will output 3 kernel configuration files (linux_latest, linux_hardened, and the linux_lts)  for NixOS
+
+Has been tested on Ubuntu 20.04
+
+#63  relevant
+
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2023-01-19 15:00](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/77#issuecomment-1397110519):
+
+# [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/77?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
+> Merging [#77](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/77?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (6149a3e) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/6211b6852b6b35f6f5d18ec2f0e713d2afea5a87?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (6211b68) will **not change** coverage.
+> The diff coverage is `n/a`.
+
+```diff
+@@           Coverage Diff           @@
+##           master      #77   +/-   ##
+=======================================
+  Coverage   92.79%   92.79%           
+=======================================
+  Files           3        3           
+  Lines         736      736           
+  Branches      171      171           
+=======================================
+  Hits          683      683           
+  Misses         26       26           
+  Partials       27       27           
+```
+
+| Flag | Coverage Δ | |
+|---|---|---|
+| functional_test | `92.79% <ø> (ø)` | |
+
+Flags with carried forward coverage won't be shown. [Click here](https://docs.codecov.io/docs/carryforward-flags?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#carryforward-flags-in-the-pull-request-comment) to find out more.
+
+
+:mega: We’re building smart automated test selection to slash your CI/CD build times. [Learn more](https://about.codecov.io/iterative-testing/?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov)
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-01-19 16:06](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/77#issuecomment-1397219216):
+
+Thanks a lot, @o8opi!
+
+It's merged.
+
+I also generated the NixOS kernel configs using `nix-build get-nixos-kconfig.nix`: https://github.com/a13xp0p0v/kconfig-hardened-check/commit/0267c39d10364e2afb0779f2ce271539eff6f4e1
+
+
+-------------------------------------------------------------------------------
+
+# [\#76 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/76) `closed`: iommu=force
+
+#### <img src="https://avatars.githubusercontent.com/u/74207682?u=fc82f6c725c4a6a1e0e8786b3ecee80b18118c92&v=4" width="50">[d4rklynk](https://github.com/d4rklynk) opened issue at [2022-12-13 17:58](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/76):
 
 It seems it helps indirectly from DMA attacks (from what I understand). It is recommended by ANSSI.
 
@@ -10,14 +683,20 @@ From this [PDF](https://www.ssi.gouv.fr/uploads/2019/02/fr_np_linux_configuratio
 
 Or from this [older version](https://www.ssi.gouv.fr/uploads/2019/03/linux_configuration-en-v1.2.pdf) of the same PDF but in english : chapter "**4.3 IOMMU Service (input/output virtualization)**"
 
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-01-21 22:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/76#issuecomment-1399341218):
 
+Added this check in https://github.com/a13xp0p0v/kconfig-hardened-check/commit/4e0065c8baf8d40c733f7f4c5c920c07b93c55b6
+
+Thanks, @d4rklynk!
 
 
 -------------------------------------------------------------------------------
 
-# [\#75 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/75) `open`: Integrity Measurement Architecture 
+# [\#75 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/75) `closed`: Integrity Measurement Architecture 
+**Labels**: `question`
 
-#### <img src="https://avatars.githubusercontent.com/u/97197406?u=3fc2e7c1b9d9f1b9b1c8e7268aaa11204944694e&v=4" width="50">[JohnVengert](https://github.com/JohnVengert) opened issue at [2022-11-14 04:40](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/75):
+
+#### <img src="https://avatars.githubusercontent.com/u/97197406?u=3fc2e7c1b9d9f1b9b1c8e7268aaa11204944694e&v=4" width="50">[JohnVengert](https://github.com/JohnVengert) opened issue at [2022-11-14 04:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/75):
 
 The Integrity Measurement Architecture is a subsystem that is responsible
  for calculating file hashes. this allows greater security . This option would be ideal
@@ -72,7 +751,7 @@ Thank you very much
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-12-08 13:29](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/75#issuecomment-1342739444):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-12-08 13:29](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/75#issuecomment-1342739444):
 
 Hello @JohnVengert,
 
@@ -88,9 +767,9 @@ Thanks!
 
 -------------------------------------------------------------------------------
 
-# [\#74 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/74) `open`: Add disabling compatibility mode.
+# [\#74 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/74) `closed`: Add disabling compatibility mode.
 
-#### <img src="https://avatars.githubusercontent.com/u/7232674?u=dba600128b18073a4e3c33b76f5c601591d8f613&v=4" width="50">[Manouchehri](https://github.com/Manouchehri) opened issue at [2022-10-20 22:00](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/74):
+#### <img src="https://avatars.githubusercontent.com/u/7232674?u=dba600128b18073a4e3c33b76f5c601591d8f613&v=4" width="50">[Manouchehri](https://github.com/Manouchehri) opened issue at [2022-10-20 22:00](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/74):
 
 I'm not a kernel maintainer, so I added myself a new category. I don't think I'm wrong about this one though, here's a few public examples I found within a minute of searching:
 
@@ -100,7 +779,7 @@ https://outflux.net/blog/archives/2010/10/19/cve-2010-2963-v4l-compat-exploit/
 http://inertiawar.com/compat1/
 http://inertiawar.com/compat2/
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-10-22 18:57](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/74#issuecomment-1287883856):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-10-22 18:57](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/74#issuecomment-1287883856):
 
 Hello @Manouchehri,
 
@@ -133,7 +812,7 @@ Thank you very much!
 This case shows that from time to time we need to look up all config options that should be disabled.
 Maybe some of them have been renamed in the Linux kernel.
 
-#### <img src="https://avatars.githubusercontent.com/u/7232674?u=dba600128b18073a4e3c33b76f5c601591d8f613&v=4" width="50">[Manouchehri](https://github.com/Manouchehri) commented at [2022-10-22 19:02](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/74#issuecomment-1287884800):
+#### <img src="https://avatars.githubusercontent.com/u/7232674?u=dba600128b18073a4e3c33b76f5c601591d8f613&v=4" width="50">[Manouchehri](https://github.com/Manouchehri) commented at [2022-10-22 19:02](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/74#issuecomment-1287884800):
 
 CONFIG_COMPAT depends on the arch too. For example, neither `X86_X32_ABI` or `X86_X32` will cover arm64 systems.
 
@@ -147,17 +826,28 @@ https://github.com/torvalds/linux/blob/master/arch/arm64/Kconfig#L1526-L1542
 
 I don't see the harm in a separate check for `COMPAT`. That flag has been around for years and not changed across architectures IIRC.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-10-22 19:06](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/74#issuecomment-1287885578):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-10-22 19:06](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/74#issuecomment-1287885578):
 
 That's a good point!
 I'll return with the results.
 
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-01-14 18:01](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/74#issuecomment-1382873066):
+
+Hello @Manouchehri,
+
+I contacted KSPP. Now their recommendations [contain](https://kernsec.org/wiki/index.php?title=Kernel_Self_Protection_Project%2FRecommended_Settings&action=historysubmit&type=revision&diff=4064&oldid=4060) disabling `CONFIG_COMPAT` and `CONFIG_X86_X32_ABI`.
+
+Please see the commit https://github.com/a13xp0p0v/kconfig-hardened-check/commit/f3ba594b3acbc154eeade43d87a76b90352ab1d1, where I added these KSPP recommendations.
+
+Thank you for the idea!
+Closing the PR.
+
 
 -------------------------------------------------------------------------------
 
-# [\#73 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/73) `closed`: ERORR?
+# [\#73 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/73) `closed`: ERORR?
 
-#### <img src="https://avatars.githubusercontent.com/u/77776927?v=4" width="50">[alpahca](https://github.com/alpahca) opened issue at [2022-09-24 15:03](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/73):
+#### <img src="https://avatars.githubusercontent.com/u/77776927?v=4" width="50">[alpahca](https://github.com/alpahca) opened issue at [2022-09-24 15:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/73):
 
 i was try to some book(Billimoria, Kaiwan N. Linux Kernel Debugging: Leverage proven tools and advanced techniques to effectively debug Linux kernels and kernel modules (p. 61). Packt Publishing. Kindle Edition. ).
 
@@ -168,7 +858,7 @@ $ bin/kconfig-hardened-check -p X86_64 -c ~/lkd_kernels/kconfig.prod01/.config
 
 what should i do?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-09-24 21:18](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/73#issuecomment-1257066908):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-09-24 21:18](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/73#issuecomment-1257066908):
 
 Hi @alpahca,
 
@@ -185,7 +875,7 @@ So for checking your kernel config simply do this:
 $ bin/kconfig-hardened-check -c ~/lkd_kernels/kconfig.prod01/.config
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/77776927?v=4" width="50">[alpahca](https://github.com/alpahca) commented at [2022-10-11 07:42](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/73#issuecomment-1274233073):
+#### <img src="https://avatars.githubusercontent.com/u/77776927?v=4" width="50">[alpahca](https://github.com/alpahca) commented at [2022-10-11 07:42](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/73#issuecomment-1274233073):
 
 Oh thx.
 But... 
@@ -219,7 +909,7 @@ Reply to this email directly, view it on GitHub, or unsubscribe.
 You are receiving this because you were mentioned.Message ID: ***@***.***>
 ​
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-10-22 19:27](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/73#issuecomment-1287890539):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-10-22 19:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/73#issuecomment-1287890539):
 
 Hi @alpahca,
 
@@ -231,9 +921,9 @@ Alexander
 
 -------------------------------------------------------------------------------
 
-# [\#71 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/71) `closed`: Config change in 5.19.X
+# [\#71 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/71) `closed`: Config change in 5.19.X
 
-#### <img src="https://avatars.githubusercontent.com/u/11868071?u=d7a5841263276e1f323827fc21b04345df594a60&v=4" width="50">[Churam](https://github.com/Churam) opened issue at [2022-08-31 08:18](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/71):
+#### <img src="https://avatars.githubusercontent.com/u/11868071?u=d7a5841263276e1f323827fc21b04345df594a60&v=4" width="50">[Churam](https://github.com/Churam) opened issue at [2022-08-31 08:18](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/71):
 
 Hello,
 
@@ -268,7 +958,7 @@ CONFIG_GCC_PLUGIN_RANDSTRUCT=y
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-09-02 11:42](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/71#issuecomment-1235396338):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-09-02 11:42](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/71#issuecomment-1235396338):
 
 Hi @Churam,
 
@@ -276,11 +966,11 @@ Thanks for your report!
 
 I've improved the checks, please have a look.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2022-09-06 19:29](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/71#issuecomment-1238566204):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2022-09-06 19:29](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/71#issuecomment-1238566204):
 
 maybe it would make sense to tag a new release after :cat:
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-09-09 08:23](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/71#issuecomment-1241663085):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-09-09 08:23](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/71#issuecomment-1241663085):
 
 Hi @anthraxx,
 
@@ -291,15 +981,15 @@ I’m planning to do this work for the next Linux kernel release.
 
 -------------------------------------------------------------------------------
 
-# [\#70 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/70) `closed`: COPR repo with built kernel with suggested recommendations
+# [\#70 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/70) `closed`: COPR repo with built kernel with suggested recommendations
 
-#### <img src="https://avatars.githubusercontent.com/u/75043245?u=eb07d86df642ef04f9e53169e65f500ea367c63f&v=4" width="50">[Krish-sysadmin](https://github.com/Krish-sysadmin) opened issue at [2022-07-21 15:19](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/70):
+#### <img src="https://avatars.githubusercontent.com/u/75043245?u=6d29ec5975073ebb1af663a8bf866715b525d50e&v=4" width="50">[krishjainx](https://github.com/krishjainx) opened issue at [2022-07-21 15:19](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/70):
 
 Hi. This repository has been incredibly useful to me as of late. I’m trying to do the following: create a COPR repository for example such that it takes the kernel configuration from Fedora’s latest kernel build for say 36 and then applies the recommended options here, handles setting everything on/off etc for everything that depends on that option and everything setting that option depends on while blacklisting certain recommendations such that it doesn’t break certain apps etc. Post doing this it would grab the source code for that kernel versions and build it with those configs and then one would just install the kernel normally.
 
 How would one go about implementing this? Thank you!
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-21 19:48](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/70#issuecomment-1191870587):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-21 19:48](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/70#issuecomment-1191870587):
 
 Hi Krish,
 
@@ -310,11 +1000,11 @@ For example, see:
  - Suse kernel flavours: https://www.suse.com/support/kb/doc/?id=000017133
  - The discussion about NixOS hardened kernel: https://github.com/NixOS/nixpkgs/issues/76850
 
-#### <img src="https://avatars.githubusercontent.com/u/75043245?u=eb07d86df642ef04f9e53169e65f500ea367c63f&v=4" width="50">[Krish-sysadmin](https://github.com/Krish-sysadmin) commented at [2022-07-21 22:18](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/70#issuecomment-1191988714):
+#### <img src="https://avatars.githubusercontent.com/u/75043245?u=6d29ec5975073ebb1af663a8bf866715b525d50e&v=4" width="50">[krishjainx](https://github.com/krishjainx) commented at [2022-07-21 22:18](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/70#issuecomment-1191988714):
 
 Yes, thank you I understand that but how would I have your script/tool change the .config to be more hardened and then have that grab new kernel sources and automatically build like if I was to hold a COPR?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-22 21:00](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/70#issuecomment-1192931275):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-22 21:00](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/70#issuecomment-1192931275):
 
 Thanks Krish, now I see what you mean.
 
@@ -326,15 +1016,15 @@ It should use the JSON output of `kconfig-hardened-check` and work with kconfig 
 
 What do you think?
 
-#### <img src="https://avatars.githubusercontent.com/u/75043245?u=eb07d86df642ef04f9e53169e65f500ea367c63f&v=4" width="50">[Krish-sysadmin](https://github.com/Krish-sysadmin) commented at [2022-07-23 03:10](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/70#issuecomment-1193047106):
+#### <img src="https://avatars.githubusercontent.com/u/75043245?u=6d29ec5975073ebb1af663a8bf866715b525d50e&v=4" width="50">[krishjainx](https://github.com/krishjainx) commented at [2022-07-23 03:10](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/70#issuecomment-1193047106):
 
 For sure, this project is perhaps one of the best and most usable for kernel hardening and I would definitely be able to help if you can get started or others with implementing this. Thank you!
 
-#### <img src="https://avatars.githubusercontent.com/u/75043245?u=eb07d86df642ef04f9e53169e65f500ea367c63f&v=4" width="50">[Krish-sysadmin](https://github.com/Krish-sysadmin) commented at [2022-07-23 03:12](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/70#issuecomment-1193047378):
+#### <img src="https://avatars.githubusercontent.com/u/75043245?u=6d29ec5975073ebb1af663a8bf866715b525d50e&v=4" width="50">[krishjainx](https://github.com/krishjainx) commented at [2022-07-23 03:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/70#issuecomment-1193047378):
 
 It would be incredibly useful to instead of being developing sideways independent projects like linux-hardened or grsecurity to be working more close with upstream like you are - getting all the performance improvements, bug fixes and applying all available "vanilla" security fixes and pushing this to distributions using that tool. Then people can work off it. Even if it's not "revolutionary" I definitely believe in the long term it would help make Linux even better!
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-24 15:44](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/70#issuecomment-1193343924):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-24 15:44](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/70#issuecomment-1193343924):
 
 I can't comment about `grsecurity`. This topic is complex... Anyway, they are pioneers in kernel security hardening.
 
@@ -343,28 +1033,30 @@ The goal of `KSPP` is to develop kernel self-protection features for the mainlin
 
 -------------------------------------------------------------------------------
 
-# [\#69 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/69) `open`: Create documentation describing Linux kernel security options
+# [\#69 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/69) `open`: Create documentation describing Linux kernel security options
 **Labels**: `enhancement`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-04 10:43](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/69):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-04 10:43](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/69):
 
 
 
+#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) commented at [2023-04-09 20:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/69#issuecomment-1501206810):
 
+Would love to see this, even if it's just a list of links and pointers to other resources :)
 
 
 -------------------------------------------------------------------------------
 
-# [\#68 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/68) `closed`: Create a tool reporting mainline kernel versions that support a recommended option
+# [\#68 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/68) `closed`: Create a tool reporting mainline kernel versions that support a recommended option
 **Labels**: `enhancement`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-04 00:34](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/68):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-04 00:34](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/68):
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-17 15:25](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/68#issuecomment-1186547339):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-17 15:25](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/68#issuecomment-1186547339):
 
 The LKDDb project solves this task. Added info to the README.
 
@@ -373,30 +1065,54 @@ Good. Closing the issue.
 
 -------------------------------------------------------------------------------
 
-# [\#67 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/67) `open`: Create a tool that changes kconfig options according to the recommendations
+# [\#67 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/67) `closed`: Create a tool that changes kconfig options according to the recommendations
 **Labels**: `enhancement`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-04 00:25](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/67):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-04 00:25](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/67):
 
 It should use the JSON output of kconfig-hardened-check.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-17 13:43](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/67#issuecomment-1186522515):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-17 13:43](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/67#issuecomment-1186522515):
 
 See https://pypi.org/project/kconfiglib/
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-02-17 16:06](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/67#issuecomment-1434854140):
+
+That tool would also help to filter out the kconfig options that can't be enabled for the given kernel version.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-06-12 15:32](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/67#issuecomment-1587577476):
+
+This feature is implemented as a part of the `kconfig-hardened-check` tool.
+
+With the `-g` argument, the tool generates a Kconfig fragment with the security hardening options for the selected microarchitecture.
+
+This Kconfig fragment can be merged with the existing Linux kernel config:
+
+```
+$ ./bin/kconfig-hardened-check -g X86_64 > /tmp/fragment
+$ cd ~/linux-src/
+$ ./scripts/kconfig/merge_config.sh .config /tmp/fragment
+Using .config as base
+Merging /tmp/fragment
+Value of CONFIG_BUG_ON_DATA_CORRUPTION is redefined by fragment /tmp/fragment:
+Previous value: # CONFIG_BUG_ON_DATA_CORRUPTION is not set
+New value: CONFIG_BUG_ON_DATA_CORRUPTION=y
+ ...
+```
 
 
 -------------------------------------------------------------------------------
 
-# [\#66 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/66) `open`: Evaluate performance penalty of the recommended kernel options
+# [\#66 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/66) `open`: Evaluate performance penalty of the recommended kernel options
 **Labels**: `enhancement`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-03 09:57](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/66):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-03 09:57](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/66):
 
 As the first step, @BlackIkeEagle made some performance tests and described the results in [this article](https://blog.herecura.eu/blog/2020-05-30-kconfig-hardening-tests/).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-12-08 14:46](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/66#issuecomment-1342846087):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-12-08 14:46](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/66#issuecomment-1342846087):
 
 Create a solution for automating this process:
  1. Take defconfig as a basic kernel configuration.
@@ -409,37 +1125,69 @@ Create a solution for automating this process:
 
 That approach would save us from plenty of boring manual routine.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-12-08 18:58](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/66#issuecomment-1343190811):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-12-08 18:58](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/66#issuecomment-1343190811):
 
 Similar performance testing of a group of  security hardening options may give interesting results as well.
 
 
 -------------------------------------------------------------------------------
 
-# [\#65 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/65) `open`: Support checking sysctl security options
+# [\#65 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/65) `closed`: Support checking sysctl security options
 **Labels**: `enhancement`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-03 09:50](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/65):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-07-03 09:50](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/65):
 
 The `OptCheck` class inheritance now allows to implement this feature.
 
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-08-14 12:36](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/65#issuecomment-1677237521):
 
+Checking sysctl parameters is supported now:
+```
+$ ./bin/kconfig-hardened-check 
+usage: kconfig-hardened-check [-h] [--version] [-m {verbose,json,show_ok,show_fail}]
+                              [-c CONFIG] [-l CMDLINE] [-s SYSCTL]
+                              [-p {X86_64,X86_32,ARM64,ARM}]
+                              [-g {X86_64,X86_32,ARM64,ARM}]
+
+A tool for checking the security hardening options of the Linux kernel
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
+                        choose the report mode
+  -c CONFIG, --config CONFIG
+                        check the security hardening options in the kernel Kconfig file
+                        (also supports *.gz files)
+  -l CMDLINE, --cmdline CMDLINE
+                        check the security hardening options in the kernel cmdline file
+                        (contents of /proc/cmdline)
+  -s SYSCTL, --sysctl SYSCTL
+                        check the security hardening options in the sysctl output file
+                        (`sudo sysctl -a > file`)
+  -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
+                        print the security hardening recommendations for the selected
+                        microarchitecture
+  -g {X86_64,X86_32,ARM64,ARM}, --generate {X86_64,X86_32,ARM64,ARM}
+                        generate a Kconfig fragment with the security hardening options
+                        for the selected microarchitecture
+```
 
 
 -------------------------------------------------------------------------------
 
-# [\#64 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/64) `open`: script fetch configs from different kernel images for current architecture
+# [\#64 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/64) `closed`: script fetch configs from different kernel images for current architecture
 
-#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) opened issue at [2022-06-01 06:34](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/64):
+#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) opened issue at [2022-06-01 06:34](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/64):
 
 This script now tries to fetch and/or build the different kernel images for current architecture and derive the kernel configs from them
 
-#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) commented at [2022-06-01 06:36](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/64#issuecomment-1143174866):
+#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) commented at [2022-06-01 06:36](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/64#issuecomment-1143174866):
 
 This might resolve #63
 
-#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2022-06-08 15:30](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/64#issuecomment-1150072367):
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2022-06-08 15:30](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/64#issuecomment-1150072367):
 
 # [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/64?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
 > Merging [#64](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/64?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (86b6b08) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/0d5c56f297fca50a48dfc602a5b4118b8ebdbceb?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (0d5c56f) will **not change** coverage.
@@ -466,7 +1214,7 @@ This might resolve #63
 
 Flags with carried forward coverage won't be shown. [Click here](https://docs.codecov.io/docs/carryforward-flags?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov#carryforward-flags-in-the-pull-request-comment) to find out more.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-06-10 16:49](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/64#issuecomment-1152552051):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-06-10 16:49](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/64#issuecomment-1152552051):
 
 Hello @o8opi,
 
@@ -497,15 +1245,15 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
 It looks like ` json.loads()` didn't manage to handle the output of `nix search`.
 
-#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) commented at [2022-07-16 11:53](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/64#issuecomment-1186164603):
+#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) commented at [2022-07-16 11:53](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/64#issuecomment-1186164603):
 
 this should work better now
 
-#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) commented at [2022-07-17 21:53](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/64#issuecomment-1186613685):
+#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) commented at [2022-07-17 21:53](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/64#issuecomment-1186613685):
 
 I have tested in an Ubuntu-20.04 container and it worked for me, can share Dockerfile if needed :)
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-21 19:38](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/64#issuecomment-1191862516):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-07-21 19:38](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/64#issuecomment-1191862516):
 
 Hello @o8opi,
 
@@ -594,11 +1342,11 @@ Thanks!
 
 -------------------------------------------------------------------------------
 
-# [\#63 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/63) `open`: Fix getting Nix kconfig (contrib)
+# [\#63 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/63) `closed`: Fix getting Nix kconfig (contrib)
 **Labels**: `bug`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-04-27 23:30](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/63):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2022-04-27 23:30](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/63):
 
 Hello @Mic92, could you help with this Nix problem?
 
@@ -726,22 +1474,54 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
 Hoping for your help with Nix, @Mic92!
 
+#### <img src="https://avatars.githubusercontent.com/u/106462796?v=4" width="50">[o8opi](https://github.com/o8opi) commented at [2022-12-28 21:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/63#issuecomment-1366920764):
 
+Hello, is this still relevant ?
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-12-28 22:11](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/63#issuecomment-1366954405):
+
+Hello @o8opi,
+
+It would be nice to fix this script or remove it.
+
+Is it possible to get a Nix kernel config somewhere without building the Linux kernel for NixOS?
+
+Thank you!
+
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2022-12-29 10:00](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/63#issuecomment-1367202486):
+
+The script was fixed in https://github.com/a13xp0p0v/kconfig-hardened-check/pull/78
+
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2022-12-29 10:01](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/63#issuecomment-1367203173):
+
+I don't think the kernel config can be easily get otherwise. It is generated by nix code depending on enabled features and kernel versions.
+
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2022-12-29 10:02](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/63#issuecomment-1367204327):
+
+However there is https://github.com/cachix/install-nix-action combined https://github.com/marketplace/actions/create-pull-request could automatically keep this up-to-date.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-01-19 16:15](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/63#issuecomment-1397233625):
+
+Hello @Mic92,
+
+Closing, this issue has been fixed in https://github.com/a13xp0p0v/kconfig-hardened-check/pull/77.
+
+Thanks!
 
 
 -------------------------------------------------------------------------------
 
-# [\#62 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/62) `merged`: Add BLK_DEV_FD_RAWCMD
+# [\#62 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/62) `merged`: Add BLK_DEV_FD_RAWCMD
 **Labels**: `kernel_maintainer_feedback`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/150761?u=f98bb82be5009ecefd6ee9bc3d60fcf082f8cf49&v=4" width="50">[evdenis](https://github.com/evdenis) opened issue at [2022-04-27 18:15](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/62):
+#### <img src="https://avatars.githubusercontent.com/u/150761?u=f98bb82be5009ecefd6ee9bc3d60fcf082f8cf49&v=4" width="50">[evdenis](https://github.com/evdenis) opened issue at [2022-04-27 18:15](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/62):
 
 See commit torvalds/linux@233087ca0636 ("floppy: disable FDRAWCMD by default")
 
 Signed-off-by: Denis Efremov <efremov@linux.com>
 
-#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2022-04-27 18:16](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/62#issuecomment-1111331853):
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2022-04-27 18:16](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/62#issuecomment-1111331853):
 
 # [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/62?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
 > Merging [#62](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/62?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (bbe60e7) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/61bfef8931bcefc1abb6d3d46e169c8372ce729b?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (61bfef8) will **increase** coverage by `0.01%`.
@@ -779,7 +1559,7 @@ Flags with carried forward coverage won't be shown. [Click here](https://docs.co
 > `Δ = absolute <relative> (impact)`, `ø = not affected`, `? = missing data`
 > Powered by [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/62?src=pr&el=footer&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Last update [61bfef8...bbe60e7](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/62?src=pr&el=lastupdated&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Read the [comment docs](https://docs.codecov.io/docs/pull-request-comments?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-04-28 11:41](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/62#issuecomment-1112102364):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-04-28 11:41](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/62#issuecomment-1112102364):
 
 Thanks @evdenis!
 👍
@@ -787,9 +1567,9 @@ Thanks @evdenis!
 
 -------------------------------------------------------------------------------
 
-# [\#61 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/61) `closed`: Let user select configs without absolute path
+# [\#61 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/61) `closed`: Let user select configs without absolute path
 
-#### <img src="https://avatars.githubusercontent.com/u/29118926?v=4" width="50">[dmknght](https://github.com/dmknght) opened issue at [2022-03-26 15:15](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/61):
+#### <img src="https://avatars.githubusercontent.com/u/29118926?v=4" width="50">[dmknght](https://github.com/dmknght) opened issue at [2022-03-26 15:15](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/61):
 
 ## System info:
 Parrot OS 5.0, python 3
@@ -805,7 +1585,7 @@ Solution:
 3. All modules are listed by `walk_dir(config_files.__path__[0])`. By this, you can have an option in argv to list all configs
 4. When user provide `-c` flag, like `-c distros/debian.config`, absolute path is merged with `config_files.__path__[0]` so there's no need to know absolute path.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-04-08 18:06](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/61#issuecomment-1093149751):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-04-08 18:06](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/61#issuecomment-1093149751):
 
 Hello @dmknght,
 
@@ -819,7 +1599,7 @@ The main use case for users is to check their own kernel config. The example fro
 ```
 So I don't think users care about the location of these example config files. How do you think?
 
-#### <img src="https://avatars.githubusercontent.com/u/29118926?v=4" width="50">[dmknght](https://github.com/dmknght) commented at [2022-05-06 05:37](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/61#issuecomment-1119275930):
+#### <img src="https://avatars.githubusercontent.com/u/29118926?v=4" width="50">[dmknght](https://github.com/dmknght) commented at [2022-05-06 05:37](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/61#issuecomment-1119275930):
 
 > Hello @dmknght,
 > 
@@ -842,11 +1622,11 @@ Hello! Sorry for very late reply. I had issue with my mail notification LuL. Any
 
 What do you think about this? To me I think it's easier to user to just do `run and read` the result without thinking about wrong profiles.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2022-05-07 12:00](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/61#issuecomment-1120197457):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2022-05-07 12:00](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/61#issuecomment-1120197457):
 
 Some distros don't expose kernel config at /boot and I don't see why average user would be interested in checking example config which is probably totally unrelated to their system.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-05-08 13:33](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/61#issuecomment-1120420075):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-05-08 13:33](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/61#issuecomment-1120420075):
 
 I agree with @Bernhard40.
 
@@ -856,7 +1636,7 @@ Moreover, Linux kernel developers often use the `kconfig-hardened-check` tool fo
 
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/29118926?v=4" width="50">[dmknght](https://github.com/dmknght) commented at [2022-05-09 08:49](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/61#issuecomment-1120822656):
+#### <img src="https://avatars.githubusercontent.com/u/29118926?v=4" width="50">[dmknght](https://github.com/dmknght) commented at [2022-05-09 08:49](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/61#issuecomment-1120822656):
 
 > @dmknght, I would avoid adding the code for searching the kernel config on a local machine.
 
@@ -868,16 +1648,16 @@ Well i see. So i guess I can close the issue now because the scope is different.
 
 -------------------------------------------------------------------------------
 
-# [\#60 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/60) `merged`: UBSAN_SANITIZE_ALL not available on ARM
+# [\#60 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/60) `merged`: UBSAN_SANITIZE_ALL not available on ARM
 
-#### <img src="https://avatars.githubusercontent.com/u/7194705?u=be917f131efce086bc9785f2b606107afe2d2fc3&v=4" width="50">[cyanidium](https://github.com/cyanidium) opened issue at [2022-03-26 14:29](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/60):
+#### <img src="https://avatars.githubusercontent.com/u/7194705?u=be917f131efce086bc9785f2b606107afe2d2fc3&v=4" width="50">[cyanidium](https://github.com/cyanidium) opened issue at [2022-03-26 14:29](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/60):
 
 ARCH_HAS_UBSAN_SANITIZE_ALL is not selected for arm arch, which prevents selection of CONFIG_UBSAN_SANITIZE_ALL
 
 https://github.com/torvalds/linux/blob/master/arch/arm/Kconfig
 https://github.com/torvalds/linux/blob/master/lib/Kconfig.ubsan
 
-#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2022-03-26 14:30](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/60#issuecomment-1079705754):
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2022-03-26 14:30](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/60#issuecomment-1079705754):
 
 # [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/60?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
 > Merging [#60](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/60?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (b9c72b3) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/b0b91b58adc962da01c7fc45cef662ae1b462828?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (b0b91b5) will **increase** coverage by `0.01%`.
@@ -915,7 +1695,7 @@ Flags with carried forward coverage won't be shown. [Click here](https://docs.co
 > `Δ = absolute <relative> (impact)`, `ø = not affected`, `? = missing data`
 > Powered by [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/60?src=pr&el=footer&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Last update [b0b91b5...b9c72b3](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/60?src=pr&el=lastupdated&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Read the [comment docs](https://docs.codecov.io/docs/pull-request-comments?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-04-08 16:43](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/60#issuecomment-1093077908):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-04-08 16:43](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/60#issuecomment-1093077908):
 
 Hello @cyanidium, 
 
@@ -930,9 +1710,9 @@ Thanks!
 
 -------------------------------------------------------------------------------
 
-# [\#59 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/59) `merged`: EFI mitigations can't be enabled if EFI is not set
+# [\#59 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/59) `merged`: EFI mitigations can't be enabled if EFI is not set
 
-#### <img src="https://avatars.githubusercontent.com/u/7194705?u=be917f131efce086bc9785f2b606107afe2d2fc3&v=4" width="50">[cyanidium](https://github.com/cyanidium) opened issue at [2022-03-15 12:38](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/59):
+#### <img src="https://avatars.githubusercontent.com/u/7194705?u=be917f131efce086bc9785f2b606107afe2d2fc3&v=4" width="50">[cyanidium](https://github.com/cyanidium) opened issue at [2022-03-15 12:38](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/59):
 
 Both EFI_DISABLE_PCI_DMA and RESET_ATTACK_MITIGATION depend on EFI, but if EFI is not set, neither config is required.
 
@@ -943,9 +1723,9 @@ Useful on embedded devices that use u-boot or similar instead of EFI.
 
 -------------------------------------------------------------------------------
 
-# [\#58 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/58) `closed`: CONFIG_TRIM_UNUSED_KSYMS and CONFIG_MODULES not in sync
+# [\#58 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/58) `closed`: CONFIG_TRIM_UNUSED_KSYMS and CONFIG_MODULES not in sync
 
-#### <img src="https://avatars.githubusercontent.com/u/11868071?u=d7a5841263276e1f323827fc21b04345df594a60&v=4" width="50">[Churam](https://github.com/Churam) opened issue at [2022-01-17 17:17](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/58):
+#### <img src="https://avatars.githubusercontent.com/u/11868071?u=d7a5841263276e1f323827fc21b04345df594a60&v=4" width="50">[Churam](https://github.com/Churam) opened issue at [2022-01-17 17:17](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/58):
 
 It seems there is a problem with the current stable kernel (5.15.14 at the date of this issue). 
 
@@ -968,7 +1748,7 @@ But as the hardening requires to have MODULES = n (is not set) it is impossible 
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-01-21 15:53](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/58#issuecomment-1018632628):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-01-21 15:53](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/58#issuecomment-1018632628):
 
 @Churam thanks for your report!
 
@@ -979,7 +1759,7 @@ The output for your case now:
 CONFIG_TRIM_UNUSED_KSYMS   |   y   |   my   | cut_attack_surface |  OK: CONFIG_MODULES "is not set"
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/11868071?u=d7a5841263276e1f323827fc21b04345df594a60&v=4" width="50">[Churam](https://github.com/Churam) commented at [2022-01-24 11:04](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/58#issuecomment-1019976819):
+#### <img src="https://avatars.githubusercontent.com/u/11868071?u=d7a5841263276e1f323827fc21b04345df594a60&v=4" width="50">[Churam](https://github.com/Churam) commented at [2022-01-24 11:04](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/58#issuecomment-1019976819):
 
 Fix OK
 Output is now as expected, closing issue
@@ -987,9 +1767,9 @@ Output is now as expected, closing issue
 
 -------------------------------------------------------------------------------
 
-# [\#57 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/57) `closed`: CONFIG_AMD_IOMMU_V2 = m appears also to be correct
+# [\#57 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/57) `closed`: CONFIG_AMD_IOMMU_V2 = m appears also to be correct
 
-#### <img src="https://avatars.githubusercontent.com/u/15869?u=31910a5ba7214eaf12efd39cbdf71b69af1b7db0&v=4" width="50">[brandonweeks](https://github.com/brandonweeks) opened issue at [2022-01-10 09:40](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/57):
+#### <img src="https://avatars.githubusercontent.com/u/15869?u=31910a5ba7214eaf12efd39cbdf71b69af1b7db0&v=4" width="50">[brandonweeks](https://github.com/brandonweeks) opened issue at [2022-01-10 09:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/57):
 
 ```
 CONFIG_AMD_IOMMU = y
@@ -999,7 +1779,7 @@ appears to correctly setup the AMD v2 IOMMU on supported hardware (tested on Nix
 
 If you agree with this assessment, any pointers on how to add an OR to the existing AND conditional for `CONFIG_AMD_IOMMU`?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-01-21 15:29](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/57#issuecomment-1018612527):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-01-21 15:29](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/57#issuecomment-1018612527):
 
 Hello @brandonweeks 
 
@@ -1010,26 +1790,26 @@ Thanks!
 
 -------------------------------------------------------------------------------
 
-# [\#56 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/56) `open`: Add RISC-V support
+# [\#56 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56) `open`: Add RISC-V support
 **Labels**: `enhancement`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2021-11-21 12:07](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/56):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) opened issue at [2021-11-21 12:07](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56):
 
 It would be nice to have `kconfig-hardened-check` adapted for `RISC-V` kernel configs.  
 
-#### <img src="https://avatars.githubusercontent.com/u/125879?v=4" width="50">[cybernet](https://github.com/cybernet) commented at [2021-12-24 13:35](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/56#issuecomment-1000842582):
+#### <img src="https://avatars.githubusercontent.com/u/125879?v=4" width="50">[cybernet](https://github.com/cybernet) commented at [2021-12-24 13:35](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56#issuecomment-1000842582):
 
 👍
 
 
 -------------------------------------------------------------------------------
 
-# [\#55 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/55) `closed`: Should slub_debug be considered a hardening cmd line parameter?
+# [\#55 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/55) `closed`: Should slub_debug be considered a hardening cmd line parameter?
 **Labels**: `question`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/3797768?v=4" width="50">[morfikov](https://github.com/morfikov) opened issue at [2021-10-28 21:16](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/55):
+#### <img src="https://avatars.githubusercontent.com/u/3797768?v=4" width="50">[morfikov](https://github.com/morfikov) opened issue at [2021-10-28 21:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/55):
 
 [According to this](https://github.com/a13xp0p0v/kconfig-hardened-check/blob/2b5bf3548b6a7edbf7cd74278d570b658f9ab34a/kconfig_hardened_check/__init__.py#L13-L21), the `slub_debug` is a hardening cmd line parameter. But when you use this option, you will see the following in the syslog on newer kernels:
 
@@ -1052,7 +1832,7 @@ More [here](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/c
 
 So, should users use slub_debug=FZP or slub_debug=ZP?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-11-09 19:26](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/55#issuecomment-964465176):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-11-09 19:26](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/55#issuecomment-964465176):
 
 Hello @morfikov!
 
@@ -1067,11 +1847,11 @@ Thanks!
 
 -------------------------------------------------------------------------------
 
-# [\#54 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/54) `merged`: Add BLK_DEV_FD
+# [\#54 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/54) `merged`: Add BLK_DEV_FD
 **Labels**: `kernel_maintainer_feedback`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/150761?u=f98bb82be5009ecefd6ee9bc3d60fcf082f8cf49&v=4" width="50">[evdenis](https://github.com/evdenis) opened issue at [2021-09-10 15:41](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/54):
+#### <img src="https://avatars.githubusercontent.com/u/150761?u=f98bb82be5009ecefd6ee9bc3d60fcf082f8cf49&v=4" width="50">[evdenis](https://github.com/evdenis) opened issue at [2021-09-10 15:41](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/54):
 
 Floppy driver was written many years ago. It was designed to
 work in a single-threaded environment (many global variables)
@@ -1108,7 +1888,7 @@ However, qemu (5.2.0) still enables floppy device by default.
 
 [1] https://lore.kernel.org/all/CAHk-=whFAAV_TOLFNnj=wu4mD2L9OvgB6n2sKDdmd8buMKFv8A@mail.gmail.com/
 
-#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2021-09-10 21:23](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/54#issuecomment-917220941):
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2021-09-10 21:23](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/54#issuecomment-917220941):
 
 # [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/54?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
 > Merging [#54](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/54?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (17d70c5) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/b54dca6a96b7a07d3d1aec56b5a1df6386bb7d61?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (b54dca6) will **increase** coverage by `0.01%`.
@@ -1148,7 +1928,7 @@ Flags with carried forward coverage won't be shown. [Click here](https://docs.co
 > `Δ = absolute <relative> (impact)`, `ø = not affected`, `? = missing data`
 > Powered by [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/54?src=pr&el=footer&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Last update [b54dca6...17d70c5](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/54?src=pr&el=lastupdated&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Read the [comment docs](https://docs.codecov.io/docs/pull-request-comments?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 21:28](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/54#issuecomment-917223378):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 21:28](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/54#issuecomment-917223378):
 
 Thanks a lot @evdenis :)
 The pull request is merged.
@@ -1156,11 +1936,11 @@ The pull request is merged.
 
 -------------------------------------------------------------------------------
 
-# [\#53 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53) `closed`: Justification of UBSAN-related choices?
+# [\#53 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/53) `closed`: Justification of UBSAN-related choices?
 **Labels**: `kernel_maintainer_feedback`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/601177?v=4" width="50">[equaeghe](https://github.com/equaeghe) opened issue at [2021-09-04 21:22](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53):
+#### <img src="https://avatars.githubusercontent.com/u/601177?v=4" width="50">[equaeghe](https://github.com/equaeghe) opened issue at [2021-09-04 21:22](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/53):
 
 Currently, `UBSAN`-related choices are as follows:
 
@@ -1170,7 +1950,7 @@ It is unclear to me why the last two are chosen. `UBSAN_MISC=y` seems like a goo
 
 Is my understanding correct, or a misunderstanding (which is perfectly possible). In the latter case, I would be grateful for a pointer to an appropriate resource.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 13:40](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53#issuecomment-916912883):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 13:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/53#issuecomment-916912883):
 
 Hello @equaeghe 
 
@@ -1200,11 +1980,11 @@ additional sysctl settings.
 
 Does that provide answers to your questions?
 
-#### <img src="https://avatars.githubusercontent.com/u/601177?v=4" width="50">[equaeghe](https://github.com/equaeghe) commented at [2021-09-10 14:04](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53#issuecomment-916929875):
+#### <img src="https://avatars.githubusercontent.com/u/601177?v=4" width="50">[equaeghe](https://github.com/equaeghe) commented at [2021-09-10 14:04](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/53#issuecomment-916929875):
 
 Thanks, that explains why `UBSAN_TRAP=y`. I am still unclear why `UBSAN_MISC is not set` and why nothing is said about `UBSAN_SANITIZE_ALL`.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 14:56](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53#issuecomment-916967782):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 14:56](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/53#issuecomment-916967782):
 
 It looks like other UBSAN modes are for kernel debugging, not for hardening:
 ```
@@ -1220,7 +2000,7 @@ I will also test UBSAN_SANITIZE_ALL behavior.
 
 Thanks @equaeghe !
 
-#### <img src="https://avatars.githubusercontent.com/u/1110841?u=e5e99e1ac8260e791433baa2423f7d173eea4c1c&v=4" width="50">[kees](https://github.com/kees) commented at [2021-09-10 18:50](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53#issuecomment-917133371):
+#### <img src="https://avatars.githubusercontent.com/u/1110841?u=e5e99e1ac8260e791433baa2423f7d173eea4c1c&v=4" width="50">[kees](https://github.com/kees) commented at [2021-09-10 18:50](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/53#issuecomment-917133371):
 
 `UBSAN_SANITIZE_ALL` is needed to gain coverage over the kernel as a whole. Otherwise, only opted-in things will have the UBSAN features applied.
 
@@ -1234,16 +2014,16 @@ CONFIG_UBSAN_SANITIZE_ALL=y
 
 and depending on one's crash tolerances, either use `panic_on_warn=1` or `CONFIG_UBSAN_TRAP=y`.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 21:20](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/53#issuecomment-917219349):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 21:20](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/53#issuecomment-917219349):
 
 Thank you very much @kees !
 
 
 -------------------------------------------------------------------------------
 
-# [\#52 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/52) `closed`: Add RANDOMIZE_KSTACK_OFFSET_DEFAULT
+# [\#52 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/52) `closed`: Add RANDOMIZE_KSTACK_OFFSET_DEFAULT
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) opened issue at [2021-08-25 19:44](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/52):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) opened issue at [2021-08-25 19:44](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/52):
 
 Randomize kernel stack offset on syscall entry
 
@@ -1254,7 +2034,7 @@ cross-syscall address exposures. This feature is controlled
 by kernel boot param "randomize_kstack_offset=on/off", and this
 config chooses the default boot state.
 
-#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2021-08-25 19:46](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/52#issuecomment-905823752):
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2021-08-25 19:46](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/52#issuecomment-905823752):
 
 # [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/52?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
 > Merging [#52](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/52?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (5d12e64) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/57379d8c851656116e2b149e3f1d4003c17d22d9?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (57379d8) will **increase** coverage by `0.01%`.
@@ -1294,7 +2074,7 @@ Flags with carried forward coverage won't be shown. [Click here](https://docs.co
 > `Δ = absolute <relative> (impact)`, `ø = not affected`, `? = missing data`
 > Powered by [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/52?src=pr&el=footer&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Last update [57379d8...5d12e64](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/52?src=pr&el=lastupdated&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Read the [comment docs](https://docs.codecov.io/docs/pull-request-comments?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 12:14](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/52#issuecomment-916859414):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 12:14](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/52#issuecomment-916859414):
 
 Hi @anthraxx 
 
@@ -1304,11 +2084,11 @@ Hope you wouldn't mind.
 Thanks!
 Alexander
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2021-09-10 12:15](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/52#issuecomment-916860190):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2021-09-10 12:15](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/52#issuecomment-916860190):
 
 @a13xp0p0v nah, i was just about to make it KSPP official hence the delay. should have communicated it. Will create a followup PR marking it as kspp soon :cat:
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 13:45](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/52#issuecomment-916916530):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-09-10 13:45](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/52#issuecomment-916916530):
 
 @anthraxx , ah, OK!
 
@@ -1317,25 +2097,25 @@ Sure, looking forward to your new pull request!
 
 -------------------------------------------------------------------------------
 
-# [\#51 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/51) `merged`: Added cbl-mariner kernel configuration file.
+# [\#51 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/51) `merged`: Added cbl-mariner kernel configuration file.
 
-#### <img src="https://avatars.githubusercontent.com/u/25109036?u=507c0397c0e27f6fc1a1b3115f293c66b8056199&v=4" width="50">[Hacks4Snacks](https://github.com/Hacks4Snacks) opened issue at [2021-08-19 20:49](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/51):
+#### <img src="https://avatars.githubusercontent.com/u/25109036?u=507c0397c0e27f6fc1a1b3115f293c66b8056199&v=4" width="50">[Hacks4Snacks](https://github.com/Hacks4Snacks) opened issue at [2021-08-19 20:49](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/51):
 
 Hello,
 
 I have added the CBL-Mariner 1.0 distribution kernel configuration file.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-08-20 17:22](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/51#issuecomment-902842367):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-08-20 17:22](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/51#issuecomment-902842367):
 
 Hello @Hacks4Snacks,
 Could you please add the corresponding info to `kconfig_hardened_check/config_files/links.txt` and update your pull request?
 Thank you!
 
-#### <img src="https://avatars.githubusercontent.com/u/25109036?u=507c0397c0e27f6fc1a1b3115f293c66b8056199&v=4" width="50">[Hacks4Snacks](https://github.com/Hacks4Snacks) commented at [2021-08-20 17:42](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/51#issuecomment-902853201):
+#### <img src="https://avatars.githubusercontent.com/u/25109036?u=507c0397c0e27f6fc1a1b3115f293c66b8056199&v=4" width="50">[Hacks4Snacks](https://github.com/Hacks4Snacks) commented at [2021-08-20 17:42](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/51#issuecomment-902853201):
 
 Sure thing! A link to the publicly available configuration has been added. @a13xp0p0v
 
-#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2021-08-20 18:11](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/51#issuecomment-902869062):
+#### <img src="https://avatars.githubusercontent.com/u/65553080?u=1e9e0de760ac0083c86dab588f627a0468cd714e&v=4" width="50">[codecov-commenter](https://github.com/codecov-commenter) commented at [2021-08-20 18:11](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/51#issuecomment-902869062):
 
 # [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/51?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) Report
 > Merging [#51](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/51?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (a5686b1) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/38bde65d9df70a6b1ec772b93b07e98778cb7e34?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov) (38bde65) will **not change** coverage.
@@ -1372,18 +2152,18 @@ Flags with carried forward coverage won't be shown. [Click here](https://docs.co
 > `Δ = absolute <relative> (impact)`, `ø = not affected`, `? = missing data`
 > Powered by [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/51?src=pr&el=footer&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Last update [38bde65...a5686b1](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/51?src=pr&el=lastupdated&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov). Read the [comment docs](https://docs.codecov.io/docs/pull-request-comments?utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=Alexander+Popov).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-08-20 18:22](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/51#issuecomment-902874845):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-08-20 18:22](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/51#issuecomment-902874845):
 
 Merged. Thanks @Hacks4Snacks!
 
 
 -------------------------------------------------------------------------------
 
-# [\#50 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/50) `open`: Allow redefining rules and expanding rule sets
+# [\#50 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/50) `open`: Allow redefining rules and expanding rule sets
 **Labels**: `enhancement`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/65050545?u=3d095cc7726e6bbf544ea4857c4223033ea90921&v=4" width="50">[petervanvugt](https://github.com/petervanvugt) opened issue at [2021-02-20 01:10](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/50):
+#### <img src="https://avatars.githubusercontent.com/u/65050545?u=3d095cc7726e6bbf544ea4857c4223033ea90921&v=4" width="50">[petervanvugt](https://github.com/petervanvugt) opened issue at [2021-02-20 01:10](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/50):
 
 I have found this tool quite helpful for quickly auditing embedded kernel configs. However, I've been finding that on embedded systems, I often have unique, application-specific security requirements:
 
@@ -1424,7 +2204,7 @@ tests: !!seq [
 ```
 This would enable the config requirements to be layered, similar to the way kernel `defconfigs` can be layered (i.e. arch | Android | SoC vendor | device). I have some free time next week to implement this if you're open to it.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-02-21 22:15](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/50#issuecomment-782937216):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-02-21 22:15](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/50#issuecomment-782937216):
 
 Hello @petervanvugt,
 
@@ -1456,7 +2236,7 @@ My thoughts:
 Best regards,
 Alexander
 
-#### <img src="https://avatars.githubusercontent.com/u/65050545?u=3d095cc7726e6bbf544ea4857c4223033ea90921&v=4" width="50">[petervanvugt](https://github.com/petervanvugt) commented at [2021-02-23 02:26](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/50#issuecomment-783833502):
+#### <img src="https://avatars.githubusercontent.com/u/65050545?u=3d095cc7726e6bbf544ea4857c4223033ea90921&v=4" width="50">[petervanvugt](https://github.com/petervanvugt) commented at [2021-02-23 02:26](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/50#issuecomment-783833502):
 
 Hi @a13xp0p0v ,
 
@@ -1501,7 +2281,7 @@ which could be split into two requirements: one for `RANDOMIZE_BASE` on kernels 
 
 What do you think?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-03-05 19:16](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/50#issuecomment-791625966):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-03-05 19:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/50#issuecomment-791625966):
 
 @petervanvugt thanks a lot for describing your use-cases.
 I think they match with [this one](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-453810119).
@@ -1514,7 +2294,7 @@ Then we can ponder over the check description syntax.
 I will experiment with that.
 If you create any prototype, please share!
 
-#### <img src="https://avatars.githubusercontent.com/u/10352354?u=97ab0d446ea4204b959ae74734f8436c78de18e7&v=4" width="50">[egberts](https://github.com/egberts) commented at [2021-08-31 13:08](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/50#issuecomment-909221366):
+#### <img src="https://avatars.githubusercontent.com/u/10352354?u=97ab0d446ea4204b959ae74734f8436c78de18e7&v=4" width="50">[egberts](https://github.com/egberts) commented at [2021-08-31 13:08](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/50#issuecomment-909221366):
 
 other use case is prevent leakage of kernel pointers to log file, /proc directory files, or terminal output.  
 
@@ -1525,12 +2305,22 @@ another one is the one provided by Whonix.org (a KSPP variant) which is more rig
 
 Another one is for Spectre, et. al., mitigation and that has a bunch of config s as well.
 
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-04-23 07:33](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/50#issuecomment-1518980838):
+
+I implemented a part of this feature in `override_expected_value()`.
+
+1. Implementation: https://github.com/a13xp0p0v/kconfig-hardened-check/commit/c1090722157b531261a7cf0257f2dccb744bd93d
+
+2. Unit-test: https://github.com/a13xp0p0v/kconfig-hardened-check/commit/7194de8dfe8b6232166eded1516eb7fdd21c14ed
+
+3.  Refinement of the CONFIG_ARCH_MMAP_RND_BITS check using this feature: https://github.com/a13xp0p0v/kconfig-hardened-check/commit/9bbea5b5bad45aac84aadf83536e31f9bd5e395e
+
 
 -------------------------------------------------------------------------------
 
-# [\#49 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/49) `closed`: Some checks seem to be at odds with what the recommended settings are
+# [\#49 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/49) `closed`: Some checks seem to be at odds with what the recommended settings are
 
-#### <img src="https://avatars.githubusercontent.com/u/14325582?v=4" width="50">[wdormann](https://github.com/wdormann) opened issue at [2021-02-11 14:34](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/49):
+#### <img src="https://avatars.githubusercontent.com/u/14325582?v=4" width="50">[wdormann](https://github.com/wdormann) opened issue at [2021-02-11 14:34](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/49):
 
 I did not go through them all, but these in particular stuck out to me:
 
@@ -1546,7 +2336,7 @@ However, the specific tests show as ```FAIL``` because they are ```not "y"```
 Perhaps I'm just interpreting the report incorrectly, but at first glance it would appear that the check for the desired result is wrong.
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-02-11 15:06](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/49#issuecomment-777552022):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2021-02-11 15:06](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/49#issuecomment-777552022):
 
 Hi @wdormann,
 
@@ -1565,7 +2355,7 @@ That's why the second check fails too with the explanation: `CONFIG_GCC_PLUGIN_R
 The situation with `STACKLEAK_METRICS` and `STACKLEAK_RUNTIME_DISABLE` is similar.
 These checks fail because they depend on `STACKLEAK` which is not `"y"`.
 
-#### <img src="https://avatars.githubusercontent.com/u/14325582?v=4" width="50">[wdormann](https://github.com/wdormann) commented at [2021-02-11 15:19](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/49#issuecomment-777570144):
+#### <img src="https://avatars.githubusercontent.com/u/14325582?v=4" width="50">[wdormann](https://github.com/wdormann) commented at [2021-02-11 15:19](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/49#issuecomment-777570144):
 
 Reading comprehension is apparently important!
 Thanks for the clarification.
@@ -1573,13 +2363,13 @@ Thanks for the clarification.
 
 -------------------------------------------------------------------------------
 
-# [\#48 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/48) `merged`: Do not check CONFIG_HARDEN_EL2_VECTORS for v5.9+
+# [\#48 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/48) `merged`: Do not check CONFIG_HARDEN_EL2_VECTORS for v5.9+
 
-#### <img src="https://avatars.githubusercontent.com/u/20878259?v=4" width="50">[pgils](https://github.com/pgils) opened issue at [2020-10-19 13:45](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/48):
+#### <img src="https://avatars.githubusercontent.com/u/20878259?v=4" width="50">[pgils](https://github.com/pgils) opened issue at [2020-10-19 13:45](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/48):
 
 The CONFIG_HARDEN_EL2_VECTORS Kconfig was removed in Linux 5.9: torvalds/linux@a59a2ed.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-21 15:06](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/48#issuecomment-713644849):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-21 15:06](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/48#issuecomment-713644849):
 
 Hi @pgils, thanks for your pull request!
 
@@ -1588,13 +2378,13 @@ So simple check of the kernel version is not enough.
 
 I think of making nested ComplexOptCheck possible to write such a rule.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-22 16:12](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/48#issuecomment-714601175):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-22 16:12](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/48#issuecomment-714601175):
 
 Hi @pgils,
 I added nested `ComplexOptChecks` support, merged and improved your rule.
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/20878259?v=4" width="50">[pgils](https://github.com/pgils) commented at [2020-10-24 14:14](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/48#issuecomment-715921069):
+#### <img src="https://avatars.githubusercontent.com/u/20878259?v=4" width="50">[pgils](https://github.com/pgils) commented at [2020-10-24 14:14](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/48#issuecomment-715921069):
 
 thanks @a13xp0p0v, that's a nice feature!
 
@@ -1609,7 +2399,7 @@ Do you think it would be worthwhile using this for complex dependencies such as 
     && (!FUNCTION_GRAPH_TRACER [=n] || DYNAMIC_FTRACE_WITH_REGS [=n])
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-30 18:16](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/48#issuecomment-719717934):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-30 18:16](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/48#issuecomment-719717934):
 
 @pgils, I guess you can't enable `ARM64_PTR_AUTH` because your current toolchain doesn't fit the requirements.
 I would recommend improving the toolchain to get this nice feature.
@@ -1622,13 +2412,13 @@ Depends on: (CC_HAS_SIGN_RETURN_ADDRESS [=y] || CC_HAS_BRANCH_PROT_PAC_RET [=y])
 
 -------------------------------------------------------------------------------
 
-# [\#47 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/47) `closed`: Please support /proc/config.gz
+# [\#47 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/47) `closed`: Please support /proc/config.gz
 
-#### <img src="https://avatars.githubusercontent.com/u/3797768?v=4" width="50">[morfikov](https://github.com/morfikov) opened issue at [2020-10-13 14:58](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/47):
+#### <img src="https://avatars.githubusercontent.com/u/3797768?v=4" width="50">[morfikov](https://github.com/morfikov) opened issue at [2020-10-13 14:58](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/47):
 
 Currently only uncompressed `config-*` files in /boot/ are supported, but the current kernel config can also be accessed via `/proc/config.gz` . There's no way to use this file. Please support this path as well. 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-14 12:25](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/47#issuecomment-708366463):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-14 12:25](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/47#issuecomment-708366463):
 
 No problem, I would recommend this:
 ```
@@ -1636,11 +2426,11 @@ No problem, I would recommend this:
   # ./bin/kconfig-hardened-check -c my.config
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/3797768?v=4" width="50">[morfikov](https://github.com/morfikov) commented at [2020-10-14 13:43](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/47#issuecomment-708410948):
+#### <img src="https://avatars.githubusercontent.com/u/3797768?v=4" width="50">[morfikov](https://github.com/morfikov) commented at [2020-10-14 13:43](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/47#issuecomment-708410948):
 
 Yes, I know, but this is the same as just using `-c /boot/config-*` . I thought of using `/proc/config.gz` because in such case a user would just use one file no matter what kernel version he's using. When you decompress the file first, it's an extra step which could be eliminated to simplify the whole process and make it easier.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-21 14:44](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/47#issuecomment-713629103):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-21 14:44](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/47#issuecomment-713629103):
 
 Not all kernels provide the kernel config via `/proc/config.gz`.
 For example, RHEL, Fedora, Ubuntu, Debian don't do that.
@@ -1650,11 +2440,11 @@ I think we can use `zcat` separately, if we need.
 
 -------------------------------------------------------------------------------
 
-# [\#46 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/46) `closed`: CPU specific options and the kernel cmd line 
+# [\#46 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/46) `closed`: CPU specific options and the kernel cmd line 
 **Labels**: `enhancement`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/3797768?v=4" width="50">[morfikov](https://github.com/morfikov) opened issue at [2020-10-04 15:39](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/46):
+#### <img src="https://avatars.githubusercontent.com/u/3797768?v=4" width="50">[morfikov](https://github.com/morfikov) opened issue at [2020-10-04 15:39](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/46):
 
 I have an Intel CPU, and when I run `kconfig-hardened-check` I get the following FAILs:
 
@@ -1676,7 +2466,7 @@ If a user set `slub_debug=FZP` and `vsyscall=none` in the kernel cmd line, I thi
 
 What do you think about such improvements? 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-05 10:09](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/46#issuecomment-703535817):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-05 10:09](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/46#issuecomment-703535817):
 
 Hi @morfikov, thanks for your ideas.
 
@@ -1688,13 +2478,13 @@ That would allow to avoid incorrect FAIL reports.
 I'm going to work on `kconfig-hardened-check` in the coming days.
 If you want to participate, come on, your pull requests will be welcome!
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-10-05 11:03](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/46#issuecomment-703560552):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-10-05 11:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/46#issuecomment-703560552):
 
 I always seen this project scope as simple kernel config checker not running system audit tool and I believe in old  unix mantra _Do One Thing and Do It Well_ so I'm skeptical about this additions. Taking  `/proc/cmdline` into account would mean same config would yield different result across systems. Having OR between amd and intel features make it less useful for distros which would want them all.
 
 I think end users are capable of ignoring amd warnings when they have intel cpu and the opposite and also be aware o what they added to their cmdline.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-05 11:55](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/46#issuecomment-703583549):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-05 11:55](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/46#issuecomment-703583549):
 
 Hi @Bernhard40 
 
@@ -1711,7 +2501,7 @@ In fact, I see checking cmdline parameters as a very big improvement.
 There are several important cases when checking kernel config is not enough for a correct conclusion about the kernel security.
 Examples: `mitigations`, `page_poison`, `init_on_alloc/init_on_free` and some others.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-10-05 20:35](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/46#issuecomment-703873764):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-10-05 20:35](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/46#issuecomment-703873764):
 
 > I would propose a compromise: add a separate flag for checking /proc/cmdline (disabled by default).
 > Is it OK for you?
@@ -1723,11 +2513,11 @@ I don't mind if you are ready to maintain it.
 
 Yes but for now checking kernel config is the only thing this project ever promised (see readme). Conclusions about kernel security needs expanding the project scope which may be a rabbit hole as if you add cmdlne support then sysctl support should be next etc.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-05 21:01](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/46#issuecomment-703886769):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-10-05 21:01](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/46#issuecomment-703886769):
 
 @Bernhard40, I'll do my best.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-05-28 19:19](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/46#issuecomment-1140317020):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2022-05-28 19:19](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/46#issuecomment-1140317020):
 
 Now kconfig-hardened-check supports checking kernel cmdline parameters.
 
@@ -1757,9 +2547,9 @@ optional arguments:
 
 -------------------------------------------------------------------------------
 
-# [\#45 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/45) `closed`: Request for command line options to display only OK/FAIL items
+# [\#45 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/45) `closed`: Request for command line options to display only OK/FAIL items
 
-#### <img src="https://avatars.githubusercontent.com/u/14027079?u=09634a743d6bc4698e252f4c692982df45481846&v=4" width="50">[fonic](https://github.com/fonic) opened issue at [2020-07-13 10:07](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/45):
+#### <img src="https://avatars.githubusercontent.com/u/14027079?u=379b0b0fcecea8820dea0f220dc09e3342cc4519&v=4" width="50">[fonic](https://github.com/fonic) opened issue at [2020-07-13 10:07](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/45):
 
 I'd like to request command line options to reduce output to OK/FAIL items only, e.g.
 ```
@@ -1771,7 +2561,7 @@ This would make it much easier to work through the list of settings when hardeni
 
 This tool is great, many thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-07-15 11:55](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/45#issuecomment-658724615):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-07-15 11:55](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/45#issuecomment-658724615):
 
 Hello @fonic,
 
@@ -1865,26 +2655,26 @@ CONFIG_INTEGRITY                             |      y      |defconfig |userspace
 [+] Config check is finished: 'OK' - 57 / 'FAIL' - 79 (suppressed in output)
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/14027079?u=09634a743d6bc4698e252f4c692982df45481846&v=4" width="50">[fonic](https://github.com/fonic) commented at [2020-07-15 15:14](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/45#issuecomment-658827875):
+#### <img src="https://avatars.githubusercontent.com/u/14027079?u=379b0b0fcecea8820dea0f220dc09e3342cc4519&v=4" width="50">[fonic](https://github.com/fonic) commented at [2020-07-15 15:14](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/45#issuecomment-658827875):
 
 Awesome, just tested it. That makes an already great tool even better. Many thanks!
 
 
 -------------------------------------------------------------------------------
 
-# [\#44 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/44) `closed`: KSPP future in defconf linux distribution.
+# [\#44 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/44) `closed`: KSPP future in defconf linux distribution.
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2020-05-10 18:01](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/44):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2020-05-10 18:01](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/44):
 
 Hello,
 
 Im just curious what is the status of implementing KSPP to default kernel of linux GNU distribution ? Why linux distributions dont impelment for example most of kspp solutions for example steackleak or gcc hardeneing ? I use most of kspp feature based on your script Alexander and kernel works like a charm. Someone can explain to me ?
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-05-11 11:40](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/44#issuecomment-626650276):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-05-11 11:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/44#issuecomment-626650276):
 
 Some settings may affect performance, debugability, support for older userspace software, etc.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-05-18 09:58](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/44#issuecomment-630078520):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-05-18 09:58](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/44#issuecomment-630078520):
 
 > Some settings may affect performance, debugability, support for older userspace software, etc.
 
@@ -1895,21 +2685,21 @@ I think Linux distributions could provide several kernel flavours for different 
 
 I'm sure @kees has more insights about this.
 
-#### <img src="https://avatars.githubusercontent.com/u/1110841?u=e5e99e1ac8260e791433baa2423f7d173eea4c1c&v=4" width="50">[kees](https://github.com/kees) commented at [2020-05-18 15:16](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/44#issuecomment-630251690):
+#### <img src="https://avatars.githubusercontent.com/u/1110841?u=e5e99e1ac8260e791433baa2423f7d173eea4c1c&v=4" width="50">[kees](https://github.com/kees) commented at [2020-05-18 15:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/44#issuecomment-630251690):
 
 Yup! There is an open bug with KSPP to provide a defconfig fragment selection interface to the upstream kernel. You can see more details here:
 https://github.com/KSPP/linux/issues/14
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2020-05-20 21:06](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/44#issuecomment-631726899):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2020-05-20 21:06](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/44#issuecomment-631726899):
 
 Okey. Thanks guys for your work and explanation.
 
 
 -------------------------------------------------------------------------------
 
-# [\#43 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/43) `merged`: Upgrading to Ubuntu 20.04 kernel config
+# [\#43 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/43) `merged`: Upgrading to Ubuntu 20.04 kernel config
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2020-05-05 09:12](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/43):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2020-05-05 09:12](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/43):
 
 Hi @a13xp0p0v, 
 
@@ -1917,26 +2707,26 @@ Here is the Ubuntu kernel configuration update.
 
 Best regards.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-05-06 21:41](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/43#issuecomment-624906056):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-05-06 21:41](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/43#issuecomment-624906056):
 
 Thanks @HacKurx!
 
 
 -------------------------------------------------------------------------------
 
-# [\#42 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/42) `closed`: add tests
+# [\#42 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/42) `closed`: add tests
 
-#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) opened issue at [2020-04-14 12:10](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/42):
+#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) opened issue at [2020-04-14 12:10](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/42):
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-24 23:29](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/42#issuecomment-619279461):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-24 23:29](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/42#issuecomment-619279461):
 
 Hello @shamilbi !
 Could you please describe the purpose of this PR?
 By the way, tests for `kconfig-hardened-check` already exist as GitHub Actions (kind of continuous integration).
 
-#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) commented at [2020-04-25 07:33](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/42#issuecomment-619335943):
+#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) commented at [2020-04-25 07:33](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/42#issuecomment-619335943):
 
 > Hello @shamilbi !
 > Could you please describe the purpose of this PR?
@@ -1945,11 +2735,11 @@ By the way, tests for `kconfig-hardened-check` already exist as GitHub Actions (
 If files `tests/results/**/*.check` are proper results of kconfig-hardened-check applied to `kconfig_hardened_check/config_files/**/*.config` then this PR just compares output of a current kconfig_hardened_check (a current commit) with those proper results.
 This gives you an exact diff in output from a last commit
 
-#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) commented at [2020-04-25 07:43](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/42#issuecomment-619337059):
+#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) commented at [2020-04-25 07:43](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/42#issuecomment-619337059):
 
 [My workflows file](https://github.com/shamilbi/kconfig-hardened-check/blob/master/.github/workflows/test-master.yml)
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-05-06 21:19](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/42#issuecomment-624897025):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-05-06 21:19](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/42#issuecomment-624897025):
 
 Yes, sometimes I use ouput diff during the `kconfig-hardened-check` development.
 However I don't think we need to commit the output results to the repository.
@@ -1958,9 +2748,9 @@ Thank you anyway.
 
 -------------------------------------------------------------------------------
 
-# [\#41 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/41) `merged`: Add CONFIG_INPUT_EVBUG
+# [\#41 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/41) `merged`: Add CONFIG_INPUT_EVBUG
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2020-04-09 11:38](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/41):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2020-04-09 11:38](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/41):
 
 Hi @a13xp0p0v,
 
@@ -1973,7 +2763,7 @@ Thank you.
 
 Best regards,
 
-#### <img src="https://avatars.githubusercontent.com/u/8655789?u=4694f03b321aa2287d9fe05155adcddb23272e81&v=4" width="50">[codecov-io](https://github.com/codecov-io) commented at [2020-04-09 11:39](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/41#issuecomment-611482374):
+#### <img src="https://avatars.githubusercontent.com/u/8655789?u=4694f03b321aa2287d9fe05155adcddb23272e81&v=4" width="50">[codecov-io](https://github.com/codecov-io) commented at [2020-04-09 11:39](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/41#issuecomment-611482374):
 
 # [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/41?src=pr&el=h1) Report
 > Merging [#41](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/41?src=pr&el=desc) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/100a39e2b01dadd2d27ed805cbe2b4ead7fc8b05&el=desc) will **increase** coverage by `0.01%`.
@@ -2014,13 +2804,13 @@ Best regards,
 
 -------------------------------------------------------------------------------
 
-# [\#40 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/40) `merged`: pylint some code
+# [\#40 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/40) `merged`: pylint some code
 
-#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) opened issue at [2020-04-08 07:01](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/40):
+#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) opened issue at [2020-04-08 07:01](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/40):
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-09 15:35](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/40#issuecomment-611595095):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-09 15:35](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/40#issuecomment-611595095):
 
 Thanks @shamilbi.
 Merged.
@@ -2028,13 +2818,13 @@ Merged.
 
 -------------------------------------------------------------------------------
 
-# [\#39 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/39) `closed`: VerCheck: work with 3-digit kernel versions
+# [\#39 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/39) `closed`: VerCheck: work with 3-digit kernel versions
 
-#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) opened issue at [2020-04-03 15:54](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/39):
+#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) opened issue at [2020-04-03 15:54](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/39):
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/8655789?u=4694f03b321aa2287d9fe05155adcddb23272e81&v=4" width="50">[codecov-io](https://github.com/codecov-io) commented at [2020-04-03 16:25](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/39#issuecomment-608535796):
+#### <img src="https://avatars.githubusercontent.com/u/8655789?u=4694f03b321aa2287d9fe05155adcddb23272e81&v=4" width="50">[codecov-io](https://github.com/codecov-io) commented at [2020-04-03 16:25](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/39#issuecomment-608535796):
 
 # [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/39?src=pr&el=h1) Report
 > Merging [#39](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/39?src=pr&el=desc) into [master](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/commit/bdac2c22b96b3a682801674efed92fddc8a347b0&el=desc) will **increase** coverage by `0.60%`.
@@ -2072,7 +2862,7 @@ Merged.
 > `Δ = absolute <relative> (impact)`, `ø = not affected`, `? = missing data`
 > Powered by [Codecov](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/39?src=pr&el=footer). Last update [bdac2c2...97b9f90](https://codecov.io/gh/a13xp0p0v/kconfig-hardened-check/pull/39?src=pr&el=lastupdated). Read the [comment docs](https://docs.codecov.io/docs/pull-request-comments).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-06 13:32](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/39#issuecomment-609796546):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-06 13:32](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/39#issuecomment-609796546):
 
 Hello @shamilbi,
 Thanks for your work!
@@ -2093,12 +2883,12 @@ That's why currently only two numbers are checked and IMO that's enough.
 Thanks!
 Alexander
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-07 15:47](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/39#issuecomment-610465555):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-07 15:47](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/39#issuecomment-610465555):
 
 @shamilbi, could you please move pylint fixes to a separate pull request?
 I would like to merge it. Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) commented at [2020-04-08 08:35](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/39#issuecomment-610828778):
+#### <img src="https://avatars.githubusercontent.com/u/3125993?v=4" width="50">[shamilbi](https://github.com/shamilbi) commented at [2020-04-08 08:35](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/39#issuecomment-610828778):
 
 > @shamilbi, could you please move pylint fixes to a separate pull request?
 > I would like to merge it. Thanks!
@@ -2107,11 +2897,11 @@ OK, done
 
 -------------------------------------------------------------------------------
 
-# [\#38 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38) `closed`: graphics related options
+# [\#38 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38) `closed`: graphics related options
 **Labels**: `kernel_maintainer_feedback`
 
 
-#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) opened issue at [2020-04-03 08:52](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38):
+#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) opened issue at [2020-04-03 08:52](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38):
 
 Discussion with dmitry yukov on twitter:
 
@@ -2123,13 +2913,13 @@ CONFIG_VT: Maybe the most disputed of all, but a lot of the console drivers this
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-04-03 12:03](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-608395946):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-04-03 12:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-608395946):
 
 > You need at least one virtual terminal device in order to make use of your keyboard and monitor. Therefore, only people configuring an embedded system would want to say N here in order to save some memory; the only way to log into such a system is then via a serial or network connection.
 
 Is this comment from [CONFIG_VT](https://cateee.net/lkddb/web-lkddb/VT.html) wrong then?
 
-#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) commented at [2020-04-03 12:32](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-608407778):
+#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) commented at [2020-04-03 12:32](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-608407778):
 
 This comment hasn't been updated since decades (I checked historical trees ...). Nowadays Xorg and wayland compositors should be able to run without a VT. And kmscon (although abandoned due to lack of interest) can provide you a userspace implementation of VTs if you don't want to run X11 or wayland, using pseudo TTYs (like a terminal emulator).
 
@@ -2137,22 +2927,22 @@ A paranoid desktop distro imo should really not have VT enabled, and ofc whateve
 
 But the comment is also correct in that without a userspace compositor you indeed will only be able to log in through the network or serial lines.
 
-#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) commented at [2020-04-03 12:42](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-608412082):
+#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) commented at [2020-04-03 12:42](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-608412082):
 
 Maybe an addition: If you want multi-user switching without CONFIG_VT then you need something like systemd's logind, so that the (forced) handover of input and output devices works correctly. But the VT subsystem's only role there is as an rpc between compositors, it has 0 functionality to actually force compositors to hand over devices to the next compositor (which is what logind does, using some of the new ioctl calls added specifically for this for both input and drm subsystems).
 
 So if you want actual secure multi-user switching then you should be running with all that new stuff already anyway (and then CONFIG_VT really shouldn't be enabled, to prevent creating a mess).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-03 17:03](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-608553993):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-03 17:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-608553993):
 
 Thanks @danvet !
 Done: https://github.com/a13xp0p0v/kconfig-hardened-check/commit/75bed5d6178375a64f93ced4795ee0cf47442df1
 
-#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) commented at [2020-04-03 17:24](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-608563651):
+#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) commented at [2020-04-03 17:24](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-608563651):
 
 Thanks, looks neat. Hopefully this pushes a few more people to make this happen finally.
 
-#### <img src="https://avatars.githubusercontent.com/u/1095328?u=91175c42d0de0ad8ba9f70cc6b9a41bbfbe70de8&v=4" width="50">[dvyukov](https://github.com/dvyukov) commented at [2020-04-03 17:28](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-608565745):
+#### <img src="https://avatars.githubusercontent.com/u/1095328?u=91175c42d0de0ad8ba9f70cc6b9a41bbfbe70de8&v=4" width="50">[dvyukov](https://github.com/dvyukov) commented at [2020-04-03 17:28](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-608565745):
 
 @a13xp0p0v Are these enabled in any distros for which you have canned configs?
 
@@ -2166,7 +2956,7 @@ CONFIG_FB=y
 ```
 So that may be the first step :)
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-03 20:18](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-608639217):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-03 20:18](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-608639217):
 
 @dvyukov, yes, these are enabled in many distributions:
 ```
@@ -2236,13 +3026,13 @@ Alpinelinux-edge:
   CONFIG_VT            | is not set  |maintainer| cut_attack_surface |   FAIL: "y"
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/1080275?v=4" width="50">[arndb](https://github.com/arndb) commented at [2020-04-04 09:48](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-609004574):
+#### <img src="https://avatars.githubusercontent.com/u/1080275?v=4" width="50">[arndb](https://github.com/arndb) commented at [2020-04-04 09:48](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-609004574):
 
 The hyperv framebuffer driver came up on the mailing list recently when I noticed a patch to add support for arm64 and suggested having it converted to DRM. Other hardware-independent drivers that don't seem to have a DRM counterpart at the moment are the UEFI framebuffer that is often used in the absence of a hardware specific driver and the goldfish driver for Android device emulation.
 
 It might help to also look at each distro to see which device drivers are enabled for DRM_LEGACY and FBDEV, as there may be others that are important and need to be converted.
 
-#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) commented at [2020-04-04 11:12](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/38#issuecomment-609012871):
+#### <img src="https://avatars.githubusercontent.com/u/5088003?v=4" width="50">[danvet](https://github.com/danvet) commented at [2020-04-04 11:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/38#issuecomment-609012871):
 
 @dvyukov the trouble is you'll break pretty much any general purpose distro with this stuff disabled. Iirc most compositors keel over if they can't open a vt (but they should all have options to survive without one). Plus since neither kmscon nor system-consoled ever happened for real no kernel console without these, so all the whitebeards will be screaming with their pitchforks. Really not something you can do in a defconfig unfortunately.
 
@@ -2253,9 +3043,9 @@ Wrt DRM_LEGACY and FBDEV drivers in general, I get the impression that distros w
 
 -------------------------------------------------------------------------------
 
-# [\#37 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/37) `closed`: conflict with the latest grsecurity
+# [\#37 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/37) `closed`: conflict with the latest grsecurity
 
-#### <img src="https://avatars.githubusercontent.com/u/50359848?v=4" width="50">[pythonmandev](https://github.com/pythonmandev) opened issue at [2020-03-30 14:20](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/37):
+#### <img src="https://avatars.githubusercontent.com/u/50359848?v=4" width="50">[pythonmandev](https://github.com/pythonmandev) opened issue at [2020-03-30 14:20](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/37):
 
 CONFIG_REFCOUNT_FULL conflict with PAX_REFCOUNT
 PAGE_TABLE_ISOLATION conflict with PAX_MEMORY_UDEREF
@@ -2263,21 +3053,21 @@ VMAP_STACK conflict with GRKERNSEC_KSTACKOVERFLOW
 SECURITY_YAMA conflict with GRKERNSEC
 RANDOMIZE_BASE also can not enable.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-31 11:29](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/37#issuecomment-606569944):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-31 11:29](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/37#issuecomment-606569944):
 
 Hello @pythonmandev!
 What do you mean saying "latest grsecurity"?
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2020-03-31 11:38](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/37#issuecomment-606574067):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2020-03-31 11:38](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/37#issuecomment-606574067):
 
 its not an openly available patchset anymore hence i suggest to not take it into account. I would think differently if it would be open source, but sadly its not.
 
 
 -------------------------------------------------------------------------------
 
-# [\#36 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/36) `closed`: null
+# [\#36 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/36) `closed`: null
 
-#### <img src="(unknown)" width="50">[(unknown)]((unknown)) opened issue at [2020-03-30 14:13](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/36):
+#### <img src="(unknown)" width="50">[(unknown)]((unknown)) opened issue at [2020-03-30 14:13](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/36):
 
 null
 
@@ -2286,9 +3076,9 @@ null
 
 -------------------------------------------------------------------------------
 
-# [\#35 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/35) `closed`: can't add version check for constraints in a logical product
+# [\#35 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/35) `closed`: can't add version check for constraints in a logical product
 
-#### <img src="https://avatars.githubusercontent.com/u/785111?u=8feaa758657096dbcadcd190fbea88e371aab7be&v=4" width="50">[tych0](https://github.com/tych0) opened issue at [2020-03-26 17:44](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/35):
+#### <img src="https://avatars.githubusercontent.com/u/785111?u=8feaa758657096dbcadcd190fbea88e371aab7be&v=4" width="50">[tych0](https://github.com/tych0) opened issue at [2020-03-26 17:44](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/35):
 
 If I try to do:
 
@@ -2325,7 +3115,7 @@ Traceback (most recent call last):
 AttributeError: can't set attribute
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-28 20:54](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/35#issuecomment-605518372):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-28 20:54](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/35#issuecomment-605518372):
 
 Hello @tych0!
 I'm glad that you had a look at this project!
@@ -2351,7 +3141,7 @@ Detailed example: https://github.com/a13xp0p0v/kconfig-hardened-check/pull/32
 
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/785111?u=8feaa758657096dbcadcd190fbea88e371aab7be&v=4" width="50">[tych0](https://github.com/tych0) commented at [2020-03-29 14:51](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/35#issuecomment-605648635):
+#### <img src="https://avatars.githubusercontent.com/u/785111?u=8feaa758657096dbcadcd190fbea88e371aab7be&v=4" width="50">[tych0](https://github.com/tych0) commented at [2020-03-29 14:51](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/35#issuecomment-605648635):
 
 On Sat, Mar 28, 2020 at 01:55:08PM -0700, Alexander Popov wrote:
 > Hello @tych0!
@@ -2384,7 +3174,7 @@ kconfig-hardened-check is complaining at me :)
 "Not present" is also risky though, if people don't have some of the
 dependencies of a feature enabled. A version whitelist seems the best.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-30 21:12](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/35#issuecomment-606252748):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-30 21:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/35#issuecomment-606252748):
 
 >> What is the purpose of combining `UMIP` check with version check?
 
@@ -2413,12 +3203,12 @@ Hence they can be compared using `OK/FAIL` numbers that are printed by the tool 
 [+] config check is finished: 'OK' - 55 / 'FAIL' - 77
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-10 16:49](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/35#issuecomment-612117051):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-04-10 16:49](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/35#issuecomment-612117051):
 
 @tych0 your issue reminded me the idea to create some formatted annotations, that can be used for muting checks for a particular kernel. That was discussed in #9.
 Thank you.
 
-#### <img src="https://avatars.githubusercontent.com/u/785111?u=8feaa758657096dbcadcd190fbea88e371aab7be&v=4" width="50">[tych0](https://github.com/tych0) commented at [2020-04-10 16:55](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/35#issuecomment-612119721):
+#### <img src="https://avatars.githubusercontent.com/u/785111?u=8feaa758657096dbcadcd190fbea88e371aab7be&v=4" width="50">[tych0](https://github.com/tych0) commented at [2020-04-10 16:55](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/35#issuecomment-612119721):
 
 Sorry, I read this and forgot to respond :)
 
@@ -2430,16 +3220,16 @@ Yes, but switching is not so easy sometimes, because of institutional challenges
 
 Consider GCC_PLUGIN_STACKLEAK; we'll report "Not present" if the user hasn't set CONFIG_GCC_PLUGINS=n, but it really should be an error.
 
-#### <img src="https://avatars.githubusercontent.com/u/785111?u=8feaa758657096dbcadcd190fbea88e371aab7be&v=4" width="50">[tych0](https://github.com/tych0) commented at [2020-04-10 16:56](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/35#issuecomment-612119803):
+#### <img src="https://avatars.githubusercontent.com/u/785111?u=8feaa758657096dbcadcd190fbea88e371aab7be&v=4" width="50">[tych0](https://github.com/tych0) commented at [2020-04-10 16:56](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/35#issuecomment-612119803):
 
 Anwyay, I'll check out the updates, thanks :)
 
 
 -------------------------------------------------------------------------------
 
-# [\#34 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/34) `merged`: GrapheneOS is the continuation of CopperheadOS
+# [\#34 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/34) `merged`: GrapheneOS is the continuation of CopperheadOS
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) opened issue at [2020-03-22 19:44](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/34):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) opened issue at [2020-03-22 19:44](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/34):
 
 "CopperheadOS" is the project's legacy name which is now being used for a scam focused on attacking GrapheneOS, the true continuation.
 
@@ -2456,9 +3246,9 @@ https://github.com/yegortimoshenko/copperhead-takeover
 
 -------------------------------------------------------------------------------
 
-# [\#33 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/33) `closed`: CONFIG_STATIC_USERMODEHELPER
+# [\#33 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/33) `closed`: CONFIG_STATIC_USERMODEHELPER
 
-#### <img src="https://avatars.githubusercontent.com/u/543852?v=4" width="50">[anthonyryan1](https://github.com/anthonyryan1) opened issue at [2020-03-20 22:25](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/33):
+#### <img src="https://avatars.githubusercontent.com/u/543852?v=4" width="50">[anthonyryan1](https://github.com/anthonyryan1) opened issue at [2020-03-20 22:25](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/33):
 
 I read over the CLIP OS notes regarding this option, and they also mention that they are not currently using it in the second paragraph.
 
@@ -2466,11 +3256,11 @@ It seems to be that this option isn't actually helpful unless you've already got
 
 Just questioning the wisdom of this option as I imagine some people will just enable everything they see here, and may wind up with this pointing at a non-existent binary.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-03-21 10:52](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/33#issuecomment-602026415):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-03-21 10:52](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/33#issuecomment-602026415):
 
 Yes, this option needs userspace support and yes, blindly enabling everything may cause harm.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-23 15:22](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/33#issuecomment-602670488):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-23 15:22](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/33#issuecomment-602670488):
 
 @Bernhard40, absolutely agree.
 N.B. There is a comment about `STATIC_USERMODEHELPER` in the source code:
@@ -2481,13 +3271,13 @@ checklist.append(OptCheck('STATIC_USERMODEHELPER', 'y', 'clipos', 'self_protecti
 
 -------------------------------------------------------------------------------
 
-# [\#32 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/32) `closed`: Fix LDISC_AUTOLOAD check
+# [\#32 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/32) `closed`: Fix LDISC_AUTOLOAD check
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) opened issue at [2020-03-09 18:01](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/32):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) opened issue at [2020-03-09 18:01](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/32):
 
 CONFIG_LDISC_AUTOLOAD has existed since v4.14, not v5.1: https://lkml.org/lkml/2019/4/15/890
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-14 09:52](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/32#issuecomment-599034709):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-14 09:52](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/32#issuecomment-599034709):
 
 Hello @madaidan,
 
@@ -2505,17 +3295,17 @@ I think the correct approach here is to add another type of check that can disti
 
 What do you think?
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-03-14 20:29](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/32#issuecomment-599131303):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-03-14 20:29](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/32#issuecomment-599131303):
 
 How about a whitelist of allowed versions? So it checks for 4.4, 4.9, 4.14 or ≥5.1 but not 4.5.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-31 11:46](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/32#issuecomment-606577240):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-31 11:46](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/32#issuecomment-606577240):
 
 Hm, I got an idea.
 I'll try to create a new check that the option __exists__ in the config.
 So for `LDISC_AUTOLOAD` we can create a rule `(exists) AND (is not set)`.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-31 14:13](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/32#issuecomment-606654029):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-31 14:13](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/32#issuecomment-606654029):
 
 Done!
 Thanks!
@@ -2523,9 +3313,9 @@ Thanks!
 
 -------------------------------------------------------------------------------
 
-# [\#31 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/31) `merged`: Update config files
+# [\#31 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/31) `merged`: Update config files
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2020-02-24 20:27](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/31):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2020-02-24 20:27](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/31):
 
 Hi @a13xp0p0v, 
 
@@ -2536,13 +3326,13 @@ See you soon.
 
 Best regards,
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-02-27 17:36](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/31#issuecomment-592084682):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-02-27 17:36](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/31#issuecomment-592084682):
 
 Thanks, @HacKurx!
 
 N.B. I'm going to work on support of new kernel releases in the near future.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2020-03-04 19:09](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/31#issuecomment-594761475):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2020-03-04 19:09](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/31#issuecomment-594761475):
 
 @a13xp0p0v, 
 > N.B. I'm going to work on support of new kernel releases in the near future.
@@ -2551,16 +3341,16 @@ https://kernsec.org/wiki/index.php?title=Kernel_Self_Protection_Project/Recommen
 
 :wink:
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-04 19:55](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/31#issuecomment-594797254):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-04 19:55](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/31#issuecomment-594797254):
 
 Yes, thanks, I'm already working on that!
 
 
 -------------------------------------------------------------------------------
 
-# [\#30 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30) `closed`: Has CONFIG_REFCOUNT_FULL and VMAP_STACK been removed from Kernel-5.5 ?
+# [\#30 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30) `closed`: Has CONFIG_REFCOUNT_FULL and VMAP_STACK been removed from Kernel-5.5 ?
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2020-02-01 12:24](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2020-02-01 12:24](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30):
 
 Hey everyone,
 
@@ -2569,16 +3359,16 @@ I use Kernel-5.3 for now and there is an option available. Soo should i think th
 
 Thanks !
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-02-02 13:05](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30#issuecomment-581133592):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-02-02 13:05](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30#issuecomment-581133592):
 
 `CONFIG_REFCOUNT_FULL` was removed but `CONFIG_VMAP_STACK` is still available.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-02-05 16:54](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30#issuecomment-582504214):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-02-05 16:54](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30#issuecomment-582504214):
 
 Yes, `REFCOUNT_FULL` was removed...
 Have to find a way how to check it without false positive.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-02-06 12:30](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30#issuecomment-582884278):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-02-06 12:30](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30#issuecomment-582884278):
 
 @a13xp0p0v there is kernel version printed in config header, like:
 
@@ -2591,16 +3381,16 @@ Have to find a way how to check it without false positive.
 
 maybe you can parse those?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-02-06 15:25](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30#issuecomment-582957059):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-02-06 15:25](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30#issuecomment-582957059):
 
 Yes, it looks like we have to add some limited kernel version checking...
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-02-06 15:29](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30#issuecomment-582959470):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-02-06 15:29](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30#issuecomment-582959470):
 
 I may have time to work on that only after OffensiveCon.
 Does anybody want to prepare a pull request?
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2020-02-09 13:03](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30#issuecomment-583842999):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2020-02-09 13:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30#issuecomment-583842999):
 
 Hey,
 
@@ -2624,7 +3414,7 @@ napisał(a):
 > .
 >
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-02-10 14:32](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30#issuecomment-584150411):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2020-02-10 14:32](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30#issuecomment-584150411):
 
 > Is a CONFIG_HAVE_ARCH_VMAP_STACK in Kernel-5.5.2 equivalent to
 > CONFIG_VMAPSTACK ?
@@ -2633,7 +3423,7 @@ No `CONFIG_HAVE_ARCH_VMAP_STACK` tells only if `VMAP_STACK` is available for spe
 
 You can check that [VMAP_STACK definitely still exist up to 5.6-rc](https://cateee.net/lkddb/web-lkddb/VMAP_STACK.html).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-05 11:03](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/30#issuecomment-595170199):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-05 11:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30#issuecomment-595170199):
 
 Hello!
 
@@ -2644,9 +3434,9 @@ Also have a look at 61b5ca3c8f95212141284be8eb4036c8c1bda9e7: that fixes the fal
 
 -------------------------------------------------------------------------------
 
-# [\#29 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/29) `closed`: Recommend PANIC_ON_OOPS
+# [\#29 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/29) `closed`: Recommend PANIC_ON_OOPS
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) opened issue at [2020-01-13 21:28](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/29):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) opened issue at [2020-01-13 21:28](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/29):
 
 This causes the kernel to panic on an oops.
 
@@ -2665,7 +3455,7 @@ https://docs.clip-os.org/clipos/kernel.html
 >
 >    Prevent potential further exploitation of a bug by immediately panicking the kernel.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-14 09:23](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/29#issuecomment-574081092):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-14 09:23](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/29#issuecomment-574081092):
 
 Hello @madaidan,
 
@@ -2674,11 +3464,11 @@ I personally don't support it because it provides easy denial-of-service attack 
 
 In my opinion having CONFIG_BUG is enough. If we have kernel oops in the process context, the offending/attacking process is killed.
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-14 16:52](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/29#issuecomment-574269683):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-14 16:52](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/29#issuecomment-574269683):
 
 I think the kernel exploits this can prevent are more important than DoS.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-16 10:06](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/29#issuecomment-575078024):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-16 10:06](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/29#issuecomment-575078024):
 
 > I think the kernel exploits this can prevent are more important than DoS.
 
@@ -2689,11 +3479,11 @@ and
 
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-16 17:30](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/29#issuecomment-575259978):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-16 17:30](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/29#issuecomment-575259978):
 
 This is a good example since it explicitly mentions panic_on_oops: https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-17 15:10](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/29#issuecomment-575664888):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-17 15:10](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/29#issuecomment-575664888):
 
 > This is a good example since it explicitly mentions panic_on_oops: https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html
 
@@ -2710,31 +3500,31 @@ would probably be a bad idea -, but it is e.g. enabled by Android.
 
 If some users want to enable it anyway, they can always use `kernel.panic_on_oops` sysctl or the corresponding kernel command line parameter.
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-20 17:34](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/29#issuecomment-576372137):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-20 17:34](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/29#issuecomment-576372137):
 
 Alright. Fair enough.
 
 
 -------------------------------------------------------------------------------
 
-# [\#28 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/28) `closed`: Don't give errors about CONFIG_PAGE_POISONING when using an alternative
+# [\#28 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/28) `closed`: Don't give errors about CONFIG_PAGE_POISONING when using an alternative
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) opened issue at [2020-01-09 19:36](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/28):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) opened issue at [2020-01-09 19:36](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/28):
 
 Some people use `CONFIG_INIT_ON_ALLOC_DEFAULT_ON`/`CONFIG_INIT_ON_FREE_DEFAULT_ON` or linux-hardened's `CONFIG_PAGE_SANITIZE` (for LTS kernels) instead of `CONFIG_PAGE_POISONING`. People using these alternatives will get pointless errors that may confuse them.
 
 It would be better if the errors were only shown when not using these.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2020-01-09 19:38](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/28#issuecomment-572720806):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2020-01-09 19:38](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/28#issuecomment-572720806):
 
 I would love this :P
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-10 15:26](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/28#issuecomment-573079631):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-10 15:26](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/28#issuecomment-573079631):
 
 As I remember, all these features are different in some sense.
 Are you sure that they are alternative to each other?
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-10 16:40](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/28#issuecomment-573110783):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-10 16:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/28#issuecomment-573110783):
 
 As far as I know, they all have the same goal which is to overwrite memory to prevent use-after-free but they have some slight differences as `PAGE_POISONING` forces debugging bloat (as it is actually a debugging feature) which makes `init_on_{,free,alloc}` or `PAGE_SANITIZE` (which was dropped in newer linux-hardened versions for `init_on_{,free,alloc}`) better.
 
@@ -2748,7 +3538,7 @@ applied to unpoisoned allocations.
 
 Also notice that linux-hardened and ClipOS do not enable `PAGE_POISONING` but use the others instead.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-14 10:28](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/28#issuecomment-574108331):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-14 10:28](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/28#issuecomment-574108331):
 
 @madaidan, thanks for the details.
 So yes, `PAGE_POISONING` is a debugging feature.
@@ -2757,20 +3547,20 @@ It provides less erasing than `INIT_ON_FREE_DEFAULT_ON`.
 I joined these checks with OR giving preference to `INIT_ON_FREE_DEFAULT_ON`.
 Please see the linked commit.
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-14 16:55](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/28#issuecomment-574271418):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-14 16:55](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/28#issuecomment-574271418):
 
 Great, thanks.
 
 
 -------------------------------------------------------------------------------
 
-# [\#27 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27) `closed`: add nix build files
+# [\#27 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27) `closed`: add nix build files
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) opened issue at [2020-01-02 09:02](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) opened issue at [2020-01-02 09:02](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27):
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-01-02 10:44](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-570172617):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-01-02 10:44](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-570172617):
 
 These are all possible kernel configurations:
 There might be duplicate since linux-latest is basically linux-5.4.
@@ -2794,7 +3584,7 @@ Maybe _hardened, _latest and the default kernel.
 [nixpkgs-linux_mptcp_95-config.txt](https://github.com/a13xp0p0v/kconfig-hardened-check/files/4015584/nixpkgs-linux_mptcp_95-config.txt)
 [nixpkgs-linux_mptcp-config.txt](https://github.com/a13xp0p0v/kconfig-hardened-check/files/4015585/nixpkgs-linux_mptcp-config.txt)
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-01-02 10:47](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-570173237):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-01-02 10:47](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-570173237):
 
 This is the output for our hardened kernel:
 cc @joachifm (hardened maintainer)
@@ -2932,15 +3722,15 @@ CONFIG_ARCH_MMAP_RND_BITS                    |     32      |  clipos  |userspace
 [+] config check is finished: 'OK' - 66 / 'FAIL' - 57
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-01-02 10:51](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-570174082):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-01-02 10:51](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-570174082):
 
 cc @fpletz @andir @flokli @nequissimus regarding security/kernel maintenance.
 
-#### <img src="https://avatars.githubusercontent.com/u/628342?u=948c2401c073b8097e8ec160019140fb6043f266&v=4" width="50">[NeQuissimus](https://github.com/NeQuissimus) commented at [2020-01-02 16:07](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-570253840):
+#### <img src="https://avatars.githubusercontent.com/u/628342?u=948c2401c073b8097e8ec160019140fb6043f266&v=4" width="50">[NeQuissimus](https://github.com/NeQuissimus) commented at [2020-01-02 16:07](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-570253840):
 
 There is no (official) open source grsecurity for recent kernels. But for the other options, I'd be interested in a discussion in the nixpkgs repo.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-02 23:11](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-570392431):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-02 23:11](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-570392431):
 
 Hello @Mic92,
 
@@ -2977,14 +3767,14 @@ Does NixOS have a documentation describing the difference between its hardened a
 
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/628342?u=948c2401c073b8097e8ec160019140fb6043f266&v=4" width="50">[NeQuissimus](https://github.com/NeQuissimus) commented at [2020-01-03 00:29](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-570414239):
+#### <img src="https://avatars.githubusercontent.com/u/628342?u=948c2401c073b8097e8ec160019140fb6043f266&v=4" width="50">[NeQuissimus](https://github.com/NeQuissimus) commented at [2020-01-03 00:29](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-570414239):
 
 I was thinking of minipli but I guess those are only for 4.9.
 
 I opened NixOS/nixpkgs#76850, which links to the kernel flags we set for the standard kernel builds and for the hardened one.
 Unfortunately I do not think there is good documentation.
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-01-03 08:37](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-570503332):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-01-03 08:37](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-570503332):
 
 > Hello @Mic92,
 > 
@@ -2998,7 +3788,7 @@ Unfortunately I do not think there is good documentation.
 
 Fair enough I think the other changes that are actually part of this pull request should be still useful though.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-10 14:12](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-573050822):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-10 14:12](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-573050822):
 
 > Fair enough I think the other changes that are actually part of this pull request should be still useful though.
 
@@ -3007,7 +3797,7 @@ Could you have a look at my comments for your PR https://github.com/a13xp0p0v/kc
 I need some clarifications to be able to integrate your work.
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2020-02-24 20:57](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-590544879):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2020-02-24 20:57](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-590544879):
 
 Hi,
 
@@ -3018,21 +3808,21 @@ https://hydra.nixos.org/job/nixos/release-19.09/nixpkgs.linuxPackages_latest_har
 Beside the point, I'm not a fan of that :
 https://github.com/NixOS/nixpkgs/commit/1b9bf8fa7559d1bbf030f3fe3513d25eada65a41
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-02-25 09:26](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-590768293):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-02-25 09:26](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-590768293):
 
 @HacKurx It's generated by nix code. Can you explain why a RANDSTRUCT read from /dev/random is better than a checksum over the linux kernel tarball? From my understanding, once that a package is build, one could extract the seed from the build. In that way reproducible builds would give us other properties i.e. verifying a correct build.
 
-#### <img src="https://avatars.githubusercontent.com/u/41977?u=ba54c9de3752a1aa05a462e38bd6e84bdc26a2bb&v=4" width="50">[joachifm](https://github.com/joachifm) commented at [2020-02-25 17:26](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-590976475):
+#### <img src="https://avatars.githubusercontent.com/u/41977?u=ba54c9de3752a1aa05a462e38bd6e84bdc26a2bb&v=4" width="50">[joachifm](https://github.com/joachifm) commented at [2020-02-25 17:26](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-590976475):
 
 @Mic92 I agree with you. I think it's fair to say that any compile-time randomization is rendered (nearly) pointless by publishing the image.  In our case, the value is likely to change whenever source/config changes, so might be considered "better" than a static seed value (whether it makes any real difference is another matter).  I think users who really care about this type of mitigation should build their own kernel with a custom seed (support for this was added in a later patch, iirc).
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2020-02-25 21:10](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-591070826):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2020-02-25 21:10](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-591070826):
 
 @Mic92, @joachifm,
 The person who recompile a kernel from your source should have another seed (not your) for more security.
 It seems preferable to me of change the SEED variable every time you update the nix kernel. Use a compilation based of a date or the kernel number for example.
 
-#### <img src="https://avatars.githubusercontent.com/u/41977?u=ba54c9de3752a1aa05a462e38bd6e84bdc26a2bb&v=4" width="50">[joachifm](https://github.com/joachifm) commented at [2020-02-25 22:20](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-591100811):
+#### <img src="https://avatars.githubusercontent.com/u/41977?u=ba54c9de3752a1aa05a462e38bd6e84bdc26a2bb&v=4" width="50">[joachifm](https://github.com/joachifm) commented at [2020-02-25 22:20](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-591100811):
 
 @HacKurx note that `${src}` in the snippet you linked above expands to a string that contains both the checksum of the linux source tarball and the version number: it is certain to change in case of version bumps.  
 
@@ -3040,7 +3830,7 @@ I wouldn't mind including more information in the seed construction to further i
 
 Reproducibility is a key goal for Nix/NixPkgs and usually overrides other concerns.  In this case, I think giving users of the prebuilt image a weak(ened) variant of the mitigation while making it easy to supply a custom seed is a more than fair tradeoff, especially given that the full benefit of this type of mitigation can only be realized with a self-built package anyway.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-27 19:45](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-605284899):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-27 19:45](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-605284899):
 
 Hello @Mic92!
 I installed Nix on a Debian machine to test your scripts.
@@ -3048,7 +3838,7 @@ Unfortunately I have to revert the commit that adds `contrib/get-nix-kconfig.py`
 This script is corrupted (has unexpected symbols).
 It also has numerous troubles with Python 3.5.3.
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-03-27 19:52](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-605287211):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-03-27 19:52](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-605287211):
 
 @a13xp0p0v just add:
 
@@ -3060,7 +3850,7 @@ It also has numerous troubles with Python 3.5.3.
 as a shebang. Nixpkgs has python3.6 and the script depends nix anyway.
 It is not corrupted but depends on python3.6 or newer.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-27 20:27](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-605300321):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-27 20:27](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-605300321):
 
 Thanks for prompt reply!
 1. I perform:
@@ -3080,7 +3870,7 @@ I got kernel configs and added hardened one to the collection: 4768e21b33fa96631
 
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-03-28 03:18](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/27#issuecomment-605387095):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-03-28 03:18](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/27#issuecomment-605387095):
 
 My mistake it should have been:
 
@@ -3092,13 +3882,13 @@ My mistake it should have been:
 
 -------------------------------------------------------------------------------
 
-# [\#26 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/26) `closed`: enable distribution via pip/setuptools
+# [\#26 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/26) `closed`: enable distribution via pip/setuptools
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) opened issue at [2020-01-02 09:01](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/26):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) opened issue at [2020-01-02 09:01](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/26):
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-02-25 09:34](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/26#issuecomment-590771724):
+#### <img src="https://avatars.githubusercontent.com/u/96200?u=9ed15c85825694d00e996d605d728179b830c4fa&v=4" width="50">[Mic92](https://github.com/Mic92) commented at [2020-02-25 09:34](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/26#issuecomment-590771724):
 
 > Hi Jörg,
 > Thanks a lot for your work.
@@ -3134,7 +3924,7 @@ Let me know and I would not include them at all.
 > 
 > Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-26 13:20](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/26#issuecomment-604427052):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-03-26 13:20](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/26#issuecomment-604427052):
 
 Hello @Mic92,
 I carefully reimplemented your proof-of-concept in a set of separate commits.
@@ -3144,9 +3934,9 @@ Thank you very much, I learned a lot!
 
 -------------------------------------------------------------------------------
 
-# [\#25 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/25) `closed`: Hardened Kernel Config File for Virtual Machines (VMs) ("cloud kernel")
+# [\#25 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/25) `closed`: Hardened Kernel Config File for Virtual Machines (VMs) ("cloud kernel")
 
-#### <img src="https://avatars.githubusercontent.com/u/1985040?u=b84e7065f9f8d62fbff9ac468a0cf0757718ed77&v=4" width="50">[adrelanos](https://github.com/adrelanos) opened issue at [2019-12-28 20:35](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/25):
+#### <img src="https://avatars.githubusercontent.com/u/1985040?u=b84e7065f9f8d62fbff9ac468a0cf0757718ed77&v=4" width="50">[adrelanos](https://github.com/adrelanos) opened issue at [2019-12-28 20:35](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/25):
 
 A kernel config specialized for better security inside virtual machines is in development.
 
@@ -3168,7 +3958,7 @@ Therefore I am wondering if there is any chance you would accept a pull request 
 @madaidan is also working on a hardened bare metal (i.e. non-VM) kernel config:
 https://github.com/Whonix/hardened-kernel/blob/master/usr/share/hardened-kernel/hardened-host-kernel
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-02 23:27](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/25#issuecomment-570397241):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-02 23:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/25#issuecomment-570397241):
 
 Hello @adrelanos,
 I guess Whonix has a default and hardened config, am I right?
@@ -3178,28 +3968,28 @@ That's useful for a brief comparison of kernel hardening adoption by various Lin
 There is also the `config_files/links.txt` file that describes how to get official configs from various distros.
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-05 17:22](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/25#issuecomment-570930694):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-05 17:22](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/25#issuecomment-570930694):
 
 The current Whonix default is the Debian default. It will be changed to the config mentioned in the post once it's finished.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-10 15:20](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/25#issuecomment-573077384):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2020-01-10 15:20](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/25#issuecomment-573077384):
 
 Ok.
 So when it is finished, you are welcome to send me the pull request that
  - adds the official Whonix hardened config to `config_files/distros/`;
  - adds the corresponding info to `config_files/links.txt`.
 
-#### <img src="https://avatars.githubusercontent.com/u/42802201?v=4" width="50">[tsautereau-anssi](https://github.com/tsautereau-anssi) commented at [2020-01-13 15:59](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/25#issuecomment-573735007):
+#### <img src="https://avatars.githubusercontent.com/u/42802201?v=4" width="50">[tsautereau-anssi](https://github.com/tsautereau-anssi) commented at [2020-01-13 15:59](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/25#issuecomment-573735007):
 
 @madaidan After reading your [post](https://github.com/anthraxx/linux-hardened/issues/21) on the linux-hardened repository, it seems you might be interested in contributing some of your changes to the [CLIP OS kernel](https://github.com/clipos/src_external_linux/) (see our current configuration [here](https://github.com/clipos/src_platform_config-linux-hardware/tree/master/kernel_config)). If so, don't hesitate to [open an issue](https://github.com/clipos/bugs), it would be much appreciated!
 
 Thanks @msalaun-anssi for the heads-up ;)
 
-#### <img src="https://avatars.githubusercontent.com/u/1985040?u=b84e7065f9f8d62fbff9ac468a0cf0757718ed77&v=4" width="50">[adrelanos](https://github.com/adrelanos) commented at [2020-01-13 16:25](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/25#issuecomment-573747860):
+#### <img src="https://avatars.githubusercontent.com/u/1985040?u=b84e7065f9f8d62fbff9ac468a0cf0757718ed77&v=4" width="50">[adrelanos](https://github.com/adrelanos) commented at [2020-01-13 16:25](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/25#issuecomment-573747860):
 
 Created https://github.com/clipos/bugs/issues/38 for it.
 
-#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-13 18:15](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/25#issuecomment-573797636):
+#### <img src="https://avatars.githubusercontent.com/u/50278627?v=4" width="50">[madaidan](https://github.com/madaidan) commented at [2020-01-13 18:15](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/25#issuecomment-573797636):
 
 > @madaidan After reading your post on the linux-hardened repository, it seems you might be interested in contributing some of your changes to the CLIP OS kernel (see our current configuration here). If so, don't hesitate to open an issue, it would be much appreciated!
 
@@ -3208,9 +3998,9 @@ Sounds great. I'll see what I can do.
 
 -------------------------------------------------------------------------------
 
-# [\#24 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24) `closed`: Create debian-buster.config
+# [\#24 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24) `closed`: Create debian-buster.config
 
-#### <img src="https://avatars.githubusercontent.com/u/89727?v=4" width="50">[alexandernst](https://github.com/alexandernst) opened issue at [2019-08-27 23:19](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24):
+#### <img src="https://avatars.githubusercontent.com/u/89727?v=4" width="50">[alexandernst](https://github.com/alexandernst) opened issue at [2019-08-27 23:19](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24):
 
 ```
 [+] Trying to detect architecture in "../linux-source-4.19/.config"...
@@ -3342,7 +4132,7 @@ CONFIG_ARCH_MMAP_RND_BITS               |     32      |  clipos  |userspace_prot
 [+] config check is finished: 'OK' - 60 / 'FAIL' - 60
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-08-30 12:40](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24#issuecomment-526586258):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-08-30 12:40](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24#issuecomment-526586258):
 
 Hello @alexandernst,
 
@@ -3357,7 +4147,7 @@ Where did you get your config?
 Best regards,
 Alexander
 
-#### <img src="https://avatars.githubusercontent.com/u/89727?v=4" width="50">[alexandernst](https://github.com/alexandernst) commented at [2019-08-30 12:56](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24#issuecomment-526591340):
+#### <img src="https://avatars.githubusercontent.com/u/89727?v=4" width="50">[alexandernst](https://github.com/alexandernst) commented at [2019-08-30 12:56](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24#issuecomment-526591340):
 
 The config file was generated using the instructions in https://kernel-team.pages.debian.net/kernel-handbook/ch-common-tasks.html#s-common-building
 
@@ -3369,11 +4159,11 @@ yes "" | make localmodconfig
 scripts/config --disable MODULE_SIG
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/89727?v=4" width="50">[alexandernst](https://github.com/alexandernst) commented at [2019-08-30 12:58](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24#issuecomment-526591989):
+#### <img src="https://avatars.githubusercontent.com/u/89727?v=4" width="50">[alexandernst](https://github.com/alexandernst) commented at [2019-08-30 12:58](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24#issuecomment-526591989):
 
 Oh, this was built using an AWS EC2 instance, so that might be causing the differences between a vainilla debian config and my config.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-08-30 13:07](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24#issuecomment-526595179):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-08-30 13:07](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24#issuecomment-526595179):
 
 Right, let me quote the kernel documentation:
 ```
@@ -3386,16 +4176,16 @@ If so I would also ask to add info to `config_files/links.txt`.
 
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/89727?v=4" width="50">[alexandernst](https://github.com/alexandernst) commented at [2019-08-30 13:38](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24#issuecomment-526605210):
+#### <img src="https://avatars.githubusercontent.com/u/89727?v=4" width="50">[alexandernst](https://github.com/alexandernst) commented at [2019-08-30 13:38](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24#issuecomment-526605210):
 
 I'm not really sure if by "fix" you mean rename the file to something like `debian-buster-aws.config` or by replace the config with the one from https://packages.debian.org/buster/linux-image-4.19.0-5-amd64 ?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-08-30 13:44](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24#issuecomment-526607017):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-08-30 13:44](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24#issuecomment-526607017):
 
 I think adding an original Debian config would be more useful for everyone.
 Also it would be nice if you find a direct link to this config and add it to `links.txt`.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-11-28 07:36](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/24#issuecomment-559376496):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-11-28 07:36](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/24#issuecomment-559376496):
 
 Closing the PR (I've finally did it myself: ad80700, 4f9c653).
 Thanks.
@@ -3403,9 +4193,9 @@ Thanks.
 
 -------------------------------------------------------------------------------
 
-# [\#23 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/23) `closed`: LOCK_DOWN_KERNEL 
+# [\#23 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/23) `closed`: LOCK_DOWN_KERNEL 
 
-#### <img src="https://avatars.githubusercontent.com/u/11277437?v=4" width="50">[bokobok](https://github.com/bokobok) opened issue at [2019-07-22 12:05](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/23):
+#### <img src="https://avatars.githubusercontent.com/u/11277437?v=4" width="50">[rubeecube](https://github.com/rubeecube) opened issue at [2019-07-22 12:05](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/23):
 
 Hello,
 
@@ -3427,22 +4217,22 @@ http://lkml.iu.edu/hypermail/linux/kernel/1704.0/02933.html
 
 Is it possible to reflect this in the script?
 
-#### <img src="https://avatars.githubusercontent.com/u/67428?u=cc677701e49dca0be4cdc6ea10bc60b52a181e4e&v=4" width="50">[jelly](https://github.com/jelly) commented at [2019-07-22 12:18](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/23#issuecomment-513767366):
+#### <img src="https://avatars.githubusercontent.com/u/67428?u=cc677701e49dca0be4cdc6ea10bc60b52a181e4e&v=4" width="50">[jelly](https://github.com/jelly) commented at [2019-07-22 12:18](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/23#issuecomment-513767366):
 
 The kernel lockdown patch has not been merged yet and I'm not sure if it's possible to enable these hardening functionality without the patch.
 
 Also the linked patch is out of a date, there is a newer revision implemented as LSM https://lore.kernel.org/linux-security-module/20190404003249.14356-1-matthewgarrett@google.com/T/#m50dd383459d65d52d80c90f36af860a7c10f364c
 
-#### <img src="https://avatars.githubusercontent.com/u/11277437?v=4" width="50">[bokobok](https://github.com/bokobok) commented at [2019-07-22 12:27](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/23#issuecomment-513770393):
+#### <img src="https://avatars.githubusercontent.com/u/11277437?v=4" width="50">[rubeecube](https://github.com/rubeecube) commented at [2019-07-22 12:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/23#issuecomment-513770393):
 
 Ok, I'm new to this and didn't know that.
 Thanks
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-07-23 12:15](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/23#issuecomment-514184160):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-07-23 12:15](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/23#issuecomment-514184160):
 
 Some distros like Fedora or Ubuntu are using lockdown kernel patches for a long time.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-08-12 08:27](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/23#issuecomment-520338183):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-08-12 08:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/23#issuecomment-520338183):
 
 Hello everyone!
 
@@ -3457,16 +4247,16 @@ When the lockdown patchset is finally merged, I will look through the commits on
 
 @jelly @Bernhard40, thanks for your commentary.
 
-#### <img src="https://avatars.githubusercontent.com/u/67428?u=cc677701e49dca0be4cdc6ea10bc60b52a181e4e&v=4" width="50">[jelly](https://github.com/jelly) commented at [2019-08-12 18:27](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/23#issuecomment-520540892):
+#### <img src="https://avatars.githubusercontent.com/u/67428?u=cc677701e49dca0be4cdc6ea10bc60b52a181e4e&v=4" width="50">[jelly](https://github.com/jelly) commented at [2019-08-12 18:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/23#issuecomment-520540892):
 
 It's getting close to mainline http://kernsec.org/pipermail/linux-security-module-archive/2019-August/015795.html
 
 
 -------------------------------------------------------------------------------
 
-# [\#22 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/22) `merged`: #20 fix: use right quotes in json output
+# [\#22 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/22) `merged`: #20 fix: use right quotes in json output
 
-#### <img src="https://avatars.githubusercontent.com/u/4029800?u=86702d3f2d50ee01ef1c572ef26b1ea1318f28da&v=4" width="50">[adrianopol](https://github.com/adrianopol) opened issue at [2019-07-07 19:27](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/22):
+#### <img src="https://avatars.githubusercontent.com/u/4029800?u=86702d3f2d50ee01ef1c572ef26b1ea1318f28da&v=4" width="50">[adrianopol](https://github.com/adrianopol) opened issue at [2019-07-07 19:27](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/22):
 
 #20: fix quotes for --json
 
@@ -3475,19 +4265,19 @@ It's getting close to mainline http://kernsec.org/pipermail/linux-security-modul
 
 -------------------------------------------------------------------------------
 
-# [\#21 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/21) `merged`: add --json option
+# [\#21 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/21) `merged`: add --json option
 
-#### <img src="https://avatars.githubusercontent.com/u/4029800?u=86702d3f2d50ee01ef1c572ef26b1ea1318f28da&v=4" width="50">[adrianopol](https://github.com/adrianopol) opened issue at [2019-06-21 19:57](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/21):
+#### <img src="https://avatars.githubusercontent.com/u/4029800?u=86702d3f2d50ee01ef1c572ef26b1ea1318f28da&v=4" width="50">[adrianopol](https://github.com/adrianopol) opened issue at [2019-06-21 19:57](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/21):
 
 With `--json` output will be formatted as array of arrays:
 
 `[['CONFIG_BUG', 'y', 'defconfig', 'self_protection', 'OK'], ['CONFIG_STRICT_KERNEL_RWX', 'y', 'defconfig', 'self_protection', 'OK'], ...`
 
-#### <img src="https://avatars.githubusercontent.com/u/4029800?u=86702d3f2d50ee01ef1c572ef26b1ea1318f28da&v=4" width="50">[adrianopol](https://github.com/adrianopol) commented at [2019-06-24 09:24](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/21#issuecomment-504931635):
+#### <img src="https://avatars.githubusercontent.com/u/4029800?u=86702d3f2d50ee01ef1c572ef26b1ea1318f28da&v=4" width="50">[adrianopol](https://github.com/adrianopol) commented at [2019-06-24 09:24](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/21#issuecomment-504931635):
 
 Fixed.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-24 11:11](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/21#issuecomment-504965369):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-24 11:11](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/21#issuecomment-504965369):
 
 Thank you!
 Merged.
@@ -3495,9 +4285,9 @@ Merged.
 
 -------------------------------------------------------------------------------
 
-# [\#20 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/20) `closed`: JSON output
+# [\#20 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/20) `closed`: JSON output
 
-#### <img src="https://avatars.githubusercontent.com/u/964610?u=f244bab6b14967638a88cef92752379e64b15996&v=4" width="50">[Wenzel](https://github.com/Wenzel) opened issue at [2019-06-10 14:11](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/20):
+#### <img src="https://avatars.githubusercontent.com/u/964610?u=f244bab6b14967638a88cef92752379e64b15996&v=4" width="50">[Wenzel](https://github.com/Wenzel) opened issue at [2019-06-10 14:11](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/20):
 
 Hi,
 
@@ -3508,7 +4298,7 @@ Otherwise processing with your data will be very difficult, if you are not human
 
 Thanks !
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-11 10:03](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/20#issuecomment-500775436):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-11 10:03](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/20#issuecomment-500775436):
 
 Hello @Wenzel 
 
@@ -3522,13 +4312,13 @@ Otherwise processing with your data will be very difficult, if you are not human
 It sounds reasonable. I'll have a look in my free time.
 If you already know how to implement it, the pull request is welcome!
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-24 11:12](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/20#issuecomment-504965591):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-24 11:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/20#issuecomment-504965591):
 
 Hello @Wenzel and @nettrino,
 
 @adrianopol has added the JSON output feature (#21), please check the `--json` argument.
 
-#### <img src="https://avatars.githubusercontent.com/u/964610?u=f244bab6b14967638a88cef92752379e64b15996&v=4" width="50">[Wenzel](https://github.com/Wenzel) commented at [2019-07-07 12:51](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/20#issuecomment-508997348):
+#### <img src="https://avatars.githubusercontent.com/u/964610?u=f244bab6b14967638a88cef92752379e64b15996&v=4" width="50">[Wenzel](https://github.com/Wenzel) commented at [2019-07-07 12:51](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/20#issuecomment-508997348):
 
 Hi @a13xp0p0v , @adrianopol ,
 
@@ -3552,16 +4342,16 @@ I think it might be a trivial fix, like double quotes instead of simple quotes:
 
 Thanks !
 
-#### <img src="https://avatars.githubusercontent.com/u/964610?u=f244bab6b14967638a88cef92752379e64b15996&v=4" width="50">[Wenzel](https://github.com/Wenzel) commented at [2019-07-07 12:55](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/20#issuecomment-508997636):
+#### <img src="https://avatars.githubusercontent.com/u/964610?u=f244bab6b14967638a88cef92752379e64b15996&v=4" width="50">[Wenzel](https://github.com/Wenzel) commented at [2019-07-07 12:55](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/20#issuecomment-508997636):
 
 It should be more robust to use `json.dump(obj)` or `json.dumps(string)` instead of printing your own JSON.
 https://github.com/a13xp0p0v/kconfig-hardened-check/blob/master/kconfig-hardened-check.py#L377
 
-#### <img src="https://avatars.githubusercontent.com/u/4029800?u=86702d3f2d50ee01ef1c572ef26b1ea1318f28da&v=4" width="50">[adrianopol](https://github.com/adrianopol) commented at [2019-07-07 19:28](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/20#issuecomment-509024571):
+#### <img src="https://avatars.githubusercontent.com/u/4029800?u=86702d3f2d50ee01ef1c572ef26b1ea1318f28da&v=4" width="50">[adrianopol](https://github.com/adrianopol) commented at [2019-07-07 19:28](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/20#issuecomment-509024571):
 
 Fixed. Thanks.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-07-08 14:12](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/20#issuecomment-509241942):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-07-08 14:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/20#issuecomment-509241942):
 
 @Wenzel, thanks for the report.
 @adrianopol, thanks for the fix, merged.
@@ -3570,9 +4360,9 @@ Double-checked it in json validator, now it should be fine.
 
 -------------------------------------------------------------------------------
 
-# [\#19 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19) `closed`: Compare with clipos recommendations
+# [\#19 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19) `closed`: Compare with clipos recommendations
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2019-06-01 12:08](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2019-06-01 12:08](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19):
 
 Hi Alexander,
 
@@ -3632,20 +4422,20 @@ https://docs.clip-os.org/clipos/kernel.html#configuration
 
 Best regards,
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2019-06-01 12:12](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19#issuecomment-497939852):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2019-06-01 12:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19#issuecomment-497939852):
 
 Even if I'm not a fan of black magic (see [this](https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/issues/3)), the CONFIG_MICROCODE=y option is now essential.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-06-02 11:33](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19#issuecomment-498022889):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-06-02 11:33](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19#issuecomment-498022889):
 
 Some of those options are available only in linux-hardened patchset thus not applicable here. Others like CONFIG_INTEGRITY=n or CONFIG_INTEL_TXT=n are specific to clipos and general recommendations would be the opposite.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2019-06-02 15:13](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19#issuecomment-498039692):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2019-06-02 15:13](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19#issuecomment-498039692):
 
 Yes, you're right, I did a quick extraction. 
 Are there any options you think are interesting?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-03 10:23](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19#issuecomment-498201117):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-03 10:23](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19#issuecomment-498201117):
 
 Cool! @HacKurx, learning the CLIP OS config is a nice idea.
 
@@ -3653,12 +4443,12 @@ Thanks for the link, I'll check the options from their documentation and choose 
 
 Do you have their full kernel config for adding to `config_files`?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-03 18:16](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19#issuecomment-498368130):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-03 18:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19#issuecomment-498368130):
 
 Hi @HacKurx and @Bernhard40,
 I've added new checks based on the CLIP OS recommendations.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2019-06-03 19:02](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19#issuecomment-498384402):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2019-06-03 19:02](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19#issuecomment-498384402):
 
 Hi @a13xp0p0v,
 
@@ -3674,13 +4464,13 @@ I can ask @tsautereau-anssi for confirm it.
 
 Best regards,
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-06-04 10:20](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19#issuecomment-498612884):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-06-04 10:20](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19#issuecomment-498612884):
 
 @a13xp0p0v `CONFIG_X86_MSR` could also be set to `m` which I think should be ok.
 
 At least Ubuntu, Debian, Archlinux and opensSUSE have it set this way.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-04 22:12](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/19#issuecomment-498862822):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-06-04 22:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/19#issuecomment-498862822):
 
 >@a13xp0p0v CONFIG_X86_MSR could also be set to m which I think should be ok.
 At least Ubuntu, Debian, Archlinux and opensSUSE have it set this way.
@@ -3696,9 +4486,9 @@ https://github.com/clipos/src_platform_config-linux-hardware/issues/1
 
 -------------------------------------------------------------------------------
 
-# [\#18 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/18) `merged`: Update pentoo config link
+# [\#18 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/18) `merged`: Update pentoo config link
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2019-06-01 12:02](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/18):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2019-06-01 12:02](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/18):
 
 
 
@@ -3707,9 +4497,9 @@ https://github.com/clipos/src_platform_config-linux-hardware/issues/1
 
 -------------------------------------------------------------------------------
 
-# [\#17 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/17) `merged`: Update and add config
+# [\#17 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/17) `merged`: Update and add config
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2019-05-12 15:09](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/17):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2019-05-12 15:09](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/17):
 
 Hi Alexander,
 
@@ -3719,25 +4509,25 @@ I let you choose ;)
 
 Best regards,
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-05-17 15:13](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/17#issuecomment-493490338):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-05-17 15:13](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/17#issuecomment-493490338):
 
 Hello @HacKurx,
 Thanks for the update!
 I'm merging it.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-05-17 15:20](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/17#issuecomment-493492947):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-05-17 15:20](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/17#issuecomment-493492947):
 
 @HacKurx, may I ask you to add/update information in the `links.txt` as well?
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2019-05-25 16:59](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/17#issuecomment-495933123):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2019-05-25 16:59](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/17#issuecomment-495933123):
 
 Hello @a13xp0p0v,
 
 Thank's for the merge. Some configuration files do not have a url (debian, ubuntu, rhel), I had to extract the configuration from the kernel package.
 I am willing to maintain all config occasionally.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-05-27 14:39](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/17#issuecomment-496234113):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-05-27 14:39](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/17#issuecomment-496234113):
 
 Nice, thanks!
 
@@ -3747,9 +4537,9 @@ For example, Alpine, Arch and Pentoo. Could you please update the links?
 
 -------------------------------------------------------------------------------
 
-# [\#16 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/16) `closed`: After kspp settings server if freezed
+# [\#16 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/16) `closed`: After kspp settings server if freezed
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2019-04-11 12:37](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/16):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2019-04-11 12:37](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/16):
 
 Hey guys,
 
@@ -3882,11 +4672,11 @@ CONFIG_GCC_PLUGIN_STRUCTLEAK | y | kspp | self_protection || OK
 CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL | y | kspp | self_protection || OK
 CONFIG_GCC_PLUGIN_LATENT_ENTROPY | y | kspp | self_protection || OK
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-04-11 19:26](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/16#issuecomment-482272466):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-04-11 19:26](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/16#issuecomment-482272466):
 
 Could you post `dmesg` output?
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2019-04-14 13:50](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/16#issuecomment-482980574):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2019-04-14 13:50](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/16#issuecomment-482980574):
 
 Hey,
 
@@ -3900,7 +4690,7 @@ dmesg 2 - https://ufile.io/mkt1sv73
 
 Thanks,
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-04-14 20:45](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/16#issuecomment-483056865):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-04-14 20:45](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/16#issuecomment-483056865):
 
 Hello @bryn1u,
 
@@ -3918,9 +4708,9 @@ You can speed up this procedure using bisection method (between the initial and 
 
 -------------------------------------------------------------------------------
 
-# [\#15 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/15) `closed`: After used KSPP settings, modules ext4, xfs, iptables are disabled.
+# [\#15 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/15) `closed`: After used KSPP settings, modules ext4, xfs, iptables are disabled.
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2019-03-22 13:09](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/15):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2019-03-22 13:09](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/15):
 
 Hello a13xp0p0v :))
 
@@ -3933,15 +4723,15 @@ I have no idea why after kernel compiling, modules like for example ext4, xfs an
 Thanks for help :)
 
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-23 17:18](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/15#issuecomment-475888038):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-23 17:18](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/15#issuecomment-475888038):
 
 It could be caused by `CONFIG_STATIC_USERMODEHELPER`. This option needs userspace support which is pretty much non-existent in distros, don't use it.
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2019-03-23 20:07](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/15#issuecomment-475900478):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2019-03-23 20:07](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/15#issuecomment-475900478):
 
 Thanks Bernhard40. I disabled usermodhelper and it works.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-24 11:35](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/15#issuecomment-475950377):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-24 11:35](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/15#issuecomment-475950377):
 
 Hello!
 
@@ -3958,15 +4748,15 @@ checklist.append(OptCheck('SECURITY_LOADPIN', 'y', 'my', 'self_protection')) # n
 
 -------------------------------------------------------------------------------
 
-# [\#14 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14) `closed`: User namespace useful especially when running containers
+# [\#14 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14) `closed`: User namespace useful especially when running containers
 
-#### <img src="https://avatars.githubusercontent.com/u/1397088?v=4" width="50">[jcberthon](https://github.com/jcberthon) opened issue at [2019-03-19 14:59](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14):
+#### <img src="https://avatars.githubusercontent.com/u/1397088?v=4" width="50">[jcberthon](https://github.com/jcberthon) opened issue at [2019-03-19 14:59](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14):
 
 Maybe I'm wrong, but at least with Kernel 5.0 USER_NS is activated by default, so "is not set" or "y" should be equivalent. At the moment, it fails because it is "y" on my configuration.
 
 I know that activating USER_NS can cut the attack surface if it is not needed on a system. But on my system which are running containers, I want to have USER_NS activated. True this is not pure hardening of the Kernel, but if we take into account the whole kernel including the possibilities to use it to make containers, then USER_NS should be part of the whole hardening.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-19 18:02](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14#issuecomment-474500985):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-19 18:02](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14#issuecomment-474500985):
 
 > Maybe I'm wrong, but at least with Kernel 5.0 USER_NS is activated by default, so "is not set" or "y" should be equivalent. At the moment, it fails because it is "y" on my configuration.
 
@@ -3976,7 +4766,7 @@ I know that activating USER_NS can cut the attack surface if it is not needed on
 
 You have it backwards. **Disabling** USER_NS [cuts the attack surface](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#sysctls) and is part of kernel hardening. USER_NS (unprivileged) are considered inherently insecure and unfixable.
 
-#### <img src="https://avatars.githubusercontent.com/u/1397088?v=4" width="50">[jcberthon](https://github.com/jcberthon) commented at [2019-03-19 21:20](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14#issuecomment-474589104):
+#### <img src="https://avatars.githubusercontent.com/u/1397088?v=4" width="50">[jcberthon](https://github.com/jcberthon) commented at [2019-03-19 21:20](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14#issuecomment-474589104):
 
 Thanks for clarifying the first point.
 
@@ -3990,17 +4780,17 @@ Do you have a source for user ns being considered unfixable?
 
 Anyway, I understand your reasoning for marking user ns as insecure, so I would not be offended if you would decide to close this issue. Of course I would appreciate you take my suggestion into account :-)
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2019-03-19 21:32](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14#issuecomment-474592962):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2019-03-19 21:32](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14#issuecomment-474592962):
 
 its not just one like 2 years ago, userns is an endless stream of privilege escalation flaws exposed by root designed functionality accessible to any unprivileged user inside a user namespace over and over again.
 
 In my personal opinion this should remain as is, being an error, and if your personal threat model doesn't care about user_ns you can just ignore the result of kconfig-hardened-check :cat:
 
-#### <img src="https://avatars.githubusercontent.com/u/1397088?v=4" width="50">[jcberthon](https://github.com/jcberthon) commented at [2019-03-19 22:44](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14#issuecomment-474613483):
+#### <img src="https://avatars.githubusercontent.com/u/1397088?v=4" width="50">[jcberthon](https://github.com/jcberthon) commented at [2019-03-19 22:44](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14#issuecomment-474613483):
 
 Alright, and thanks for the feedback.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-20 06:49](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14#issuecomment-474708180):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-20 06:49](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14#issuecomment-474708180):
 
 Hello everyone,
 
@@ -4022,13 +4812,13 @@ checklist.append(OptCheck('USER_NS', 'is not set', 'my', 'cut_attack_surface')) 
 
 Thanks for your discussion, I think I should add some clarification of `cut_attack_surface` to the README.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-20 12:25](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14#issuecomment-474807051):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-20 12:25](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14#issuecomment-474807051):
 
 > (by the way, adding the ability to check kernel boot parameters and sysctl would be really nice)
 
 I'm not sure if it's good idea for this project to start scanning the running system for security features. I would vote for keeping it simple and just check chosen config file.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-20 13:23](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14#issuecomment-474826371):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-20 13:23](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14#issuecomment-474826371):
 
 > > (by the way, adding the ability to check kernel boot parameters and sysctl would be really nice)
 > 
@@ -4038,22 +4828,22 @@ I agree, I don't like the privileged scanning of a system from the script too.
 I mean the script could analyze additional files with the needed information together with the kernel config.
 For example, right now we can say nothing about side-channel attack mitigations.
 
-#### <img src="https://avatars.githubusercontent.com/u/1397088?v=4" width="50">[jcberthon](https://github.com/jcberthon) commented at [2019-03-20 23:09](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/14#issuecomment-475063272):
+#### <img src="https://avatars.githubusercontent.com/u/1397088?v=4" width="50">[jcberthon](https://github.com/jcberthon) commented at [2019-03-20 23:09](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/14#issuecomment-475063272):
 
 Thank you for the interesting read and for the updated README.
 
 
 -------------------------------------------------------------------------------
 
-# [\#13 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/13) `closed`: False positive and false negatives
+# [\#13 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/13) `closed`: False positive and false negatives
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) opened issue at [2019-03-09 19:13](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/13):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) opened issue at [2019-03-09 19:13](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/13):
 
 `PAGE_POISONING_NO_SANITY` and `PAGE_POISONING_ZERO` depend on `PAGE_POISONING`. Checking distro config which doesn't enable `PAGE_POISONING` (like Fedora) will show `OK: not found` for the first two even as it's far from ok in this case.
 
 Currently script checks only for `MODULE_SIG_SHA512`. Some distros (like Fedora) may use `SHA256` which I think should be fine as well even if KSPP chose different example.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-11 16:27](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/13#issuecomment-471614645):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-11 16:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/13#issuecomment-471614645):
 
 Hello @Bernhard40,
 Thanks for your report, let's discuss it.
@@ -4071,7 +4861,7 @@ The MODULE_SIG_SHA512 option is the KSPP recommendation, it is explicitly indica
 Distros may have various reasons to do it differently.
 One day the script will support the error annotations (the idea is described here: https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-453810119)
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-12 00:07](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/13#issuecomment-471790830):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-12 00:07](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/13#issuecomment-471790830):
 
 > Yes, they are dependent on PAGE_POISONING.
 > These options make this feature weaker, so the script is checking that they are disabled.
@@ -4100,7 +4890,7 @@ The check shows that distro which disables PAGE_POISONING completely is better t
 
 I read this recommendation as _sign your modules_ rather than _sign your modules using SHA512_. The KSPP page says [But if CONFIG_MODULE=y is needed, at least they must be signed with a per-build key](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#CONFIGs). Below they show an example with SHA512. I highly doubt they meant SHA512 explicitly and nothing else. IMO they just used one example because iterating it for SHA256/SHA384 would be rather redundant. You may ask Kees about what he had in mind when he wrote this.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-12 15:31](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/13#issuecomment-472049899):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-12 15:31](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/13#issuecomment-472049899):
 
 > The check shows that distro which disables PAGE_POISONING completely is better than one which enables its weaker version! Specifically for fedora it's 52 errors with the former (actual config) vs 53 errors with the latter.
 
@@ -4114,13 +4904,13 @@ Right. Please have a look how I've solved this issue.
 
 Ok, I will remember that. There are several things which can be added to KSPP wiki. I'll work on that later.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-12 17:53](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/13#issuecomment-472112024):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-12 17:53](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/13#issuecomment-472112024):
 
 > It's now used for PAGE_POISONING_NO_SANITY and PAGE_POISONING_ZERO - they are not checked if PAGE_POISONING is off:
 
 You could also always mark them as failed in that case like `FAIL: "dependency missing"`. That would prevent FAIL count from increasing when enabling only PAGE_POISONING.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-12 21:54](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/13#issuecomment-472196588):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-12 21:54](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/13#issuecomment-472196588):
 
 > You could also always mark them as failed in that case like FAIL: "dependency missing"
 
@@ -4130,9 +4920,9 @@ Implemented in d9aca2d28e9f95266bca2da09625d7d2c885a6b2.
 
 -------------------------------------------------------------------------------
 
-# [\#12 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/12) `closed`: CONFIG_MODULE_SIG_FORCE shouldn't be checked if CONFIG_MODULES is not set
+# [\#12 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/12) `closed`: CONFIG_MODULE_SIG_FORCE shouldn't be checked if CONFIG_MODULES is not set
 
-#### <img src="https://avatars.githubusercontent.com/u/990588?v=4" width="50">[hannob](https://github.com/hannob) opened issue at [2019-03-03 12:35](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/12):
+#### <img src="https://avatars.githubusercontent.com/u/990588?v=4" width="50">[hannob](https://github.com/hannob) opened issue at [2019-03-03 12:35](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/12):
 
 I have a minimal kernel without modules for a server. I get a warning about CONFIG_MODULE_SIG_FORCE, which should not apply for a kernel without module support.
 
@@ -4143,7 +4933,7 @@ Output is:
   CONFIG_MODULE_SIG_FORCE                |      y      |   kspp   |  self_protection   ||      FAIL: not found       
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-04 13:42](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/12#issuecomment-469256961):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-04 13:42](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/12#issuecomment-469256961):
 
 Fixed.
 Thank you @hannob.
@@ -4151,9 +4941,9 @@ Thank you @hannob.
 
 -------------------------------------------------------------------------------
 
-# [\#11 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/11) `closed`: Feature request: Check CONFIG_RESET_ATTACK_MITIGATION
+# [\#11 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/11) `closed`: Feature request: Check CONFIG_RESET_ATTACK_MITIGATION
 
-#### <img src="https://avatars.githubusercontent.com/u/990588?v=4" width="50">[hannob](https://github.com/hannob) opened issue at [2019-03-02 08:17](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/11):
+#### <img src="https://avatars.githubusercontent.com/u/990588?v=4" width="50">[hannob](https://github.com/hannob) opened issue at [2019-03-02 08:17](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/11):
 
 Thanks for this tool.
 
@@ -4166,22 +4956,22 @@ https://lwn.net/Articles/730006/
 It's also explained in this talk:
 https://www.youtube.com/watch?v=RqvPZnLkP70 (around minute 35)
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-02 12:47](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/11#issuecomment-468917523):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-03-02 12:47](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/11#issuecomment-468917523):
 
 This option needs userspace support, otherwise it's not recommended for use:
 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a5c03c31af2291f13689d11760c0b59fb70c9a5a
 
 https://bugzilla.redhat.com/show_bug.cgi?id=1532058
 
-#### <img src="https://avatars.githubusercontent.com/u/990588?v=4" width="50">[hannob](https://github.com/hannob) commented at [2019-03-03 12:33](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/11#issuecomment-469018559):
+#### <img src="https://avatars.githubusercontent.com/u/990588?v=4" width="50">[hannob](https://github.com/hannob) commented at [2019-03-03 12:33](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/11#issuecomment-469018559):
 
 Interesting, is there any userspace tool to do this? Or is this basically unsupported in current systems?
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2019-03-03 12:49](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/11#issuecomment-469019815):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2019-03-03 12:49](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/11#issuecomment-469019815):
 
 @hannob I wanted to look into this for systemd, but forgot for quite a while. thanks for reminding me, back then there was no userspace support, theoretically you could add a systemd service but doing it _properly_ is bit more tricky. I'm putting this back onto my todo list and take a dive into how to properly implement this into systemd itself at a place that could guarantee that all other services etc. are already properly shut down.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-04 14:52](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/11#issuecomment-469280355):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-04 14:52](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/11#issuecomment-469280355):
 
 Hello @hannob @Bernhard40 @anthraxx,
 
@@ -4189,16 +4979,16 @@ Hello @hannob @Bernhard40 @anthraxx,
 
 That case will be similar to the `STATIC_USERMODEHELPER` option, which needs the userspace support as well (but, as I know, enabling it currently breaks systemd workflow on Ubuntu).
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-04 18:29](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/11#issuecomment-469362767):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-03-04 18:29](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/11#issuecomment-469362767):
 
 Hm... By the way Ubuntu 18 has `RESET_ATTACK_MITIGATION` enabled.
 
 
 -------------------------------------------------------------------------------
 
-# [\#10 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10) `closed`: Add support for x86_32, arm, and arm64 architectures
+# [\#10 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10) `closed`: Add support for x86_32, arm, and arm64 architectures
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) opened issue at [2019-01-14 19:37](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) opened issue at [2019-01-14 19:37](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10):
 
 (This is a continuation of #9)
 
@@ -4214,24 +5004,24 @@ Some changes since #9 include:
 - Look for `CONFIG_X86_32` and `CONFIG_X86_64` when detecting `x86` sub architecture
 - Restrict the accepted `-a <ARCHITECTURE>` values to those found in `SUPPORTED_ARCHS`
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-14 20:58](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-454158772):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-14 20:58](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-454158772):
 
 Hello @tyhicks , thanks a lot for the follow-up! Let me propose some improvements.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-14 21:45](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-454173475):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-14 21:45](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-454173475):
 
 @tyhicks , thanks for your work again!
 Let me propose one more idea. What do you think about splitting [KSPP recommended settings](http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings) onto 4 arch-specific configs in `./config_files/`?
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-17 18:04](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-455270114):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-17 18:04](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-455270114):
 
 Yes, I can add 4 arch-specific configs in `./config_files/`.
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-17 23:44](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-455373860):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-17 23:44](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-455373860):
 
 I've rebased on top of your current tree, fixed up a few things, added what I think you were asking for in the arch-specific KSPP files, and force pushed to this branch.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-18 12:12](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-455526516):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-18 12:12](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-455526516):
 
 Ouch. 
 @tyhicks , excuse me please!
@@ -4239,12 +5029,12 @@ I've made a code review 3 days ago, but didn't hit "submit" button, so it is "pe
 I've just realized that you haven't seen my review when I looked at your rebased branch.
 My fault.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-18 13:01](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-455538355):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-18 13:01](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-455538355):
 
 If you don't have time/desire, I can pick up your branch and polish it myself.
 Thank you again!
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-18 23:16](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-455718260):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-18 23:16](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-455718260):
 
 > If you don't have time/desire, I can pick up your branch and polish it myself.
 
@@ -4254,7 +5044,7 @@ I won't mind if you do the polishing yourself.
 
 No problem. Thanks for all the review comments.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-24 08:02](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-457102717):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-24 08:02](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-457102717):
 
 Hello @tyhicks ,
 
@@ -4263,26 +5053,26 @@ Do you like it?
 Do you have any comments or requests?
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-24 15:34](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/10#issuecomment-457240527):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-24 15:34](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/10#issuecomment-457240527):
 
 Thanks for finishing out the work. It looks very good to me. I'll make use of the changes over the next week or so and submit new pull requests if I spot anything wrong/missing. Thanks again!
 
 
 -------------------------------------------------------------------------------
 
-# [\#9 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9) `closed`: Teach the script about target architecture and kernel version
+# [\#9 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9) `closed`: Teach the script about target architecture and kernel version
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) opened issue at [2019-01-12 00:16](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) opened issue at [2019-01-12 00:16](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9):
 
 Some recommendations are dependent on the processor architecture and/or the kernel version. For example, the KSPP recommendations differ between [x86_32](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#x86_32) and [x86_64](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#x86_64). Additionally, option names change over time such as when `CONFIG_CC_STACKPROTECTOR_STRONG` was [renamed](https://kernsec.org/wiki/index.php?title=Kernel_Self_Protection_Project%2FRecommended_Settings&diff=3983&oldid=3976).
 
 This pull request adds the ability to reason about the architecture and version when constructing the checklist. It also teaches the script about `x86_32`, `arm`, and `arm64` specific config recommendations.
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-12 00:18](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-453698919):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-12 00:18](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9#issuecomment-453698919):
 
 I verified that all the example configs in `config_files/` show the same number of config check failures before and after these changes are applied. Of course, the ordering of the options are changed since the ordering used to construct the checklist has been changed.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-12 17:49](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-453767322):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-12 17:49](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9#issuecomment-453767322):
 
 Hello @tyhicks ,
 
@@ -4301,7 +5091,7 @@ May I ask you to extract arch support into a separate pull request? We will work
 
 Thanks again for your time!
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-12 19:48](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-453775979):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-12 19:48](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9#issuecomment-453775979):
 
 > Thank you very much for this pull request! Great!
 
@@ -4320,11 +5110,11 @@ Maybe I'll just drop the version checking now and, in the future, propose some t
 
 Certainly. It might not happen today but I'll get a new PR up very soon.
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-12 19:51](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-453776169):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-12 19:51](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9#issuecomment-453776169):
 
 @a13xp0p0v I have a slightly unrelated question about the script that I'll ask here since I mentioned using this script with our Ubuntu kernel configs. What does `ubuntu18` mean in the `decision` column of the script output? I assume that you're talking about Ubuntu 18.04 LTS but it feels like `kspp` should be used for nearly all of those rows instead of `ubuntu18` as I consider the KSPP project as the "upstream" that makes these recommendations.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-13 08:03](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-453810119):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-13 08:03](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9#issuecomment-453810119):
 
 > Glad that you find it useful. I plan to use the script and these changes to audit all of the Ubuntu kernel configs and enable reasonable hardening options that aren't yet enabled.
 
@@ -4378,24 +5168,24 @@ So I use:
 
 Thanks for your question, I think I should document that in the README.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-01-13 12:31](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-453825869):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2019-01-13 12:31](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9#issuecomment-453825869):
 
 @a13xp0p0v isn't better to make `kspp` as base for recommendations instead of `ubuntu18`? As @tyhicks mentioned the current order takes it backwards . The alternative would be to use `defconfig` here. I understand that `ubuntu18` is your personal choice but it's highly opinioniated.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-14 13:35](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-454006535):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2019-01-14 13:35](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9#issuecomment-454006535):
 
 @Bernhard40 , thanks for a reasonable comment. I will use `defconfig` as the basis.
 
-#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-14 19:38](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/9#issuecomment-454133942):
+#### <img src="https://avatars.githubusercontent.com/u/1051156?u=82b8caad104296ef90ffe2f5807dc34d82c31c2b&v=4" width="50">[tyhicks](https://github.com/tyhicks) commented at [2019-01-14 19:38](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/9#issuecomment-454133942):
 
 Closing this pull request in favor of #10
 
 
 -------------------------------------------------------------------------------
 
-# [\#8 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/8) `closed`: couldn't mount to /sysroot after compile kernel with KSPP options.
+# [\#8 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/8) `closed`: couldn't mount to /sysroot after compile kernel with KSPP options.
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2018-12-17 15:33](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/8):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2018-12-17 15:33](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/8):
 
 Hello Alexander,
 
@@ -4406,7 +5196,7 @@ It looks like my initramfs doesn't have the kernel module for ext4 but why.
 
 Im using Centos 7 with gcc 7.2
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-18 11:55](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/8#issuecomment-448195919):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-18 11:55](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/8#issuecomment-448195919):
 
 Hello @bryn1u ,
 
@@ -4416,7 +5206,7 @@ Distros can have various issues because of the kernel hardening options, for exa
 It would be great if you find the reason and share the result.
 I would recommend you to use binary search to do it faster.
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2018-12-18 22:12](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/8#issuecomment-448390343):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2018-12-18 22:12](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/8#issuecomment-448390343):
 
 Hey,
 
@@ -4425,7 +5215,7 @@ I checked many options and recompiled kernel many times to find some answers, bu
 Don't you know if ubuntu developers will enable KSPP options to the ubuntu kernel ? Or only manual compilation is available to get more security features ?
 Thanks !
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-19 11:57](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/8#issuecomment-448569306):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-19 11:57](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/8#issuecomment-448569306):
 
 > With CONFIG_SECURITY_LOADPIN enabled im not able to load any module and getting "operation not permitted". Im guessing it's supposed to be like that.
 
@@ -4440,7 +5230,7 @@ I guess in your case the first modules are loaded from the ramdisk, and later lo
 
 It's slow but steady process. More and more kernel hardening options are enabled by distros.
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2018-12-22 12:38](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/8#issuecomment-449567219):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2018-12-22 12:38](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/8#issuecomment-449567219):
 
 Hello
 I have a weir problem. After successfully compiled kernel i can't use iptables:
@@ -4563,7 +5353,7 @@ option name                            | desired val | decision |       reason  
 
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-25 12:27](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/8#issuecomment-449846419):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-25 12:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/8#issuecomment-449846419):
 
 Hello @bryn1u ,
 The error message which you posted makes me think that your issue is about kernel modules loading.
@@ -4572,9 +5362,9 @@ I would recommend you to look at the kernel log for more information and bisect 
 
 -------------------------------------------------------------------------------
 
-# [\#7 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/7) `closed`: Removing security features during kernel compilation.
+# [\#7 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/7) `closed`: Removing security features during kernel compilation.
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2018-12-05 13:21](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/7):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) opened issue at [2018-12-05 13:21](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/7):
 
 Hey,
 
@@ -4598,7 +5388,7 @@ CONFIG_GCC_PLUGIN_RANDSTRUCT=y
 ```
 And make a "make -j 8 deb-pkg" on ubuntu or "make -j8 bzImage ...." on centos, these options are removing immediately from ".config" in kernel-4.19.6 . I have no idea what's going on. Could you tell me what am i doing wrong ?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-05 21:08](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/7#issuecomment-444648549):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-05 21:08](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/7#issuecomment-444648549):
 
 Hello @bryn1u ,
 
@@ -4607,32 +5397,32 @@ If you have gcc-7 on Ubuntu, try to install gcc-7-plugin-dev package. It should 
 
 And thanks for your question. I'll add this information to README.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-05 21:31](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/7#issuecomment-444656696):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-05 21:31](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/7#issuecomment-444656696):
 
 Added 478e5f266df05b5f75badef59914c8b0e71e3e0e
 
-#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2018-12-06 21:08](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/7#issuecomment-445030219):
+#### <img src="https://avatars.githubusercontent.com/u/3471772?v=4" width="50">[bryn1u](https://github.com/bryn1u) commented at [2018-12-06 21:08](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/7#issuecomment-445030219):
 
 Hello,
 
 Now it works :) thanks ! I have one question about CONFIG_GCC_PLUGIN_STACKLEAK . This is the one option which is removing during compilation. Is it any way to enable it or isn't it available in kernel-4.19.7 yet ?
 Thanks again :)
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-07 06:59](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/7#issuecomment-445141837):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-12-07 06:59](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/7#issuecomment-445141837):
 
 Yes, CONFIG_GCC_PLUGIN_STACKLEAK will be available in Linux 4.20.
 
 
 -------------------------------------------------------------------------------
 
-# [\#6 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/6) `closed`: Removed long lines on output + minor fix
+# [\#6 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/6) `closed`: Removed long lines on output + minor fix
 
-#### <img src="https://avatars.githubusercontent.com/u/7037785?u=6ac77234884c153e7fd38e3732be16d9760509ea&v=4" width="50">[c0rv4x](https://github.com/c0rv4x) opened issue at [2018-07-30 14:38](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/6):
+#### <img src="https://avatars.githubusercontent.com/u/7037785?u=6ac77234884c153e7fd38e3732be16d9760509ea&v=4" width="50">[c0rv4x](https://github.com/c0rv4x) opened issue at [2018-07-30 14:38](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/6):
 
 I removed long lines from `print` and `format` functions.
 Also i edited function `get_option_state` now uses `dict.get` method to extract a key from dict with default value 
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-30 20:09](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/6#issuecomment-408993713):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-30 20:09](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/6#issuecomment-408993713):
 
 Applied!
 Thank you @iad42 !
@@ -4640,9 +5430,9 @@ Thank you @iad42 !
 
 -------------------------------------------------------------------------------
 
-# [\#5 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/5) `closed`: Oop refactoring
+# [\#5 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/5) `closed`: Oop refactoring
 
-#### <img src="https://avatars.githubusercontent.com/u/7037785?u=6ac77234884c153e7fd38e3732be16d9760509ea&v=4" width="50">[c0rv4x](https://github.com/c0rv4x) opened issue at [2018-07-28 21:49](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/5):
+#### <img src="https://avatars.githubusercontent.com/u/7037785?u=6ac77234884c153e7fd38e3732be16d9760509ea&v=4" width="50">[c0rv4x](https://github.com/c0rv4x) opened issue at [2018-07-28 21:49](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/5):
 
 Made the program a liitle bit more OOP.
 
@@ -4651,11 +5441,11 @@ Outputter class is responsible for outputting major results (however, not all th
 OR and OptConifg were moved to a separate file
 Checklist got its own class with a method `check(config)` that performs all the checks from the checklist against user's config
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-30 09:43](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/5#issuecomment-408807705):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-30 09:43](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/5#issuecomment-408807705):
 
 The last commit adds a ```__pycache__``` directory with bython bytecode cache files, that commit should be amended
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-30 09:50](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/5#issuecomment-408809392):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-30 09:50](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/5#issuecomment-408809392):
 
 Cool that you invest time with this, but personally speaking I'm bit mixed here what the justification/gain is to introduce the complexity and split other then "but oop and modules". Right now it's quite handy to just have the whole thing in a single file that could be copied to /usr/bin dir f.e. and I don't think its expected that lots lots lots of additional modules and python functions are needed beyond this.
 
@@ -4663,7 +5453,7 @@ Otherwise, if the project goes the path to make it more modular, then it should 
 
 My 2 cents is that a single file isn't too bad after considering the current scope and content
 
-#### <img src="https://avatars.githubusercontent.com/u/7037785?u=6ac77234884c153e7fd38e3732be16d9760509ea&v=4" width="50">[c0rv4x](https://github.com/c0rv4x) commented at [2018-07-30 10:36](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/5#issuecomment-408821023):
+#### <img src="https://avatars.githubusercontent.com/u/7037785?u=6ac77234884c153e7fd38e3732be16d9760509ea&v=4" width="50">[c0rv4x](https://github.com/c0rv4x) commented at [2018-07-30 10:36](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/5#issuecomment-408821023):
 
 You are right about `__pycache__`, that is my fault.
 
@@ -4671,7 +5461,7 @@ As for sticking to a single file, i clearly see your point and agree with you. H
 
 Also, thanks for the note on setup.py file, i will surely fix that problem!
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-30 10:42](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/5#issuecomment-408822137):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-30 10:42](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/5#issuecomment-408822137):
 
 Hello @iad42 and @anthraxx ,
 
@@ -4688,7 +5478,7 @@ print('  CONFIG_{:<32}|{:^13}|{:^10}|{:^20}||{:^28}'.format(
 
 Thanks!
 
-#### <img src="https://avatars.githubusercontent.com/u/7037785?u=6ac77234884c153e7fd38e3732be16d9760509ea&v=4" width="50">[c0rv4x](https://github.com/c0rv4x) commented at [2018-07-30 14:39](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/5#issuecomment-408886952):
+#### <img src="https://avatars.githubusercontent.com/u/7037785?u=6ac77234884c153e7fd38e3732be16d9760509ea&v=4" width="50">[c0rv4x](https://github.com/c0rv4x) commented at [2018-07-30 14:39](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/5#issuecomment-408886952):
 
 @a13xp0p0v 
 
@@ -4697,9 +5487,9 @@ I created a separate pull request https://github.com/a13xp0p0v/kconfig-hardened-
 
 -------------------------------------------------------------------------------
 
-# [\#4 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4) `closed`: Add more config files
+# [\#4 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4) `closed`: Add more config files
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2018-07-20 20:31](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2018-07-20 20:31](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4):
 
 Hello @a13xp0p0v,
 
@@ -4707,16 +5497,16 @@ Just like I promised.
 
 Best regards.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-07-23 19:03](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-407166514):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-07-23 19:03](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-407166514):
 
 Don't we overdo with the number of configs here? This project allows everyone for checking any config they want themselves so what is the point of storing them here? One or two as example is enough. Most of them will be outdated sooner or later anyway.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-23 19:18](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-407170808):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-23 19:18](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-407170808):
 
 Yeah I agree, also they are outdated quite fast and who maintains the configs?
 To compare and test stuff, it would make sense to have a small amount of general purpose configs like ubuntu, debian and have some hardened examples like kspp, archlinux-hardened and others. I don't think it is or should be the scope of the project to collect them all
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-24 12:11](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-407384626):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-24 12:11](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-407384626):
 
 Hello,
 
@@ -4746,7 +5536,7 @@ So I lets @a13xp0p0v choose what he prefers.
 
 But I wish in any case to maintain pentoo-hardened in view of its result :smiley:
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-24 23:06](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-407580227):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-24 23:06](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-407580227):
 
 Hello @HacKurx @anthraxx @Bernhard40 ,
 
@@ -4760,11 +5550,11 @@ So what do you think about this solution:
 
 Does it sound reasonable to you?
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-07-25 11:41](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-407725269):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-07-25 11:41](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-407725269):
 
 Yeah, keeping well know distros and non-rolling release kernels make sense.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-25 19:28](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-407868315):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-25 19:28](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-407868315):
 
 Hello @a13xp0p0v ,
 
@@ -4780,7 +5570,7 @@ I know, but for old kernels we need use more OR class. Example: CONFIG_DEBUG_SET
 
 In addition certain points must be corrected, as for example the recommendation "CONFIG_LKDTM" is impossible to respect without breaking the recommendation of Grsecurity on DEBUG_FS.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-27 21:29](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-408543338):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-27 21:29](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-408543338):
 
 Hello @HacKurx , thanks for your work.
 
@@ -4804,7 +5594,7 @@ If so, in the result we will have some consistence between links.txt and config 
 
 Thank you a lot!
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-28 06:57](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-408587814):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-28 06:57](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-408587814):
 
 Hello @a13xp0p0v ,
 
@@ -4823,7 +5613,7 @@ Yes of course the links are in the file.
 I'll take care of it soon.
 Thank you too. Best regards.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-08-01 21:45](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-409734659):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-08-01 21:45](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-409734659):
 
 Hello @a13xp0p0v ,
 
@@ -4849,7 +5639,7 @@ I'm still looking for some points and I'm quite busy but I always take care of t
 
 Regards.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-08-03 20:52](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-410373163):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-08-03 20:52](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-410373163):
 
 Hi @HacKurx ,
 
@@ -4879,7 +5669,7 @@ Excuse me, I don't see the connection between these options. Can you share more 
 
 Thank you!
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-08-04 14:56](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-410455183):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-08-04 14:56](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-410455183):
 
 Hi @a13xp0p0v ,
 
@@ -4940,13 +5730,13 @@ What about CRYPTO_SPECK, what do you think?
 
 Thanks you to again.
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-08-04 16:14](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-410460070):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-08-04 16:14](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-410460070):
 
 > If you want to know more, you just have to convince a large company (google? microsoft ^^) to finance their research in a public way 😇
 
 So, until that happens there is no point for adding support for options which almost no one can use.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-08-04 17:30](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-410465146):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-08-04 17:30](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-410465146):
 
 >  So, until that happens there is no point for adding support for options which almost no one can use.
 
@@ -4954,13 +5744,13 @@ So you want to create a false error to the persons who uses it?
 KSPP's advances come from grsecurity don't forget it.
 Besides the old versions are still a source of inspiration, right?
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-08-04 17:53](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-410466573):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-08-04 17:53](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-410466573):
 
 If someone uses grsecurity private code then they should seek support from grsecurity which they pay for, not from volunteers working for free.
 
 Old versions are dead, nothing we can do about it.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-08-04 20:51](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-410476855):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-08-04 20:51](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-410476855):
 
 Hello @HacKurx and @Bernhard40 ,
 
@@ -4975,7 +5765,7 @@ So I would like to focus on the mainline kconfig options. Moreover, grsecurity u
 
 Thanks for understanding.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-08-08 12:36](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-411389774):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-08-08 12:36](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-411389774):
 
 Hello @HacKurx ,
 
@@ -4984,7 +5774,7 @@ Thank you very much.
 
 Closing it now.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-08-08 21:57](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/4#issuecomment-411565682):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-08-08 21:57](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/4#issuecomment-411565682):
 
 Hello @a13xp0p0v ,
 
@@ -5005,9 +5795,9 @@ Best regards.
 
 -------------------------------------------------------------------------------
 
-# [\#3 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3) `closed`: Add Grsecurity recommendation on BINFMT_AOUT
+# [\#3 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3) `closed`: Add Grsecurity recommendation on BINFMT_AOUT
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2018-07-18 18:52](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) opened issue at [2018-07-18 18:52](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3):
 
 Hi,
 
@@ -5018,17 +5808,17 @@ Sorry for the tabulations in my code :D
 
 Regards,
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-07-18 19:14](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406043222):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-07-18 19:14](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406043222):
 
 I'm curious, does anyone seen kernel with that option enabled in last 10 years?
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-18 19:49](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406052730):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-18 19:49](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406052730):
 
 Today his is not the case but it is necessary to warn users better about the old code that is dangerous and that Linus will never want to delete.
 
 Because otherwise I'm sure he's got geeks who'll activate him for fun...
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-18 20:13](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406059551):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-18 20:13](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406059551):
 
 @Bernhard40 to be precise (extraction from linux-4.18-rc5) shows that it's still using a little. The equipment on ARM being more recent.
 
@@ -5064,7 +5854,7 @@ arm/configs/netwinder_defconfig:CONFIG_BINFMT_AOUT=y
 arm/configs/iop13xx_defconfig:CONFIG_BINFMT_AOUT=y
 arm/configs/iop33x_defconfig:CONFIG_BINFMT_AOUT=y
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-19 19:02](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406381446):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-19 19:02](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406381446):
 
 No thanks to you @a13xp0p0v 
 
@@ -5078,11 +5868,11 @@ https://github.com/HacKurx/public-sharing/blob/master/disables_unsecured_options
 
 Thanks, best regards.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 20:43](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406408269):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 20:43](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406408269):
 
 @HacKurx btw, i have seen you added Arch Linux config: there is a hardened arch kernel as well with more protective options.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-19 21:08](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406414918):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-19 21:08](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406414918):
 
 Hello @HacKurx,
 
@@ -5094,7 +5884,7 @@ explicit "is not set" is different from the option absence in the config file, I
 Thanks again!
 Till soon.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-20 11:56](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406579032):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-20 11:56](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406579032):
 
 @anthraxx 
 > there is a hardened arch kernel as well with more protective options.
@@ -5108,21 +5898,21 @@ This will allow an easy comparison to be made.
 
 What do you think of that?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-20 12:26](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406585795):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-20 12:26](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406585795):
 
 Yes, moving configs into a separate directory is a good idea.
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-20 14:59](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406627110):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-20 14:59](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406627110):
 
 It's done.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-20 18:10](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406683275):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-20 18:10](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406683275):
 
 Hello @HacKurx,
 Thanks for your work, it's merged (except "not found" dropping).
 Nice!
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-20 18:54](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/3#issuecomment-406695869):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-20 18:54](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/3#issuecomment-406695869):
 
 Thank you to you too.
 I will complete the config_files folder because the results are very interesting :)
@@ -5132,21 +5922,21 @@ See you soon. Best regards,
 
 -------------------------------------------------------------------------------
 
-# [\#2 PR](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2) `closed`: Feature/improvements
+# [\#2 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2) `closed`: Feature/improvements
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) opened issue at [2018-06-20 22:14](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) opened issue at [2018-06-20 22:14](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2):
 
 Improve the source to make it easier to iterate over options by making the checks and all kernel config options a dictionary. Additionally implement logical operator to support or conditional checks.
 
 Refactor option parsing to use pythons argparse
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-20 22:16](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-398915150):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-20 22:16](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-398915150):
 
 At the end lots of lines changed, please ask anything you want to suggest any changes you would like to see. Even through the changes look massive, I believe they will pay out and make some stuff easier to maintain and access for potential future features.
 
 I'm happy to take any feedback :cat:
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-06-21 20:50](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-399239396):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-06-21 20:50](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-399239396):
 
 Thank you very much for your time spent on that!
 I like the ideas behind your changes and I want to merge them in the end.
@@ -5160,7 +5950,7 @@ At least I see your ideas and I can split (and learn) the commits myself.
 
 Thank you, again.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-21 23:13](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-399271969):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-21 23:13](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-399271969):
 
 All of this sounds reasonable to me! I already spent some time on this and I'm sure I may contribute in the future as well so I would be super happy to change the commits as long as it satisfies you!
 I will split out the DEVMEM and STACKPROTECTOR changes and see if I can split at even more. Should be easy with rebase edit.
@@ -5170,39 +5960,39 @@ Latter case you described should easily be possible with an AND class that is li
 Cheers
 Levente
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-06-22 20:50](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-399578012):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) commented at [2018-06-22 20:50](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-399578012):
 
 Just FYI, in Linux 4.18 `CC_STACKPROTECTOR_STRONG` [was renamed](https://github.com/torvalds/linux/blob/v4.18-rc1/arch/Kconfig#L585) to `STACKPROTECTOR_STRONG` and `CC_STACKPROTECTOR_AUTO` is gone.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-06-25 16:27](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-400013145):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-06-25 16:27](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-400013145):
 
 Thanks for the info, @Bernhard40. I'll update the STACKPROTECTOR config option when 4.18 is released.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-25 22:47](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-400119687):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-25 22:47](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-400119687):
 
 @a13xp0p0v I have splitted up the commits as much as made sense, can you please take a look? Really don't fear nitpicking, I'm used to do open-source :yum: 
 
 PS: this also handles STACKPROTECTOR_STRONG by using the OR operator.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-06-26 21:26](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-400467818):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-06-26 21:26](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-400467818):
 
 Thanks a lot for your work, @anthraxx !
 I'll review this version in a couple of days.
 Till soon.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-09 18:23](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-403574284):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-09 18:23](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-403574284):
 
 @a13xp0p0v round 2, fight! :cat:
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-14 09:00](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-405010041):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-14 09:00](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-405010041):
 
 Well I personally don't think it's a good idea to parse and check one line separately and don't really see why It can't be a dict. Curious how you want to check AND and OR logic on other opts if the config it not fully parsed yet. Personally, parsing it yet again for such logic sounds like non optimal algorithm/approach to me.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-14 09:02](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-405010151):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-14 09:02](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-405010151):
 
 Why not just check for existence before assigning parsed_options[config] and call it a day?
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-14 20:05](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-405046688):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-14 20:05](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-405046688):
 
 Ah, yes, I see.
 You are right. AND & OR logic can't be implemented if we check the config file line by line.
@@ -5219,13 +6009,13 @@ If you have no time/motivation for that work, I will do it myself.
 
 Thanks again, @anthraxx. I'm glad to have your attention to this project.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-14 20:57](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-405049389):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-14 20:57](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-405049389):
 
 Yay! No worries, I like to discuss solutions and opinions as collaborative work and exchange is much more effective!
 I would be happy to make the changes as you requested, will push an update and rebased version very soon.
 Cheers 🍻
 
-#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-19 19:14](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-406384461):
+#### <img src="https://avatars.githubusercontent.com/u/4661917?u=bb7aeb3c77839cea055b49b80168666b36315f3d&v=4" width="50">[theLOICofFRANCE](https://github.com/theLOICofFRANCE) commented at [2018-07-19 19:14](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-406384461):
 
 I don't know if you're doing it, but CONFIG_ARCH_MMAP_RND_BITS should be replaced by: 
 ```
@@ -5235,11 +6025,11 @@ CONFIG_ARCH_MMAP_RND_BITS_MAX=32
 
 found in Linux kernels: 4.5–4.17, 4.18-rc+HEAD
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 20:44](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-406408491):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 20:44](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-406408491):
 
 @HacKurx no, i really want to get this PR through finally. After that me, you or whoever can make that CONFIG_ARCH_MMAP_RND_BITS change.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 20:48](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-406409433):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 20:48](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-406409433):
 
 @a13xp0p0v I have made the adjustments you wanted to see:
 - get_option_state is moved out of the class and assigned before checking
@@ -5247,7 +6037,7 @@ found in Linux kernels: 4.5–4.17, 4.18-rc+HEAD
 
 I really hope we can get this in soon, I'm still there to make any changes if you request some but quite a lot of time already went in to make you happy :cat: :cat:
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-19 20:56](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-406411723):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-19 20:56](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-406411723):
 
 Hello @anthraxx 
 
@@ -5256,15 +6046,15 @@ Yes, we've already spent plenty of time on that, because it's not so easy: this 
 
 Anyway, I like your ideas, they will be merged in the end.
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 20:58](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-406412140):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 20:58](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-406412140):
 
 @a13xp0p0v Yay thanks, don't get me wrong I really like to work with you on this and i really enjoy it very much. Also I'm 100% on your side to get commits that make it into the tree proper, I just wanted to get that the rework conflicted a lot off my chest :smile:
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 21:15](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-406416764):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-19 21:15](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-406416764):
 
 @a13xp0p0v just in case you already pulled my branch, please re-pull as there was a typo in the STACKPROTECTOR option, sorry. tested and reviewd every single commit independent from each other again
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-20 18:09](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-406683207):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-20 18:09](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-406683207):
 
 Hello @anthraxx,
 
@@ -5274,11 +6064,11 @@ You've done a great job, I appreciate it!
 Now we are ready to merge your OR and AND support.
 I have some questions, could you answer please?
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-21 08:12](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-406779757):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-21 08:12](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-406779757):
 
 These are used to print the table and use the very first option of a logical class to represent the group by showing the first entries name and expected value
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-24 22:00](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-407566128):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-24 22:00](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-407566128):
 
 Hello @anthraxx ,
 Thanks for your explanation.
@@ -5300,12 +6090,12 @@ As I see in the kernel git history, the "CC_" prefix is dropped from both STACKP
 +                        OptCheck('STACKPROTECTOR_STRONG','y', 'ubuntu18', 'self_protection')))
 ```
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-24 22:41](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-407575301):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-24 22:41](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-407575301):
 
 @a13xp0p0v Hmm true, it is for >= 4.18 but for all kernels before 4.18 this would generate an error where non should be. Having CC_STACKPROTECTOR_STRONG without CC_STACKPROTECTOR is a totally correct setting pre 4.18 which would yield to an error.
 Its shitty, but the more generally compatible way would be to combine the different "correct sets" with the logical class to just have a single checklist.append for STACKPROTECTOR
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-24 23:19](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-407582510):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-24 23:19](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-407582510):
 
 And how about this?
 ```
@@ -5318,11 +6108,11 @@ And how about this?
 It fits your logic "be strong or fail".
 At the same time it fits the case of old configs, where there is no CC_STACKPROTECTOR, right?
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-25 07:05](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-407655722):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-07-25 07:05](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-407655722):
 
 yeah, i think that should work :smiley_cat:
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-25 11:45](https://github.com/a13xp0p0v/kconfig-hardened-check/pull/2#issuecomment-407726202):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-25 11:45](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/2#issuecomment-407726202):
 
 Done with STACKPROTECTOR and MODULES.
 @anthraxx we have finished with this pull request.
@@ -5331,9 +6121,9 @@ Thanks for your excellent work :thumbsup:
 
 -------------------------------------------------------------------------------
 
-# [\#1 Issue](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/1) `closed`: Couple ideas
+# [\#1 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/1) `closed`: Couple ideas
 
-#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) opened issue at [2018-06-20 13:19](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/1):
+#### <img src="https://avatars.githubusercontent.com/u/32568352?v=4" width="50">[Bernhard40](https://github.com/Bernhard40) opened issue at [2018-06-20 13:19](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/1):
 
 Shouldn't [NAMESPACES](https://github.com/a13xp0p0v/kconfig-hardened-check/blob/master/kconfig-hardened-check.py#L94) be replaced by `USER_NS`? AFAIK only user namespaces have security concerns, others are fine. Disabling them all will negatively affect many applications which use various namespaces for sandboxing.
 
@@ -5343,22 +6133,22 @@ Script doesn't check for [DEVMEM](https://github.com/a13xp0p0v/kconfig-hardened-
 
 
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-20 13:23](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/1#issuecomment-398746587):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-20 13:23](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/1#issuecomment-398746587):
 
 I already nearly finished a PR for the DEVMEM and CC_STACKPROTECTOR_* case by adding context aware logic to the option checks.
 Pull request incoming later today, it extends the options with logical operators like OR()
 
-#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-20 19:14](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/1#issuecomment-398864576):
+#### <img src="https://avatars.githubusercontent.com/u/203012?u=939d6d3b5ff0b9e46e911d8792a40c20408574e2&v=4" width="50">[anthraxx](https://github.com/anthraxx) commented at [2018-06-20 19:14](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/1#issuecomment-398864576):
 
 @a13xp0p0v please no force push, that creates weird merge diffs when working on something :smile_cat:
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-06-20 20:43](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/1#issuecomment-398890140):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-06-20 20:43](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/1#issuecomment-398890140):
 
 @Bernhard40 , thanks a lot for the ideas. I agree. Just fixed the namespaces mistake.
 @anthraxx , thanks, cool! Waiting for your PR.
 And, yes, no more force push from me.
 
-#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-04 15:38](https://github.com/a13xp0p0v/kconfig-hardened-check/issues/1#issuecomment-402512111):
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2018-07-04 15:38](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/1#issuecomment-402512111):
 
 Closing, since @anthraxx PR will resolve it.
 
