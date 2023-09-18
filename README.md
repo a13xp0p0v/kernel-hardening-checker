@@ -1,6 +1,6 @@
 # kernel-hardening-checker
 
-__(formerly kconfig-hardened-check)__<br />
+__(formerly kconfig-hardened-check)__<br /><br />
 [![functional test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/functional%20test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/functional_test.yml)
 [![functional test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=functional_test)](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker)<br />
 [![engine unit-test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/engine%20unit-test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/engine_unit-test.yml)
@@ -115,7 +115,7 @@ CONFIG_DEVMEM                           |kconfig| is not set |   kspp   |cut_att
 
 ## Example output for `Fedora 38` kernel configuration
 ```
-$ ./bin/kernel-hardening-checker -c kernel_hardening_checker/config_files/distros/fedora_38.config -l /proc/cmdline -s kernel_hardening_checker/config_files/distros/example_sysctls.txt 
+$ ./bin/kernel-hardening-checker -c kernel_hardening_checker/config_files/distros/fedora_38.config -l /proc/cmdline -s kernel_hardening_checker/config_files/distros/example_sysctls.txt
 [+] Kconfig file to check: kernel_hardening_checker/config_files/distros/fedora_38.config
 [+] Kernel cmdline file to check: /proc/cmdline
 [+] Sysctl output file to check: kernel_hardening_checker/config_files/distros/example_sysctls.txt
@@ -333,7 +333,6 @@ tsx_async_abort                         |cmdline| is not off |defconfig | self_p
 srbds                                   |cmdline| is not off |defconfig | self_protection  | FAIL: is off, not found
 mmio_stale_data                         |cmdline| is not off |defconfig | self_protection  | FAIL: is off, not found
 retbleed                                |cmdline| is not off |defconfig | self_protection  | FAIL: is off, not found
-kpti                                    |cmdline| is not off |defconfig | self_protection  | FAIL: is off, not found
 rodata                                  |cmdline|     on     |defconfig | self_protection  | OK: rodata is not found
 nosmt                                   |cmdline| is present |   kspp   | self_protection  | FAIL: is not present
 mitigations                             |cmdline| auto,nosmt |   kspp   | self_protection  | FAIL: is not found
@@ -342,10 +341,10 @@ slub_merge                              |cmdline| is not set |   kspp   | self_p
 slab_nomerge                            |cmdline| is present |   kspp   | self_protection  | OK: CONFIG_SLAB_MERGE_DEFAULT is "is not set"
 init_on_alloc                           |cmdline|     1      |   kspp   | self_protection  | FAIL: is not found
 init_on_free                            |cmdline|     1      |   kspp   | self_protection  | FAIL: is not found
-iommu.strict                            |cmdline|     1      |   kspp   | self_protection  | FAIL: is not found
-iommu.passthrough                       |cmdline|     0      |   kspp   | self_protection  | OK: CONFIG_IOMMU_DEFAULT_PASSTHROUGH is "is not set"
 hardened_usercopy                       |cmdline|     1      |   kspp   | self_protection  | OK: CONFIG_HARDENED_USERCOPY is "y"
 slab_common.usercopy_fallback           |cmdline|     0      |   kspp   | self_protection  | OK: CONFIG_HARDENED_USERCOPY_FALLBACK is not found
+iommu.strict                            |cmdline|     1      |   kspp   | self_protection  | FAIL: is not found
+iommu.passthrough                       |cmdline|     0      |   kspp   | self_protection  | OK: CONFIG_IOMMU_DEFAULT_PASSTHROUGH is "is not set"
 randomize_kstack_offset                 |cmdline|     1      |   kspp   | self_protection  | OK: CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT is "y"
 pti                                     |cmdline|     on     |   kspp   | self_protection  | FAIL: is not found
 page_alloc.shuffle                      |cmdline|     1      |  clipos  | self_protection  | FAIL: is not found
@@ -363,10 +362,8 @@ kernel.kexec_load_disabled              |sysctl |     1      |   kspp   |cut_att
 user.max_user_namespaces                |sysctl |     0      |   kspp   |cut_attack_surface| FAIL: "31021"
 dev.tty.ldisc_autoload                  |sysctl |     0      |   kspp   |cut_attack_surface| FAIL: "1"
 kernel.unprivileged_bpf_disabled        |sysctl |     1      |   kspp   |cut_attack_surface| OK
-kernel.kptr_restrict                    |sysctl |     1      |   kspp   |cut_attack_surface| FAIL: "0"
-kernel.yama.ptrace_scope                |sysctl |     1      |   kspp   |cut_attack_surface| FAIL: "0"
 
-[+] Config check is finished: 'OK' - 118 / 'FAIL' - 122
+[+] Config check is finished: 'OK' - 118 / 'FAIL' - 119
 ```
 
 ## Generating a Kconfig fragment with the security hardening options
