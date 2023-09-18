@@ -20,10 +20,9 @@ def colorize_result(input_text):
         return input_text
     if input_text.startswith('OK'):
         color = GREEN_COLOR
-    elif input_text.startswith('FAIL:'):
-        color = RED_COLOR
     else:
-        assert(False), f'unexpected result "{input_text}"'
+        assert(input_text.startswith('FAIL:')), f'unexpected result "{input_text}"'
+        color = RED_COLOR
     return f'{color}{input_text}{COLOR_END}'
 
 
