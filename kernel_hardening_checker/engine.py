@@ -125,9 +125,12 @@ class SysctlCheck(OptCheck):
 
 class VersionCheck:
     def __init__(self, ver_expected):
-        assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 2), \
+        assert(ver_expected and isinstance(ver_expected, tuple) and 2 <= len(ver_expected) <= 3), \
                f'invalid version "{ver_expected}" for VersionCheck'
         self.ver_expected = ver_expected
+        self.ver_expected_print = f'{self.ver_expected[0]}.{self.ver_expected[1]}'
+        if len(ver_expected) == 3:
+            self.ver_expected_print += f'.{self.ver_expected[2]}'
         self.ver = ()
         self.result = None
 
@@ -137,18 +140,18 @@ class VersionCheck:
 
     def check(self):
         if self.ver[0] > self.ver_expected[0]:
-            self.result = f'OK: version >= {self.ver_expected[0]}.{self.ver_expected[1]}'
+            self.result = f'OK: version >= {self.ver_expected_print}'
             return
         if self.ver[0] < self.ver_expected[0]:
-            self.result = f'FAIL: version < {self.ver_expected[0]}.{self.ver_expected[1]}'
+            self.result = f'FAIL: version < {self.ver_expected_print}'
             return
         if self.ver[1] >= self.ver_expected[1]:
-            self.result = f'OK: version >= {self.ver_expected[0]}.{self.ver_expected[1]}'
+            self.result = f'OK: version >= {self.ver_expected_print}'
             return
-        self.result = f'FAIL: version < {self.ver_expected[0]}.{self.ver_expected[1]}'
+        self.result = f'FAIL: version < {self.ver_expected_print}'
 
     def table_print(self, _mode, with_results):
-        ver_req = f'kernel version >= {self.ver_expected[0]}.{self.ver_expected[1]}'
+        ver_req = f'kernel version >= {self.ver_expected_print}'
         print(f'{ver_req:<91}', end='')
         if with_results:
             print(f'| {colorize_result(self.result)}', end='')
