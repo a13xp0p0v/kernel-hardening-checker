@@ -461,6 +461,7 @@ def add_cmdline_checks(l, arch):
     l += [CmdlineCheck('self_protection', 'kspp', 'nosmt', 'is present')] # slow (high performance penalty)
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
+    l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
              AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set'),
@@ -497,7 +498,6 @@ def add_cmdline_checks(l, arch):
                   CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set'))]
 
     # 'self_protection', 'clipos'
-    l += [CmdlineCheck('self_protection', 'clipos', 'page_alloc.shuffle', '1')]
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'clipos', 'iommu', 'force')]
 
