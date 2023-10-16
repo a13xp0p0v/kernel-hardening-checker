@@ -457,8 +457,8 @@ def add_cmdline_checks(l, arch):
                  CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
 
     # 'self_protection', 'kspp'
-    l += [CmdlineCheck('self_protection', 'kspp', 'nosmt', 'is present')]
-    l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')] # 'nosmt' by kspp + 'auto' by defconfig
+    l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
+    l += [CmdlineCheck('self_protection', 'kspp', 'nosmt', 'is present')] # slow (high performance penalty)
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
