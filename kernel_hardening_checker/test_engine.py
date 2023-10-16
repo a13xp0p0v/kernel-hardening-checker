@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """
 This tool is for checking the security hardening options of the Linux kernel.
