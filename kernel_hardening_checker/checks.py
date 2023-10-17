@@ -578,7 +578,6 @@ def normalize_cmdline_options(option, value):
 
 
 # TODO: draft of security hardening sysctls:
-#    kernel.kptr_restrict=2 (or 1?)
 #    kernel.yama.ptrace_scope=3
 #    what about bpf_jit_enable?
 #    vm.unprivileged_userfaultfd=0
@@ -615,3 +614,4 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.unprivileged_bpf_disabled', '1')]
+    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kptr_restrict', '2')]
