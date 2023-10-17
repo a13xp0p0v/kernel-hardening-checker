@@ -458,7 +458,6 @@ def add_cmdline_checks(l, arch):
 
     # 'self_protection', 'kspp'
     l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
-    l += [CmdlineCheck('self_protection', 'kspp', 'nosmt', 'is present')] # slow (high performance penalty)
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
@@ -507,6 +506,7 @@ def add_cmdline_checks(l, arch):
                      CmdlineCheck('cut_attack_surface', 'defconfig', 'tsx', 'is not set')))]
 
     # 'cut_attack_surface', 'kspp'
+    l += [CmdlineCheck('cut_attack_surface', 'kspp', 'nosmt', 'is present')] # slow (high performance penalty)
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
