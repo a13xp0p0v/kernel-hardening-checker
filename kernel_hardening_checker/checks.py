@@ -582,7 +582,6 @@ def normalize_cmdline_options(option, value):
 #    vm.mmap_min_addr has a good value
 #    kernel.modules_disabled=1
 #    nosmt sysfs control file
-#    dev.tty.legacy_tiocsti=0
 #    vm.mmap_rnd_bits=max (?)
 #    kernel.sysrq=0
 #    abi.vsyscall32 (any value except 2)
@@ -606,6 +605,7 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.unprivileged_bpf_disabled', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kptr_restrict', '2')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.yama.ptrace_scope', '3')]
+    l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'vm.unprivileged_userfaultfd', '0')]
           # At first, it disabled unprivileged userfaultfd,
           # and since v5.11 it enables unprivileged userfaultfd for user-mode only.
