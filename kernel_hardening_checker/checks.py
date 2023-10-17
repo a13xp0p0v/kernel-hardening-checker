@@ -581,7 +581,6 @@ def normalize_cmdline_options(option, value):
 #    what about bpf_jit_enable?
 #    vm.mmap_min_addr has a good value
 #    kernel.modules_disabled=1
-#    kernel.randomize_va_space=2
 #    nosmt sysfs control file
 #    dev.tty.legacy_tiocsti=0
 #    vm.mmap_rnd_bits=max (?)
@@ -616,3 +615,4 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_fifos', '2')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_regular', '2')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.suid_dumpable', '0')]
+    l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.randomize_va_space', '2')]
