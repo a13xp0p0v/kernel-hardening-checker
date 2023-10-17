@@ -580,7 +580,6 @@ def normalize_cmdline_options(option, value):
 # TODO: draft of security hardening sysctls:
 #    what about bpf_jit_enable?
 #    vm.mmap_min_addr has a good value
-#    fs.protected_regular=2
 #    fs.suid_dumpable=0
 #    kernel.modules_disabled=1
 #    kernel.randomize_va_space=2
@@ -616,3 +615,4 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_hardlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_fifos', '2')]
+    l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_regular', '2')]
