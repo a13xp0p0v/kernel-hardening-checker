@@ -475,7 +475,6 @@ def add_cmdline_checks(l, arch):
              AND(CmdlineCheck('self_protection', 'kspp', 'page_poison', '1'),
                  KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'slub_debug', 'P')))]
-    # The cmdline checks compatible with the kconfig recommendations of the KSPP project...
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', 'is not set')))]
