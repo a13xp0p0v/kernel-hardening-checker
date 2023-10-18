@@ -604,7 +604,6 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.unprivileged_bpf_disabled', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kptr_restrict', '2')]
-    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.yama.ptrace_scope', '3')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'vm.unprivileged_userfaultfd', '0')]
           # At first, it disabled unprivileged userfaultfd,
@@ -616,3 +615,4 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_regular', '2')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.suid_dumpable', '0')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.randomize_va_space', '2')]
+    l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.yama.ptrace_scope', '3')]
