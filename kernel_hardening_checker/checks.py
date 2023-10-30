@@ -54,7 +54,7 @@ def add_kconfig_checks(l, arch):
              modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
     if arch in ('X86_64'):
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
-                 VersionGT((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
+                 VersionCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
     if arch in ('X86_64', 'ARM64', 'ARM'):
