@@ -680,7 +680,8 @@ def add_sysctl_checks(l, _arch):
              AND(KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set'),
                  have_config_file))]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kptr_restrict', '2')]
-    l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', '0')]
+    l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', '0'),
+             SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', 'is not set'))]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'vm.unprivileged_userfaultfd', '0')]
           # At first, it disabled unprivileged userfaultfd,
           # and since v5.11 it enables unprivileged userfaultfd for user-mode only.
