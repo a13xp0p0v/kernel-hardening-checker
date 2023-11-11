@@ -580,7 +580,6 @@ def normalize_cmdline_options(option, value):
 # TODO: draft of security hardening sysctls:
 #    what about bpf_jit_enable?
 #    vm.mmap_min_addr has a good value
-#    kernel.modules_disabled=1
 #    nosmt sysfs control file
 #    vm.mmap_rnd_bits=max (?)
 #    kernel.sysrq=0
@@ -608,6 +607,8 @@ def add_sysctl_checks(l, arch):
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'vm.unprivileged_userfaultfd', '0')]
           # At first, it disabled unprivileged userfaultfd,
           # and since v5.11 it enables unprivileged userfaultfd for user-mode only.
+
+#   l += [SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1')] # radical, but may be useful in some cases
 
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_hardlinks', '1')]
