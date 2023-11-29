@@ -48,7 +48,7 @@ def detect_arch(fname, archs):
 
 def detect_kernel_version(fname):
     with _open(fname, 'rt', encoding='utf-8') as f:
-        ver_pattern = re.compile("# Linux/.+ Kernel Configuration$")
+        ver_pattern = re.compile("^# Linux/.+ Kernel Configuration$|^Linux version .+")
         for line in f.readlines():
             if ver_pattern.match(line):
                 line = line.strip()
@@ -241,6 +241,8 @@ def main():
                         help='check the security hardening options in the kernel cmdline file (contents of /proc/cmdline)')
     parser.add_argument('-s', '--sysctl',
                         help='check the security hardening options in the sysctl output file (`sudo sysctl -a > file`)')
+    parser.add_argument('-v', '--kernel-version',
+                        help='extract the version from the kernel version file (contents of /proc/version)')
     parser.add_argument('-p', '--print', choices=supported_archs,
                         help='print the security hardening recommendations for the selected microarchitecture')
     parser.add_argument('-g', '--generate', choices=supported_archs,
@@ -274,8 +276,13 @@ def main():
         if mode != 'json':
             print(f'[+] Detected microarchitecture: {arch}')
 
-        kernel_version, msg = detect_kernel_version(args.config)
+        if args.kernel_version:
+            kernel_version, msg = detect_kernel_version(args.kernel_version)
+        else:
+            kernel_version, msg = detect_kernel_version(args.config)
         if kernel_version is None:
+            if not args.kernel_version:
+                print('[!] Hint: provide the kernel version file through --kernel-version option')
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
             print(f'[+] Detected kernel version: {kernel_version[0]}.{kernel_version[1]}')
