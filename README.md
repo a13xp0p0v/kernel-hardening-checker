@@ -88,6 +88,9 @@ options:
   -s SYSCTL, --sysctl SYSCTL
                         check the security hardening options in the sysctl output file
                         (`sudo sysctl -a > file`)
+  -v VERSION, --kernel-version VERSION
+                        extract the version from the kernel version file
+                        (contents of /proc/version)
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
                         print the security hardening recommendations for the selected
                         microarchitecture
