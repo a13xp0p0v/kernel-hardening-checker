@@ -27,7 +27,7 @@ def add_kconfig_checks(l, arch):
     cc_is_gcc = KconfigCheck('-', '-', 'CC_IS_GCC', 'y') # exists since v4.18
     cc_is_clang = KconfigCheck('-', '-', 'CC_IS_CLANG', 'y') # exists since v4.18
 
-    modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')
+    modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set') # radical, but may be useful in some cases
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
     bpf_syscall_not_set = KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set') # refers to LOCKDOWN
 
@@ -608,7 +608,7 @@ def add_sysctl_checks(l, arch):
           # At first, it disabled unprivileged userfaultfd,
           # and since v5.11 it enables unprivileged userfaultfd for user-mode only.
 
-#   l += [SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1')] # radical, but may be useful in some cases
+    l += [SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1')] # radical, but may be useful in some cases
 
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_hardlinks', '1')]
