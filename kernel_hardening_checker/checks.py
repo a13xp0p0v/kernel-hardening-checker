@@ -117,9 +117,12 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
+    kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
+    l += [kfence_is_set]
+    l += [AND(KconfigCheck('self_protection', 'my', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
+              kfence_is_set)]
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
     l += [randstruct_is_set]
