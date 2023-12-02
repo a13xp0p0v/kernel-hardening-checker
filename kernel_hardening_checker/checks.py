@@ -502,6 +502,11 @@ def add_cmdline_checks(l, arch):
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'clipos', 'iommu', 'force')]
 
+    # 'self_protection', 'my'
+    l += [OR(CmdlineCheck('self_protection', 'my', 'kfence.sample_interval', 'is not off'),
+             AND(KconfigCheck('self_protection', 'my', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
+                 CmdlineCheck('self_protection', 'my', 'kfence.sample_interval', 'is not set')))]
+
     # 'cut_attack_surface', 'defconfig'
     if arch in ('X86_64', 'X86_32'):
         l += [OR(CmdlineCheck('cut_attack_surface', 'defconfig', 'tsx', 'off'),
