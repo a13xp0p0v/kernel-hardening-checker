@@ -68,9 +68,9 @@ Some Linux distributions also provide `kernel-hardening-checker` as a package.
 ## Usage
 ```
 usage: kernel-hardening-checker [-h] [--version] [-m {verbose,json,show_ok,show_fail}]
-                              [-c CONFIG] [-l CMDLINE] [-s SYSCTL]
-                              [-p {X86_64,X86_32,ARM64,ARM}]
-                              [-g {X86_64,X86_32,ARM64,ARM}]
+                                [-c CONFIG] [-l CMDLINE] [-s SYSCTL] [-v KERNEL_VERSION]
+                                [-p {X86_64,X86_32,ARM64,ARM}]
+                                [-g {X86_64,X86_32,ARM64,ARM}]
 
 A tool for checking the security hardening options of the Linux kernel
 
@@ -88,9 +88,9 @@ options:
   -s SYSCTL, --sysctl SYSCTL
                         check the security hardening options in the sysctl output file
                         (`sudo sysctl -a > file`)
-  -v VERSION, --kernel-version VERSION
-                        extract the version from the kernel version file
-                        (contents of /proc/version)
+  -v KERNEL_VERSION, --kernel-version KERNEL_VERSION
+                        extract the version from the kernel version file (contents of
+                        /proc/version)
   -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
                         print the security hardening recommendations for the selected
                         microarchitecture
