@@ -453,6 +453,9 @@ def add_cmdline_checks(l, arch):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_rstack_overflow', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'spec_rstack_overflow', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -569,6 +572,7 @@ no_kstrtobool_options = [
     'retbleed', # See retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'rodata', # See set_debug_rodata() in init/main.c
     'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
+    'spec_rstack_overflow', # See srso_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'slub_debug', # See setup_slub_debug() in mm/slub.c
     'iommu', # See iommu_setup() in arch/x86/kernel/pci-dma.c
     'vsyscall', # See vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
