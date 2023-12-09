@@ -378,6 +378,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'my', 'XFS_SUPPORT_V4', 'is not set')]
     l += [OR(KconfigCheck('cut_attack_surface', 'my', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
+    l += [KconfigCheck('cut_attack_surface', 'my', 'MODULE_FORCE_LOAD', 'is not set')]
 
     # 'harden_userspace'
     if arch == 'ARM64':
