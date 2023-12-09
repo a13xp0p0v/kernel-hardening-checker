@@ -65,6 +65,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
         microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
         l += [microcode_is_set] # is needed for mitigating CPU bugs
