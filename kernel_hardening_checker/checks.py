@@ -58,6 +58,7 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
     if arch in ('X86_64', 'X86_32'):
+        l += [KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
