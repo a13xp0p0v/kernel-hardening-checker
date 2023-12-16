@@ -246,6 +246,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
+    l += [KconfigCheck('security_policy', 'my', 'SECURITY_SELINUX_DEBUG', 'is not set')]
     l += [OR(KconfigCheck('security_policy', 'my', 'SECURITY_SELINUX', 'y'),
              KconfigCheck('security_policy', 'my', 'SECURITY_APPARMOR', 'y'),
              KconfigCheck('security_policy', 'my', 'SECURITY_SMACK', 'y'),
