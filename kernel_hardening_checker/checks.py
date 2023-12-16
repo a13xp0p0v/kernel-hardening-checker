@@ -229,6 +229,9 @@ def add_kconfig_checks(l, arch):
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
 
+    # 'self_protection', 'my'
+    l += [KconfigCheck('self_protection', 'my', 'LIST_HARDENED', 'y')]
+
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('security_policy', 'defconfig', 'SECURITY', 'y')]
