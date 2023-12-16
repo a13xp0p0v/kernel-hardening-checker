@@ -231,6 +231,7 @@ def add_kconfig_checks(l, arch):
 
     # 'self_protection', 'my'
     l += [KconfigCheck('self_protection', 'my', 'LIST_HARDENED', 'y')]
+    l += [KconfigCheck('self_protection', 'my', 'RANDOM_KMALLOC_CACHES', 'y')]
 
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
