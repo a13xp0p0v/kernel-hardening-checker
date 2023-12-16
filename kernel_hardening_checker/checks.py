@@ -280,6 +280,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'MODIFY_LDT_SYSCALL', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'OABI_COMPAT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_MSR', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_TIOCSTI', 'is not set')]
     l += [modules_not_set]
     l += [devmem_not_set]
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'),
@@ -369,7 +370,6 @@ def add_kconfig_checks(l, arch):
     l += [bpf_syscall_not_set] # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'my'
-    l += [KconfigCheck('cut_attack_surface', 'my', 'LEGACY_TIOCSTI', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'my', 'LIVEPATCH', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'IP_DCCP', 'is not set')]
