@@ -82,6 +82,7 @@ def add_kconfig_checks(l, arch):
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y'))]
     if arch in ('ARM64', 'ARM'):
+        l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
@@ -128,7 +129,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
     l += [kfence_is_set]
@@ -198,6 +198,7 @@ def add_kconfig_checks(l, arch):
         l += [AND(KconfigCheck('self_protection', 'kspp', 'CFI_PERMISSIVE', 'is not set'),
                   cfi_clang_is_set)]
     if arch in ('X86_64', 'X86_32'):
+        l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
         l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
