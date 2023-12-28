@@ -53,6 +53,8 @@ def add_kconfig_checks(l, arch):
              modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
              VersionCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
+    l += [OR(KconfigCheck('self_protection', 'defconfig', 'INIT_STACK_ALL_ZERO', 'y'),
+             KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
     if arch in ('X86_64', 'ARM64', 'ARM'):
@@ -154,8 +156,6 @@ def add_kconfig_checks(l, arch):
              modules_not_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
              modules_not_set)] # refers to LOCKDOWN
-    l += [OR(KconfigCheck('self_protection', 'kspp', 'INIT_STACK_ALL_ZERO', 'y'),
-             KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'),
              KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'))]
              # CONFIG_INIT_ON_FREE_DEFAULT_ON was added in v5.3.
