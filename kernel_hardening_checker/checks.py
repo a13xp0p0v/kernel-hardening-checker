@@ -67,7 +67,6 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
         microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
         l += [microcode_is_set] # is needed for mitigating CPU bugs
@@ -90,6 +89,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y')]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'AMD_IOMMU', 'y'),
