@@ -31,7 +31,7 @@ def _open(file: str, *args, **kwargs):
 
 def detect_arch(fname, archs):
     with _open(fname, 'rt', encoding='utf-8') as f:
-        arch_pattern = re.compile("CONFIG_[a-zA-Z0-9_]+=y$")
+        arch_pattern = re.compile(r"CONFIG_[a-zA-Z0-9_]+=y$")
         arch = None
         for line in f.readlines():
             if arch_pattern.match(line):
@@ -48,7 +48,7 @@ def detect_arch(fname, archs):
 
 def detect_kernel_version(fname):
     with _open(fname, 'rt', encoding='utf-8') as f:
-        ver_pattern = re.compile("^# Linux/.+ Kernel Configuration$|^Linux version .+")
+        ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
         for line in f.readlines():
             if ver_pattern.match(line):
                 line = line.strip()
@@ -152,8 +152,8 @@ def print_checklist(mode, checklist, with_results):
 
 def parse_kconfig_file(mode, parsed_options, fname):
     with _open(fname, 'rt', encoding='utf-8') as f:
-        opt_is_on = re.compile("CONFIG_[a-zA-Z0-9_]+=.+$")
-        opt_is_off = re.compile("# CONFIG_[a-zA-Z0-9_]+ is not set$")
+        opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
+        opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
 
         for line in f.readlines():
             line = line.strip()
@@ -201,7 +201,7 @@ def parse_cmdline_file(mode, parsed_options, fname):
 
 def parse_sysctl_file(mode, parsed_options, fname):
     with open(fname, 'r', encoding='utf-8') as f:
-        sysctl_pattern = re.compile("[a-zA-Z0-9/\._-]+ =.*$")
+        sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
         for line in f.readlines():
             line = line.strip()
             if not sysctl_pattern.match(line):
