@@ -544,14 +544,14 @@ def add_cmdline_checks(l, arch):
                  KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
                      CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'is not set')))]
-        l += [OR(CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
-                 CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
+        l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
+                 CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
                      CmdlineCheck('cut_attack_surface', 'my', 'vdso32', 'is not set')))] # the vdso32 parameter must not be 2
     if arch == 'X86_32':
-        l += [OR(CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
-                 CmdlineCheck('cut_attack_surface', 'my', 'vdso', '1'),
-                 CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
+        l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
+                 CmdlineCheck('cut_attack_surface', 'my', 'vdso', '0'),
+                 CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
                  CmdlineCheck('cut_attack_surface', 'my', 'vdso', '0'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
                      CmdlineCheck('cut_attack_surface', 'my', 'vdso32', 'is not set'),
