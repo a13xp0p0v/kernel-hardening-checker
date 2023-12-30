@@ -364,6 +364,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'clipos', 'AIO', 'is not set')]
 #   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')] # no, IKCONFIG is needed for this check :)
 
     # 'cut_attack_surface', 'lockdown'
@@ -381,7 +382,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'my', 'VIDEO_VIVID', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
     l += [KconfigCheck('cut_attack_surface', 'my', 'KGDB', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'my', 'AIO', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'CORESIGHT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'my', 'XFS_SUPPORT_V4', 'is not set')]
     l += [OR(KconfigCheck('cut_attack_surface', 'my', 'TRIM_UNUSED_KSYMS', 'y'),
