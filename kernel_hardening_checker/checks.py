@@ -552,7 +552,7 @@ def add_cmdline_checks(l, arch):
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
                  CmdlineCheck('cut_attack_surface', 'my', 'vdso', '0'),
                  CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
-                 CmdlineCheck('cut_attack_surface', 'my', 'vdso', '0'),
+                 CmdlineCheck('cut_attack_surface', 'my', 'vdso', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
                      CmdlineCheck('cut_attack_surface', 'my', 'vdso32', 'is not set'),
                      CmdlineCheck('cut_attack_surface', 'my', 'vdso', 'is not set')))] # the vdso and vdso32 parameters must not be 2
