@@ -80,7 +80,7 @@ def detect_compiler(fname):
     sys.exit(f'[!] ERROR: invalid GCC_VERSION and CLANG_VERSION: {gcc_version} {clang_version}')
 
 
-def print_unknown_options(checklist, parsed_options):
+def print_unknown_options(checklist, parsed_options, opt_type):
     known_options = []
 
     for o1 in checklist:
@@ -100,7 +100,7 @@ def print_unknown_options(checklist, parsed_options):
 
     for option, value in parsed_options.items():
         if option not in known_options:
-            print(f'[?] No check for option {option} ({value})')
+            print(f'[?] No check for {opt_type} option {option} ({value})')
 
 
 def print_checklist(mode, checklist, with_results):
@@ -335,12 +335,11 @@ def main():
 
         if mode == 'verbose':
             # print the parsed options without the checks (for debugging)
-            all_parsed_options = parsed_kconfig_options # assignment does not copy
+            print_unknown_options(config_checklist, parsed_kconfig_options, 'kconfig')
             if args.cmdline:
-                all_parsed_options.update(parsed_cmdline_options)
+                print_unknown_options(config_checklist, parsed_cmdline_options, 'cmdline')
             if args.sysctl:
-                all_parsed_options.update(parsed_sysctl_options)
-            print_unknown_options(config_checklist, all_parsed_options)
+                print_unknown_options(config_checklist, parsed_sysctl_options, 'sysctl')
 
         # finally print the results
         print_checklist(mode, config_checklist, True)
@@ -371,7 +370,7 @@ def main():
 
         if mode == 'verbose':
             # print the parsed options without the checks (for debugging)
-            print_unknown_options(config_checklist, parsed_sysctl_options)
+            print_unknown_options(config_checklist, parsed_sysctl_options, 'sysctl')
 
         # finally print the results
         print_checklist(mode, config_checklist, True)
