@@ -405,6 +405,8 @@ def main():
         for opt in config_checklist:
             if opt.name == 'CONFIG_ARCH_MMAP_RND_BITS':
                 continue # don't add CONFIG_ARCH_MMAP_RND_BITS because its value needs refinement
+            if opt.expected == 'is not off':
+                continue # don't add Kconfig options without explicitly recommended values
             if opt.expected == 'is not set':
                 print(f'# {opt.name} is not set')
             else:
