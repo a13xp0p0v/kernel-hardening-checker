@@ -181,9 +181,9 @@ def add_kconfig_checks(l, arch):
               KconfigCheck('self_protection', 'kspp', 'UBSAN_BOOL', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_ENUM', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_ALIGNMENT', 'is not set'))] # only array index bounds checking with traps
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'UBSAN_SANITIZE_ALL', 'y'),
+              ubsan_bounds_is_set)]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'UBSAN_SANITIZE_ALL', 'y'),
-                  ubsan_bounds_is_set)] # ARCH_HAS_UBSAN_SANITIZE_ALL is not enabled for ARM
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [AND(stackleak_is_set, gcc_plugins_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'STACKLEAK_METRICS', 'is not set'),
