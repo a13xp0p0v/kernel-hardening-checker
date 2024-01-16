@@ -108,7 +108,7 @@ class OptCheck:
 class KconfigCheck(OptCheck):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.name = 'CONFIG_' + self.name
+        self.name = f'CONFIG_{self.name}'
 
     @property
     def type(self):
@@ -183,7 +183,8 @@ class ComplexOptCheck:
 
     def table_print(self, mode, with_results):
         if mode == 'verbose':
-            print(f'    {"<<< " + self.__class__.__name__ + " >>>":87}', end='')
+            class_name = f'<<< {self.__class__.__name__} >>>'
+            print(f'    {class_name:87}', end='')
             if with_results:
                 print(f'| {colorize_result(self.result)}', end='')
             for o in self.opts:

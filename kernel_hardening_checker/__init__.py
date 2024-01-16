@@ -74,9 +74,9 @@ def detect_compiler(fname):
     if gcc_version is None or clang_version is None:
         return None, 'no CONFIG_GCC_VERSION or CONFIG_CLANG_VERSION'
     if gcc_version == '0' and clang_version != '0':
-        return 'CLANG ' + clang_version, 'OK'
+        return f'CLANG {clang_version}', 'OK'
     if gcc_version != '0' and clang_version == '0':
-        return 'GCC ' + gcc_version, 'OK'
+        return f'GCC {gcc_version}', 'OK'
     sys.exit(f'[!] ERROR: invalid GCC_VERSION and CLANG_VERSION: {gcc_version} {clang_version}')
 
 
@@ -232,7 +232,7 @@ def main():
     supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
     parser = ArgumentParser(prog='kernel-hardening-checker',
                             description='A tool for checking the security hardening options of the Linux kernel')
-    parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
+    parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
     parser.add_argument('-c', '--config',
