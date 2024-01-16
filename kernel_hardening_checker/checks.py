@@ -131,8 +131,10 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
     cfi_clang_is_set = KconfigCheck('self_protection', 'kspp', 'CFI_CLANG', 'y')
+    cfi_clang_permissive_not_set = KconfigCheck('self_protection', 'kspp', 'CFI_PERMISSIVE', 'is not set')
     l += [OR(KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y'),
-             cfi_clang_is_set)]
+             AND(cfi_clang_is_set,
+                 cfi_clang_permissive_not_set))]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y'),
              vmap_stack_is_set)]
     kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
@@ -199,7 +201,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'ARM64'):
         l += [cfi_clang_is_set]
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'CFI_PERMISSIVE', 'is not set'),
+        l += [AND(cfi_clang_permissive_not_set,
                   cfi_clang_is_set)]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
