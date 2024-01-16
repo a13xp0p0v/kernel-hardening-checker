@@ -150,7 +150,7 @@ def print_checklist(mode, checklist, with_results):
         print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
-def parse_kconfig_file(mode, parsed_options, fname):
+def parse_kconfig_file(_mode, parsed_options, fname):
     with _open(fname, 'rt', encoding='utf-8') as f:
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
