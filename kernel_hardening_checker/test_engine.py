@@ -135,16 +135,16 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
-                 ["CONFIG_NAME_2", "kconfig", "expected_2", "decision_2", "reason_2", "FAIL: \"UNexpected_2\""],
-                 ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "FAIL: is not found"],
-                 ["CONFIG_NAME_4", "kconfig", "is not set", "decision_4", "reason_4", "OK: is not found"],
-                 ["CONFIG_NAME_5", "kconfig", "is present", "decision_5", "reason_5", "OK: is present"],
-                 ["CONFIG_NAME_6", "kconfig", "is present", "decision_6", "reason_6", "FAIL: is not present"],
-                 ["CONFIG_NAME_7", "kconfig", "is not off", "decision_7", "reason_7", "OK: is not off, \"really_not_off\""],
-                 ["CONFIG_NAME_8", "kconfig", "is not off", "decision_8", "reason_8", "FAIL: is off"],
-                 ["CONFIG_NAME_9", "kconfig", "is not off", "decision_9", "reason_9", "FAIL: is off, \"0\""],
-                 ["CONFIG_NAME_10", "kconfig", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'OK'],
+                 ['CONFIG_NAME_2', 'kconfig', 'expected_2', 'decision_2', 'reason_2', 'FAIL: "UNexpected_2"'],
+                 ['CONFIG_NAME_3', 'kconfig', 'expected_3', 'decision_3', 'reason_3', 'FAIL: is not found'],
+                 ['CONFIG_NAME_4', 'kconfig', 'is not set', 'decision_4', 'reason_4', 'OK: is not found'],
+                 ['CONFIG_NAME_5', 'kconfig', 'is present', 'decision_5', 'reason_5', 'OK: is present'],
+                 ['CONFIG_NAME_6', 'kconfig', 'is present', 'decision_6', 'reason_6', 'FAIL: is not present'],
+                 ['CONFIG_NAME_7', 'kconfig', 'is not off', 'decision_7', 'reason_7', 'OK: is not off, "really_not_off"'],
+                 ['CONFIG_NAME_8', 'kconfig', 'is not off', 'decision_8', 'reason_8', 'FAIL: is off'],
+                 ['CONFIG_NAME_9', 'kconfig', 'is not off', 'decision_9', 'reason_9', 'FAIL: is off, "0"'],
+                 ['CONFIG_NAME_10', 'kconfig', 'is not off', 'decision_10', 'reason_10', 'FAIL: is off, not found']]
         )
 
     def test_simple_cmdline(self):
@@ -178,16 +178,16 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["name_1", "cmdline", "expected_1", "decision_1", "reason_1", "OK"],
-                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"UNexpected_2\""],
-                 ["name_3", "cmdline", "expected_3", "decision_3", "reason_3", "FAIL: is not found"],
-                 ["name_4", "cmdline", "is not set", "decision_4", "reason_4", "OK: is not found"],
-                 ["name_5", "cmdline", "is present", "decision_5", "reason_5", "OK: is present"],
-                 ["name_6", "cmdline", "is present", "decision_6", "reason_6", "FAIL: is not present"],
-                 ["name_7", "cmdline", "is not off", "decision_7", "reason_7", "OK: is not off, \"\""],
-                 ["name_8", "cmdline", "is not off", "decision_8", "reason_8", "FAIL: is off"],
-                 ["name_9", "cmdline", "is not off", "decision_9", "reason_9", "FAIL: is off, \"0\""],
-                 ["name_10", "cmdline", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
+                [['name_1', 'cmdline', 'expected_1', 'decision_1', 'reason_1', 'OK'],
+                 ['name_2', 'cmdline', 'expected_2', 'decision_2', 'reason_2', 'FAIL: "UNexpected_2"'],
+                 ['name_3', 'cmdline', 'expected_3', 'decision_3', 'reason_3', 'FAIL: is not found'],
+                 ['name_4', 'cmdline', 'is not set', 'decision_4', 'reason_4', 'OK: is not found'],
+                 ['name_5', 'cmdline', 'is present', 'decision_5', 'reason_5', 'OK: is present'],
+                 ['name_6', 'cmdline', 'is present', 'decision_6', 'reason_6', 'FAIL: is not present'],
+                 ['name_7', 'cmdline', 'is not off', 'decision_7', 'reason_7', 'OK: is not off, ""'],
+                 ['name_8', 'cmdline', 'is not off', 'decision_8', 'reason_8', 'FAIL: is off'],
+                 ['name_9', 'cmdline', 'is not off', 'decision_9', 'reason_9', 'FAIL: is off, "0"'],
+                 ['name_10', 'cmdline', 'is not off', 'decision_10', 'reason_10', 'FAIL: is off, not found']]
         )
 
     def test_simple_sysctl(self):
@@ -221,16 +221,16 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["name_1", "sysctl", "expected_1", "decision_1", "reason_1", "OK"],
-                 ["name_2", "sysctl", "expected_2", "decision_2", "reason_2", "FAIL: \"UNexpected_2\""],
-                 ["name_3", "sysctl", "expected_3", "decision_3", "reason_3", "FAIL: is not found"],
-                 ["name_4", "sysctl", "is not set", "decision_4", "reason_4", "OK: is not found"],
-                 ["name_5", "sysctl", "is present", "decision_5", "reason_5", "OK: is present"],
-                 ["name_6", "sysctl", "is present", "decision_6", "reason_6", "FAIL: is not present"],
-                 ["name_7", "sysctl", "is not off", "decision_7", "reason_7", "OK: is not off, \"\""],
-                 ["name_8", "sysctl", "is not off", "decision_8", "reason_8", "FAIL: is off"],
-                 ["name_9", "sysctl", "is not off", "decision_9", "reason_9", "FAIL: is off, \"0\""],
-                 ["name_10", "sysctl", "is not off", "decision_10", "reason_10", "FAIL: is off, not found"]]
+                [['name_1', 'sysctl', 'expected_1', 'decision_1', 'reason_1', 'OK'],
+                 ['name_2', 'sysctl', 'expected_2', 'decision_2', 'reason_2', 'FAIL: "UNexpected_2"'],
+                 ['name_3', 'sysctl', 'expected_3', 'decision_3', 'reason_3', 'FAIL: is not found'],
+                 ['name_4', 'sysctl', 'is not set', 'decision_4', 'reason_4', 'OK: is not found'],
+                 ['name_5', 'sysctl', 'is present', 'decision_5', 'reason_5', 'OK: is present'],
+                 ['name_6', 'sysctl', 'is present', 'decision_6', 'reason_6', 'FAIL: is not present'],
+                 ['name_7', 'sysctl', 'is not off', 'decision_7', 'reason_7', 'OK: is not off, ""'],
+                 ['name_8', 'sysctl', 'is not off', 'decision_8', 'reason_8', 'FAIL: is off'],
+                 ['name_9', 'sysctl', 'is not off', 'decision_9', 'reason_9', 'FAIL: is off, "0"'],
+                 ['name_10', 'sysctl', 'is not off', 'decision_10', 'reason_10', 'FAIL: is off, not found']]
         )
 
     def test_complex_or(self):
@@ -268,12 +268,12 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
-                 ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "OK: CONFIG_NAME_4 is \"expected_4\""],
-                 ["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: \"UNexpected_5\""],
-                 ["CONFIG_NAME_7", "kconfig", "expected_7", "decision_7", "reason_7", "OK: CONFIG_NAME_8 is not found"],
-                 ["CONFIG_NAME_9", "kconfig", "expected_9", "decision_9", "reason_9", "OK: CONFIG_NAME_10 is present"],
-                 ["CONFIG_NAME_11", "kconfig", "expected_11", "decision_11", "reason_11", "OK: CONFIG_NAME_12 is not off"]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'OK'],
+                 ['CONFIG_NAME_3', 'kconfig', 'expected_3', 'decision_3', 'reason_3', 'OK: CONFIG_NAME_4 is "expected_4"'],
+                 ['CONFIG_NAME_5', 'kconfig', 'expected_5', 'decision_5', 'reason_5', 'FAIL: "UNexpected_5"'],
+                 ['CONFIG_NAME_7', 'kconfig', 'expected_7', 'decision_7', 'reason_7', 'OK: CONFIG_NAME_8 is not found'],
+                 ['CONFIG_NAME_9', 'kconfig', 'expected_9', 'decision_9', 'reason_9', 'OK: CONFIG_NAME_10 is present'],
+                 ['CONFIG_NAME_11', 'kconfig', 'expected_11', 'decision_11', 'reason_11', 'OK: CONFIG_NAME_12 is not off']]
         )
 
     def test_complex_and(self):
@@ -313,12 +313,12 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
-                 ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "FAIL: CONFIG_NAME_4 is not \"expected_4\""],
-                 ["CONFIG_NAME_5", "kconfig", "expected_5", "decision_5", "reason_5", "FAIL: \"UNexpected_5\""],
-                 ["CONFIG_NAME_7", "kconfig", "expected_7", "decision_7", "reason_7", "FAIL: CONFIG_NAME_8 is not present"],
-                 ["CONFIG_NAME_9", "kconfig", "expected_9", "decision_9", "reason_9", "FAIL: CONFIG_NAME_10 is off"],
-                 ["CONFIG_NAME_11", "kconfig", "expected_11", "decision_11", "reason_11", "FAIL: CONFIG_NAME_12 is off, not found"]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'OK'],
+                 ['CONFIG_NAME_3', 'kconfig', 'expected_3', 'decision_3', 'reason_3', 'FAIL: CONFIG_NAME_4 is not "expected_4"'],
+                 ['CONFIG_NAME_5', 'kconfig', 'expected_5', 'decision_5', 'reason_5', 'FAIL: "UNexpected_5"'],
+                 ['CONFIG_NAME_7', 'kconfig', 'expected_7', 'decision_7', 'reason_7', 'FAIL: CONFIG_NAME_8 is not present'],
+                 ['CONFIG_NAME_9', 'kconfig', 'expected_9', 'decision_9', 'reason_9', 'FAIL: CONFIG_NAME_10 is off'],
+                 ['CONFIG_NAME_11', 'kconfig', 'expected_11', 'decision_11', 'reason_11', 'FAIL: CONFIG_NAME_12 is off, not found']]
         )
 
     def test_complex_nested(self):
@@ -360,10 +360,10 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK"],
-                 ["CONFIG_NAME_4", "kconfig", "expected_4", "decision_4", "reason_4", "FAIL: CONFIG_NAME_5 is not \"expected_5\""],
-                 ["CONFIG_NAME_7", "kconfig", "expected_7", "decision_7", "reason_7", "OK: CONFIG_NAME_8 is \"expected_8\""],
-                 ["CONFIG_NAME_10", "kconfig", "expected_10", "decision_10", "reason_10", "FAIL: \"UNexpected_10\""]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'OK'],
+                 ['CONFIG_NAME_4', 'kconfig', 'expected_4', 'decision_4', 'reason_4', 'FAIL: CONFIG_NAME_5 is not "expected_5"'],
+                 ['CONFIG_NAME_7', 'kconfig', 'expected_7', 'decision_7', 'reason_7', 'OK: CONFIG_NAME_8 is "expected_8"'],
+                 ['CONFIG_NAME_10', 'kconfig', 'expected_10', 'decision_10', 'reason_10', 'FAIL: "UNexpected_10"']]
         )
 
     def test_version(self):
@@ -394,10 +394,10 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK: version >= 41.101"],
-                 ["CONFIG_NAME_2", "kconfig", "expected_2", "decision_2", "reason_2", "FAIL: version < 44.1"],
-                 ["CONFIG_NAME_3", "kconfig", "expected_3", "decision_3", "reason_3", "FAIL: version < 42.44"],
-                 ["CONFIG_NAME_4", "kconfig", "expected_4", "decision_4", "reason_4", "OK: version >= 42.43"]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'OK: version >= 41.101'],
+                 ['CONFIG_NAME_2', 'kconfig', 'expected_2', 'decision_2', 'reason_2', 'FAIL: version < 44.1'],
+                 ['CONFIG_NAME_3', 'kconfig', 'expected_3', 'decision_3', 'reason_3', 'FAIL: version < 42.44'],
+                 ['CONFIG_NAME_4', 'kconfig', 'expected_4', 'decision_4', 'reason_4', 'OK: version >= 42.43']]
         )
 
     def test_stdout(self):
@@ -431,8 +431,8 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, json_result, 'json')
         self.assertEqual(
                 json_result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "OK: name_2 is \"expected_2\""],
-                 ["CONFIG_NAME_4", "kconfig", "expected_4", "decision_4", "reason_4", "FAIL: name_5 is not \"expected_5\""]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'OK: name_2 is "expected_2"'],
+                 ['CONFIG_NAME_4', 'kconfig', 'expected_4', 'decision_4', 'reason_4', 'FAIL: name_5 is not "expected_5"']]
         )
 
         stdout_result = []
@@ -440,10 +440,10 @@ class TestEngine(unittest.TestCase):
         self.assertEqual(
                 stdout_result,
                 [
-"\
-CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[32mOK: name_2 is \"expected_2\"\x1b[0m\
-CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | \x1b[31mFAIL: name_5 is not \"expected_5\"\x1b[0m\
-"               ]
+'\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[32mOK: name_2 is "expected_2"\x1b[0m\
+CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | \x1b[31mFAIL: name_5 is not "expected_5"\x1b[0m\
+'               ]
         )
 
         stdout_result = []
@@ -451,18 +451,18 @@ CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     re
         self.assertEqual(
                 stdout_result,
                 [
-"\
-    <<< OR >>>                                                                             | \x1b[32mOK: name_2 is \"expected_2\"\x1b[0m\n\
-CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[31mFAIL: \"UNexpected_1\"\x1b[0m\n\
+'\
+    <<< OR >>>                                                                             | \x1b[32mOK: name_2 is "expected_2"\x1b[0m\n\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[31mFAIL: "UNexpected_1"\x1b[0m\n\
 name_2                                  |cmdline| expected_2 |decision_2|     reason_2     | \x1b[32mOK\x1b[0m\n\
 name_3                                  |sysctl | expected_3 |decision_3|     reason_3     | None\
-"\
-"\
-    <<< AND >>>                                                                            | \x1b[31mFAIL: name_5 is not \"expected_5\"\x1b[0m\n\
+'\
+'\
+    <<< AND >>>                                                                            | \x1b[31mFAIL: name_5 is not "expected_5"\x1b[0m\n\
 CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | None\n\
-name_5                                  |cmdline| expected_5 |decision_5|     reason_5     | \x1b[31mFAIL: \"UNexpected_5\"\x1b[0m\n\
+name_5                                  |cmdline| expected_5 |decision_5|     reason_5     | \x1b[31mFAIL: "UNexpected_5"\x1b[0m\n\
 name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | \x1b[32mOK\x1b[0m\
-"               ]
+'               ]
         )
 
     def test_value_overriding(self):
@@ -492,13 +492,13 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1", "decision_1", "reason_1", "FAIL: \"expected_1_new\""],
-                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"expected_2_new\""],
-                 ["name_3", "sysctl", "expected_3", "decision_3", "reason_3", "FAIL: \"expected_3_new\""]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'FAIL: "expected_1_new"'],
+                 ['name_2', 'cmdline', 'expected_2', 'decision_2', 'reason_2', 'FAIL: "expected_2_new"'],
+                 ['name_3', 'sysctl', 'expected_3', 'decision_3', 'reason_3', 'FAIL: "expected_3_new"']]
         )
 
         # 7. override expected value and perform the checks again
-        override_expected_value(config_checklist, "CONFIG_NAME_1", "expected_1_new")
+        override_expected_value(config_checklist, 'CONFIG_NAME_1', 'expected_1_new')
         perform_checks(config_checklist)
 
         # 8. check that the results are correct
@@ -506,13 +506,13 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1_new", "decision_1", "reason_1", "OK"],
-                 ["name_2", "cmdline", "expected_2", "decision_2", "reason_2", "FAIL: \"expected_2_new\""],
-                 ["name_3", "sysctl", "expected_3", "decision_3", "reason_3", "FAIL: \"expected_3_new\""]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1_new', 'decision_1', 'reason_1', 'OK'],
+                 ['name_2', 'cmdline', 'expected_2', 'decision_2', 'reason_2', 'FAIL: "expected_2_new"'],
+                 ['name_3', 'sysctl', 'expected_3', 'decision_3', 'reason_3', 'FAIL: "expected_3_new"']]
         )
 
         # 9. override expected value and perform the checks again
-        override_expected_value(config_checklist, "name_2", "expected_2_new")
+        override_expected_value(config_checklist, 'name_2', 'expected_2_new')
         perform_checks(config_checklist)
 
         # 10. check that the results are correct
@@ -520,13 +520,13 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1_new", "decision_1", "reason_1", "OK"],
-                 ["name_2", "cmdline", "expected_2_new", "decision_2", "reason_2", "OK"],
-                 ["name_3", "sysctl", "expected_3", "decision_3", "reason_3", "FAIL: \"expected_3_new\""]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1_new', 'decision_1', 'reason_1', 'OK'],
+                 ['name_2', 'cmdline', 'expected_2_new', 'decision_2', 'reason_2', 'OK'],
+                 ['name_3', 'sysctl', 'expected_3', 'decision_3', 'reason_3', 'FAIL: "expected_3_new"']]
         )
 
         # 11. override expected value and perform the checks again
-        override_expected_value(config_checklist, "name_3", "expected_3_new")
+        override_expected_value(config_checklist, 'name_3', 'expected_3_new')
         perform_checks(config_checklist)
 
         # 12. check that the results are correct
@@ -534,7 +534,7 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [["CONFIG_NAME_1", "kconfig", "expected_1_new", "decision_1", "reason_1", "OK"],
-                 ["name_2", "cmdline", "expected_2_new", "decision_2", "reason_2", "OK"],
-                 ["name_3", "sysctl", "expected_3_new", "decision_3", "reason_3", "OK"]]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1_new', 'decision_1', 'reason_1', 'OK'],
+                 ['name_2', 'cmdline', 'expected_2_new', 'decision_2', 'reason_2', 'OK'],
+                 ['name_3', 'sysctl', 'expected_3_new', 'decision_3', 'reason_3', 'OK']]
         )

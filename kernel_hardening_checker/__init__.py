@@ -23,7 +23,7 @@ from .engine import populate_with_data, perform_checks, override_expected_value
 
 def _open(file: str, *args, **kwargs):
     open_method = open
-    if file.endswith(".gz"):
+    if file.endswith('.gz'):
         open_method = gzip.open
 
     return open_method(file, *args, **kwargs)
