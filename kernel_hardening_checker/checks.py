@@ -9,7 +9,7 @@ This module contains knowledge for checks.
 """
 
 # pylint: disable=missing-function-docstring,line-too-long,invalid-name
-# pylint: disable=too-many-branches,too-many-statements
+# pylint: disable=too-many-branches,too-many-statements,too-many-locals
 
 from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
 
