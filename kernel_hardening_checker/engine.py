@@ -57,6 +57,10 @@ class OptCheck:
         self.state = None
         self.result = None
 
+    @property
+    def type(self):
+        return None
+
     def check(self):
         # handle the 'is present' check
         if self.expected == 'is present':
