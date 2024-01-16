@@ -1,12 +1,509 @@
-Export of Github issues for [a13xp0p0v/kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker). Generated on 2023.09.18 at 01:51:32.
+Export of Github issues for [a13xp0p0v/kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker).
+
+# [\#103 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/103) `open`: add disabling CONFIG_AIO (legacy POSIX AIO) as a recommendation
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) opened issue at [2024-01-08 05:31](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/103):
+
+POSIX AIO is a legacy feature and adds significant attack surface, albeit not nearly as much as IO_URING. POSIX AIO was poorly designed and hardly got any usage. The glibc and musl implementation doesn't use the kernel implementation and it requires a dedicated library, but is essentially obsolete now beyond it being used before io_uring was an option and still not being replaced in rare applications using it. Essentially everything using it can fall back to not using it via thread pools though, with little impact to most people. High performance software would be using io_uring anyway, not this legacy approach.
+
+As an example, Android used AIO for implementing the fastboot, adb and mtp USB gadget protocols with fallback to synchronous IO but then moved to using io_uring for fastboot and also adopted it for snapuserd too. io_uring is limited to fastbootd/snapuserd via SELinux, but AIO was allowed for everything. It would be best if they moved adb and mtp to io_uring too and removed the AIO system calls from the seccomp-bpf whitelist. Apps can't use io_uring and none use AIO in practice, particularly since they provide no bindings for it for apps to use, only the base OS.
+
+
+
+
+-------------------------------------------------------------------------------
+
+# [\#102 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/102) `open`: drop check for dependency-only CONFIG_GCC_PLUGINS due to Clang
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) opened issue at [2024-01-08 05:10](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/102):
+
+It makes sense to check for the functionality provided by the plugins if there's no Clang alternative, but it doesn't make sense to fail from an irrelevant dependency for those features being unavailable. For example, using CONFIG_INIT_STACK_ALL_ZERO is more secure than the STRUCTLEAK plugin anyway, and has insignificant performance overhead. There are already checks for the latent entropy, RANDSTRUCT and STACKLEAK plugins, but there could be alternatives to those for Clang, and not having GCC_PLUGINS enabled is irrelevant.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 21:52](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/102#issuecomment-1894574347):
+
+@thestinger, I agree. I'll think and return with the solution.
+
+
+-------------------------------------------------------------------------------
+
+# [\#101 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/101) `closed`: CONFIG_ARCH_MMAP_RND_BITS check is wrong for arm64
+**Labels**: `question`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) opened issue at [2024-01-08 04:37](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/101):
+
+The expected value on arm64 for a 48-bit address space (4 level page tables with 4k pages) is 33, not 32, which makes the check fail even though it's higher. arm64 has configurable page size and page table levels. Typical Linux devices have 4k pages and 3 level page tables resulting in a 39-bit address space, providing much less ASLR entropy as the maximum. A hardened kernel should use 4 level page tables resulting in a 48-bit address space and an expected value of 33 here. 4k pages also provide more granularity for guard pages, although it's much less important on ARMv9 devices supporting MTE such as the Pixel 8 where a reserved tag can be used for 16 byte granularity guards rather than using pages.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 21:37](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/101#issuecomment-1894555189):
+
+Hi @thestinger,
+
+I agree with you, currently the code already does this.
+
+Quoting [__init__.py#L328](https://github.com/a13xp0p0v/kernel-hardening-checker/blob/master/kernel_hardening_checker/__init__.py#L328):
+```
+        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
+        mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
+        if mmap_rnd_bits_max:
+            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
+        else:
+            # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
+            print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
+            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
+```
+So `kernel-hardening-checker` creates this recommendation dynamically.
+
+The example output for `arm64_defconfig_6.6.config`:
+```
+[+] Kconfig file to check: kernel_hardening_checker/config_files/defconfigs/arm64_defconfig_6.6.config
+[+] Detected microarchitecture: ARM64
+[+] Detected kernel version: 6.6
+[+] Detected compiler: GCC 130001
+...
+CONFIG_ARCH_MMAP_RND_BITS               |kconfig|     33     |    my    | harden_userspace | FAIL: "18"
+```
+I'll create a new tag very soon, and this will get into the new release of the tool.
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) commented at [2024-01-16 21:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/101#issuecomment-1894558946):
+
+I can also start testing with the git revision now before making recommendations, it just didn't occur to me that it had been a long time since the last stable release and I didn't see recent commits for those things.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 21:48](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/101#issuecomment-1894569310):
+
+@thestinger, thank you for testing!
+
+Preparing a release of the tool corresponding to the new kernel version takes a lot of effort.
+
+I hope to find resources to do that more often.
+
+
+-------------------------------------------------------------------------------
+
+# [\#100 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/100) `closed`: CONFIG_COMPAT_VDSO has a completely different meaning for arm64 and recommending disabling it doesn't make sense there
+**Labels**: `question`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) opened issue at [2024-01-08 04:34](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/100):
+
+On arm64, CONFIG_COMPAT_VDSO determines whether the vdso is mapped in 32-bit processes at all. It's not a compatibility hack with security implications like it is on x86 but rather has a completely different meaning.
+
+It makes sense to recommend disabling 32-bit ARM support as a whole (CONFIG_COMPAT), but there's no reason to recommend disabling this particular option.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 21:26](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/100#issuecomment-1894537837):
+
+Hello @thestinger,
+
+Yes, the code already describes the same thing.
+Quoting [checks.py#L298](https://github.com/a13xp0p0v/kernel-hardening-checker/blob/master/kernel_hardening_checker/checks.py#L298):
+```
+    if arch in ('X86_64', 'X86_32'):
+        l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set')]
+              # CONFIG_COMPAT_VDSO disabled ASLR of vDSO only on X86_64 and X86_32;
+              # on ARM64 this option has different meaning
+```
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) commented at [2024-01-16 21:30](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/100#issuecomment-1894543152):
+
+Ah, it's because https://github.com/a13xp0p0v/kernel-hardening-checker/commit/22728555223c98630180c2f642cc7e369424bd8a isn't in a stable tag yet and I was using the Arch Linux package instead of the latest revision.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 21:31](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/100#issuecomment-1894544028):
+
+Right! 
+I'll create a new tag very soon, and this will get into the new release of the tool.
+
+
+-------------------------------------------------------------------------------
+
+# [\#99 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/99) `open`: skip CONFIG_DEBUG_NOTIFIERS requirement when CONFIG_CFI_CLANG is set with CONFIG_CFI_PERMISSIVE disabled
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) opened issue at [2024-01-08 04:30](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/99):
+
+CONFIG_DEBUG_NOTIFIERS only checks that the notifier function pointer is in kernel text. CFI already does that for everything that's not excluded from it. CONFIG_DEBUG_NOTIFIERS is obsolete when using CFI, and there should be no clear reason to enable it.
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) commented at [2024-01-16 20:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/99#issuecomment-1894462962):
+
+This is partly motivated by CONFIG_DEBUG_NOTIFIERS being buggy on some architectures. It works properly on x86 but we had issues with it on arm64 previously. It's the only user of `func_ptr_is_kernel_text` so there's little motivation for that function to work universally for such a niche feature that's no longer even useful if you use CFI. The whole feature is this:
+
+```c
+#ifdef CONFIG_DEBUG_NOTIFIERS
+		if (unlikely(!func_ptr_is_kernel_text(nb->notifier_call))) {
+			WARN(1, "Invalid notifier called!");
+			nb = next_nb;
+			continue;
+		}
+#endif
+```
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 20:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/99#issuecomment-1894479180):
+
+@thestinger, thanks for the idea!
+
+Added the commit  https://github.com/a13xp0p0v/kernel-hardening-checker/commit/cd5bb8a0364e6a28b2d03a8ac0d7520194a9f07a.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 20:42](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/99#issuecomment-1894481143):
+
+One moment, you are right, CFI_PERMISSIVE should be disabled as well.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 21:20](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/99#issuecomment-1894530696):
+
+Added the commit https://github.com/a13xp0p0v/kernel-hardening-checker/commit/65ff79dbe2c36347283d71d3fa1959030bf6838f.
+
+Now the verbose result for checking this config ...
+```
+# CONFIG_DEBUG_NOTIFIERS is not set
+CONFIG_CFI_CLANG=y
+CONFIG_CFI_PERMISSIVE=y
+```
+... looks like that:
+```
+-------------------------------------------------------------------------------------------------------------------------
+    <<< OR >>>                                                                             | FAIL: "is not set"
+CONFIG_DEBUG_NOTIFIERS                  |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
+    <<< AND >>>                                                                            | FAIL: CONFIG_CFI_PERMISSIVE is not "is not set"
+CONFIG_CFI_CLANG                        |kconfig|     y      |   kspp   | self_protection  | OK
+CONFIG_CFI_PERMISSIVE                   |kconfig| is not set |   kspp   | self_protection  | FAIL: "y"
+-------------------------------------------------------------------------------------------------------------------------
+```
+And the verbose result of checking this config...
+```
+# CONFIG_DEBUG_NOTIFIERS is not set
+CONFIG_CFI_CLANG=y
+# CONFIG_CFI_PERMISSIVE is not set
+```
+... looks like that:
+```
+-------------------------------------------------------------------------------------------------------------------------
+    <<< OR >>>                                                                             | OK: CONFIG_CFI_CLANG is "y"
+CONFIG_DEBUG_NOTIFIERS                  |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
+    <<< AND >>>                                                                            | OK
+CONFIG_CFI_CLANG                        |kconfig|     y      |   kspp   | self_protection  | OK
+CONFIG_CFI_PERMISSIVE                   |kconfig| is not set |   kspp   | self_protection  | OK
+-------------------------------------------------------------------------------------------------------------------------
+```
+
+
+-------------------------------------------------------------------------------
+
+# [\#98 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/98) `closed`: skip CONFIG_SCHED_STACK_END_CHECK requirement when CONFIG_VMAP_STACK is set
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) opened issue at [2024-01-08 04:20](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/98):
+
+CONFIG_SCHED_STACK_END_CHECK only provides stack exhaustion detection after it's already too late and it can be bypassed. CONFIG_VMAP_STACK provides reliable detection of stack exhaustion and there shouldn't be any need for CONFIG_SCHED_STACK_END_CHECK with it.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 20:08](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/98#issuecomment-1894435929):
+
+Hello @thestinger,
+
+As I remember, SCHED_STACK_END_CHECK checks the magic value at the end of the kernel thread stack, and VMAP_STACK adds guard pages near it. So they do a bit different things, but VMAP_STACK is more reliable.
+
+I agree with your point.
+
+Added the commit https://github.com/a13xp0p0v/kernel-hardening-checker/commit/c0fc9e89d7a21dfd734bc6c3b946f835493502ca.
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) commented at [2024-01-16 20:24](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/98#issuecomment-1894458928):
+
+> As I remember, SCHED_STACK_END_CHECK checks the magic value at the end of the kernel thread stack, and VMAP_STACK adds guard pages near it. So they do a bit different things, but VMAP_STACK is more reliable.
+
+Yes, SCHED_STACK_END_CHECK checks a magic value at certain times such as exiting the kernel back to userspace, at which point the exploit can already have succeeded. The attacker may also have been able to clobber the value so that it's not detected. VMAP_STACK directly detects it with memory protection, which combined with making sure no large stack frames or VLAs exist prevents an overflow past the guard.
+
+
+-------------------------------------------------------------------------------
+
+# [\#97 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/97) `open`: Get rid of CONFIG_DEBUG_CREDENTIALS
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/23581360?v=4" width="50">[Sporif](https://github.com/Sporif) opened issue at [2023-12-22 15:37](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/97):
+
+This config has been removed recently.
+
+[master](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ae1914174a63a558113e80d24ccac2773f9f7b2b) 
+
+[stable](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.6.y&id=207f135d819344c03333246f784f6666e652e081)
+
+#### <img src="https://avatars.githubusercontent.com/u/1505226?u=0edff17ad0c4acebbd8660dc1854229d526a6dc4&v=4" width="50">[thestinger](https://github.com/thestinger) commented at [2024-01-08 04:14](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/97#issuecomment-1880362163):
+
+The checking tool isn't only for the most recent kernel versions, and this was a mildly useful hardening feature despite not being designed as one. It would be possible to do a much better job, but people use what's available upstream.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2024-01-16 19:27](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/97#issuecomment-1894377361):
+
+Thanks for the info!
+
+Later, I'll add the dependency on the kernel version for the CONFIG_DEBUG_CREDENTIALS check.
+
+
+-------------------------------------------------------------------------------
+
+# [\#96 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/96) `open`: new tag?
+**Labels**: `question`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/4741819?v=4" width="50">[asarubbo](https://github.com/asarubbo) opened issue at [2023-12-07 12:04](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/96):
+
+Hello @a13xp0p0v
+
+[kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker) it's really a great work!
+
+I have recently added it into the [Gentoo tree](https://github.com/gentoo/gentoo/commit/151491904fa748c04cdff48a3884d52e18da9c0a) and I noticed that a lot of commits have been done after the last tag. Would you mind to issue a new minor release?
+Thanks a lot
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-12-09 05:54](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/96#issuecomment-1848252596):
+
+Hello @asarubbo, thanks for kind words!
+
+I'm currently preparing a new release of the tool.  A new tag will appear soon.
+
+
+-------------------------------------------------------------------------------
+
+# [\#95 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/95) `closed`: Check for module force loading?
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/89150207?v=4" width="50">[vobst](https://github.com/vobst) opened issue at [2023-12-07 08:30](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/95):
+
+Would it make sense to check for `CONFIG_MODULE_FORCE_LOAD`? It could prevent attackers from loading slightly mismatching kernel modules. However, but it seems kind of redundant given that you already recommend disabling modules or enforcing signatures. Maybe it could be checked as a fall back if both stronger measures are disabled.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-12-09 05:51](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/95#issuecomment-1848251810):
+
+Hello @vobst, thanks for the idea.
+
+Added [e5f804e](https://github.com/a13xp0p0v/kernel-hardening-checker/commit/e5f804ede6ea7f66f674c2825396c15c216c718d).
+
+
+-------------------------------------------------------------------------------
+
+# [\#94 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/94) `merged`: add --kernel-version option
+
+#### <img src="https://avatars.githubusercontent.com/u/1485263?v=4" width="50">[ffontaine](https://github.com/ffontaine) opened issue at [2023-11-29 16:46](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/94):
+
+`--kernel-version` option will extract the version in `/proc/version`. This is especially useful on embedded systems where `config.gz` doesn't always contain the kernel version
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-12-01 13:38](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/94#issuecomment-1836135013):
+
+Hello @ffontaine,
+
+Nice idea, thanks!
+
+I would ask for some small changes.
+
+
+-------------------------------------------------------------------------------
+
+# [\#93 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/93) `open`: added wsl config
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/8870284?u=ec42118bfcab2ddd30e7fb094422d250164c3150&v=4" width="50">[mrkoykang](https://github.com/mrkoykang) opened issue at [2023-11-15 01:58](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/93):
+
+added wsl config files
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-11-22 09:33](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/93#issuecomment-1822409439):
+
+Hello @mrkoykang,
+
+Thanks for the pull request.
+
+1) These two kconfig files are mostly identical. How about adding only the more recent one?
+
+2) Could you please add a link to this kconfig in [this file](https://github.com/a13xp0p0v/kernel-hardening-checker/blob/master/kernel_hardening_checker/config_files/links.txt)?
+
+Thanks!
+
+
+-------------------------------------------------------------------------------
+
+# [\#92 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/92) `open`: new make hardening.config available
+**Labels**: `question`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/77795961?v=4" width="50">[osevan](https://github.com/osevan) opened issue at [2023-11-06 00:09](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/92):
+
+https://github.com/torvalds/linux/blob/master/kernel/configs/hardening.config
+
+https://www.phoronix.com/news/Linux-6.7-Hardening
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-11-22 10:07](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/92#issuecomment-1822464512):
+
+Hello @osevan,
+
+Thanks for the links.
+
+Need your opinion: how should `kernel-hardening-checker` use this new `make` target?
+
+#### <img src="https://avatars.githubusercontent.com/u/4741819?v=4" width="50">[asarubbo](https://github.com/asarubbo) commented at [2023-12-19 07:51](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/92#issuecomment-1862276038):
+
+> Need your opinion: how should `kernel-hardening-checker` use this new `make` target?
+
+Not sure I have understood at all the question, but just port these option into `kernel-hardening-checker` and update them from time to time is an option?
+
+I mean to just monitor changes like this https://github.com/torvalds/linux/commits/master/kernel/configs/hardening.config
+
+
+-------------------------------------------------------------------------------
+
+# [\#91 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/91) `open`: Modify requirements for Android configs
+**Labels**: `enhancement`
+
+
+#### <img src="https://avatars.githubusercontent.com/u/65050545?u=3d095cc7726e6bbf544ea4857c4223033ea90921&v=4" width="50">[petervanvugt](https://github.com/petervanvugt) opened issue at [2023-10-30 19:27](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/91):
+
+Android configs require various things that are currently disallowed in this tool. We can use CONFIG_ANDROID to detect Android configs and generate reports with fewer positives that cannot/should not be changed.
+
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-11-22 09:35](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/91#issuecomment-1822411251):
+
+Hello @petervanvugt,
+
+Nice idea, thanks.
+
+Let's discuss some details.
+
+
+-------------------------------------------------------------------------------
+
+# [\#90 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/90) `merged`: Use /usr/bin/env in shebangs
+
+#### <img src="https://avatars.githubusercontent.com/u/7258858?u=c524720e2844ffa8a2aa67944fde5af54031e06d&v=4" width="50">[SuperSandro2000](https://github.com/SuperSandro2000) opened issue at [2023-10-05 22:41](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/90):
+
+This is guaranteed to work everything including NixOS
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-10-16 04:34](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/90#issuecomment-1763710410):
+
+Merged. Thanks, @SuperSandro2000!
+
+
+-------------------------------------------------------------------------------
+
+# [\#89 PR](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/89) `open`: Fix a false positive in REFCOUNT_FULL in recent 5.4.x
+
+#### <img src="https://avatars.githubusercontent.com/u/4372440?v=4" width="50">[hlein](https://github.com/hlein) opened issue at [2023-09-22 03:41](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/89):
+
+Extend VersionCheck to be able to take a three-tuple, x.y.z kernel version in order to properly recognise 5.4.208 as when this became the default behavior and thus CONFIG_REFCOUNT_FULL disappeared.
+
+
+Closes: https://github.com/a13xp0p0v/kernel-hardening-checker/issues/88
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-10-04 18:13](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/89#issuecomment-1747405606):
+
+@hlein, thanks for your pull request.
+
+I think you need to adapt  `detect_kernel_version()` to get the third number of the kernel version from the kconfig file.
+
+One more aspect: you need to compare this number in the `check()` method of the `VersionCheck` class. Otherwise it will return wrong results.
+
+#### <img src="https://avatars.githubusercontent.com/u/4372440?v=4" width="50">[hlein](https://github.com/hlein) commented at [2023-10-04 18:29](https://github.com/a13xp0p0v/kernel-hardening-checker/pull/89#issuecomment-1747427507):
+
+> @hlein, thanks for your pull request.
+> 
+> I think you need to adapt `detect_kernel_version()` to get the third number of the kernel version from the kconfig file.
+
+Oh, you are probably right. I didn't have access to the box or config in question any more, so fabricated some data I was testing against; my tests must have been incomplete / accidentally-successful.
+
+> One more aspect: you need to compare this number in the `check()` method of the `VersionCheck` class. Otherwise it will return wrong results.
+
+Oof, you're right. I think I had done things a different way before refactoring the `self.ver_expected_print` out, but then lost the check against `self.ver_expected[2]` when cleaning up. Ugh!
+
+
+-------------------------------------------------------------------------------
+
+# [\#88 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/88) `open`: False positive on CONFIG_REFCOUNT_FULL in recent 5.4.x kernels
+
+#### <img src="https://avatars.githubusercontent.com/u/4372440?v=4" width="50">[hlein](https://github.com/hlein) opened issue at [2023-09-22 03:07](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/88):
+
+Similar to https://github.com/a13xp0p0v/kernel-hardening-checker/issues/30, `CONFIG_REFCOUNT_FULL` was removed from 5.4.x kernels starting with v5.4.208, because full refcount became always-on, in this commit:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.4.y&id=d0d583484d2ed9f5903edbbfa7e2a68f78b950b0
+
+Currently we complain when it is not found, like:
+`CONFIG_REFCOUNT_FULL      |kconfig|     y      |defconfig | self_protection  | FAIL: is not found`
+
+I don't know an easier way to find which kernel first included that commit other than:
+
+```
+$ egrep url .git/config 
+        url = https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+$ git tag --contains d0d583484d2ed9f5903edbbfa7e2a68f78b950b0 | head -n2
+v5.4.208
+v5.4.209
+```
+I think the fix is to return OK for 5.4.x where x >= 208.
+
+Except... that's done via `VersionCheck` in `engine.py` which, if I'm reading it right, takes only major and minor versions, no third parameter:
+
+```
+class VersionCheck:
+    def __init__(self, ver_expected):
+        assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 2), \
+               f'invalid version "{ver_expected}" for VersionCheck'
+```
+So that function would have to be made a bit more flexible.
+
+I don't know if other `CONFIG_*` knobs disappeared / became defaults in the middle of a given major.minor kernel version, but it would not surprise me.
+
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-10-04 17:58](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/88#issuecomment-1747385253):
+
+Hello @hlein,
+
+Thanks for your comment!
+
+The REFCOUNT_FULL config option was removed from the mainline in the commit [fb041bb7c0a918b95c6889fc965cdc4a75b4c0ca](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v6.6-rc4&id=fb041bb7c0a918b95c6889fc965cdc4a75b4c0ca)
+
+This commit appeared in the mainline kernel v5.5-rc1:
+```
+$ cd linux/
+$ git describe --match 'v*' --contains fb041bb7c0a918b95c6889fc965cdc4a75b4c0ca
+v5.5-rc1~149^2~2
+```
+
+The commit [d0d583484d2ed9f5903edbbfa7e2a68f78b950b0](https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.4.y&id=d0d583484d2ed9f5903edbbfa7e2a68f78b950b0) is the backport of the upstream commit to the stable branch:
+```
+$ cd linux-stable/
+$ git describe --match 'v*' --contains d0d583484d2ed9f5903edbbfa7e2a68f78b950b0
+v5.4.208~21
+```
+
+I didn't find backports of this commit to other stable branches.
+
+So, technically, it's not wrong to say that REFCOUNT_FULL was removed in v5.4.208 :) 
+
+I'll take a look at your pull request. Thanks a lot!
+
+
+-------------------------------------------------------------------------------
 
 # [\#87 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/87) `open`: Add a check for IA32_EMULATION
+**Labels**: `enhancement`
+
 
 #### <img src="https://avatars.githubusercontent.com/u/325724?u=4446b76c0f4ebcbecb2678759f8d13817a67f85d&v=4" width="50">[jvoisin](https://github.com/jvoisin) opened issue at [2023-09-14 12:36](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/87):
 
 As [reported by phoronix](https://www.phoronix.com/news/Linux-6.7-ia32_emulation-Boot), it's now possible to disable 32b support on amd64, to reduce attack surface.
 
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-11-22 10:09](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/87#issuecomment-1822468556):
 
+Thanks @jvoisin,
+
+This will be added in the next release of `kernel-hardening-checker`.
+
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-12-17 10:23](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/87#issuecomment-1859129322):
+
+Hello @jvoisin,
+
+The `ia32_emulation` boot param was introduced in Linux v6.7.
+
+I'm currently preparing the `kernel-hardening-checker` release corresponding to the kernel v6.6.
+
+So this boot option and `IA32_EMULATION_DEFAULT_DISABLED` will be added in the next release.
+
+Thanks!
 
 
 -------------------------------------------------------------------------------
@@ -166,6 +663,8 @@ Flags with carried forward coverage won't be shown. [Click here](https://docs.co
 -------------------------------------------------------------------------------
 
 # [\#84 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/84) `open`: Add RDK Linux Hardening specification flags
+**Labels**: `question`
+
 
 #### <img src="https://avatars.githubusercontent.com/u/5826484?u=2cc3ddef5824379423495733759ef362d0600078&v=4" width="50">[frakman1](https://github.com/frakman1) opened issue at [2023-09-01 12:48](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/84):
 
@@ -287,10 +786,16 @@ o	Disable CONFIG_CRASH_DUMP
 53.	Minimum MMAPable address set to 4K min. 
 o	This prevents mapping NULL address
 
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-11-22 10:16](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/84#issuecomment-1822479661):
+
+Need to compare these recommendations with the current `kernel-hardening-checker` rules.
+
+Gonna do that after preparing the next release of the tool.
+
 
 -------------------------------------------------------------------------------
 
-# [\#83 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/83) `open`: Enhancement add kmalloc hardening
+# [\#83 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/83) `closed`: Enhancement add kmalloc hardening
 **Labels**: `enhancement`
 
 
@@ -306,10 +811,14 @@ Best regards
 @osevan, thanks!
 I'll consider it during preparing the next release of the tool.
 
+#### <img src="https://avatars.githubusercontent.com/u/1419667?u=de82e29061c3ef5f1c19f95528f8a82b08051fd2&v=4" width="50">[a13xp0p0v](https://github.com/a13xp0p0v) commented at [2023-12-16 23:42](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/83#issuecomment-1858987573):
+
+Done! Thanks @osevan.
+
 
 -------------------------------------------------------------------------------
 
-# [\#82 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/82) `open`: Consider removing/not recommending CONFIG_ZERO_CALL_USED_REGS
+# [\#82 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/82) `closed`: Consider removing/not recommending CONFIG_ZERO_CALL_USED_REGS
 **Labels**: `question`
 
 
@@ -1767,7 +2276,9 @@ Output is now as expected, closing issue
 
 -------------------------------------------------------------------------------
 
-# [\#57 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/57) `closed`: CONFIG_AMD_IOMMU_V2 = m appears also to be correct
+# [\#57 Issue](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/57) `open`: CONFIG_AMD_IOMMU_V2 = m appears also to be correct
+**Labels**: `question`
+
 
 #### <img src="https://avatars.githubusercontent.com/u/15869?u=31910a5ba7214eaf12efd39cbdf71b69af1b7db0&v=4" width="50">[brandonweeks](https://github.com/brandonweeks) opened issue at [2022-01-10 09:40](https://github.com/a13xp0p0v/kernel-hardening-checker/issues/57):
 
