@@ -622,7 +622,7 @@ def normalize_cmdline_options(option, value):
 #    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
 
-def add_sysctl_checks(l, arch):
+def add_sysctl_checks(l, _arch):
 # This function may be called with arch=None
 
 # Calling the SysctlCheck class constructor:
