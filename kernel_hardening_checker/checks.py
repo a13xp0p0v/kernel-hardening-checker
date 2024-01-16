@@ -57,8 +57,9 @@ def add_kconfig_checks(l, arch):
              KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
+    vmap_stack_is_set = KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')
     if arch in ('X86_64', 'ARM64', 'ARM'):
-        l += [KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')]
+        l += [vmap_stack_is_set]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
@@ -118,7 +119,6 @@ def add_kconfig_checks(l, arch):
 
     # 'self_protection', 'kspp'
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_HARDENED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_RANDOM', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SHUFFLE_PAGE_ALLOCATOR', 'y')]
@@ -131,6 +131,8 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
+    l += [OR(KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y'),
+             vmap_stack_is_set)]
     kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
     l += [kfence_is_set]
     l += [AND(KconfigCheck('self_protection', 'my', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
