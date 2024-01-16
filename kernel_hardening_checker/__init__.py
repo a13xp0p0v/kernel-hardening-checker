@@ -281,7 +281,7 @@ def main():
         else:
             kernel_version, msg = detect_kernel_version(args.config)
         if kernel_version is None:
-            if not args.kernel_version:
+            if args.kernel_version is None:
                 print('[!] Hint: provide the kernel version file through --kernel-version option')
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
