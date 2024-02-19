@@ -163,6 +163,7 @@ def add_kconfig_checks(l, arch):
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_ALL', 'y'),
              modules_not_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_SHA512', 'y'),
+             KconfigCheck('self_protection', 'my', 'MODULE_SIG_SHA3_512', 'y'),
              modules_not_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
              modules_not_set)] # refers to LOCKDOWN
