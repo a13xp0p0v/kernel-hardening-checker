@@ -570,6 +570,11 @@ def add_cmdline_checks(l, arch):
 
     # 'cut_attack_surface', 'my'
     l += [CmdlineCheck('cut_attack_surface', 'my', 'sysrq_always_enabled', 'is not set')]
+    if arch == 'X86_64':
+        l += [OR(CmdlineCheck('cut_attack_surface', 'my', 'ia32_emulation', '0'),
+                 KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
+                 AND(KconfigCheck('cut_attack_surface', 'my', 'IA32_EMULATION_DEFAULT_DISABLED', 'y'),
+                     CmdlineCheck('cut_attack_surface', 'my', 'ia32_emulation', 'is not set')))]
 
     # 'harden_userspace'
     l += [CmdlineCheck('harden_userspace', 'defconfig', 'norandmaps', 'is not set')]
