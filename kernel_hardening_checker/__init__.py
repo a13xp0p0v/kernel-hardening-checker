@@ -55,10 +55,11 @@ def detect_kernel_version(fname):
                 parts = line.split()
                 ver_str = parts[2].split('-', 1)[0]
                 ver_numbers = ver_str.split('.')
-                if len(ver_numbers) < 3 or not ver_numbers[0].isdigit() or not ver_numbers[1].isdigit():
-                    msg = f'failed to parse the version "{ver_str}"'
-                    return None, msg
-                return (int(ver_numbers[0]), int(ver_numbers[1])), None
+                if len(ver_numbers) >= 3:
+                    if all(map(lambda x: x.isdigit(), ver_numbers)):
+                        return tuple(map(int, ver_numbers)), None
+                msg = f'failed to parse the version "{parts[2]}"'
+                return None, msg
         return None, 'no kernel version detected'
 
 
@@ -285,7 +286,7 @@ def main():
                 print('[!] Hint: provide the kernel version file through --kernel-version option')
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
-            print(f'[+] Detected kernel version: {kernel_version[0]}.{kernel_version[1]}')
+            print(f'[+] Detected kernel version: {kernel_version}')
 
         compiler, msg = detect_compiler(args.config)
         if mode != 'json':
