@@ -374,19 +374,24 @@ class TestEngine(unittest.TestCase):
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 VersionCheck((41, 101, 0)))]
         config_checklist += [AND(KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'),
-                                VersionCheck((44, 1, 0)))]
-        config_checklist += [AND(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
-                                VersionCheck((42, 44, 0)))]
-        config_checklist += [OR(KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'),
-                                VersionCheck((42, 43, 0)))]
+                                 VersionCheck((43, 1, 0)))]
+        config_checklist += [OR(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
+                                VersionCheck((42, 42, 101)))]
+        config_checklist += [AND(KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'),
+                                 VersionCheck((42, 44, 1)))]
+        config_checklist += [OR(KconfigCheck('reason_5', 'decision_5', 'NAME_5', 'expected_5'),
+                                VersionCheck((42, 43, 44)))]
+        config_checklist += [AND(KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'),
+                                 VersionCheck((42, 43, 45)))]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
         parsed_kconfig_options['CONFIG_NAME_2'] = 'expected_2'
-        parsed_kconfig_options['CONFIG_NAME_3'] = 'expected_3'
+        parsed_kconfig_options['CONFIG_NAME_4'] = 'expected_4'
+        parsed_kconfig_options['CONFIG_NAME_6'] = 'expected_6'
 
         # 3. prepare the kernel version
-        kernel_version = (42, 43, 0)
+        kernel_version = (42, 43, 44)
 
         # 4. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, kernel_version)
@@ -396,10 +401,12 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
-                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'OK: version >= 41.101'],
-                 ['CONFIG_NAME_2', 'kconfig', 'expected_2', 'decision_2', 'reason_2', 'FAIL: version < 44.1'],
-                 ['CONFIG_NAME_3', 'kconfig', 'expected_3', 'decision_3', 'reason_3', 'FAIL: version < 42.44'],
-                 ['CONFIG_NAME_4', 'kconfig', 'expected_4', 'decision_4', 'reason_4', 'OK: version >= 42.43']]
+                [['CONFIG_NAME_1', 'kconfig', 'expected_1', 'decision_1', 'reason_1', 'OK: version >= (41, 101, 0)'],
+                 ['CONFIG_NAME_2', 'kconfig', 'expected_2', 'decision_2', 'reason_2', 'FAIL: version < (43, 1, 0)'],
+                 ['CONFIG_NAME_3', 'kconfig', 'expected_3', 'decision_3', 'reason_3', 'OK: version >= (42, 42, 101)'],
+                 ['CONFIG_NAME_4', 'kconfig', 'expected_4', 'decision_4', 'reason_4', 'FAIL: version < (42, 44, 1)'],
+                 ['CONFIG_NAME_5', 'kconfig', 'expected_5', 'decision_5', 'reason_5', 'OK: version >= (42, 43, 44)'],
+                 ['CONFIG_NAME_6', 'kconfig', 'expected_6', 'decision_6', 'reason_6', 'FAIL: version < (42, 43, 45)']]
         )
 
     def test_stdout(self):

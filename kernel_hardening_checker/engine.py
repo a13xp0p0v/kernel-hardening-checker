@@ -135,7 +135,9 @@ class SysctlCheck(OptCheck):
 class VersionCheck:
     def __init__(self, ver_expected):
         assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 3), \
-               f'invalid expected version "{ver_expected}" for VersionCheck'
+               f'invalid expected version "{ver_expected}" for VersionCheck (1)'
+        assert(all(map(lambda x: isinstance(x, int), ver_expected))), \
+               f'invalid expected version "{ver_expected}" for VersionCheck (2)'
         self.ver_expected = ver_expected
         self.ver = ()
         self.result = None
