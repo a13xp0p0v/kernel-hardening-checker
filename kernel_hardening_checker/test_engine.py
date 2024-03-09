@@ -370,13 +370,13 @@ class TestEngine(unittest.TestCase):
         # 1. prepare the checklist
         config_checklist = []
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
-                                VersionCheck((41, 101)))]
+                                VersionCheck((41, 101, 0)))]
         config_checklist += [AND(KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'),
-                                VersionCheck((44, 1)))]
+                                VersionCheck((44, 1, 0)))]
         config_checklist += [AND(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
-                                VersionCheck((42, 44)))]
+                                VersionCheck((42, 44, 0)))]
         config_checklist += [OR(KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'),
-                                VersionCheck((42, 43)))]
+                                VersionCheck((42, 43, 0)))]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options = OrderedDict()
@@ -384,7 +384,7 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_3'] = 'expected_3'
 
         # 3. prepare the kernel version
-        kernel_version = (42, 43)
+        kernel_version = (42, 43, 0)
 
         # 4. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, kernel_version)

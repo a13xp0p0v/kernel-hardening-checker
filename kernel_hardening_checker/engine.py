@@ -129,7 +129,7 @@ class SysctlCheck(OptCheck):
 
 class VersionCheck:
     def __init__(self, ver_expected):
-        assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 2), \
+        assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 3), \
                f'invalid version "{ver_expected}" for VersionCheck'
         self.ver_expected = ver_expected
         self.ver = ()

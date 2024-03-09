@@ -52,7 +52,7 @@ def add_kconfig_checks(l, arch):
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_SET_MODULE_RONX', 'y'),
              modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
-             VersionCheck((5, 5)))] # REFCOUNT_FULL is enabled by default since v5.5
+             VersionCheck((5, 5, 0)))] # REFCOUNT_FULL is enabled by default since v5.5
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'INIT_STACK_ALL_ZERO', 'y'),
              KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
@@ -73,12 +73,12 @@ def add_kconfig_checks(l, arch):
         l += [microcode_is_set] # is needed for mitigating CPU bugs
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_INTEL', 'y'),
                  AND(microcode_is_set,
-                     VersionCheck((6, 6))))] # MICROCODE_INTEL was included in MICROCODE since v6.6
+                     VersionCheck((6, 6, 0))))] # MICROCODE_INTEL was included in MICROCODE since v6.6
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_AMD', 'y'),
                  AND(microcode_is_set,
-                     VersionCheck((6, 6))))] # MICROCODE_AMD was included in MICROCODE since v6.6
+                     VersionCheck((6, 6, 0))))] # MICROCODE_AMD was included in MICROCODE since v6.6
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_SMAP', 'y'),
-                 VersionCheck((5, 19)))] # X86_SMAP is enabled by default since v5.19
+                 VersionCheck((5, 19, 0)))] # X86_SMAP is enabled by default since v5.19
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y'))]
     if arch in ('ARM64', 'ARM'):
@@ -108,9 +108,9 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MODULE_REGION_FULL', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y'),
-                     VersionCheck((5, 9))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
+                     VersionCheck((5, 9, 0))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
-                 VersionCheck((5, 10)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+                 VersionCheck((5, 10, 0)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
