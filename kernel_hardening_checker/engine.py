@@ -61,6 +61,12 @@ class OptCheck:
     def type(self):
         return None
 
+    def set_state(self, data):
+        if data:
+            assert(isinstance(data, str)), \
+               f'invalid state "{data}" for "{self.name}" check'
+            self.state = data
+
     def check(self):
         # handle the 'is present' check
         if self.expected == 'is present':
@@ -130,7 +136,7 @@ class SysctlCheck(OptCheck):
 class VersionCheck:
     def __init__(self, ver_expected):
         assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 3), \
-               f'invalid version "{ver_expected}" for VersionCheck'
+               f'invalid expected version "{ver_expected}" for VersionCheck'
         self.ver_expected = ver_expected
         self.ver = ()
         self.result = None
@@ -138,6 +144,11 @@ class VersionCheck:
     @property
     def type(self):
         return 'version'
+
+    def set_state(self, data):
+        assert(data and isinstance(data, tuple) and len(data) >= 3), \
+               f'invalid version "{data}" for VersionCheck'
+        self.ver = data[:3]
 
     def check(self):
         if self.ver[0] > self.ver_expected[0]:
@@ -280,11 +291,11 @@ def populate_simple_opt_with_data(opt, data, data_type):
         return
 
     if data_type in ('kconfig', 'cmdline', 'sysctl'):
-        opt.state = data.get(opt.name, None)
+        opt.set_state(data.get(opt.name, None))
     else:
         assert(data_type == 'version'), \
                f'unexpected data type "{data_type}"'
-        opt.ver = data
+        opt.set_state(data)
 
 
 def populate_opt_with_data(opt, data, data_type):
