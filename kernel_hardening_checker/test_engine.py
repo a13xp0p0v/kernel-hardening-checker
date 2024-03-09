@@ -53,6 +53,8 @@ class TestEngine(unittest.TestCase):
         self.assertEqual(...
     """
 
+    maxDiff = None
+
     @staticmethod
     def run_engine(checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, kernel_version):
         # populate the checklist with data
