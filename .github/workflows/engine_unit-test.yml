@@ -38,7 +38,7 @@ jobs:
         coverage xml -i -o coverage_unittest.xml
 
     - name: Handle coverage
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v3
       with:
         files: ./coverage_unittest.xml
         flags: engine_unit-test
