@@ -62,10 +62,9 @@ class OptCheck:
         return None
 
     def set_state(self, data):
-        if data:
-            assert(isinstance(data, str)), \
+        assert(data is None or isinstance(data, str)), \
                f'invalid state "{data}" for "{self.name}" check'
-            self.state = data
+        self.state = data
 
     def check(self):
         # handle the 'is present' check
