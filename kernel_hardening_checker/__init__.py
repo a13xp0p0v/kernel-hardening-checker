@@ -53,7 +53,7 @@ def detect_kernel_version(fname):
             if ver_pattern.match(line):
                 line = line.strip()
                 parts = line.split()
-                ver_str = parts[2]
+                ver_str = parts[2].split('-', 1)[0]
                 ver_numbers = ver_str.split('.')
                 if len(ver_numbers) < 3 or not ver_numbers[0].isdigit() or not ver_numbers[1].isdigit():
                     msg = f'failed to parse the version "{ver_str}"'
