@@ -52,7 +52,9 @@ def add_kconfig_checks(l, arch):
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_SET_MODULE_RONX', 'y'),
              modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
-             VersionCheck((5, 5, 0)))] # REFCOUNT_FULL is enabled by default since v5.5
+             VersionCheck((5, 4, 208)))]
+             # REFCOUNT_FULL is enabled by default since v5.5,
+             # and this is backported to v5.4.208
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'INIT_STACK_ALL_ZERO', 'y'),
              KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
