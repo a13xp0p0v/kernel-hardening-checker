@@ -128,7 +128,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_VIRTUAL', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_SG', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
@@ -137,6 +136,8 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
     cfi_clang_is_set = KconfigCheck('self_protection', 'kspp', 'CFI_CLANG', 'y')
     cfi_clang_permissive_not_set = KconfigCheck('self_protection', 'kspp', 'CFI_PERMISSIVE', 'is not set')
+    l += [OR(KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y'),
+             VersionCheck((6, 6, 8)))] # DEBUG_CREDENTIALS was dropped in v6.6.8
     l += [OR(KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y'),
              AND(cfi_clang_is_set,
                  cfi_clang_permissive_not_set))]
