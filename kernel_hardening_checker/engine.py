@@ -113,7 +113,7 @@ class OptCheck:
         }
         if with_results:
             dump["check_result_text"] = self.result
-            dump["check_result"] = "FAIL" not in self.result
+            dump["check_result"] = self.result.startswith('OK')
         return dump
 
 
