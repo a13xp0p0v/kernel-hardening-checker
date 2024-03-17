@@ -226,9 +226,9 @@ class ComplexOptCheck:
     def json_dump(self, with_results):
         dump = self.opts[0].json_dump(False)
         if with_results:
-            # Add 'result_text' and 'result' keys to the dictionary
+            # Add 'check_result_text' and 'check_result' keys to the dictionary
             dump["check_result_text"] = self.result
-            dump["check_result"] = "FAIL" not in self.result
+            dump["check_result"] = self.result.startswith('OK')
         return dump
 
 
