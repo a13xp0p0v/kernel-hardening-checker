@@ -112,8 +112,8 @@ class OptCheck:
             "reason": self.reason,
         }
         if with_results:
-            dump["check_result_text"] = self.result
-            dump["check_result"] = self.result.startswith('OK')
+            dump["check_result"] = self.result
+            dump["check_result_bool"] = self.result.startswith('OK')
         return dump
 
 
@@ -226,9 +226,9 @@ class ComplexOptCheck:
     def json_dump(self, with_results):
         dump = self.opts[0].json_dump(False)
         if with_results:
-            # Add 'check_result_text' and 'check_result' keys to the dictionary
-            dump["check_result_text"] = self.result
-            dump["check_result"] = self.result.startswith('OK')
+            # Add the 'check_result' and 'check_result_bool' keys to the dictionary
+            dump["check_result"] = self.result
+            dump["check_result_bool"] = self.result.startswith('OK')
         return dump
 
 

@@ -117,9 +117,9 @@ def print_checklist(mode, checklist, with_results):
     if with_results:
         sep_line_len += 30
     print('=' * sep_line_len)
-    print(f'{"option name":^40}|{"type":^7}|{"desired val":^12}|{"decision":^10}|{"reason":^18}', end='')
+    print(f'{"option_name":^40}|{"type":^7}|{"desired_val":^12}|{"decision":^10}|{"reason":^18}', end='')
     if with_results:
-        print('| check result', end='')
+        print('| check_result', end='')
     print()
     print('=' * sep_line_len)
 

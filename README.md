@@ -123,10 +123,10 @@ $ ./bin/kernel-hardening-checker -c kernel_hardening_checker/config_files/distro
 [+] Kernel cmdline file to check: /proc/cmdline
 [+] Sysctl output file to check: kernel_hardening_checker/config_files/distros/example_sysctls.txt
 [+] Detected microarchitecture: X86_64
-[+] Detected kernel version: 5.15
+[+] Detected kernel version: (5, 15, 0)
 [+] Detected compiler: GCC 110200
 =========================================================================================================================
-              option name               | type  |desired val | decision |      reason      | check result
+              option_name               | type  |desired_val | decision |      reason      | check_result
 =========================================================================================================================
 CONFIG_BUG                              |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_SLUB_DEBUG                       |kconfig|     y      |defconfig | self_protection  | OK
@@ -137,7 +137,7 @@ CONFIG_STACKPROTECTOR                   |kconfig|     y      |defconfig | self_p
 CONFIG_STACKPROTECTOR_STRONG            |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_STRICT_KERNEL_RWX                |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_STRICT_MODULE_RWX                |kconfig|     y      |defconfig | self_protection  | OK
-CONFIG_REFCOUNT_FULL                    |kconfig|     y      |defconfig | self_protection  | OK: version >= 5.5
+CONFIG_REFCOUNT_FULL                    |kconfig|     y      |defconfig | self_protection  | OK: version >= (5, 4, 208)
 CONFIG_INIT_STACK_ALL_ZERO              |kconfig|     y      |defconfig | self_protection  | FAIL: is not found
 CONFIG_RANDOMIZE_BASE                   |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_VMAP_STACK                       |kconfig|     y      |defconfig | self_protection  | OK
@@ -168,10 +168,13 @@ CONFIG_FORTIFY_SOURCE                   |kconfig|     y      |   kspp   | self_p
 CONFIG_DEBUG_LIST                       |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
 CONFIG_DEBUG_VIRTUAL                    |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
 CONFIG_DEBUG_SG                         |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
-CONFIG_DEBUG_CREDENTIALS                |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
 CONFIG_INIT_ON_ALLOC_DEFAULT_ON         |kconfig|     y      |   kspp   | self_protection  | OK
 CONFIG_STATIC_USERMODEHELPER            |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
 CONFIG_SCHED_CORE                       |kconfig|     y      |   kspp   | self_protection  | OK
+CONFIG_SECURITY_LOCKDOWN_LSM            |kconfig|     y      |   kspp   | self_protection  | OK
+CONFIG_SECURITY_LOCKDOWN_LSM_EARLY      |kconfig|     y      |   kspp   | self_protection  | OK
+CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
+CONFIG_DEBUG_CREDENTIALS                |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
 CONFIG_DEBUG_NOTIFIERS                  |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
 CONFIG_SCHED_STACK_END_CHECK            |kconfig|     y      |   kspp   | self_protection  | OK
 CONFIG_KFENCE                           |kconfig|     y      |   kspp   | self_protection  | OK
@@ -216,9 +219,6 @@ CONFIG_SECURITY_LANDLOCK                |kconfig|     y      |   kspp   | securi
 CONFIG_SECURITY_SELINUX_DISABLE         |kconfig| is not set |   kspp   | security_policy  | OK
 CONFIG_SECURITY_SELINUX_BOOTPARAM       |kconfig| is not set |   kspp   | security_policy  | FAIL: "y"
 CONFIG_SECURITY_SELINUX_DEVELOP         |kconfig| is not set |   kspp   | security_policy  | FAIL: "y"
-CONFIG_SECURITY_LOCKDOWN_LSM            |kconfig|     y      |   kspp   | security_policy  | OK
-CONFIG_SECURITY_LOCKDOWN_LSM_EARLY      |kconfig|     y      |   kspp   | security_policy  | OK
-CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY|kconfig|     y      |   kspp   | security_policy  | FAIL: "is not set"
 CONFIG_SECURITY_WRITABLE_HOOKS          |kconfig| is not set |   kspp   | security_policy  | OK: is not found
 CONFIG_SECURITY_SELINUX_DEBUG           |kconfig| is not set |    my    | security_policy  | OK: is not found
 CONFIG_SECURITY_SELINUX                 |kconfig|     y      |    my    | security_policy  | OK
@@ -369,6 +369,7 @@ vsyscall                                |cmdline|    none    |   kspp   |cut_att
 vdso32                                  |cmdline|     0      |   kspp   |cut_attack_surface| OK: CONFIG_COMPAT_VDSO is "is not set"
 debugfs                                 |cmdline|    off     |  grsec   |cut_attack_surface| FAIL: is not found
 sysrq_always_enabled                    |cmdline| is not set |    my    |cut_attack_surface| OK: is not found
+ia32_emulation                          |cmdline|     0      |    my    |cut_attack_surface| FAIL: is not found
 norandmaps                              |cmdline| is not set |defconfig | harden_userspace | OK: is not found
 net.core.bpf_jit_harden                 |sysctl |     2      |   kspp   | self_protection  | FAIL: "0"
 kernel.dmesg_restrict                   |sysctl |     1      |   kspp   |cut_attack_surface| OK
@@ -389,7 +390,7 @@ fs.suid_dumpable                        |sysctl |     0      |   kspp   | harden
 kernel.randomize_va_space               |sysctl |     2      |   kspp   | harden_userspace | OK
 kernel.yama.ptrace_scope                |sysctl |     3      |   kspp   | harden_userspace | FAIL: "1"
 
-[+] Config check is finished: 'OK' - 121 / 'FAIL' - 139
+[+] Config check is finished: 'OK' - 121 / 'FAIL' - 140
 ```
 
 ## Generating a Kconfig fragment with the security hardening options
