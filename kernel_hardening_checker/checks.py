@@ -145,7 +145,7 @@ def add_kconfig_checks(l, arch):
              vmap_stack_is_set)]
     kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
     l += [kfence_is_set]
-    l += [AND(KconfigCheck('self_protection', 'my', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
+    l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
               kfence_is_set)]
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
@@ -166,7 +166,7 @@ def add_kconfig_checks(l, arch):
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_ALL', 'y'),
              modules_not_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_SHA512', 'y'),
-             KconfigCheck('self_protection', 'my', 'MODULE_SIG_SHA3_512', 'y'),
+             KconfigCheck('self_protection', 'a13xp0p0v', 'MODULE_SIG_SHA3_512', 'y'),
              modules_not_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
              modules_not_set)] # refers to LOCKDOWN
@@ -242,9 +242,9 @@ def add_kconfig_checks(l, arch):
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
 
-    # 'self_protection', 'my'
-    l += [KconfigCheck('self_protection', 'my', 'LIST_HARDENED', 'y')]
-    l += [KconfigCheck('self_protection', 'my', 'RANDOM_KMALLOC_CACHES', 'y')]
+    # 'self_protection', 'a13xp0p0v'
+    l += [KconfigCheck('self_protection', 'a13xp0p0v', 'LIST_HARDENED', 'y')]
+    l += [KconfigCheck('self_protection', 'a13xp0p0v', 'RANDOM_KMALLOC_CACHES', 'y')]
 
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
@@ -257,11 +257,11 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEVELOP', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
-    l += [KconfigCheck('security_policy', 'my', 'SECURITY_SELINUX_DEBUG', 'is not set')]
-    l += [OR(KconfigCheck('security_policy', 'my', 'SECURITY_SELINUX', 'y'),
-             KconfigCheck('security_policy', 'my', 'SECURITY_APPARMOR', 'y'),
-             KconfigCheck('security_policy', 'my', 'SECURITY_SMACK', 'y'),
-             KconfigCheck('security_policy', 'my', 'SECURITY_TOMOYO', 'y'))] # one of major LSMs implementing MAC
+    l += [KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX_DEBUG', 'is not set')]
+    l += [OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))] # one of major LSMs implementing MAC
 
     # 'cut_attack_surface', 'defconfig'
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP', 'y')]
@@ -382,20 +382,20 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'lockdown', 'KPROBES', 'is not set')] # refers to LOCKDOWN
     l += [bpf_syscall_not_set] # refers to LOCKDOWN
 
-    # 'cut_attack_surface', 'my'
-    l += [KconfigCheck('cut_attack_surface', 'my', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
-    l += [KconfigCheck('cut_attack_surface', 'my', 'LIVEPATCH', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'my', 'IP_DCCP', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'my', 'IP_SCTP', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'my', 'FTRACE', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'my', 'VIDEO_VIVID', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'my', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
-    l += [KconfigCheck('cut_attack_surface', 'my', 'KGDB', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'my', 'CORESIGHT', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'my', 'XFS_SUPPORT_V4', 'is not set')]
-    l += [OR(KconfigCheck('cut_attack_surface', 'my', 'TRIM_UNUSED_KSYMS', 'y'),
+    # 'cut_attack_surface', 'a13xp0p0v'
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'LIVEPATCH', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IP_DCCP', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IP_SCTP', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FTRACE', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'VIDEO_VIVID', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'KGDB', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CORESIGHT', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'XFS_SUPPORT_V4', 'is not set')]
+    l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
-    l += [KconfigCheck('cut_attack_surface', 'my', 'MODULE_FORCE_LOAD', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MODULE_FORCE_LOAD', 'is not set')]
 
     # 'harden_userspace'
     if arch == 'ARM64':
@@ -404,7 +404,7 @@ def add_kconfig_checks(l, arch):
     if arch in ('ARM', 'X86_32'):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
-    l += [KconfigCheck('harden_userspace', 'my', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
+    l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
 
 
 def add_cmdline_checks(l, arch):
@@ -481,7 +481,7 @@ def add_cmdline_checks(l, arch):
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'kernel'),
-                 CmdlineCheck('self_protection', 'my', 'ssbd', 'force-on'),
+                 CmdlineCheck('self_protection', 'a13xp0p0v', 'ssbd', 'force-on'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
@@ -535,10 +535,10 @@ def add_cmdline_checks(l, arch):
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'clipos', 'iommu', 'force')]
 
-    # 'self_protection', 'my'
-    l += [OR(CmdlineCheck('self_protection', 'my', 'kfence.sample_interval', 'is not off'),
-             AND(KconfigCheck('self_protection', 'my', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
-                 CmdlineCheck('self_protection', 'my', 'kfence.sample_interval', 'is not set')))]
+    # 'self_protection', 'a13xp0p0v'
+    l += [OR(CmdlineCheck('self_protection', 'a13xp0p0v', 'kfence.sample_interval', 'is not off'),
+             AND(KconfigCheck('self_protection', 'a13xp0p0v', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
+                 CmdlineCheck('self_protection', 'a13xp0p0v', 'kfence.sample_interval', 'is not set')))]
 
     # 'cut_attack_surface', 'defconfig'
     if arch in ('X86_64', 'X86_32'):
@@ -554,30 +554,30 @@ def add_cmdline_checks(l, arch):
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
                      CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'is not set')))]
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
-                 CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
+                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
-                     CmdlineCheck('cut_attack_surface', 'my', 'vdso32', 'is not set')))] # the vdso32 parameter must not be 2
+                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', 'is not set')))] # the vdso32 parameter must not be 2
     if arch == 'X86_32':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
-                 CmdlineCheck('cut_attack_surface', 'my', 'vdso', '0'),
-                 CmdlineCheck('cut_attack_surface', 'my', 'vdso32', '1'),
-                 CmdlineCheck('cut_attack_surface', 'my', 'vdso', '1'),
+                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', '0'),
+                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', '1'),
+                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
-                     CmdlineCheck('cut_attack_surface', 'my', 'vdso32', 'is not set'),
-                     CmdlineCheck('cut_attack_surface', 'my', 'vdso', 'is not set')))] # the vdso and vdso32 parameters must not be 2
+                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', 'is not set'),
+                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', 'is not set')))] # the vdso and vdso32 parameters must not be 2
 
     # 'cut_attack_surface', 'grsec'
     # The cmdline checks compatible with the kconfig options disabled by grsecurity...
     l += [OR(CmdlineCheck('cut_attack_surface', 'grsec', 'debugfs', 'off'),
              KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set'))] # ... the end
 
-    # 'cut_attack_surface', 'my'
-    l += [CmdlineCheck('cut_attack_surface', 'my', 'sysrq_always_enabled', 'is not set')]
+    # 'cut_attack_surface', 'a13xp0p0v'
+    l += [CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'sysrq_always_enabled', 'is not set')]
     if arch == 'X86_64':
-        l += [OR(CmdlineCheck('cut_attack_surface', 'my', 'ia32_emulation', '0'),
+        l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
-                 AND(KconfigCheck('cut_attack_surface', 'my', 'IA32_EMULATION_DEFAULT_DISABLED', 'y'),
-                     CmdlineCheck('cut_attack_surface', 'my', 'ia32_emulation', 'is not set')))]
+                 AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IA32_EMULATION_DEFAULT_DISABLED', 'y'),
+                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', 'is not set')))]
 
     # 'harden_userspace'
     l += [CmdlineCheck('harden_userspace', 'defconfig', 'norandmaps', 'is not set')]
