@@ -138,7 +138,8 @@ def add_kconfig_checks(l, arch):
              VersionCheck((6, 6, 8)))] # DEBUG_CREDENTIALS was dropped in v6.6.8
     l += [OR(KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y'),
              AND(cfi_clang_is_set,
-                 cfi_clang_permissive_not_set))]
+                 cfi_clang_permissive_not_set,
+                 cc_is_clang))]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y'),
              vmap_stack_is_set)]
     kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
@@ -206,9 +207,11 @@ def add_kconfig_checks(l, arch):
                   cc_is_gcc)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'ARM64'):
-        l += [cfi_clang_is_set]
+        l += [AND(cfi_clang_is_set,
+                  cc_is_clang)]
         l += [AND(cfi_clang_permissive_not_set,
-                  cfi_clang_is_set)]
+                  cfi_clang_is_set,
+                  cc_is_clang)]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
