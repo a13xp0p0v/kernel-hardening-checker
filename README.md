@@ -131,7 +131,6 @@ $ ./bin/kernel-hardening-checker -c kernel_hardening_checker/config_files/distro
 CONFIG_BUG                              |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_SLUB_DEBUG                       |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_THREAD_INFO_IN_TASK              |kconfig|     y      |defconfig | self_protection  | OK
-CONFIG_GCC_PLUGINS                      |kconfig|     y      |defconfig | self_protection  | FAIL: is not found
 CONFIG_IOMMU_SUPPORT                    |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_STACKPROTECTOR                   |kconfig|     y      |defconfig | self_protection  | OK
 CONFIG_STACKPROTECTOR_STRONG            |kconfig|     y      |defconfig | self_protection  | OK
@@ -178,13 +177,13 @@ CONFIG_DEBUG_CREDENTIALS                |kconfig|     y      |   kspp   | self_p
 CONFIG_DEBUG_NOTIFIERS                  |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
 CONFIG_SCHED_STACK_END_CHECK            |kconfig|     y      |   kspp   | self_protection  | OK
 CONFIG_KFENCE                           |kconfig|     y      |   kspp   | self_protection  | OK
-CONFIG_KFENCE_SAMPLE_INTERVAL           |kconfig| is not off |    my    | self_protection  | FAIL: is off, "0"
+CONFIG_KFENCE_SAMPLE_INTERVAL           |kconfig| is not off |a13xp0p0v | self_protection  | FAIL: is off, "0"
 CONFIG_RANDSTRUCT_FULL                  |kconfig|     y      |   kspp   | self_protection  | FAIL: is not found
 CONFIG_RANDSTRUCT_PERFORMANCE           |kconfig| is not set |   kspp   | self_protection  | FAIL: CONFIG_RANDSTRUCT_FULL is not "y"
 CONFIG_HARDENED_USERCOPY                |kconfig|     y      |   kspp   | self_protection  | OK
 CONFIG_HARDENED_USERCOPY_FALLBACK       |kconfig| is not set |   kspp   | self_protection  | OK
 CONFIG_HARDENED_USERCOPY_PAGESPAN       |kconfig| is not set |   kspp   | self_protection  | OK
-CONFIG_GCC_PLUGIN_LATENT_ENTROPY        |kconfig|     y      |   kspp   | self_protection  | FAIL: CONFIG_GCC_PLUGINS is not "y"
+CONFIG_GCC_PLUGIN_LATENT_ENTROPY        |kconfig|     y      |   kspp   | self_protection  | FAIL: is not found
 CONFIG_MODULE_SIG                       |kconfig|     y      |   kspp   | self_protection  | OK
 CONFIG_MODULE_SIG_ALL                   |kconfig|     y      |   kspp   | self_protection  | OK
 CONFIG_MODULE_SIG_SHA512                |kconfig|     y      |   kspp   | self_protection  | OK
@@ -196,12 +195,12 @@ CONFIG_UBSAN_BOUNDS                     |kconfig|     y      |   kspp   | self_p
 CONFIG_UBSAN_LOCAL_BOUNDS               |kconfig|     y      |   kspp   | self_protection  | OK: CONFIG_UBSAN_BOUNDS is "y"
 CONFIG_UBSAN_TRAP                       |kconfig|     y      |   kspp   | self_protection  | FAIL: CONFIG_UBSAN_ENUM is not "is not set"
 CONFIG_UBSAN_SANITIZE_ALL               |kconfig|     y      |   kspp   | self_protection  | OK
-CONFIG_GCC_PLUGIN_STACKLEAK             |kconfig|     y      |   kspp   | self_protection  | FAIL: CONFIG_GCC_PLUGINS is not "y"
-CONFIG_STACKLEAK_METRICS                |kconfig| is not set |   kspp   | self_protection  | FAIL: CONFIG_GCC_PLUGINS is not "y"
-CONFIG_STACKLEAK_RUNTIME_DISABLE        |kconfig| is not set |   kspp   | self_protection  | FAIL: CONFIG_GCC_PLUGINS is not "y"
+CONFIG_GCC_PLUGIN_STACKLEAK             |kconfig|     y      |   kspp   | self_protection  | FAIL: is not found
+CONFIG_STACKLEAK_METRICS                |kconfig| is not set |   kspp   | self_protection  | FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is not "y"
+CONFIG_STACKLEAK_RUNTIME_DISABLE        |kconfig| is not set |   kspp   | self_protection  | FAIL: CONFIG_GCC_PLUGIN_STACKLEAK is not "y"
 CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT  |kconfig|     y      |   kspp   | self_protection  | OK
-CONFIG_CFI_CLANG                        |kconfig|     y      |   kspp   | self_protection  | FAIL: is not found
-CONFIG_CFI_PERMISSIVE                   |kconfig| is not set |   kspp   | self_protection  | FAIL: CONFIG_CFI_CLANG is not "y"
+CONFIG_CFI_CLANG                        |kconfig|     y      |   kspp   | self_protection  | FAIL: CONFIG_CC_IS_CLANG is not "y"
+CONFIG_CFI_PERMISSIVE                   |kconfig| is not set |   kspp   | self_protection  | FAIL: CONFIG_CC_IS_CLANG is not "y"
 CONFIG_HW_RANDOM_TPM                    |kconfig|     y      |   kspp   | self_protection  | OK
 CONFIG_DEFAULT_MMAP_MIN_ADDR            |kconfig|   65536    |   kspp   | self_protection  | OK
 CONFIG_IOMMU_DEFAULT_DMA_STRICT         |kconfig|     y      |   kspp   | self_protection  | FAIL: "is not set"
@@ -211,8 +210,8 @@ CONFIG_SLS                              |kconfig|     y      |   kspp   | self_p
 CONFIG_INTEL_IOMMU_SVM                  |kconfig|     y      |   kspp   | self_protection  | OK
 CONFIG_AMD_IOMMU_V2                     |kconfig|     y      |   kspp   | self_protection  | FAIL: "m"
 CONFIG_SLAB_MERGE_DEFAULT               |kconfig| is not set |  clipos  | self_protection  | FAIL: "y"
-CONFIG_LIST_HARDENED                    |kconfig|     y      |    my    | self_protection  | FAIL: is not found
-CONFIG_RANDOM_KMALLOC_CACHES            |kconfig|     y      |    my    | self_protection  | FAIL: is not found
+CONFIG_LIST_HARDENED                    |kconfig|     y      |a13xp0p0v | self_protection  | FAIL: is not found
+CONFIG_RANDOM_KMALLOC_CACHES            |kconfig|     y      |a13xp0p0v | self_protection  | FAIL: is not found
 CONFIG_SECURITY                         |kconfig|     y      |defconfig | security_policy  | OK
 CONFIG_SECURITY_YAMA                    |kconfig|     y      |   kspp   | security_policy  | OK
 CONFIG_SECURITY_LANDLOCK                |kconfig|     y      |   kspp   | security_policy  | OK
@@ -220,8 +219,8 @@ CONFIG_SECURITY_SELINUX_DISABLE         |kconfig| is not set |   kspp   | securi
 CONFIG_SECURITY_SELINUX_BOOTPARAM       |kconfig| is not set |   kspp   | security_policy  | FAIL: "y"
 CONFIG_SECURITY_SELINUX_DEVELOP         |kconfig| is not set |   kspp   | security_policy  | FAIL: "y"
 CONFIG_SECURITY_WRITABLE_HOOKS          |kconfig| is not set |   kspp   | security_policy  | OK: is not found
-CONFIG_SECURITY_SELINUX_DEBUG           |kconfig| is not set |    my    | security_policy  | OK: is not found
-CONFIG_SECURITY_SELINUX                 |kconfig|     y      |    my    | security_policy  | OK
+CONFIG_SECURITY_SELINUX_DEBUG           |kconfig| is not set |a13xp0p0v | security_policy  | OK: is not found
+CONFIG_SECURITY_SELINUX                 |kconfig|     y      |a13xp0p0v | security_policy  | OK
 CONFIG_SECCOMP                          |kconfig|     y      |defconfig |cut_attack_surface| OK
 CONFIG_SECCOMP_FILTER                   |kconfig|     y      |defconfig |cut_attack_surface| OK
 CONFIG_BPF_UNPRIV_DEFAULT_OFF           |kconfig|     y      |defconfig |cut_attack_surface| OK
@@ -310,20 +309,20 @@ CONFIG_EFI_TEST                         |kconfig| is not set | lockdown |cut_att
 CONFIG_MMIOTRACE_TEST                   |kconfig| is not set | lockdown |cut_attack_surface| OK
 CONFIG_KPROBES                          |kconfig| is not set | lockdown |cut_attack_surface| FAIL: "y"
 CONFIG_BPF_SYSCALL                      |kconfig| is not set | lockdown |cut_attack_surface| FAIL: "y"
-CONFIG_MMIOTRACE                        |kconfig| is not set |    my    |cut_attack_surface| FAIL: "y"
-CONFIG_LIVEPATCH                        |kconfig| is not set |    my    |cut_attack_surface| FAIL: "y"
-CONFIG_IP_DCCP                          |kconfig| is not set |    my    |cut_attack_surface| FAIL: "m"
-CONFIG_IP_SCTP                          |kconfig| is not set |    my    |cut_attack_surface| FAIL: "m"
-CONFIG_FTRACE                           |kconfig| is not set |    my    |cut_attack_surface| FAIL: "y"
-CONFIG_VIDEO_VIVID                      |kconfig| is not set |    my    |cut_attack_surface| FAIL: "m"
-CONFIG_INPUT_EVBUG                      |kconfig| is not set |    my    |cut_attack_surface| FAIL: "m"
-CONFIG_KGDB                             |kconfig| is not set |    my    |cut_attack_surface| FAIL: "y"
-CONFIG_CORESIGHT                        |kconfig| is not set |    my    |cut_attack_surface| OK: is not found
-CONFIG_XFS_SUPPORT_V4                   |kconfig| is not set |    my    |cut_attack_surface| FAIL: "y"
-CONFIG_TRIM_UNUSED_KSYMS                |kconfig|     y      |    my    |cut_attack_surface| FAIL: "is not set"
-CONFIG_MODULE_FORCE_LOAD                |kconfig| is not set |    my    |cut_attack_surface| OK
+CONFIG_MMIOTRACE                        |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "y"
+CONFIG_LIVEPATCH                        |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "y"
+CONFIG_IP_DCCP                          |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "m"
+CONFIG_IP_SCTP                          |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "m"
+CONFIG_FTRACE                           |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "y"
+CONFIG_VIDEO_VIVID                      |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "m"
+CONFIG_INPUT_EVBUG                      |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "m"
+CONFIG_KGDB                             |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "y"
+CONFIG_CORESIGHT                        |kconfig| is not set |a13xp0p0v |cut_attack_surface| OK: is not found
+CONFIG_XFS_SUPPORT_V4                   |kconfig| is not set |a13xp0p0v |cut_attack_surface| FAIL: "y"
+CONFIG_TRIM_UNUSED_KSYMS                |kconfig|     y      |a13xp0p0v |cut_attack_surface| FAIL: "is not set"
+CONFIG_MODULE_FORCE_LOAD                |kconfig| is not set |a13xp0p0v |cut_attack_surface| OK
 CONFIG_COREDUMP                         |kconfig| is not set |  clipos  | harden_userspace | FAIL: "y"
-CONFIG_ARCH_MMAP_RND_BITS               |kconfig|     32     |    my    | harden_userspace | FAIL: "28"
+CONFIG_ARCH_MMAP_RND_BITS               |kconfig|     32     |a13xp0p0v | harden_userspace | FAIL: "28"
 nosmep                                  |cmdline| is not set |defconfig | self_protection  | OK: is not found
 nosmap                                  |cmdline| is not set |defconfig | self_protection  | OK: is not found
 nokaslr                                 |cmdline| is not set |defconfig | self_protection  | OK: is not found
@@ -362,14 +361,14 @@ iommu.passthrough                       |cmdline|     0      |   kspp   | self_p
 randomize_kstack_offset                 |cmdline|     1      |   kspp   | self_protection  | OK: CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT is "y"
 pti                                     |cmdline|     on     |   kspp   | self_protection  | FAIL: is not found
 iommu                                   |cmdline|   force    |  clipos  | self_protection  | FAIL: is not found
-kfence.sample_interval                  |cmdline| is not off |    my    | self_protection  | FAIL: is off, not found
+kfence.sample_interval                  |cmdline| is not off |a13xp0p0v | self_protection  | FAIL: is off, not found
 tsx                                     |cmdline|    off     |defconfig |cut_attack_surface| OK: CONFIG_X86_INTEL_TSX_MODE_OFF is "y"
 nosmt                                   |cmdline| is present |   kspp   |cut_attack_surface| FAIL: is not present
 vsyscall                                |cmdline|    none    |   kspp   |cut_attack_surface| FAIL: is not found
 vdso32                                  |cmdline|     0      |   kspp   |cut_attack_surface| OK: CONFIG_COMPAT_VDSO is "is not set"
 debugfs                                 |cmdline|    off     |  grsec   |cut_attack_surface| FAIL: is not found
-sysrq_always_enabled                    |cmdline| is not set |    my    |cut_attack_surface| OK: is not found
-ia32_emulation                          |cmdline|     0      |    my    |cut_attack_surface| FAIL: is not found
+sysrq_always_enabled                    |cmdline| is not set |a13xp0p0v |cut_attack_surface| OK: is not found
+ia32_emulation                          |cmdline|     0      |a13xp0p0v |cut_attack_surface| FAIL: is not found
 norandmaps                              |cmdline| is not set |defconfig | harden_userspace | OK: is not found
 net.core.bpf_jit_harden                 |sysctl |     2      |   kspp   | self_protection  | FAIL: "0"
 kernel.dmesg_restrict                   |sysctl |     1      |   kspp   |cut_attack_surface| OK
@@ -390,7 +389,7 @@ fs.suid_dumpable                        |sysctl |     0      |   kspp   | harden
 kernel.randomize_va_space               |sysctl |     2      |   kspp   | harden_userspace | OK
 kernel.yama.ptrace_scope                |sysctl |     3      |   kspp   | harden_userspace | FAIL: "1"
 
-[+] Config check is finished: 'OK' - 121 / 'FAIL' - 140
+[+] Config check is finished: 'OK' - 121 / 'FAIL' - 139
 ```
 
 ## Generating a Kconfig fragment with the security hardening options
