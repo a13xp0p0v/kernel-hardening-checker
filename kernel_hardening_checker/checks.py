@@ -26,6 +26,7 @@ def add_kconfig_checks(l, arch):
     efi_not_set = KconfigCheck('-', '-', 'EFI', 'is not set')
     cc_is_gcc = KconfigCheck('-', '-', 'CC_IS_GCC', 'y') # exists since v4.18
     cc_is_clang = KconfigCheck('-', '-', 'CC_IS_CLANG', 'y') # exists since v4.18
+    gcc_plugins_support_is_set = KconfigCheck('-', '-', 'GCC_PLUGINS', 'y')
 
     modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set') # radical, but may be useful in some cases
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
@@ -35,7 +36,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'defconfig', 'BUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
-    gcc_plugins_support_is_set = KconfigCheck('self_protection', 'defconfig', 'GCC_PLUGINS', 'y')
     iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
     l += [iommu_support_is_set] # is needed for mitigating DMA attacks
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR', 'y'),
@@ -159,7 +159,8 @@ def add_kconfig_checks(l, arch):
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_PAGESPAN', 'is not set'),
               hardened_usercopy_is_set)] # this debugging for HARDENED_USERCOPY is not needed for security
     l += [AND(KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_LATENT_ENTROPY', 'y'),
-              gcc_plugins_support_is_set)]
+              gcc_plugins_support_is_set,
+              cc_is_gcc)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG', 'y'),
              modules_not_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_ALL', 'y'),
@@ -197,13 +198,17 @@ def add_kconfig_checks(l, arch):
               ubsan_bounds_is_set)]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
-        l += [AND(stackleak_is_set, gcc_plugins_support_is_set)]
+        l += [AND(stackleak_is_set,
+                  gcc_plugins_support_is_set,
+                  cc_is_gcc)]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'STACKLEAK_METRICS', 'is not set'),
                   stackleak_is_set,
-                  gcc_plugins_support_is_set)]
+                  gcc_plugins_support_is_set,
+                  cc_is_gcc)]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'),
                   stackleak_is_set,
-                  gcc_plugins_support_is_set)]
+                  gcc_plugins_support_is_set,
+                  cc_is_gcc)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'ARM64'):
         l += [cfi_clang_is_set]
