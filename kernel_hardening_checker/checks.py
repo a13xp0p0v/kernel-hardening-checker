@@ -36,7 +36,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
     gcc_plugins_support_is_set = KconfigCheck('self_protection', 'defconfig', 'GCC_PLUGINS', 'y')
-    l += [gcc_plugins_support_is_set]
     iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
     l += [iommu_support_is_set] # is needed for mitigating DMA attacks
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR', 'y'),
