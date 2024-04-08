@@ -688,7 +688,9 @@ def add_sysctl_checks(l, _arch):
           # At first, it disabled unprivileged userfaultfd,
           # and since v5.11 it enables unprivileged userfaultfd for user-mode only.
 
-    l += [SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1')] # radical, but may be useful in some cases
+    l += [OR(SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1'), # radical, but may be useful in some cases
+             AND(KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
+                 have_config_file))]
 
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_hardlinks', '1')]
