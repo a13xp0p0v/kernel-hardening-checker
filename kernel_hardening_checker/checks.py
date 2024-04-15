@@ -400,6 +400,8 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MODULE_FORCE_LOAD', 'is not set')]
 
     # 'harden_userspace'
+    if arch == 'X86_64':
+        l += [KconfigCheck('harden_userspace', 'defconfig', 'X86_USER_SHADOW_STACK', 'y')]
     if arch == 'ARM64':
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_BTI', 'y')]
