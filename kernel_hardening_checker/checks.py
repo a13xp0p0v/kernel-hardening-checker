@@ -97,8 +97,6 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
-                 cpu_sup_amd_not_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'AMD_IOMMU', 'y'),
@@ -233,7 +231,6 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'kspp', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
@@ -248,6 +245,27 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
+
+    # CPU side-channels mitigations were renamed in 6.9
+    if VersionCheck((6, 9, 000)):
+        if arch == 'X86_64':
+            l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
+            l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_CPU_SRSO', 'y'),
+                 cpu_sup_amd_not_set)]
+            l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_IBPB_ENTRY', 'y')]
+        if arch in ('X86_64', 'X86_32'):
+            l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETPOLINE', 'y')]
+            l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_MITIGATION_TABLE_ISOLATION', 'y')]
+    else:
+        if arch == 'X86_64':
+            l += [KconfigCheck('self_protection', 'defconfig', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
+            l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
+                 cpu_sup_amd_not_set)]
+            l += [KconfigCheck('self_protection', 'defconfig', 'IBPB_ENTRY', 'y')]
+        if arch in ('X86_64', 'X86_32'):
+            l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
+            l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
+
 
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
