@@ -14,7 +14,7 @@ This module contains knowledge for checks.
 from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
 
 
-def add_kconfig_checks(l, arch):
+def add_kconfig_checks(l, arch: str):
     assert(arch), 'empty arch'
 
     # Calling the KconfigCheck class constructor:
@@ -413,7 +413,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
 
 
-def add_cmdline_checks(l, arch):
+def add_cmdline_checks(l, arch: str):
     assert(arch), 'empty arch'
 
     # Calling the CmdlineCheck class constructor:
@@ -618,7 +618,7 @@ no_kstrtobool_options = [
 ]
 
 
-def normalize_cmdline_options(option, value):
+def normalize_cmdline_options(option: str, value: str) -> str:
     # Don't normalize the cmdline option values if
     # the Linux kernel doesn't use kstrtobool() for them
     if option in no_kstrtobool_options:
@@ -645,7 +645,7 @@ def normalize_cmdline_options(option, value):
 #    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
 
-def add_sysctl_checks(l, _arch):
+def add_sysctl_checks(l, _arch: str):
 # This function may be called with arch=None
 
 # Calling the SysctlCheck class constructor:

@@ -14,6 +14,7 @@ import gzip
 import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
+from typing import List, Tuple
 import re
 import json
 from .__about__ import __version__
@@ -29,7 +30,7 @@ def _open(file: str, *args, **kwargs):
     return open_method(file, *args, **kwargs)
 
 
-def detect_arch(fname, archs):
+def detect_arch(fname: str, archs: List[str]) -> Tuple:
     with _open(fname, 'rt', encoding='utf-8') as f:
         arch_pattern = re.compile(r"CONFIG_[a-zA-Z0-9_]+=y$")
         arch = None
@@ -46,7 +47,7 @@ def detect_arch(fname, archs):
         return arch, 'OK'
 
 
-def detect_kernel_version(fname):
+def detect_kernel_version(fname: str) -> Tuple:
     with _open(fname, 'rt', encoding='utf-8') as f:
         ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
         for line in f.readlines():
@@ -63,7 +64,7 @@ def detect_kernel_version(fname):
         return None, 'no kernel version detected'
 
 
-def detect_compiler(fname):
+def detect_compiler(fname: str):
     gcc_version = None
     clang_version = None
     with _open(fname, 'rt', encoding='utf-8') as f:
@@ -104,7 +105,7 @@ def print_unknown_options(checklist, parsed_options, opt_type):
             print(f'[?] No check for {opt_type} option {option} ({value})')
 
 
-def print_checklist(mode, checklist, with_results):
+def print_checklist(mode: str, checklist, with_results: bool):
     if mode == 'json':
         output = []
         for opt in checklist:
@@ -151,7 +152,7 @@ def print_checklist(mode, checklist, with_results):
         print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
-def parse_kconfig_file(_mode, parsed_options, fname):
+def parse_kconfig_file(_mode, parsed_options, fname: str):
     with _open(fname, 'rt', encoding='utf-8') as f:
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")

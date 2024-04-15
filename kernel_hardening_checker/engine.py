@@ -11,6 +11,7 @@ This module is the engine of checks.
 # pylint: disable=missing-class-docstring,missing-function-docstring
 # pylint: disable=line-too-long,invalid-name,too-many-branches
 
+from typing import Dict, Tuple
 import sys
 
 GREEN_COLOR = '\x1b[32m'
@@ -29,7 +30,7 @@ def colorize_result(input_text):
 
 
 class OptCheck:
-    def __init__(self, reason, decision, name, expected):
+    def __init__(self, reason: str, decision: str, name: str, expected: str):
         assert(name and name == name.strip() and len(name.split()) == 1), \
                f'invalid name "{name}" for {self.__class__.__name__}'
         self.name = name
@@ -100,12 +101,12 @@ class OptCheck:
         else:
             self.result = f'FAIL: "{self.state}"'
 
-    def table_print(self, _mode, with_results):
+    def table_print(self, _mode, with_results: bool):
         print(f'{self.name:<40}|{self.opt_type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
         if with_results:
             print(f'| {colorize_result(self.result)}', end='')
 
-    def json_dump(self, with_results):
+    def json_dump(self, with_results: bool) -> Dict:
         dump = {
             "option_name": self.name,
             "type": self.opt_type,
@@ -142,7 +143,7 @@ class SysctlCheck(OptCheck):
 
 
 class VersionCheck:
-    def __init__(self, ver_expected):
+    def __init__(self, ver_expected: Tuple):
         assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 3), \
                f'invalid expected version "{ver_expected}" for VersionCheck (1)'
         assert(all(map(lambda x: isinstance(x, int), ver_expected))), \
@@ -155,7 +156,7 @@ class VersionCheck:
     def opt_type(self):
         return 'version'
 
-    def set_state(self, data):
+    def set_state(self, data: Tuple):
         assert(data and isinstance(data, tuple) and len(data) >= 3), \
                f'invalid version "{data}" for VersionCheck'
         self.ver = data[:3]
@@ -180,7 +181,7 @@ class VersionCheck:
             return
         self.result = f'FAIL: version < {self.ver_expected}'
 
-    def table_print(self, _mode, with_results):
+    def table_print(self, _mode, with_results: bool):
         ver_req = f'kernel version >= {self.ver_expected}'
         print(f'{ver_req:<91}', end='')
         if with_results:
@@ -210,7 +211,7 @@ class ComplexOptCheck:
     def expected(self):
         return self.opts[0].expected
 
-    def table_print(self, mode, with_results):
+    def table_print(self, mode: str, with_results: bool):
         if mode == 'verbose':
             class_name = f'<<< {self.__class__.__name__} >>>'
             print(f'    {class_name:87}', end='')
@@ -225,7 +226,7 @@ class ComplexOptCheck:
             if with_results:
                 print(f'| {colorize_result(self.result)}', end='')
 
-    def json_dump(self, with_results):
+    def json_dump(self, with_results: bool) -> Dict:
         dump = self.opts[0].json_dump(False)
         if with_results:
             # Add the 'check_result' and 'check_result_bool' keys to the dictionary
@@ -297,7 +298,7 @@ class AND(ComplexOptCheck):
 SIMPLE_OPTION_TYPES = ('kconfig', 'cmdline', 'sysctl', 'version')
 
 
-def populate_simple_opt_with_data(opt, data, data_type):
+def populate_simple_opt_with_data(opt, data, data_type: str):
     assert(opt.opt_type != 'complex'), \
            f'unexpected ComplexOptCheck "{opt.name}"'
     assert(opt.opt_type in SIMPLE_OPTION_TYPES), \
