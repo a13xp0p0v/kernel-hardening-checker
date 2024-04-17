@@ -38,7 +38,9 @@ jobs:
         coverage xml -i -o coverage_unittest.xml
 
     - name: Handle coverage
-      uses: codecov/codecov-action@v3.1.5
+      uses: codecov/codecov-action@v4
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         files: ./coverage_unittest.xml
         flags: engine_unit-test
