@@ -407,6 +407,8 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
     l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
+    if arch == 'X86_64':
+        l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
 
 
 def add_cmdline_checks(l, arch):
