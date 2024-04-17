@@ -2,9 +2,9 @@
 
 __(formerly kconfig-hardened-check)__<br /><br />
 [![functional test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/functional%20test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/functional_test.yml)
-[![functional test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=functional_test)](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker)<br />
+[![functional test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=functional_test)](https://app.codecov.io/gh/a13xp0p0v/kernel-hardening-checker?flags%5B0%5D=functional_test)<br />
 [![engine unit-test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/engine%20unit-test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/engine_unit-test.yml)
-[![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=engine_unit-test)](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker)<br />
+[![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=engine_unit-test)](https://app.codecov.io/gh/a13xp0p0v/kernel-hardening-checker?flags%5B0%5D=engine_unit-test)<br />
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kernel-hardening-checker?label=release)](https://github.com/a13xp0p0v/kernel-hardening-checker/tags)
 
 ## Motivation
