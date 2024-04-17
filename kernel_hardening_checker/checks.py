@@ -400,8 +400,6 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MODULE_FORCE_LOAD', 'is not set')]
 
     # 'harden_userspace'
-    if arch == 'X86_64':
-        l += [KconfigCheck('harden_userspace', 'defconfig', 'X86_USER_SHADOW_STACK', 'y')]
     if arch == 'ARM64':
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_BTI', 'y')]
@@ -409,6 +407,8 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
     l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
+    if arch == 'X86_64':
+        l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
 
 
 def add_cmdline_checks(l, arch):
