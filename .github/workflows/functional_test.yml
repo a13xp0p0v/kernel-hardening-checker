@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         # Current ubuntu-latest (Ubuntu 22.04) provides the following versions of Python:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
 
