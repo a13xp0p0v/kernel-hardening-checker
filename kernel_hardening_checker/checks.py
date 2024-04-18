@@ -395,9 +395,11 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'KGDB', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CORESIGHT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'XFS_SUPPORT_V4', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MODULE_FORCE_LOAD', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set')]
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MODULE_FORCE_LOAD', 'is not set')]
+
 
     # 'harden_userspace'
     if arch == 'ARM64':
@@ -577,6 +579,9 @@ def add_cmdline_checks(l, arch):
 
     # 'cut_attack_surface', 'a13xp0p0v'
     l += [CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'sysrq_always_enabled', 'is not set')]
+    l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', '0'),
+             AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set'),
+                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', 'is not set')))]
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
