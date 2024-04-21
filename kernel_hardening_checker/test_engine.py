@@ -450,8 +450,8 @@ class TestEngine(unittest.TestCase):
                 stdout_result,
                 [
 '\
-CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[32mOK: name_2 is "expected_2"\x1b[0m\
-CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | \x1b[31mFAIL: name_5 is not "expected_5"\x1b[0m\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | OK: name_2 is "expected_2"\
+CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | FAIL: name_5 is not "expected_5"\
 '               ]
         )
 
@@ -461,16 +461,16 @@ CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     re
                 stdout_result,
                 [
 '\
-    <<< OR >>>                                                                             | \x1b[32mOK: name_2 is "expected_2"\x1b[0m\n\
-CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | \x1b[31mFAIL: "UNexpected_1"\x1b[0m\n\
-name_2                                  |cmdline| expected_2 |decision_2|     reason_2     | \x1b[32mOK\x1b[0m\n\
+    <<< OR >>>                                                                             | OK: name_2 is "expected_2"\n\
+CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | FAIL: "UNexpected_1"\n\
+name_2                                  |cmdline| expected_2 |decision_2|     reason_2     | OK\n\
 name_3                                  |sysctl | expected_3 |decision_3|     reason_3     | None\
 '\
 '\
-    <<< AND >>>                                                                            | \x1b[31mFAIL: name_5 is not "expected_5"\x1b[0m\n\
+    <<< AND >>>                                                                            | FAIL: name_5 is not "expected_5"\n\
 CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | None\n\
-name_5                                  |cmdline| expected_5 |decision_5|     reason_5     | \x1b[31mFAIL: "UNexpected_5"\x1b[0m\n\
-name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | \x1b[32mOK\x1b[0m\
+name_5                                  |cmdline| expected_5 |decision_5|     reason_5     | FAIL: "UNexpected_5"\n\
+name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | OK\
 '               ]
         )
 

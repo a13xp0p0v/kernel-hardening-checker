@@ -11,12 +11,14 @@ This module is the engine of checks.
 # pylint: disable=missing-class-docstring,missing-function-docstring
 # pylint: disable=line-too-long,invalid-name,too-many-branches
 
+import sys
+
 GREEN_COLOR = '\x1b[32m'
 RED_COLOR = '\x1b[31m'
 COLOR_END = '\x1b[0m'
 
 def colorize_result(input_text):
-    if input_text is None:
+    if input_text is None or not sys.stdout.isatty():
         return input_text
     if input_text.startswith('OK'):
         color = GREEN_COLOR
