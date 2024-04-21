@@ -85,16 +85,16 @@ def print_unknown_options(checklist, parsed_options, opt_type):
     known_options = []
 
     for o1 in checklist:
-        if o1.type != 'complex':
+        if o1.opt_type != 'complex':
             known_options.append(o1.name)
             continue
         for o2 in o1.opts:
-            if o2.type != 'complex':
+            if o2.opt_type != 'complex':
                 if hasattr(o2, 'name'):
                     known_options.append(o2.name)
                 continue
             for o3 in o2.opts:
-                assert(o3.type != 'complex'), \
+                assert(o3.opt_type != 'complex'), \
                        f'unexpected ComplexOptCheck inside {o2.name}'
                 if hasattr(o3, 'name'):
                     known_options.append(o3.name)

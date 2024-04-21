@@ -58,7 +58,7 @@ class OptCheck:
         self.result = None
 
     @property
-    def type(self):
+    def opt_type(self):
         return None
 
     def set_state(self, data):
@@ -99,14 +99,14 @@ class OptCheck:
             self.result = f'FAIL: "{self.state}"'
 
     def table_print(self, _mode, with_results):
-        print(f'{self.name:<40}|{self.type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
+        print(f'{self.name:<40}|{self.opt_type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
         if with_results:
             print(f'| {colorize_result(self.result)}', end='')
 
     def json_dump(self, with_results):
         dump = {
             "option_name": self.name,
-            "type": self.type,
+            "type": self.opt_type,
             "desired_val": self.expected,
             "decision": self.decision,
             "reason": self.reason,
@@ -123,19 +123,19 @@ class KconfigCheck(OptCheck):
         self.name = f'CONFIG_{self.name}'
 
     @property
-    def type(self):
+    def opt_type(self):
         return 'kconfig'
 
 
 class CmdlineCheck(OptCheck):
     @property
-    def type(self):
+    def opt_type(self):
         return 'cmdline'
 
 
 class SysctlCheck(OptCheck):
     @property
-    def type(self):
+    def opt_type(self):
         return 'sysctl'
 
 
@@ -150,7 +150,7 @@ class VersionCheck:
         self.result = None
 
     @property
-    def type(self):
+    def opt_type(self):
         return 'version'
 
     def set_state(self, data):
@@ -197,7 +197,7 @@ class ComplexOptCheck:
         self.result = None
 
     @property
-    def type(self):
+    def opt_type(self):
         return 'complex'
 
     @property
@@ -296,33 +296,33 @@ SIMPLE_OPTION_TYPES = ('kconfig', 'cmdline', 'sysctl', 'version')
 
 
 def populate_simple_opt_with_data(opt, data, data_type):
-    assert(opt.type != 'complex'), \
+    assert(opt.opt_type != 'complex'), \
            f'unexpected ComplexOptCheck "{opt.name}"'
-    assert(opt.type in SIMPLE_OPTION_TYPES), \
-           f'invalid opt type "{opt.type}"'
+    assert(opt.opt_type in SIMPLE_OPTION_TYPES), \
+           f'invalid opt_type "{opt.opt_type}"'
     assert(data_type in SIMPLE_OPTION_TYPES), \
-           f'invalid data type "{data_type}"'
+           f'invalid data_type "{data_type}"'
     assert(data), \
            'empty data'
 
-    if data_type != opt.type:
+    if data_type != opt.opt_type:
         return
 
     if data_type in ('kconfig', 'cmdline', 'sysctl'):
         opt.set_state(data.get(opt.name, None))
     else:
         assert(data_type == 'version'), \
-               f'unexpected data type "{data_type}"'
+               f'unexpected data_type "{data_type}"'
         opt.set_state(data)
 
 
 def populate_opt_with_data(opt, data, data_type):
-    assert(opt.type != 'version'), 'a single VersionCheck is useless'
-    if opt.type != 'complex':
+    assert(opt.opt_type != 'version'), 'a single VersionCheck is useless'
+    if opt.opt_type != 'complex':
         populate_simple_opt_with_data(opt, data, data_type)
     else:
         for o in opt.opts:
-            if o.type != 'complex':
+            if o.opt_type != 'complex':
                 populate_simple_opt_with_data(o, data, data_type)
             else:
                 # Recursion for nested ComplexOptCheck objects
@@ -337,8 +337,8 @@ def populate_with_data(checklist, data, data_type):
 def override_expected_value(checklist, name, new_val):
     for opt in checklist:
         if opt.name == name:
-            assert(opt.type in ('kconfig', 'cmdline', 'sysctl')), \
-                   f'overriding an expected value for "{opt.type}" checks is not supported yet'
+            assert(opt.opt_type in ('kconfig', 'cmdline', 'sysctl')), \
+                   f'overriding an expected value for "{opt.opt_type}" checks is not supported yet'
             opt.expected = new_val
 
 
