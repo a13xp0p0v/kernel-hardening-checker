@@ -347,6 +347,8 @@ def main():
             if args.sysctl:
                 print_unknown_options(config_checklist, parsed_sysctl_options, 'sysctl')
 
+        config_checklist.sort(key=lambda check: check.reason)
+
         # finally print the results
         print_checklist(mode, config_checklist, True)
         sys.exit(0)

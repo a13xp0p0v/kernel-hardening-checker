@@ -35,8 +35,7 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('self_protection', 'defconfig', 'BUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
-    iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
-    l += [iommu_support_is_set] # is needed for mitigating DMA attacks
+    l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')]
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_REGULAR', 'y'),
@@ -60,62 +59,6 @@ def add_kconfig_checks(l, arch):
     vmap_stack_is_set = KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')
     if arch in ('X86_64', 'ARM64', 'ARM'):
         l += [vmap_stack_is_set]
-    if arch in ('X86_64', 'X86_32'):
-        l += [KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
-        microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
-        l += [microcode_is_set] # is needed for mitigating CPU bugs
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_INTEL', 'y'),
-                 AND(microcode_is_set,
-                     VersionCheck((6, 6, 0))))] # MICROCODE_INTEL was included in MICROCODE since v6.6
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_AMD', 'y'),
-                 AND(microcode_is_set,
-                     VersionCheck((6, 6, 0))))] # MICROCODE_AMD was included in MICROCODE since v6.6
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_SMAP', 'y'),
-                 VersionCheck((5, 19, 0)))] # X86_SMAP is enabled by default since v5.19
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'),
-                 KconfigCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y'))]
-    if arch in ('ARM64', 'ARM'):
-        l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
-        l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
-    if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y')]
-        l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
-                  iommu_support_is_set)]
-        l += [AND(KconfigCheck('self_protection', 'defconfig', 'AMD_IOMMU', 'y'),
-                  iommu_support_is_set)]
-    if arch == 'ARM64':
-        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_PAN', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_EPAN', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'UNMAP_KERNEL_AT_EL0', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_E0PD', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_PTR_AUTH_KERNEL', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_BTI_KERNEL', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATE_SPECTRE_BRANCH_HISTORY', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_MTE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MODULE_REGION_FULL', 'y')]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
-                 AND(KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y'),
-                     VersionCheck((5, 9, 0))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
-                 VersionCheck((5, 10, 0)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
-    if arch == 'ARM':
-        l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_HISTORY', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_ALIGN_RODATA', 'y')]
 
     # 'self_protection', 'kspp'
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
@@ -212,34 +155,6 @@ def add_kconfig_checks(l, arch):
         l += [AND(cfi_clang_permissive_not_set,
                   cfi_clang_is_set,
                   cc_is_clang)]
-    if arch in ('X86_64', 'X86_32'):
-        l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
-        l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
-                  iommu_support_is_set)]
-    if arch in ('ARM64', 'ARM'):
-        l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
-        l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
-    if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'kspp', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
-                  iommu_support_is_set)]
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
-                  iommu_support_is_set)]
-    if arch == 'ARM64':
-        l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')] # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
-    if arch == 'X86_32':
-        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
-                  iommu_support_is_set)]
 
     # 'self_protection', 'clipos'
     l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
@@ -251,8 +166,6 @@ def add_kconfig_checks(l, arch):
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('security_policy', 'defconfig', 'SECURITY', 'y')]
-    if arch == 'ARM':
-        l += [KconfigCheck('security_policy', 'kspp', 'SECURITY', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_YAMA', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LANDLOCK', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DISABLE', 'is not set')]
@@ -273,8 +186,6 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'STRICT_DEVMEM', 'y'),
                  devmem_not_set)] # refers to LOCKDOWN
-    if arch in ('X86_64', 'X86_32'):
-        l += [KconfigCheck('cut_attack_surface', 'defconfig', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
 
     # 'cut_attack_surface', 'kspp'
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'SECURITY_DMESG_RESTRICT', 'y')]
@@ -301,18 +212,6 @@ def add_kconfig_checks(l, arch):
              devmem_not_set)] # refers to LOCKDOWN
     l += [AND(KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is not set'),
               KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is present'))]
-    if arch in ('X86_64', 'X86_32'):
-        l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set')]
-              # CONFIG_COMPAT_VDSO disabled ASLR of vDSO only on X86_64 and X86_32;
-              # on ARM64 this option has different meaning
-    if arch == 'X86_64':
-        l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
-                 KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'))]
-                 # disabling X86_VSYSCALL_EMULATION turns vsyscall off completely,
-                 # and LEGACY_VSYSCALL_NONE can be changed at boot time via the cmdline parameter
-    if arch == 'ARM':
-        l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
-                 devmem_not_set)] # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'grsec'
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'ZSMALLOC_STAT', 'is not set')]
@@ -400,18 +299,118 @@ def add_kconfig_checks(l, arch):
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
 
-
     # 'harden_userspace'
-    if arch == 'ARM64':
-        l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
-        l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_BTI', 'y')]
     if arch in ('ARM', 'X86_32'):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
     l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
-    if arch == 'X86_64':
-        l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
 
+    add_arm_only_kconfig_checks(arch, l)
+    add_x86_only_kconfig_checks(arch, l)
+
+
+def add_arm_only_kconfig_checks(arch, l):
+    if arch in ('ARM', 'ARM64'):
+        l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
+        l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
+        l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
+
+    if arch == 'ARM64':
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_PAN', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_EPAN', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'UNMAP_KERNEL_AT_EL0', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_E0PD', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_PTR_AUTH_KERNEL', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_BTI_KERNEL', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATE_SPECTRE_BRANCH_HISTORY', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM64_MTE', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MODULE_REGION_FULL', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y'),
+                     VersionCheck((5, 9, 0))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
+                 VersionCheck((5, 10, 0)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+        l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')] # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
+        l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
+        l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_BTI', 'y')]
+    elif arch == 'ARM':
+        devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
+        l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_HISTORY', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_ALIGN_RODATA', 'y')]
+        l += [KconfigCheck('security_policy', 'kspp', 'SECURITY', 'y')]
+        l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
+                 devmem_not_set)] # refers to LOCKDOWN
+
+
+def add_x86_only_kconfig_checks(arch, l):
+    iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
+    if arch in ('X86_32', 'x86_64'):
+        l += [KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
+        microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
+        l += [microcode_is_set] # is needed for mitigating CPU bugs
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_INTEL', 'y'),
+                 AND(microcode_is_set,
+                     VersionCheck((6, 6, 0))))] # MICROCODE_INTEL was included in MICROCODE since v6.6
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_AMD', 'y'),
+                 AND(microcode_is_set,
+                     VersionCheck((6, 6, 0))))] # MICROCODE_AMD was included in MICROCODE since v6.6
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_SMAP', 'y'),
+                 VersionCheck((5, 19, 0)))] # X86_SMAP is enabled by default since v5.19
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y'))]
+        l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
+        l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
+                  iommu_support_is_set)]
+        l += [KconfigCheck('cut_attack_surface', 'defconfig', 'X86_INTEL_TSX_MODE_OFF', 'y')] # tsx=off
+        # CONFIG_COMPAT_VDSO disabled ASLR of vDSO only on X86_64 and X86_32;
+        # on ARM64 this option has different meaning
+        l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set')]
+
+    if arch == 'X86_64':
+        l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y')]
+        l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
+                  iommu_support_is_set)]
+        l += [AND(KconfigCheck('self_protection', 'defconfig', 'AMD_IOMMU', 'y'),
+                  iommu_support_is_set)]
+        l += [KconfigCheck('self_protection', 'kspp', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
+                  iommu_support_is_set)]
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
+                  iommu_support_is_set)]
+        # disabling X86_VSYSCALL_EMULATION turns vsyscall off completely,
+         # and LEGACY_VSYSCALL_NONE can be changed at boot time via the cmdline parameter
+        l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
+                 KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'))]
+        l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
+    if arch == 'X86_32':
+        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
+                  iommu_support_is_set)]
 
 def add_cmdline_checks(l, arch):
     assert(arch), 'empty arch'
