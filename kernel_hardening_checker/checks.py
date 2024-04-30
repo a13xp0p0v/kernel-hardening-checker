@@ -561,7 +561,7 @@ def add_cmdline_checks(l, arch):
         l += [OR(CmdlineCheck('cut_attack_surface', 'defconfig', 'tsx', 'off'),
                  AND(KconfigCheck('cut_attack_surface', 'defconfig', 'X86_INTEL_TSX_MODE_OFF', 'y'),
                      tsx_not_set),
-                 AND(KconfigCheck('cut_attack_surface', 'defconfig', 'CPU_SUP_INTEL', 'is not set'),
+                 AND(KconfigCheck('-', '-', 'CPU_SUP_INTEL', 'is not set'),
                      tsx_not_set))]
 
     # 'cut_attack_surface', 'kspp'
