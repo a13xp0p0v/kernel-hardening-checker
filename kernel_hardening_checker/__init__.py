@@ -13,6 +13,7 @@ This module performs input/output.
 
 import os
 import gzip
+import glob
 import sys
 from argparse import ArgumentParser
 from typing import List, Tuple, Dict, TextIO
@@ -254,6 +255,9 @@ def main() -> None:
                         help='print the security hardening recommendations for the selected microarchitecture')
     parser.add_argument('-g', '--generate', choices=supported_archs,
                         help='generate a Kconfig fragment with the security hardening options for the selected microarchitecture')
+    parser.add_argument('-a', '--autodetect',
+                        help='autodetect the running kernel and infer the corresponding Kconfig file',
+                        action='store_true')
     args = parser.parse_args()
 
     mode = None
@@ -276,6 +280,7 @@ def main() -> None:
                 print(f'[+] Kernel cmdline file to check: {args.cmdline}')
             if args.sysctl:
                 print(f'[+] Sysctl output file to check: {args.sysctl}')
+
 
         arch, msg = detect_arch(args.config, supported_archs)
         if arch is None:
@@ -425,6 +430,87 @@ def main() -> None:
                 print(f'# {opt.name} is not set')
             else:
                 print(f'{opt.name}={opt.expected}')
+        sys.exit(0)
+
+    if args.autodetect:
+        assert(args.config is None and
+               args.cmdline is None and
+               args.sysctl is None and
+               args.generate is None and
+               args.print is None), \
+               'unexpected args'
+
+        cmdline = '/proc/cmdline'
+
+        config = '/proc/config.gz'
+        if os.path.isfile('/proc/config.gz'):
+            kernel_version, msg = detect_kernel_version(config)
+            assert kernel_version
+            kernel_version_str = '.'.join(map(str, kernel_version))
+        else:
+            kernel_version, msg = detect_kernel_version('/proc/version')
+            assert kernel_version
+            kernel_version_str = '.'.join(map(str, kernel_version))
+            config_files = glob.glob(f'/boot/config-{kernel_version_str}-*')
+            if not config_files:
+                sys.exit(f'[!] ERROR: unable to find a Kconfig file for {kernel_version_str}')
+            config = config_files[0]
+            if mode != 'json':
+                if len(config_files) > 1:
+                    print(f'[+] Multiple Kconfig files found for {kernel_version_str}, picking {config}')
+
+        if mode != 'json':
+            print(f'[+] Detected running kernel version: {kernel_version_str}')
+            print(f'[+] Kconfig file to check: {config}')
+
+        arch, msg = detect_arch(config, supported_archs)
+        if arch is None:
+            sys.exit(f'[!] ERROR: {msg}')
+        if mode != 'json':
+            print(f'[+] Detected microarchitecture: {arch}')
+
+        compiler, msg = detect_compiler(config)
+        if mode != 'json':
+            if compiler:
+                print(f'[+] Detected compiler: {compiler}')
+            else:
+                print(f'[-] Can\'t detect the compiler: {msg}')
+
+        add_kconfig_checks(config_checklist, arch)
+        add_cmdline_checks(config_checklist, arch)
+        add_sysctl_checks(config_checklist, arch)
+
+        # populate the checklist with the parsed Kconfig data
+        parsed_kconfig_opts = {} # type: Dict[str, str]
+        parse_kconfig_file(mode, parsed_kconfig_opts, config)
+        populate_with_data(config_checklist, parsed_kconfig_opts, 'kconfig')
+
+        # populate the checklist with the kernel version data
+        populate_with_data(config_checklist, kernel_version, 'version')
+
+        # populate the checklist with the parsed cmdline data
+        parsed_cmdline_opts = {} # type: Dict[str, str]
+        parse_cmdline_file(mode, parsed_cmdline_opts, cmdline)
+        populate_with_data(config_checklist, parsed_cmdline_opts, 'cmdline')
+
+        #TODO: add sysctl processing
+
+        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
+        mmap_rnd_bits_max = parsed_kconfig_opts.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
+        if mmap_rnd_bits_max:
+            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
+        else:
+            # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
+            if mode != 'json':
+                print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
+            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
+
+        # now everything is ready, perform the checks
+        perform_checks(config_checklist)
+
+        if mode != 'json':
+            print(f'[+] Printing kernel security hardening options for {arch}...')
+        print_checklist(mode, config_checklist, False)
         sys.exit(0)
 
     parser.print_help()
