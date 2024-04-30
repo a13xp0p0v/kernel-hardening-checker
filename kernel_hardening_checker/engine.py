@@ -210,6 +210,10 @@ class ComplexOptCheck:
     def expected(self):
         return self.opts[0].expected
 
+    @property
+    def reason(self):
+        return self.opts[0].reason
+
     def table_print(self, mode, with_results):
         if mode == 'verbose':
             class_name = f'<<< {self.__class__.__name__} >>>'
