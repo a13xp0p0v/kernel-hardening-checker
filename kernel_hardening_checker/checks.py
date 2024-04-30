@@ -26,6 +26,9 @@ def add_kconfig_checks(l, arch):
     efi_not_set = KconfigCheck('-', '-', 'EFI', 'is not set')
     cc_is_gcc = KconfigCheck('-', '-', 'CC_IS_GCC', 'y') # exists since v4.18
     cc_is_clang = KconfigCheck('-', '-', 'CC_IS_CLANG', 'y') # exists since v4.18
+    if arch in ('X86_64', 'X86_32'):
+        cpu_sup_amd_not_set = KconfigCheck('-', '-', 'CPU_SUP_AMD', 'is not set')
+        cpu_sup_intel_not_set = KconfigCheck('-', '-', 'CPU_SUP_INTEL', 'is not set')
 
     modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set') # radical, but may be useful in some cases
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
@@ -61,16 +64,10 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64', 'ARM'):
         l += [vmap_stack_is_set]
     if arch in ('X86_64', 'X86_32'):
-        cpu_sup_amd_not_set=KconfigCheck('-', '-', 'CPU_SUP_AMD', 'is not set')
-        cpu_sup_intel_not_set=KconfigCheck('-', '-', 'CPU_SUP_INTEL', 'is not set')
         l += [KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y'),
-                 cpu_sup_intel_not_set)]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y'),
-                 cpu_sup_amd_not_set)]
         l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
         microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
@@ -87,6 +84,10 @@ def add_kconfig_checks(l, arch):
                  VersionCheck((5, 19, 0)))] # X86_SMAP is enabled by default since v5.19
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y'),
+                 cpu_sup_amd_not_set)]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
@@ -281,8 +282,8 @@ def add_kconfig_checks(l, arch):
         l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'STRICT_DEVMEM', 'y'),
                  devmem_not_set)] # refers to LOCKDOWN
     if arch in ('X86_64', 'X86_32'):
-        l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'X86_INTEL_TSX_MODE_OFF', 'y'), # tsx=off
-                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'X86_INTEL_TSX_MODE_OFF', 'y'),
+                 cpu_sup_intel_not_set)] # tsx=off
 
     # 'cut_attack_surface', 'kspp'
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'SECURITY_DMESG_RESTRICT', 'y')]
