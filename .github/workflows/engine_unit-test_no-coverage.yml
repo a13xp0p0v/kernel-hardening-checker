@@ -1,4 +1,4 @@
-name: engine unit-test without coverage control
+name: engine unit-test no coverage
 
 on:
   push:
