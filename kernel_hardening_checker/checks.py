@@ -663,21 +663,34 @@ def add_sysctl_checks(l, _arch):
 # Calling the SysctlCheck class constructor:
 #   SysctlCheck(reason, decision, name, expected)
 
-    l += [SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2')]
+    # Use an omnipresent kconfig symbol to see if we have a kconfig file for checking
+    have_kconfig = KconfigCheck('-', '-', 'LOCALVERSION', 'is present')
+
+    l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
+             AND(KconfigCheck('-', '-', 'BPF_JIT', 'is not set'),
+                 have_kconfig))]
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
-    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0')] # may break the upower daemon in Ubuntu
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
-    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.unprivileged_bpf_disabled', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kptr_restrict', '2')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', '0')]
-    l += [SysctlCheck('cut_attack_surface', 'kspp', 'vm.unprivileged_userfaultfd', '0')]
+    l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1'),
+             AND(KconfigCheck('-', '-', 'KEXEC_CORE', 'is not set'),
+                 have_kconfig))]
+    l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.unprivileged_bpf_disabled', '1'),
+             AND(KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set'),
+                 have_kconfig))]
+    l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'vm.unprivileged_userfaultfd', '0'),
+             AND(KconfigCheck('cut_attack_surface', 'grsec', 'USERFAULTFD', 'is not set'),
+                 have_kconfig))]
           # At first, it disabled unprivileged userfaultfd,
           # and since v5.11 it enables unprivileged userfaultfd for user-mode only.
 
-    l += [SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1')] # radical, but may be useful in some cases
+    l += [OR(SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1'),
+             AND(KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
+                 have_kconfig))] # radical, but may be useful in some cases
 
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_hardlinks', '1')]
