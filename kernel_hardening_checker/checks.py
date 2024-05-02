@@ -673,7 +673,7 @@ def add_sysctl_checks(l, _arch):
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1'),
-             AND(KconfigCheck('cut_attack_surfice', 'kspp', 'KEXEC_CORE', 'is not set'),
+             AND(KconfigCheck('-', '-', 'KEXEC_CORE', 'is not set'),
                  have_config_file))]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0')] # may break the upower daemon in Ubuntu
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
