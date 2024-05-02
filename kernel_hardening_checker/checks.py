@@ -663,8 +663,9 @@ def add_sysctl_checks(l, _arch):
 # Calling the SysctlCheck class constructor:
 #   SysctlCheck(reason, decision, name, expected)
 
-    # use an omnipresent config symbol to see if we have a config file
-    have_config_file = KconfigCheck('-', '-', 'DEFAULT_INIT', 'is present')
+    # Use an omnipresent kconfig symbol to see if we have a kconfig file for checking
+    have_config_file = KconfigCheck('-', '-', 'LOCALVERSION', 'is present')
+
     l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
              AND(KconfigCheck('cut_attack_surface', 'kspp', 'BPF_JIT', 'is not set'),
                  have_config_file))]
