@@ -667,7 +667,7 @@ def add_sysctl_checks(l, _arch):
     have_config_file = KconfigCheck('-', '-', 'LOCALVERSION', 'is present')
 
     l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
-             AND(KconfigCheck('cut_attack_surface', 'kspp', 'BPF_JIT', 'is not set'),
+             AND(KconfigCheck('-', '-', 'BPF_JIT', 'is not set'),
                  have_config_file))]
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
