@@ -1,4 +1,4 @@
-name: engine unit-test
+name: engine unit-test without coverage control
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  engine_unit-test:
+  engine_unit-test_no-coverage:
 
     runs-on: ubuntu-latest
 
