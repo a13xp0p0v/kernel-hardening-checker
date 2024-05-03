@@ -3,11 +3,11 @@ name: engine unit-test
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   engine_unit-test:
+
+    if: github.repository == 'a13xp0p0v/kernel-hardening-checker'
 
     runs-on: ubuntu-latest
 
