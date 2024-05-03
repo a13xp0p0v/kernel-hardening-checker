@@ -241,6 +241,7 @@ def add_kconfig_checks(l, arch):
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'UNWIND_PATCH_PAC_INTO_SCS', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')] # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
     if arch == 'X86_32':
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
