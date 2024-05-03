@@ -1,13 +1,13 @@
-name: functional test
+name: functional test no coverage
 
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  functional_test:
-
-    if: github.repository == 'a13xp0p0v/kernel-hardening-checker'
+  functional_test_no-coverage:
 
     runs-on: ubuntu-latest
 
@@ -48,25 +48,10 @@ jobs:
         done
         echo -e "\nHave checked $COUNT kconfigs"
 
-    - name: Get source code for collecting coverage
+    - name: Get source code
       uses: actions/checkout@v4
 
-    - name: Run the functional tests and collect the coverage
+    - name: Run the functional tests
       run: |
         pip install coverage
         sh .github/workflows/functional_test.sh
-
-    - name: Prepare final coverage report
-      run: |
-        coverage xml -i -o coverage.xml
-
-    - name: Handle coverage
-      uses: codecov/codecov-action@v4
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      with:
-        files: ./coverage.xml
-        flags: functional_test
-        name: functional_test_upload
-        fail_ci_if_error: true
-        verbose: true

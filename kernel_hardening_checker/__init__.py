@@ -220,8 +220,8 @@ def parse_sysctl_file(mode, parsed_options, fname):
         sys.exit(f'[!] ERROR: {fname} doesn\'t look like a sysctl output file, please try `sudo sysctl -a > {fname}`')
 
     # let's check the presence of a sysctl option available for root
-    if 'net.core.bpf_jit_harden' not in parsed_options and mode != 'json':
-        print(f'[!] WARNING: sysctl option "net.core.bpf_jit_harden" available for root is not found in {fname}, please try `sudo sysctl -a > {fname}`')
+    if 'kernel.cad_pid' not in parsed_options and mode != 'json':
+        print(f'[!] WARNING: sysctl option "kernel.cad_pid" available for root is not found in {fname}, please try `sudo sysctl -a > {fname}`')
 
 
 def main():
