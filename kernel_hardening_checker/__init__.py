@@ -14,7 +14,7 @@ import gzip
 import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
-from typing import List, Tuple
+from typing import List, Tuple, TextIO
 import re
 import json
 from .__about__ import __version__
@@ -22,12 +22,12 @@ from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_op
 from .engine import populate_with_data, perform_checks, override_expected_value
 
 
-def _open(file: str, *args, **kwargs):
-    open_method = open
+def _open(file: str, *args, **kwargs) -> TextIO:
     if file.endswith('.gz'):
-        open_method = gzip.open
-
-    return open_method(file, *args, **kwargs)
+        f = gzip.open(file, *args, **kwargs)
+    else:
+        f = open(file, *args, **kwargs)
+    return f
 
 
 def detect_arch(fname: str, archs: List[str]) -> Tuple:
