@@ -115,6 +115,7 @@ class OptCheck:
             "reason": self.reason,
         }
         if with_results:
+            assert self.result, f'unexpected empty result in {self.name}'
             dump["check_result"] = self.result
             dump["check_result_bool"] = self.result.startswith('OK')
         return dump
@@ -230,6 +231,7 @@ class ComplexOptCheck:
         dump = self.opts[0].json_dump(False)
         if with_results:
             # Add the 'check_result' and 'check_result_bool' keys to the dictionary
+            assert self.result, f'unexpected empty result in {self.name}'
             dump["check_result"] = self.result
             dump["check_result_bool"] = self.result.startswith('OK')
         return dump
