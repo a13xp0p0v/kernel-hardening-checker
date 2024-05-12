@@ -19,7 +19,7 @@ import re
 import json
 from .__about__ import __version__
 from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options, add_sysctl_checks
-from .engine import populate_with_data, perform_checks, override_expected_value
+from .engine import StrOrNone, TupleOrNone, populate_with_data, perform_checks, override_expected_value
 
 
 def _open(file: str, *args, **kwargs) -> TextIO:
@@ -28,7 +28,7 @@ def _open(file: str, *args, **kwargs) -> TextIO:
     return open(file, *args, **kwargs)
 
 
-def detect_arch(fname: str, archs: List[str]) -> Tuple[str | None, str]:
+def detect_arch(fname: str, archs: List[str]) -> Tuple[StrOrNone, str]:
     with _open(fname, 'rt', encoding='utf-8') as f:
         arch_pattern = re.compile(r"CONFIG_[a-zA-Z0-9_]+=y$")
         arch = None
@@ -45,7 +45,7 @@ def detect_arch(fname: str, archs: List[str]) -> Tuple[str | None, str]:
         return arch, 'OK'
 
 
-def detect_kernel_version(fname: str) -> Tuple[Tuple | None, str]:
+def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
     with _open(fname, 'rt', encoding='utf-8') as f:
         ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
         for line in f.readlines():
@@ -62,7 +62,7 @@ def detect_kernel_version(fname: str) -> Tuple[Tuple | None, str]:
         return None, 'no kernel version detected'
 
 
-def detect_compiler(fname: str) -> Tuple[str | None, str]:
+def detect_compiler(fname: str) -> Tuple[StrOrNone, str]:
     gcc_version = None
     clang_version = None
     with _open(fname, 'rt', encoding='utf-8') as f:
@@ -103,7 +103,7 @@ def print_unknown_options(checklist: List, parsed_options: OrderedDict, opt_type
             print(f'[?] No check for {opt_type} option {option} ({value})')
 
 
-def print_checklist(mode: str | None, checklist: List, with_results: bool) -> None:
+def print_checklist(mode: StrOrNone, checklist: List, with_results: bool) -> None:
     if mode == 'json':
         output = []
         for opt in checklist:
@@ -150,7 +150,7 @@ def print_checklist(mode: str | None, checklist: List, with_results: bool) -> No
         print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
-def parse_kconfig_file(_mode: str | None, parsed_options: OrderedDict, fname: str) -> None:
+def parse_kconfig_file(_mode: StrOrNone, parsed_options: OrderedDict, fname: str) -> None:
     with _open(fname, 'rt', encoding='utf-8') as f:
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
@@ -178,7 +178,7 @@ def parse_kconfig_file(_mode: str | None, parsed_options: OrderedDict, fname: st
                 parsed_options[option] = value
 
 
-def parse_cmdline_file(mode: str | None, parsed_options: OrderedDict, fname: str) -> None:
+def parse_cmdline_file(mode: StrOrNone, parsed_options: OrderedDict, fname: str) -> None:
     with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
         opts = line.split()
@@ -199,7 +199,7 @@ def parse_cmdline_file(mode: str | None, parsed_options: OrderedDict, fname: str
             parsed_options[name] = value
 
 
-def parse_sysctl_file(mode: str | None, parsed_options: OrderedDict, fname: str) -> None:
+def parse_sysctl_file(mode: StrOrNone, parsed_options: OrderedDict, fname: str) -> None:
     with open(fname, 'r', encoding='utf-8') as f:
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
         for line in f.readlines():
