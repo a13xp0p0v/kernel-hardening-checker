@@ -26,7 +26,11 @@ def _open(file: str, *args, **kwargs):
     if file.endswith('.gz'):
         open_method = gzip.open
 
-    return open_method(file, *args, **kwargs)
+    try:
+        return open_method(file, *args, **kwargs)
+    except FileNotFoundError:
+        sys.exit(f'[!] ERROR: unable to open {file}, are you sure it exists?')
+
 
 
 def detect_arch(fname, archs):
