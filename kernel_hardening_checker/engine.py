@@ -38,19 +38,22 @@ def colorize_result(input_text: StrOrNone) -> StrOrNone:
 
 class OptCheck:
     def __init__(self, reason: str, decision: str, name: str, expected: str) -> None:
-        assert(name and name == name.strip() and len(name.split()) == 1), \
+        assert(name and isinstance(name, str) and
+               name == name.strip() and len(name.split()) == 1), \
                f'invalid name "{name}" for {self.__class__.__name__}'
         self.name = name
 
-        assert(decision and decision == decision.strip() and len(decision.split()) == 1), \
+        assert(decision and isinstance(decision, str) and
+               decision == decision.strip() and len(decision.split()) == 1), \
                f'invalid decision "{decision}" for "{name}" check'
         self.decision = decision
 
-        assert(reason and reason == reason.strip() and len(reason.split()) == 1), \
+        assert(reason and isinstance(reason, str) and
+               reason == reason.strip() and len(reason.split()) == 1), \
                f'invalid reason "{reason}" for "{name}" check'
         self.reason = reason
 
-        assert(expected and expected == expected.strip()), \
+        assert(expected and isinstance(expected, str) and expected == expected.strip()), \
                f'invalid expected value "{expected}" for "{name}" check (1)'
         val_len = len(expected.split())
         if val_len == 3:
@@ -114,6 +117,7 @@ class OptCheck:
             print(f'| {colorize_result(self.result)}', end='')
 
     def json_dump(self, with_results: bool) -> Dict[str, StrOrBool]:
+        assert(self.opt_type), f'unexpected empty opt_type in {self.name}'
         dump = {
             "option_name": self.name,
             "type": self.opt_type,
@@ -157,7 +161,7 @@ class VersionCheck:
         assert(all(map(lambda x: isinstance(x, int), ver_expected))), \
                f'invalid expected version "{ver_expected}" for VersionCheck (2)'
         self.ver_expected = ver_expected
-        self.ver = ()
+        self.ver = (0, 0, 0) # type: Tuple[int, int, int]
         self.result = None # type: str | None
 
     @property
@@ -170,6 +174,7 @@ class VersionCheck:
         self.ver = data[:3]
 
     def check(self) -> None:
+        assert(self.ver[0] >= 2), 'not initialized kernel version'
         if self.ver[0] > self.ver_expected[0]:
             self.result = f'OK: version >= {self.ver_expected}'
             return
@@ -203,7 +208,7 @@ class ComplexOptCheck:
                f'empty {self.__class__.__name__} check'
         assert(len(self.opts) != 1), \
                f'useless {self.__class__.__name__} check: {opts}'
-        assert(isinstance(opts[0], (KconfigCheck, CmdlineCheck, SysctlCheck))), \
+        assert(isinstance(self.opts[0], SimpleNamedOptCheckTypes)), \
                f'invalid {self.__class__.__name__} check: {opts}'
         self.result = None # type: str | None
 
@@ -213,10 +218,12 @@ class ComplexOptCheck:
 
     @property
     def name(self) -> str:
+        assert hasattr(self.opts[0], 'name') # true for SimpleNamedOptCheckTypes
         return self.opts[0].name
 
     @property
     def expected(self) -> str:
+        assert hasattr(self.opts[0], 'expected') # true for SimpleNamedOptCheckTypes
         return self.opts[0].expected
 
     def table_print(self, mode: StrOrNone, with_results: bool) -> None:
@@ -235,6 +242,7 @@ class ComplexOptCheck:
                 print(f'| {colorize_result(self.result)}', end='')
 
     def json_dump(self, with_results: bool) -> Dict[str, StrOrBool]:
+        assert hasattr(self.opts[0], 'json_dump') # true for SimpleNamedOptCheckTypes
         dump = self.opts[0].json_dump(False)
         if with_results:
             # Add the 'check_result' and 'check_result_bool' keys to the dictionary
@@ -252,22 +260,26 @@ class OR(ComplexOptCheck):
     def check(self) -> None:
         for i, opt in enumerate(self.opts):
             opt.check()
+            assert(opt.result), 'unexpected empty result of the OR sub-check'
             if opt.result.startswith('OK'):
                 self.result = opt.result
-                # Add more info for additional checks:
                 if i != 0:
-                    if opt.result == 'OK':
-                        self.result = f'OK: {opt.name} is "{opt.expected}"'
-                    elif opt.result == 'OK: is not found':
-                        self.result = f'OK: {opt.name} is not found'
-                    elif opt.result == 'OK: is present':
-                        self.result = f'OK: {opt.name} is present'
-                    elif opt.result.startswith('OK: is not off'):
-                        self.result = f'OK: {opt.name} is not off'
-                    else:
-                        # VersionCheck provides enough info
+                    # Add more info for additional checks:
+                    if isinstance(opt, VersionCheck):
                         assert(opt.result.startswith('OK: version')), \
-                               f'unexpected OK description "{opt.result}"'
+                               f'unexpected VersionCheck result {opt.result}'
+                        # VersionCheck provides enough info, nothing to add
+                    else:
+                        if opt.result == 'OK':
+                            self.result = f'OK: {opt.name} is "{opt.expected}"'
+                        elif opt.result == 'OK: is not found':
+                            self.result = f'OK: {opt.name} is not found'
+                        elif opt.result == 'OK: is present':
+                            self.result = f'OK: {opt.name} is present'
+                        else:
+                            assert(opt.result.startswith('OK: is not off')), \
+                                   f'unexpected OK description "{opt.result}"'
+                            self.result = f'OK: {opt.name} is not off'
                 return
         self.result = self.opts[0].result
 
@@ -281,6 +293,7 @@ class AND(ComplexOptCheck):
     def check(self) -> None:
         for i, opt in reversed(list(enumerate(self.opts))):
             opt.check()
+            assert(opt.result), 'unexpected empty result of the AND sub-check'
             if i == 0:
                 self.result = opt.result
                 return
@@ -288,19 +301,21 @@ class AND(ComplexOptCheck):
                 # This FAIL is caused by additional checks,
                 # and not by the main option that this AND-check is about.
                 # Describe the reason of the FAIL.
-                if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: is not found':
-                    self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
-                elif opt.result == 'FAIL: is not present':
-                    self.result = f'FAIL: {opt.name} is not present'
-                elif opt.result in ('FAIL: is off', 'FAIL: is off, "0"'):
-                    self.result = f'FAIL: {opt.name} is off'
-                elif opt.result == 'FAIL: is off, not found':
-                    self.result = f'FAIL: {opt.name} is off, not found'
-                else:
-                    # VersionCheck provides enough info
-                    self.result = opt.result
+                if isinstance(opt, VersionCheck):
                     assert(opt.result.startswith('FAIL: version')), \
-                           f'unexpected FAIL description "{opt.result}"'
+                           f'unexpected VersionCheck result {opt.result}'
+                    self.result = opt.result # VersionCheck provides enough info
+                else:
+                    if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: is not found':
+                        self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
+                    elif opt.result == 'FAIL: is not present':
+                        self.result = f'FAIL: {opt.name} is not present'
+                    elif opt.result in ('FAIL: is off', 'FAIL: is off, "0"'):
+                        self.result = f'FAIL: {opt.name} is off'
+                    else:
+                        assert(opt.result == 'FAIL: is off, not found'), \
+                               f'unexpected FAIL description "{opt.result}"'
+                        self.result = f'FAIL: {opt.name} is off, not found'
                 return
 
 
@@ -309,6 +324,8 @@ class AND(ComplexOptCheck):
 SIMPLE_OPTION_TYPES = ('kconfig', 'cmdline', 'sysctl', 'version')
 SimpleOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck]
 SimpleOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck)
+SimpleNamedOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck]
+SimpleNamedOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck)
 
 #  2) complex objects that may contain complex and simple objects
 ComplexOptCheckType = Union[OR, AND]
@@ -322,22 +339,24 @@ AnyOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, O
 
 
 def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: TupleOrOrderedDict, data_type: str) -> None:
-    assert(opt.opt_type != 'complex'), \
-           f'unexpected ComplexOptCheck "{opt.name}"'
-    assert(opt.opt_type in SIMPLE_OPTION_TYPES), \
-           f'invalid opt_type "{opt.opt_type}"'
-    assert(data_type in SIMPLE_OPTION_TYPES), \
-           f'invalid data_type "{data_type}"'
-    assert(data), \
-           'empty data'
+    assert(opt.opt_type != 'complex'), f'unexpected opt_type "{opt.opt_type}" for {opt}'
+    assert(opt.opt_type in SIMPLE_OPTION_TYPES), f'invalid opt_type "{opt.opt_type}"'
+    assert(data_type in SIMPLE_OPTION_TYPES), f'invalid data_type "{data_type}"'
+    assert(data), 'empty data'
 
     if data_type != opt.opt_type:
         return
 
     if data_type in ('kconfig', 'cmdline', 'sysctl'):
+        assert(isinstance(data, OrderedDict)), \
+               f'unexpected data with data_type {data_type}'
+        assert(isinstance(opt, SimpleNamedOptCheckTypes)), \
+               f'unexpected VersionCheck with opt_type "{opt.opt_type}"'
         opt.set_state(data.get(opt.name, None))
     else:
-        assert(data_type == 'version'), \
+        assert(isinstance(data, tuple)), \
+               f'unexpected verion data with data_type {data_type}'
+        assert(isinstance(opt, VersionCheck) and data_type == 'version'), \
                f'unexpected data_type "{data_type}"'
         opt.set_state(data)
 
@@ -345,10 +364,16 @@ def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: TupleOrOrderedD
 def populate_opt_with_data(opt: AnyOptCheckType, data: TupleOrOrderedDict, data_type: str) -> None:
     assert(opt.opt_type != 'version'), 'a single VersionCheck is useless'
     if opt.opt_type != 'complex':
+        assert(isinstance(opt, SimpleOptCheckTypes)), \
+               f'unexpected object {opt} with opt_type "{opt.opt_type}"'
         populate_simple_opt_with_data(opt, data, data_type)
     else:
+        assert(isinstance(opt, ComplexOptCheckTypes)), \
+               f'unexpected object {opt} with opt_type "{opt.opt_type}"'
         for o in opt.opts:
             if o.opt_type != 'complex':
+                assert(isinstance(o, SimpleOptCheckTypes)), \
+                       f'unexpected object {o} with opt_type "{o.opt_type}"'
                 populate_simple_opt_with_data(o, data, data_type)
             else:
                 # Recursion for nested ComplexOptCheck objects
