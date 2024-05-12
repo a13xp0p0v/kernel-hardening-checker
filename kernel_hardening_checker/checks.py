@@ -380,8 +380,9 @@ def add_kconfig_checks(l, arch):
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KEXEC_FILE', 'is not set')] # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'USER_NS', 'is not set')] # user.max_user_namespaces=0
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_CPUID', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')] # refers to LOCKDOWN
+    if arch in ('X86_64', 'X86_32'):
+        l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_CPUID', 'is not set')]
+        l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'AIO', 'is not set')]
