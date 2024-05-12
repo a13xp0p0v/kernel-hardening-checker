@@ -80,7 +80,7 @@ def detect_compiler(fname: str) -> Tuple[StrOrNone, str]:
     sys.exit(f'[!] ERROR: invalid GCC_VERSION and CLANG_VERSION: {gcc_version} {clang_version}')
 
 
-def print_unknown_options(checklist: List, parsed_options: OrderedDict, opt_type: str) -> None:
+def print_unknown_options(checklist: List, parsed_options: OrderedDict[str, str], opt_type: str) -> None:
     known_options = []
 
     for o1 in checklist:
@@ -150,7 +150,7 @@ def print_checklist(mode: StrOrNone, checklist: List, with_results: bool) -> Non
         print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
-def parse_kconfig_file(_mode: StrOrNone, parsed_options: OrderedDict, fname: str) -> None:
+def parse_kconfig_file(_mode: StrOrNone, parsed_options: OrderedDict[str, str], fname: str) -> None:
     with _open(fname, 'rt', encoding='utf-8') as f:
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
@@ -175,10 +175,11 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: OrderedDict, fname: str
                 sys.exit(f'[!] ERROR: Kconfig option "{line}" is found multiple times')
 
             if option:
+                assert(value), f'unexpected empty value for {option}'
                 parsed_options[option] = value
 
 
-def parse_cmdline_file(mode: StrOrNone, parsed_options: OrderedDict, fname: str) -> None:
+def parse_cmdline_file(mode: StrOrNone, parsed_options: OrderedDict[str, str], fname: str) -> None:
     with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
         opts = line.split()
@@ -196,10 +197,11 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: OrderedDict, fname: str)
             if name in parsed_options and mode != 'json':
                 print(f'[!] WARNING: cmdline option "{name}" is found multiple times')
             value = normalize_cmdline_options(name, value)
+            assert(value is not None), f'unexpected None value for {name}'
             parsed_options[name] = value
 
 
-def parse_sysctl_file(mode: StrOrNone, parsed_options: OrderedDict, fname: str) -> None:
+def parse_sysctl_file(mode: StrOrNone, parsed_options: OrderedDict[str, str], fname: str) -> None:
     with open(fname, 'r', encoding='utf-8') as f:
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
         for line in f.readlines():
@@ -306,7 +308,7 @@ def main() -> None:
             add_sysctl_checks(config_checklist, arch)
 
         # populate the checklist with the parsed Kconfig data
-        parsed_kconfig_options = OrderedDict() # type: OrderedDict
+        parsed_kconfig_options = OrderedDict() # type: OrderedDict[str, str]
         parse_kconfig_file(mode, parsed_kconfig_options, args.config)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
 
@@ -315,13 +317,13 @@ def main() -> None:
 
         if args.cmdline:
             # populate the checklist with the parsed cmdline data
-            parsed_cmdline_options = OrderedDict() # type: OrderedDict
+            parsed_cmdline_options = OrderedDict() # type: OrderedDict[str, str]
             parse_cmdline_file(mode, parsed_cmdline_options, args.cmdline)
             populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
         if args.sysctl:
             # populate the checklist with the parsed sysctl data
-            parsed_sysctl_options = OrderedDict() # type: OrderedDict
+            parsed_sysctl_options = OrderedDict() # type: OrderedDict[str, str]
             parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
             populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
 
