@@ -24,10 +24,8 @@ from .engine import populate_with_data, perform_checks, override_expected_value
 
 def _open(file: str, *args, **kwargs) -> TextIO:
     if file.endswith('.gz'):
-        f = gzip.open(file, *args, **kwargs)
-    else:
-        f = open(file, *args, **kwargs)
-    return f
+        return gzip.open(file, *args, **kwargs)
+    return open(file, *args, **kwargs)
 
 
 def detect_arch(fname: str, archs: List[str]) -> Tuple:
