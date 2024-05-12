@@ -56,7 +56,7 @@ def detect_kernel_version(fname: str) -> Tuple[Tuple | None, str]:
                 ver_numbers = ver_str.split('.')
                 if len(ver_numbers) >= 3:
                     if all(map(lambda x: x.isdigit(), ver_numbers)):
-                        return tuple(map(int, ver_numbers)), None
+                        return tuple(map(int, ver_numbers)), 'OK'
                 msg = f'failed to parse the version "{parts[2]}"'
                 return None, msg
         return None, 'no kernel version detected'
@@ -388,6 +388,7 @@ def main() -> None:
         if mode and mode not in ('verbose', 'json'):
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
+        assert arch, 'unexpected empty arch from ArgumentParser'
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
         add_sysctl_checks(config_checklist, arch)
@@ -401,6 +402,7 @@ def main() -> None:
         if mode:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
         arch = args.generate
+        assert arch, 'unexpected empty arch from ArgumentParser'
         add_kconfig_checks(config_checklist, arch)
         print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the microarchitecture
         for opt in config_checklist:
