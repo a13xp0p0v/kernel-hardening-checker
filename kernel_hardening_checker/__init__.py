@@ -14,7 +14,7 @@ import gzip
 import sys
 from argparse import ArgumentParser
 from collections import OrderedDict
-from typing import List, Tuple, TextIO
+from typing import List, Tuple, OrderedDict, TextIO
 import re
 import json
 from .__about__ import __version__
@@ -28,7 +28,7 @@ def _open(file: str, *args, **kwargs) -> TextIO:
     return open(file, *args, **kwargs)
 
 
-def detect_arch(fname: str, archs: List[str]) -> Tuple:
+def detect_arch(fname: str, archs: List[str]) -> Tuple[str | None, str]:
     with _open(fname, 'rt', encoding='utf-8') as f:
         arch_pattern = re.compile(r"CONFIG_[a-zA-Z0-9_]+=y$")
         arch = None
@@ -45,7 +45,7 @@ def detect_arch(fname: str, archs: List[str]) -> Tuple:
         return arch, 'OK'
 
 
-def detect_kernel_version(fname: str) -> Tuple:
+def detect_kernel_version(fname: str) -> Tuple[Tuple | None, str]:
     with _open(fname, 'rt', encoding='utf-8') as f:
         ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
         for line in f.readlines():
@@ -62,7 +62,7 @@ def detect_kernel_version(fname: str) -> Tuple:
         return None, 'no kernel version detected'
 
 
-def detect_compiler(fname: str):
+def detect_compiler(fname: str) -> Tuple[str | None, str]:
     gcc_version = None
     clang_version = None
     with _open(fname, 'rt', encoding='utf-8') as f:
@@ -80,7 +80,7 @@ def detect_compiler(fname: str):
     sys.exit(f'[!] ERROR: invalid GCC_VERSION and CLANG_VERSION: {gcc_version} {clang_version}')
 
 
-def print_unknown_options(checklist, parsed_options, opt_type):
+def print_unknown_options(checklist: List, parsed_options: OrderedDict, opt_type: str) -> None:
     known_options = []
 
     for o1 in checklist:
@@ -103,7 +103,7 @@ def print_unknown_options(checklist, parsed_options, opt_type):
             print(f'[?] No check for {opt_type} option {option} ({value})')
 
 
-def print_checklist(mode: str, checklist, with_results: bool):
+def print_checklist(mode: str | None, checklist: List, with_results: bool) -> None:
     if mode == 'json':
         output = []
         for opt in checklist:
@@ -150,7 +150,7 @@ def print_checklist(mode: str, checklist, with_results: bool):
         print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
-def parse_kconfig_file(_mode, parsed_options, fname: str):
+def parse_kconfig_file(_mode: str | None, parsed_options: OrderedDict, fname: str) -> None:
     with _open(fname, 'rt', encoding='utf-8') as f:
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
@@ -178,7 +178,7 @@ def parse_kconfig_file(_mode, parsed_options, fname: str):
                 parsed_options[option] = value
 
 
-def parse_cmdline_file(mode, parsed_options, fname):
+def parse_cmdline_file(mode: str | None, parsed_options: OrderedDict, fname: str) -> None:
     with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
         opts = line.split()
@@ -199,7 +199,7 @@ def parse_cmdline_file(mode, parsed_options, fname):
             parsed_options[name] = value
 
 
-def parse_sysctl_file(mode, parsed_options, fname):
+def parse_sysctl_file(mode: str | None, parsed_options: OrderedDict, fname: str) -> None:
     with open(fname, 'r', encoding='utf-8') as f:
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
         for line in f.readlines():
@@ -222,7 +222,7 @@ def parse_sysctl_file(mode, parsed_options, fname):
         print(f'[!] WARNING: sysctl option "kernel.cad_pid" available for root is not found in {fname}, please try `sudo sysctl -a > {fname}`')
 
 
-def main():
+def main() -> None:
     # Report modes:
     #   * verbose mode for
     #     - reporting about unknown kernel options in the Kconfig
@@ -255,7 +255,7 @@ def main():
         if mode != 'json':
             print(f'[+] Special report mode: {mode}')
 
-    config_checklist = []
+    config_checklist = [] # type: List
 
     if args.config:
         if args.print:
@@ -306,7 +306,7 @@ def main():
             add_sysctl_checks(config_checklist, arch)
 
         # populate the checklist with the parsed Kconfig data
-        parsed_kconfig_options = OrderedDict()
+        parsed_kconfig_options = OrderedDict() # type: OrderedDict
         parse_kconfig_file(mode, parsed_kconfig_options, args.config)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
 
@@ -315,13 +315,13 @@ def main():
 
         if args.cmdline:
             # populate the checklist with the parsed cmdline data
-            parsed_cmdline_options = OrderedDict()
+            parsed_cmdline_options = OrderedDict() # type: OrderedDict
             parse_cmdline_file(mode, parsed_cmdline_options, args.cmdline)
             populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
         if args.sysctl:
             # populate the checklist with the parsed sysctl data
-            parsed_sysctl_options = OrderedDict()
+            parsed_sysctl_options = OrderedDict() # type: OrderedDict
             parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
             populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
 
