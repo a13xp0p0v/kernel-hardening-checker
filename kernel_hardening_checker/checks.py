@@ -11,10 +11,11 @@ This module contains knowledge for checks.
 # pylint: disable=missing-function-docstring,line-too-long,invalid-name
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
 
-from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
+from .engine import StrOrNone, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
+from typing import List
 
 
-def add_kconfig_checks(l, arch: str):
+def add_kconfig_checks(l: List, arch: str) -> None:
     assert(arch), 'empty arch'
 
     # Calling the KconfigCheck class constructor:
@@ -422,7 +423,7 @@ def add_kconfig_checks(l, arch: str):
         l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
 
 
-def add_cmdline_checks(l, arch: str):
+def add_cmdline_checks(l: List, arch: str) -> None:
     assert(arch), 'empty arch'
 
     # Calling the CmdlineCheck class constructor:
@@ -657,7 +658,7 @@ def normalize_cmdline_options(option: str, value: str) -> str:
 #    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
 
-def add_sysctl_checks(l, _arch: str):
+def add_sysctl_checks(l: List, _arch: StrOrNone) -> None:
 # This function may be called with arch=None
 
 # Calling the SysctlCheck class constructor:
