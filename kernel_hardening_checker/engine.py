@@ -13,7 +13,7 @@ This module is the engine of checks.
 
 import sys
 
-from typing import Optional, Dict, Tuple
+from typing import Optional, OrderedDict, Dict, List, Tuple
 StrOrNone = Optional[str]
 TupleOrNone = Optional[Tuple]
 
@@ -353,3 +353,26 @@ def override_expected_value(checklist, name, new_val):
 def perform_checks(checklist):
     for opt in checklist:
         opt.check()
+
+
+def print_unknown_options(checklist: List, parsed_options: OrderedDict[str, str], opt_type: str) -> None:
+    known_options = []
+
+    for o1 in checklist:
+        if o1.opt_type != 'complex':
+            known_options.append(o1.name)
+            continue
+        for o2 in o1.opts:
+            if o2.opt_type != 'complex':
+                if hasattr(o2, 'name'):
+                    known_options.append(o2.name)
+                continue
+            for o3 in o2.opts:
+                assert(o3.opt_type != 'complex'), \
+                       f'unexpected ComplexOptCheck inside {o2.name}'
+                if hasattr(o3, 'name'):
+                    known_options.append(o3.name)
+
+    for option, value in parsed_options.items():
+        if option not in known_options:
+            print(f'[?] No check for {opt_type} option {option} ({value})')

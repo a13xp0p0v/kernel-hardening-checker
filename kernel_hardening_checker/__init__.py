@@ -19,7 +19,7 @@ import re
 import json
 from .__about__ import __version__
 from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options, add_sysctl_checks
-from .engine import StrOrNone, TupleOrNone, populate_with_data, perform_checks, override_expected_value
+from .engine import StrOrNone, TupleOrNone, print_unknown_options, populate_with_data, perform_checks, override_expected_value
 
 
 def _open(file: str, *args, **kwargs) -> TextIO:
@@ -78,29 +78,6 @@ def detect_compiler(fname: str) -> Tuple[StrOrNone, str]:
     if gcc_version != '0' and clang_version == '0':
         return f'GCC {gcc_version}', 'OK'
     sys.exit(f'[!] ERROR: invalid GCC_VERSION and CLANG_VERSION: {gcc_version} {clang_version}')
-
-
-def print_unknown_options(checklist: List, parsed_options: OrderedDict[str, str], opt_type: str) -> None:
-    known_options = []
-
-    for o1 in checklist:
-        if o1.opt_type != 'complex':
-            known_options.append(o1.name)
-            continue
-        for o2 in o1.opts:
-            if o2.opt_type != 'complex':
-                if hasattr(o2, 'name'):
-                    known_options.append(o2.name)
-                continue
-            for o3 in o2.opts:
-                assert(o3.opt_type != 'complex'), \
-                       f'unexpected ComplexOptCheck inside {o2.name}'
-                if hasattr(o3, 'name'):
-                    known_options.append(o3.name)
-
-    for option, value in parsed_options.items():
-        if option not in known_options:
-            print(f'[?] No check for {opt_type} option {option} ({value})')
 
 
 def print_checklist(mode: StrOrNone, checklist: List, with_results: bool) -> None:
