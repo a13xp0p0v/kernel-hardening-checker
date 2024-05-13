@@ -28,7 +28,7 @@ steps:
       - echo "Install the mypy tool..."
       - python --version
       - pip install --no-cache-dir mypy
-      - mypy kernel_hardening_checker/
+      - mypy kernel_hardening_checker/ --show-error-context --pretty --no-incremental --check-untyped-defs --disallow-untyped-defs --strict-equality
   functional-test-with-coverage:
     image: python:3
     pull: true
