@@ -100,14 +100,21 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
     print('=' * sep_line_len)
 
     # table contents
+    ok_count = 0
+    fail_count = 0
     for opt in checklist:
         if with_results:
-            if mode == 'show_ok':
-                if not opt.result.startswith('OK'):
+            assert(opt.result), f'unexpected empty result of {opt.name} check'
+            if opt.result.startswith('OK'):
+                ok_count += 1
+                if mode == 'show_fail':
                     continue
-            if mode == 'show_fail':
-                if not opt.result.startswith('FAIL'):
+            elif opt.result.startswith('FAIL'):
+                fail_count += 1
+                if mode == 'show_ok':
                     continue
+            else:
+                assert(False), f'unexpected result "{opt.result}" of {opt.name} check'
         opt.table_print(mode, with_results)
         print()
         if mode == 'verbose':
@@ -116,9 +123,7 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
 
     # final score
     if with_results:
-        fail_count = len(list(filter(lambda opt: opt.result.startswith('FAIL'), checklist)))
         fail_suppressed = ''
-        ok_count = len(list(filter(lambda opt: opt.result.startswith('OK'), checklist)))
         ok_suppressed = ''
         if mode == 'show_ok':
             fail_suppressed = ' (suppressed in output)'

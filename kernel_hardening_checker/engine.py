@@ -388,8 +388,8 @@ def populate_with_data(checklist: List[ChecklistObjType], data: TupleOrOrderedDi
 def override_expected_value(checklist: List[ChecklistObjType], name: str, new_val: str) -> None:
     for opt in checklist:
         if opt.name == name:
-            assert(opt.opt_type in ('kconfig', 'cmdline', 'sysctl')), \
-                   f'overriding an expected value for "{opt.opt_type}" checks is not supported yet'
+            assert(isinstance(opt, SimpleNamedOptCheckTypes)), \
+                   f'overriding an expected value for {opt}" is not supported yet'
             opt.expected = new_val
 
 
@@ -402,17 +402,21 @@ def print_unknown_options(checklist: List[ChecklistObjType], parsed_options: Ord
     known_options = []
 
     for o1 in checklist:
-        if o1.opt_type != 'complex':
+        if isinstance(o1, SimpleOptCheckTypes):
+            assert(o1.opt_type != 'complex'), f'{o1} with complex opt_type'
+            assert(not isinstance(o1, VersionCheck)), 'single VersionCheck in checklist'
             known_options.append(o1.name)
             continue
         for o2 in o1.opts:
-            if o2.opt_type != 'complex':
+            if isinstance(o2, SimpleOptCheckTypes):
+                assert(o2.opt_type != 'complex'), f'{o2} with complex opt_type'
                 if hasattr(o2, 'name'):
                     known_options.append(o2.name)
                 continue
             for o3 in o2.opts:
-                assert(o3.opt_type != 'complex'), \
+                assert(isinstance(o3, SimpleOptCheckTypes)), \
                        f'unexpected ComplexOptCheck inside {o2.name}'
+                assert(o3.opt_type != 'complex'), f'{o3} with complex opt_type'
                 if hasattr(o3, 'name'):
                     known_options.append(o3.name)
 
