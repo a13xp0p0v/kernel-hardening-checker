@@ -367,7 +367,7 @@ def main() -> None:
         if mode and mode not in ('verbose', 'json'):
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
-        assert arch, 'unexpected empty arch from ArgumentParser'
+        assert(arch), 'unexpected empty arch from ArgumentParser'
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
         add_sysctl_checks(config_checklist, arch)
@@ -377,11 +377,15 @@ def main() -> None:
         sys.exit(0)
 
     if args.generate:
-        assert(args.config is None and args.cmdline is None and args.sysctl is None and args.print is None), 'unexpected args'
+        assert(args.config is None and
+               args.cmdline is None and
+               args.sysctl is None and
+               args.print is None), \
+               'unexpected args'
         if mode:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
         arch = args.generate
-        assert arch, 'unexpected empty arch from ArgumentParser'
+        assert(arch), 'unexpected empty arch from ArgumentParser'
         add_kconfig_checks(config_checklist, arch)
         print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the microarchitecture
         for opt in config_checklist:
