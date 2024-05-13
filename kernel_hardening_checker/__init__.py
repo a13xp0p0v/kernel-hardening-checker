@@ -22,14 +22,14 @@ from .engine import StrOrNone, TupleOrNone, ChecklistObjType
 from .engine import print_unknown_options, populate_with_data, perform_checks, override_expected_value
 
 
-def _open(file: str, *args, **kwargs) -> TextIO:
+def _open(file: str) -> TextIO:
     if file.endswith('.gz'):
-        return gzip.open(file, *args, **kwargs)
-    return open(file, *args, **kwargs)
+        return gzip.open(file, 'rt', encoding='utf-8')
+    return open(file, 'rt', encoding='utf-8')
 
 
 def detect_arch(fname: str, archs: List[str]) -> Tuple[StrOrNone, str]:
-    with _open(fname, 'rt', encoding='utf-8') as f:
+    with _open(fname) as f:
         arch_pattern = re.compile(r"CONFIG_[a-zA-Z0-9_]+=y$")
         arch = None
         for line in f.readlines():
@@ -46,7 +46,7 @@ def detect_arch(fname: str, archs: List[str]) -> Tuple[StrOrNone, str]:
 
 
 def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
-    with _open(fname, 'rt', encoding='utf-8') as f:
+    with _open(fname) as f:
         ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
         for line in f.readlines():
             if ver_pattern.match(line):
@@ -65,7 +65,7 @@ def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
 def detect_compiler(fname: str) -> Tuple[StrOrNone, str]:
     gcc_version = None
     clang_version = None
-    with _open(fname, 'rt', encoding='utf-8') as f:
+    with _open(fname) as f:
         for line in f.readlines():
             if line.startswith('CONFIG_GCC_VERSION='):
                 gcc_version = line[19:-1]
@@ -133,7 +133,7 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
 
 
 def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
-    with _open(fname, 'rt', encoding='utf-8') as f:
+    with _open(fname) as f:
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
 
