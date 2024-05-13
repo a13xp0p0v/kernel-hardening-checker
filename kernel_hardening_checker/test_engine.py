@@ -16,7 +16,8 @@ import sys
 import json
 import inspect
 from typing import Optional, List, Dict, Tuple
-from .engine import ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
+from .engine import ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
+from .engine import populate_with_data, perform_checks, override_expected_value
 
 
 class TestEngine(unittest.TestCase):

@@ -18,7 +18,8 @@ import re
 import json
 from .__about__ import __version__
 from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options, add_sysctl_checks
-from .engine import StrOrNone, TupleOrNone, ChecklistObjType, print_unknown_options, populate_with_data, perform_checks, override_expected_value
+from .engine import StrOrNone, TupleOrNone, ChecklistObjType
+from .engine import print_unknown_options, populate_with_data, perform_checks, override_expected_value
 
 
 def _open(file: str, *args, **kwargs) -> TextIO:
