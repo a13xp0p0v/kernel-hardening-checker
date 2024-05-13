@@ -16,7 +16,8 @@ import sys
 from collections import OrderedDict
 import json
 import inspect
-from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
+from typing import Optional, List, OrderedDict, Tuple
+from .engine import ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND, populate_with_data, perform_checks, override_expected_value
 
 
 class TestEngine(unittest.TestCase):
@@ -24,7 +25,7 @@ class TestEngine(unittest.TestCase):
     Example test scenario:
 
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'KCONFIG_NAME', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'cmdline_name', 'expected_2')]
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'sysctl_name', 'expected_3')]
@@ -48,7 +49,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, kernel_version)
 
         # 7. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(...
     """
@@ -56,7 +57,11 @@ class TestEngine(unittest.TestCase):
     maxDiff = None
 
     @staticmethod
-    def run_engine(checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, kernel_version):
+    def run_engine(checklist: List[ChecklistObjType],
+                   parsed_kconfig_options: Optional[OrderedDict],
+                   parsed_cmdline_options: Optional[OrderedDict],
+                   parsed_sysctl_options: Optional[OrderedDict],
+                   kernel_version: Optional[Tuple]) -> None:
         # populate the checklist with data
         if parsed_kconfig_options:
             populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
@@ -86,7 +91,7 @@ class TestEngine(unittest.TestCase):
         print()
 
     @staticmethod
-    def get_engine_result(checklist, result, result_type):
+    def get_engine_result(checklist: List[ChecklistObjType], result: List, result_type: str) -> None:
         assert(result_type in ('json', 'stdout', 'stdout_verbose')), \
                f'invalid result type "{result_type}"'
 
@@ -106,9 +111,9 @@ class TestEngine(unittest.TestCase):
         sys.stdout = stdout_backup
         result.append(captured_output.getvalue())
 
-    def test_simple_kconfig(self):
+    def test_simple_kconfig(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
         config_checklist += [KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2')]
         config_checklist += [KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3')]
@@ -133,7 +138,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -149,9 +154,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'desired_val': 'is not off', 'decision': 'decision_10', 'reason': 'reason_10', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}]
         )
 
-    def test_simple_cmdline(self):
+    def test_simple_cmdline(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [CmdlineCheck('reason_1', 'decision_1', 'name_1', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
         config_checklist += [CmdlineCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
@@ -176,7 +181,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, None, parsed_cmdline_options, None, None)
 
         # 4. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -192,9 +197,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'name_10', 'type': 'cmdline', 'desired_val': 'is not off', 'decision': 'decision_10', 'reason': 'reason_10', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}]
         )
 
-    def test_simple_sysctl(self):
+    def test_simple_sysctl(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [SysctlCheck('reason_1', 'decision_1', 'name_1', 'expected_1')]
         config_checklist += [SysctlCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
@@ -219,7 +224,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, None, None, parsed_sysctl_options, None)
 
         # 4. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -235,9 +240,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'name_10', 'type': 'sysctl', 'desired_val': 'is not off', 'decision': 'decision_10', 'reason': 'reason_10', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}]
         )
 
-    def test_complex_or(self):
+    def test_complex_or(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'))]
         config_checklist += [OR(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
@@ -266,7 +271,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -278,9 +283,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'desired_val': 'expected_11', 'decision': 'decision_11', 'reason': 'reason_11', 'check_result': 'OK: CONFIG_NAME_12 is not off', 'check_result_bool': True}]
         )
 
-    def test_complex_and(self):
+    def test_complex_and(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [AND(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                  KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'))]
         config_checklist += [AND(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
@@ -311,7 +316,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -323,9 +328,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'desired_val': 'expected_11', 'decision': 'decision_11', 'reason': 'reason_11', 'check_result': 'FAIL: CONFIG_NAME_12 is off, not found', 'check_result_bool': False}]
         )
 
-    def test_complex_nested(self):
+    def test_complex_nested(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [AND(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                  OR(KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'),
                                     KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3')))]
@@ -358,7 +363,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -368,9 +373,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'desired_val': 'expected_10', 'decision': 'decision_10', 'reason': 'reason_10', 'check_result': 'FAIL: "UNexpected_10"', 'check_result_bool': False}]
         )
 
-    def test_version(self):
+    def test_version(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 VersionCheck((41, 101, 0)))]
         config_checklist += [AND(KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'),
@@ -397,7 +402,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, kernel_version)
 
         # 5. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -409,9 +414,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_6', 'type': 'kconfig', 'desired_val': 'expected_6', 'decision': 'decision_6', 'reason': 'reason_6', 'check_result': 'FAIL: version < (42, 43, 45)', 'check_result_bool': False}]
         )
 
-    def test_stdout(self):
+    def test_stdout(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2'),
                                 SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3'))]
@@ -436,7 +441,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, None)
 
         # 6. check that the results are correct
-        json_result = []
+        json_result = [] # type: List
         self.get_engine_result(config_checklist, json_result, 'json')
         self.assertEqual(
                 json_result,
@@ -444,7 +449,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_4', 'type': 'kconfig', 'desired_val': 'expected_4', 'decision': 'decision_4', 'reason': 'reason_4', 'check_result': 'FAIL: name_5 is not "expected_5"', 'check_result_bool': False}]
         )
 
-        stdout_result = []
+        stdout_result = [] # type: List
         self.get_engine_result(config_checklist, stdout_result, 'stdout')
         self.assertEqual(
                 stdout_result,
@@ -474,9 +479,9 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
 '               ]
         )
 
-    def test_value_overriding(self):
+    def test_value_overriding(self) -> None:
         # 1. prepare the checklist
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
@@ -497,7 +502,7 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
         self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, None)
 
         # 6. check that the results are correct
-        result = []
+        result = [] # type: List
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
