@@ -15,9 +15,12 @@ import io
 import sys
 import json
 import inspect
-from typing import Optional, List, Dict, Tuple
-from .engine import ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
+from typing import Union, Optional, List, Dict, Tuple
+from .engine import StrOrBool, ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
 from .engine import populate_with_data, perform_checks, override_expected_value
+
+
+ResultType = List[Union[Dict[str, StrOrBool], str]]
 
 
 class TestEngine(unittest.TestCase):
@@ -43,13 +46,13 @@ class TestEngine(unittest.TestCase):
         parsed_sysctl_options['sysctl_name'] = 'expected_3'
 
         # 5. prepare the kernel version
-        kernel_version = (42, 43)
+        kernel_version = (42, 43, 44)
 
         # 6. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, kernel_version)
 
         # 7. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(...
     """
@@ -58,10 +61,10 @@ class TestEngine(unittest.TestCase):
 
     @staticmethod
     def run_engine(checklist: List[ChecklistObjType],
-                   parsed_kconfig_options: Optional[Dict],
-                   parsed_cmdline_options: Optional[Dict],
-                   parsed_sysctl_options: Optional[Dict],
-                   kernel_version: Optional[Tuple]) -> None:
+                   parsed_kconfig_options: Optional[Dict[str, str]],
+                   parsed_cmdline_options: Optional[Dict[str, str]],
+                   parsed_sysctl_options: Optional[Dict[str, str]],
+                   kernel_version: Optional[Tuple[int, int, int]]) -> None:
         # populate the checklist with data
         if parsed_kconfig_options:
             populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
@@ -91,7 +94,7 @@ class TestEngine(unittest.TestCase):
         print()
 
     @staticmethod
-    def get_engine_result(checklist: List[ChecklistObjType], result: List, result_type: str) -> None:
+    def get_engine_result(checklist: List[ChecklistObjType], result: ResultType, result_type: str) -> None:
         assert(result_type in ('json', 'stdout', 'stdout_verbose')), \
                f'invalid result type "{result_type}"'
 
@@ -138,7 +141,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -181,7 +184,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, None, parsed_cmdline_options, None, None)
 
         # 4. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -224,7 +227,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, None, None, parsed_sysctl_options, None)
 
         # 4. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -271,7 +274,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -316,7 +319,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -363,7 +366,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
 
         # 4. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -402,7 +405,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, kernel_version)
 
         # 5. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
@@ -441,7 +444,7 @@ class TestEngine(unittest.TestCase):
         self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, None)
 
         # 6. check that the results are correct
-        json_result = [] # type: List
+        json_result = [] # type: ResultType
         self.get_engine_result(config_checklist, json_result, 'json')
         self.assertEqual(
                 json_result,
@@ -449,7 +452,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_4', 'type': 'kconfig', 'desired_val': 'expected_4', 'decision': 'decision_4', 'reason': 'reason_4', 'check_result': 'FAIL: name_5 is not "expected_5"', 'check_result_bool': False}]
         )
 
-        stdout_result = [] # type: List
+        stdout_result = [] # type: ResultType
         self.get_engine_result(config_checklist, stdout_result, 'stdout')
         self.assertEqual(
                 stdout_result,
@@ -502,7 +505,7 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
         self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, None)
 
         # 6. check that the results are correct
-        result = [] # type: List
+        result = [] # type: ResultType
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
                 result,
