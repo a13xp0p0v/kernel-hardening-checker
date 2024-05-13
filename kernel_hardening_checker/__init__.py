@@ -55,7 +55,7 @@ def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
                 ver_str = parts[2].split('-', 1)[0]
                 ver_numbers = ver_str.split('.')
                 if len(ver_numbers) >= 3:
-                    if all(map(lambda x: x.isdigit(), ver_numbers)):
+                    if all(map(lambda x: x.isdecimal(), ver_numbers)):
                         return tuple(map(int, ver_numbers)), 'OK'
                 msg = f'failed to parse the version "{parts[2]}"'
                 return None, msg

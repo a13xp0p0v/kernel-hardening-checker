@@ -16,8 +16,8 @@ import sys
 
 from typing import Union, Optional, List, Dict, Tuple
 StrOrNone = Optional[str]
-TupleOrNone = Optional[Tuple]
-DictOrTuple = Union[Dict[str, str], Tuple]
+TupleOrNone = Optional[Tuple[int, ...]]
+DictOrTuple = Union[Dict[str, str], Tuple[int, ...]]
 StrOrBool = Union[str, bool]
 
 GREEN_COLOR = '\x1b[32m'
@@ -161,16 +161,18 @@ class VersionCheck:
         assert(all(map(lambda x: isinstance(x, int), ver_expected))), \
                f'invalid expected version "{ver_expected}" for VersionCheck (2)'
         self.ver_expected = ver_expected
-        self.ver = (0, 0, 0) # type: Tuple[int, int, int]
+        self.ver = (0, 0, 0) # type: Tuple[int, ...]
         self.result = None # type: str | None
 
     @property
     def opt_type(self) -> str:
         return 'version'
 
-    def set_state(self, data: Tuple) -> None:
+    def set_state(self, data: Tuple[int, ...]) -> None:
         assert(data and isinstance(data, tuple) and len(data) >= 3), \
-               f'invalid version "{data}" for VersionCheck'
+               f'invalid version "{data}" for VersionCheck (1)'
+        assert(all(map(lambda x: isinstance(x, int), data))), \
+               f'invalid version "{data}" for VersionCheck (2)'
         self.ver = data[:3]
 
     def check(self) -> None:
