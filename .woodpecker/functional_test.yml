@@ -21,6 +21,14 @@ steps:
       - COUNT=0
       - for C in $KCONFIGS; do COUNT=$(expr $COUNT + 1); echo ">>>>> checking kconfig number $COUNT <<<<<"; kernel-hardening-checker -c $C -l /proc/cmdline -s /tmp/sysctls; done
       - echo "Have checked $COUNT kconfigs"
+  static-typing-checking:
+    image: python:3
+    pull: true
+    commands:
+      - echo "Install the mypy tool..."
+      - python --version
+      - pip install --no-cache-dir mypy
+      - mypy kernel_hardening_checker/
   functional-test-with-coverage:
     image: python:3
     pull: true
