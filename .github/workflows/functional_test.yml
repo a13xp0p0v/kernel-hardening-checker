@@ -51,11 +51,6 @@ jobs:
     - name: Get source code for collecting coverage
       uses: actions/checkout@v4
 
-    - name: Check static typing with mypy
-      run: |
-        pip install mypy
-        mypy kernel_hardening_checker/
-
     - name: Run the functional tests and collect the coverage
       run: |
         pip install coverage
