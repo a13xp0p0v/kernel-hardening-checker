@@ -133,8 +133,8 @@ class OptCheck:
 
 
 class KconfigCheck(OptCheck):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args: str) -> None:
+        super().__init__(*args)
         self.name = f'CONFIG_{self.name}'
 
     @property
