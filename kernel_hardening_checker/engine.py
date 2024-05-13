@@ -11,17 +11,21 @@ This module is the engine of checks.
 # pylint: disable=missing-class-docstring,missing-function-docstring
 # pylint: disable=line-too-long,invalid-name,too-many-branches
 
+from __future__ import annotations
 import sys
 
-from typing import Optional, OrderedDict, Dict, List, Tuple
+from typing import Union, Optional, List, Dict, OrderedDict, Tuple
 StrOrNone = Optional[str]
 TupleOrNone = Optional[Tuple]
+TupleOrOrderedDict = Union[Tuple, OrderedDict[str, str]]
+StrOrBool = Union[str, bool]
 
 GREEN_COLOR = '\x1b[32m'
 RED_COLOR = '\x1b[31m'
 COLOR_END = '\x1b[0m'
 
-def colorize_result(input_text):
+
+def colorize_result(input_text: StrOrNone) -> StrOrNone:
     if input_text is None or not sys.stdout.isatty():
         return input_text
     if input_text.startswith('OK'):
@@ -33,7 +37,7 @@ def colorize_result(input_text):
 
 
 class OptCheck:
-    def __init__(self, reason: str, decision: str, name: str, expected: str):
+    def __init__(self, reason: str, decision: str, name: str, expected: str) -> None:
         assert(name and name == name.strip() and len(name.split()) == 1), \
                f'invalid name "{name}" for {self.__class__.__name__}'
         self.name = name
@@ -60,19 +64,19 @@ class OptCheck:
                    f'invalid expected value "{expected}" for "{name}" check (4)'
         self.expected = expected
 
-        self.state = None
-        self.result = None
+        self.state = None # type: str | None
+        self.result = None # type: str | None
 
     @property
-    def opt_type(self):
+    def opt_type(self) -> StrOrNone:
         return None
 
-    def set_state(self, data):
+    def set_state(self, data: StrOrNone) -> None:
         assert(data is None or isinstance(data, str)), \
                f'invalid state "{data}" for "{self.name}" check'
         self.state = data
 
-    def check(self):
+    def check(self) -> None:
         # handle the 'is present' check
         if self.expected == 'is present':
             if self.state is None:
@@ -104,19 +108,19 @@ class OptCheck:
         else:
             self.result = f'FAIL: "{self.state}"'
 
-    def table_print(self, _mode, with_results: bool):
+    def table_print(self, _mode: StrOrNone, with_results: bool) -> None:
         print(f'{self.name:<40}|{self.opt_type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
         if with_results:
             print(f'| {colorize_result(self.result)}', end='')
 
-    def json_dump(self, with_results: bool) -> Dict:
+    def json_dump(self, with_results: bool) -> Dict[str, StrOrBool]:
         dump = {
             "option_name": self.name,
             "type": self.opt_type,
             "desired_val": self.expected,
             "decision": self.decision,
             "reason": self.reason,
-        }
+        } # type: Dict[str, StrOrBool]
         if with_results:
             assert self.result, f'unexpected empty result in {self.name}'
             dump["check_result"] = self.result
@@ -125,47 +129,47 @@ class OptCheck:
 
 
 class KconfigCheck(OptCheck):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.name = f'CONFIG_{self.name}'
 
     @property
-    def opt_type(self):
+    def opt_type(self) -> str:
         return 'kconfig'
 
 
 class CmdlineCheck(OptCheck):
     @property
-    def opt_type(self):
+    def opt_type(self) -> str:
         return 'cmdline'
 
 
 class SysctlCheck(OptCheck):
     @property
-    def opt_type(self):
+    def opt_type(self) -> str:
         return 'sysctl'
 
 
 class VersionCheck:
-    def __init__(self, ver_expected: Tuple):
+    def __init__(self, ver_expected: Tuple[int, int, int]) -> None:
         assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 3), \
                f'invalid expected version "{ver_expected}" for VersionCheck (1)'
         assert(all(map(lambda x: isinstance(x, int), ver_expected))), \
                f'invalid expected version "{ver_expected}" for VersionCheck (2)'
         self.ver_expected = ver_expected
         self.ver = ()
-        self.result = None
+        self.result = None # type: str | None
 
     @property
-    def opt_type(self):
+    def opt_type(self) -> str:
         return 'version'
 
-    def set_state(self, data: Tuple):
+    def set_state(self, data: Tuple) -> None:
         assert(data and isinstance(data, tuple) and len(data) >= 3), \
                f'invalid version "{data}" for VersionCheck'
         self.ver = data[:3]
 
-    def check(self):
+    def check(self) -> None:
         if self.ver[0] > self.ver_expected[0]:
             self.result = f'OK: version >= {self.ver_expected}'
             return
@@ -185,7 +189,7 @@ class VersionCheck:
             return
         self.result = f'FAIL: version < {self.ver_expected}'
 
-    def table_print(self, _mode, with_results: bool):
+    def table_print(self, _mode: StrOrNone, with_results: bool) -> None:
         ver_req = f'kernel version >= {self.ver_expected}'
         print(f'{ver_req:<91}', end='')
         if with_results:
@@ -193,7 +197,7 @@ class VersionCheck:
 
 
 class ComplexOptCheck:
-    def __init__(self, *opts):
+    def __init__(self, *opts: AnyOptCheckType) -> None:
         self.opts = opts
         assert(self.opts), \
                f'empty {self.__class__.__name__} check'
@@ -201,21 +205,21 @@ class ComplexOptCheck:
                f'useless {self.__class__.__name__} check: {opts}'
         assert(isinstance(opts[0], (KconfigCheck, CmdlineCheck, SysctlCheck))), \
                f'invalid {self.__class__.__name__} check: {opts}'
-        self.result = None
+        self.result = None # type: str | None
 
     @property
-    def opt_type(self):
+    def opt_type(self) -> str:
         return 'complex'
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.opts[0].name
 
     @property
-    def expected(self):
+    def expected(self) -> str:
         return self.opts[0].expected
 
-    def table_print(self, mode: str, with_results: bool):
+    def table_print(self, mode: StrOrNone, with_results: bool) -> None:
         if mode == 'verbose':
             class_name = f'<<< {self.__class__.__name__} >>>'
             print(f'    {class_name:87}', end='')
@@ -230,7 +234,7 @@ class ComplexOptCheck:
             if with_results:
                 print(f'| {colorize_result(self.result)}', end='')
 
-    def json_dump(self, with_results: bool) -> Dict:
+    def json_dump(self, with_results: bool) -> Dict[str, StrOrBool]:
         dump = self.opts[0].json_dump(False)
         if with_results:
             # Add the 'check_result' and 'check_result_bool' keys to the dictionary
@@ -245,7 +249,7 @@ class OR(ComplexOptCheck):
     # Use cases:
     #     OR(<X_is_hardened>, <X_is_disabled>)
     #     OR(<X_is_hardened>, <old_X_is_hardened>)
-    def check(self):
+    def check(self) -> None:
         for i, opt in enumerate(self.opts):
             opt.check()
             if opt.result.startswith('OK'):
@@ -274,7 +278,7 @@ class AND(ComplexOptCheck):
     #     AND(<suboption>, <main_option>)
     #       Suboption is not checked if checking of the main_option is failed.
     #     AND(<X_is_disabled>, <old_X_is_disabled>)
-    def check(self):
+    def check(self) -> None:
         for i, opt in reversed(list(enumerate(self.opts))):
             opt.check()
             if i == 0:
@@ -300,10 +304,24 @@ class AND(ComplexOptCheck):
                 return
 
 
+# All classes are declared, let's define typing:
+#  1) basic simple check objects
 SIMPLE_OPTION_TYPES = ('kconfig', 'cmdline', 'sysctl', 'version')
+SimpleOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck]
+SimpleOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck)
+
+#  2) complex objects that may contain complex and simple objects
+ComplexOptCheckType = Union[OR, AND]
+ComplexOptCheckTypes = (OR, AND)
+
+#  3) objects that can be added to the checklist
+ChecklistObjType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, OR, AND]
+
+#  4) all existing objects
+AnyOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND]
 
 
-def populate_simple_opt_with_data(opt, data, data_type: str):
+def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: TupleOrOrderedDict, data_type: str) -> None:
     assert(opt.opt_type != 'complex'), \
            f'unexpected ComplexOptCheck "{opt.name}"'
     assert(opt.opt_type in SIMPLE_OPTION_TYPES), \
@@ -324,7 +342,7 @@ def populate_simple_opt_with_data(opt, data, data_type: str):
         opt.set_state(data)
 
 
-def populate_opt_with_data(opt, data, data_type):
+def populate_opt_with_data(opt: AnyOptCheckType, data: TupleOrOrderedDict, data_type: str) -> None:
     assert(opt.opt_type != 'version'), 'a single VersionCheck is useless'
     if opt.opt_type != 'complex':
         populate_simple_opt_with_data(opt, data, data_type)
@@ -337,12 +355,12 @@ def populate_opt_with_data(opt, data, data_type):
                 populate_opt_with_data(o, data, data_type)
 
 
-def populate_with_data(checklist, data, data_type):
+def populate_with_data(checklist: List, data: TupleOrOrderedDict, data_type: str) -> None:
     for opt in checklist:
         populate_opt_with_data(opt, data, data_type)
 
 
-def override_expected_value(checklist, name, new_val):
+def override_expected_value(checklist: List, name: str, new_val: str) -> None:
     for opt in checklist:
         if opt.name == name:
             assert(opt.opt_type in ('kconfig', 'cmdline', 'sysctl')), \
@@ -350,7 +368,7 @@ def override_expected_value(checklist, name, new_val):
             opt.expected = new_val
 
 
-def perform_checks(checklist):
+def perform_checks(checklist: List) -> None:
     for opt in checklist:
         opt.check()
 
