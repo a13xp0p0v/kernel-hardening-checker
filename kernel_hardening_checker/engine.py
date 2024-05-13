@@ -380,12 +380,12 @@ def populate_opt_with_data(opt: AnyOptCheckType, data: TupleOrOrderedDict, data_
                 populate_opt_with_data(o, data, data_type)
 
 
-def populate_with_data(checklist: List, data: TupleOrOrderedDict, data_type: str) -> None:
+def populate_with_data(checklist: List[ChecklistObjType], data: TupleOrOrderedDict, data_type: str) -> None:
     for opt in checklist:
         populate_opt_with_data(opt, data, data_type)
 
 
-def override_expected_value(checklist: List, name: str, new_val: str) -> None:
+def override_expected_value(checklist: List[ChecklistObjType], name: str, new_val: str) -> None:
     for opt in checklist:
         if opt.name == name:
             assert(opt.opt_type in ('kconfig', 'cmdline', 'sysctl')), \
@@ -393,12 +393,12 @@ def override_expected_value(checklist: List, name: str, new_val: str) -> None:
             opt.expected = new_val
 
 
-def perform_checks(checklist: List) -> None:
+def perform_checks(checklist: List[ChecklistObjType]) -> None:
     for opt in checklist:
         opt.check()
 
 
-def print_unknown_options(checklist: List, parsed_options: OrderedDict[str, str], opt_type: str) -> None:
+def print_unknown_options(checklist: List[ChecklistObjType], parsed_options: OrderedDict[str, str], opt_type: str) -> None:
     known_options = []
 
     for o1 in checklist:
