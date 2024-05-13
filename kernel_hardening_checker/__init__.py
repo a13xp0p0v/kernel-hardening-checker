@@ -13,8 +13,7 @@ This module performs input/output.
 import gzip
 import sys
 from argparse import ArgumentParser
-from collections import OrderedDict
-from typing import List, Tuple, OrderedDict, TextIO
+from typing import List, Tuple, Dict, TextIO
 import re
 import json
 from .__about__ import __version__
@@ -132,7 +131,7 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
         print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
-def parse_kconfig_file(_mode: StrOrNone, parsed_options: OrderedDict[str, str], fname: str) -> None:
+def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
     with _open(fname, 'rt', encoding='utf-8') as f:
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
@@ -161,7 +160,7 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: OrderedDict[str, str], 
                 parsed_options[option] = value
 
 
-def parse_cmdline_file(mode: StrOrNone, parsed_options: OrderedDict[str, str], fname: str) -> None:
+def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
     with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
         opts = line.split()
@@ -183,7 +182,7 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: OrderedDict[str, str], f
             parsed_options[name] = value
 
 
-def parse_sysctl_file(mode: StrOrNone, parsed_options: OrderedDict[str, str], fname: str) -> None:
+def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
     with open(fname, 'r', encoding='utf-8') as f:
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
         for line in f.readlines():
@@ -290,7 +289,7 @@ def main() -> None:
             add_sysctl_checks(config_checklist, arch)
 
         # populate the checklist with the parsed Kconfig data
-        parsed_kconfig_options = OrderedDict() # type: OrderedDict[str, str]
+        parsed_kconfig_options = {} # type: Dict[str, str]
         parse_kconfig_file(mode, parsed_kconfig_options, args.config)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
 
@@ -299,13 +298,13 @@ def main() -> None:
 
         if args.cmdline:
             # populate the checklist with the parsed cmdline data
-            parsed_cmdline_options = OrderedDict() # type: OrderedDict[str, str]
+            parsed_cmdline_options = {} # type: Dict[str, str]
             parse_cmdline_file(mode, parsed_cmdline_options, args.cmdline)
             populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
         if args.sysctl:
             # populate the checklist with the parsed sysctl data
-            parsed_sysctl_options = OrderedDict() # type: OrderedDict[str, str]
+            parsed_sysctl_options = {} # type: Dict[str, str]
             parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
             populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
 
@@ -350,7 +349,7 @@ def main() -> None:
         add_sysctl_checks(config_checklist, None)
 
         # populate the checklist with the parsed sysctl data
-        parsed_sysctl_options = OrderedDict()
+        parsed_sysctl_options = {}
         parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
         populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
 

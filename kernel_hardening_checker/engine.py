@@ -14,10 +14,10 @@ This module is the engine of checks.
 from __future__ import annotations
 import sys
 
-from typing import Union, Optional, List, Dict, OrderedDict, Tuple
+from typing import Union, Optional, List, Dict, Tuple
 StrOrNone = Optional[str]
 TupleOrNone = Optional[Tuple]
-TupleOrOrderedDict = Union[Tuple, OrderedDict[str, str]]
+DictOrTuple = Union[Dict[str, str], Tuple]
 StrOrBool = Union[str, bool]
 
 GREEN_COLOR = '\x1b[32m'
@@ -338,7 +338,7 @@ ChecklistObjType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, OR, AND]
 AnyOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND]
 
 
-def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: TupleOrOrderedDict, data_type: str) -> None:
+def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: DictOrTuple, data_type: str) -> None:
     assert(opt.opt_type != 'complex'), f'unexpected opt_type "{opt.opt_type}" for {opt}'
     assert(opt.opt_type in SIMPLE_OPTION_TYPES), f'invalid opt_type "{opt.opt_type}"'
     assert(data_type in SIMPLE_OPTION_TYPES), f'invalid data_type "{data_type}"'
@@ -348,7 +348,7 @@ def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: TupleOrOrderedD
         return
 
     if data_type in ('kconfig', 'cmdline', 'sysctl'):
-        assert(isinstance(data, OrderedDict)), \
+        assert(isinstance(data, dict)), \
                f'unexpected data with data_type {data_type}'
         assert(isinstance(opt, SimpleNamedOptCheckTypes)), \
                f'unexpected VersionCheck with opt_type "{opt.opt_type}"'
@@ -361,7 +361,7 @@ def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: TupleOrOrderedD
         opt.set_state(data)
 
 
-def populate_opt_with_data(opt: AnyOptCheckType, data: TupleOrOrderedDict, data_type: str) -> None:
+def populate_opt_with_data(opt: AnyOptCheckType, data: DictOrTuple, data_type: str) -> None:
     assert(opt.opt_type != 'version'), 'a single VersionCheck is useless'
     if opt.opt_type != 'complex':
         assert(isinstance(opt, SimpleOptCheckTypes)), \
@@ -380,7 +380,7 @@ def populate_opt_with_data(opt: AnyOptCheckType, data: TupleOrOrderedDict, data_
                 populate_opt_with_data(o, data, data_type)
 
 
-def populate_with_data(checklist: List[ChecklistObjType], data: TupleOrOrderedDict, data_type: str) -> None:
+def populate_with_data(checklist: List[ChecklistObjType], data: DictOrTuple, data_type: str) -> None:
     for opt in checklist:
         populate_opt_with_data(opt, data, data_type)
 
@@ -398,7 +398,7 @@ def perform_checks(checklist: List[ChecklistObjType]) -> None:
         opt.check()
 
 
-def print_unknown_options(checklist: List[ChecklistObjType], parsed_options: OrderedDict[str, str], opt_type: str) -> None:
+def print_unknown_options(checklist: List[ChecklistObjType], parsed_options: Dict[str, str], opt_type: str) -> None:
     known_options = []
 
     for o1 in checklist:
