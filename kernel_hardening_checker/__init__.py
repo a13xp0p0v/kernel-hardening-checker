@@ -8,7 +8,7 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module performs input/output.
 """
 
-# pylint: disable=missing-function-docstring,line-too-long,invalid-name,too-many-branches,too-many-statements
+# pylint: disable=missing-function-docstring,line-too-long,too-many-branches,too-many-statements
 
 import gzip
 import sys
@@ -16,10 +16,13 @@ from argparse import ArgumentParser
 from typing import List, Tuple, Dict, TextIO
 import re
 import json
-from .__about__ import __version__
 from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options, add_sysctl_checks
 from .engine import StrOrNone, TupleOrNone, ChecklistObjType
 from .engine import print_unknown_options, populate_with_data, perform_checks, override_expected_value
+
+
+# kernel-hardening-checker version
+__version__ = '0.6.6'
 
 
 def _open(file: str) -> TextIO:

@@ -1,4 +1,4 @@
-name: static typing test
+name: static analysis
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  static_typing_test:
+  static_analysis:
 
     runs-on: ubuntu-latest
 
@@ -31,3 +31,9 @@ jobs:
       run: |
         pip install mypy
         mypy kernel_hardening_checker/ --show-error-context --pretty --no-incremental --check-untyped-defs --disallow-untyped-defs --strict-equality
+
+    - name: Check code with pylint
+      run: |
+        pip install pylint
+        pip install setuptools
+        pylint --recursive=y kernel_hardening_checker setup.py

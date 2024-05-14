@@ -9,7 +9,7 @@ This module is the engine of checks.
 """
 
 # pylint: disable=missing-class-docstring,missing-function-docstring
-# pylint: disable=line-too-long,invalid-name,too-many-branches
+# pylint: disable=line-too-long,too-many-branches
 
 from __future__ import annotations
 import sys
