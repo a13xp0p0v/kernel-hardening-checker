@@ -8,7 +8,7 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module contains knowledge for checks.
 """
 
-# pylint: disable=missing-function-docstring,line-too-long,invalid-name
+# pylint: disable=missing-function-docstring,line-too-long
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
 
 from typing import List

@@ -8,7 +8,7 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module performs input/output.
 """
 
-# pylint: disable=missing-function-docstring,line-too-long,invalid-name,too-many-branches,too-many-statements
+# pylint: disable=missing-function-docstring,line-too-long,too-many-branches,too-many-statements
 
 import gzip
 import sys
