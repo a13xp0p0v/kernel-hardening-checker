@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+This tool is for checking the security hardening options of the Linux kernel.
+
+Author: Alexander Popov <alex.popov@linux.com>
+
+This module performs installing of the kernel-hardening-checker package.
+"""
+
 from setuptools import setup
 
-about = {}
-with open('kernel_hardening_checker/__about__.py') as f:
-    exec(f.read(), about)
-
-print('v: "{}"'.format(about['__version__']))
-
 # See the options in setup.cfg
-setup(version = about['__version__'])
+setup()
