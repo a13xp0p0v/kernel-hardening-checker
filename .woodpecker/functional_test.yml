@@ -29,6 +29,15 @@ steps:
       - python --version
       - pip install --no-cache-dir mypy
       - mypy kernel_hardening_checker/ --show-error-context --pretty --no-incremental --check-untyped-defs --disallow-untyped-defs --strict-equality
+  pylint-checking:
+    image: python:3
+    pull: true
+    commands:
+      - echo "Install the pylint tool..."
+      - python --version
+      - pip install --no-cache-dir pylint
+      - pip install --no-cache-dir setuptools
+      - pylint --recursive=y kernel_hardening_checker setup.py
   functional-test-with-coverage:
     image: python:3
     pull: true
