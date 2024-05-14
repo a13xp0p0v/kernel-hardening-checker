@@ -647,7 +647,7 @@ def normalize_cmdline_options(option: str, value: str) -> str:
     return value
 
 
-# TODO: draft of security hardening sysctls:
+# Ideas of security hardening sysctls:
 #    what about bpf_jit_enable?
 #    vm.mmap_min_addr has a good value
 #    nosmt sysfs control file
