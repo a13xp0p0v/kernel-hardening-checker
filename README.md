@@ -25,7 +25,7 @@ The security hardening recommendations are based on:
 
   - [KSPP recommended settings][1]
   - [CLIP OS kernel configuration][2]
-  - Last public [grsecurity][3] patch (options which they disable)
+  - [grsecurity][3] patch (options which they disable)
   - [SECURITY_LOCKDOWN_LSM][5] patchset
   - [Direct feedback from the Linux kernel maintainers][23]
 

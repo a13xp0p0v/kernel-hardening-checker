@@ -364,6 +364,21 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'SUNRPC_DEBUG', 'is not set')]
     l += [AND(KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set'),
               KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set'))]
+    l += [AND(KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set'),
+              KconfigCheck('cut_attack_surface', 'grsec', 'ARM_PTDUMP', 'is not set'))]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'X86_16BIT', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BLK_DEV_UBLK', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'VCAP_KUNIT_TEST', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'SMB_SERVER', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'XFS_ONLINE_SCRUB_STATS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BUILD_SALT', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'CACHESTAT_SYSCALL', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'PREEMPTIRQ_TRACEPOINTS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'ENABLE_DEFAULT_TRACERS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'PROVE_LOCKING', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'MPTCP', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'TLS', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'TIPC', 'is not set')]
 
     # 'cut_attack_surface', 'maintainer'
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')] # recommended by Daniel Vetter in /issues/38
