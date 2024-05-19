@@ -8,13 +8,14 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module contains knowledge for checks.
 """
 
-# pylint: disable=missing-function-docstring,line-too-long,invalid-name
+# pylint: disable=missing-function-docstring,line-too-long
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
 
-from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
+from typing import List
+from .engine import StrOrNone, ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
 
 
-def add_kconfig_checks(l, arch):
+def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     assert(arch), 'empty arch'
 
     # Calling the KconfigCheck class constructor:
@@ -423,7 +424,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
 
 
-def add_cmdline_checks(l, arch):
+def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     assert(arch), 'empty arch'
 
     # Calling the CmdlineCheck class constructor:
@@ -631,7 +632,7 @@ no_kstrtobool_options = [
 ]
 
 
-def normalize_cmdline_options(option, value):
+def normalize_cmdline_options(option: str, value: str) -> str:
     # Don't normalize the cmdline option values if
     # the Linux kernel doesn't use kstrtobool() for them
     if option in no_kstrtobool_options:
@@ -647,7 +648,7 @@ def normalize_cmdline_options(option, value):
     return value
 
 
-# TODO: draft of security hardening sysctls:
+# Ideas of security hardening sysctls:
 #    what about bpf_jit_enable?
 #    vm.mmap_min_addr has a good value
 #    nosmt sysfs control file
@@ -658,7 +659,7 @@ def normalize_cmdline_options(option, value):
 #    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
 
-def add_sysctl_checks(l, _arch):
+def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
 # This function may be called with arch=None
 
 # Calling the SysctlCheck class constructor:
