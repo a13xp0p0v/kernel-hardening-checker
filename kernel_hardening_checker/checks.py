@@ -95,9 +95,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y'))]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
                  cpu_sup_amd_not_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
@@ -244,9 +245,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')] # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
     if arch == 'X86_32':
-        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
+                 KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y'))]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
 
