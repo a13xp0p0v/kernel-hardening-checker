@@ -105,6 +105,10 @@ coverage run -a --branch bin/kernel-hardening-checker -c ./nosuchfile && exit 1
 echo ">>>>> no cmdline file <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -l ./nosuchfile && exit 1
 
+echo ">>>>> empty cmdline file <<<<<"
+touch ./empty_file
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -l ./empty_file && exit 1
+
 echo ">>>>> no sysctl file <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -s ./nosuchfile && exit 1
 
@@ -156,7 +160,6 @@ echo 'some strange line' >> error_sysctls
 coverage run -a --branch bin/kernel-hardening-checker -c test.config -s error_sysctls && exit 1
 
 echo ">>>>> invalid sysctl file <<<<<"
-touch empty_file
 coverage run -a --branch bin/kernel-hardening-checker -c test.config -s empty_file && exit 1
 
 echo "The end of the functional tests"
