@@ -93,6 +93,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y'))]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
                  cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
+                 cpu_sup_intel_not_set)]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
@@ -473,6 +475,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not off'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set')))]
@@ -623,6 +629,7 @@ no_kstrtobool_options = [
     'pti', # See pti_check_boottime_disable() in arch/x86/mm/pti.c
     'spectre_v2', # See spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'spectre_v2_user', # See spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spectre_bhi', # See spectre_bhi_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'spec_store_bypass_disable', # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'l1tf', # See l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
     'mds', # See mds_cmdline() in arch/x86/kernel/cpu/bugs.c
