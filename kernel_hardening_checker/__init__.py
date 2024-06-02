@@ -10,6 +10,7 @@ This module performs input/output.
 
 # pylint: disable=missing-function-docstring,line-too-long,too-many-branches,too-many-statements
 
+import os
 import gzip
 import sys
 from argparse import ArgumentParser
@@ -168,6 +169,9 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: 
 
 
 def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
+    if not os.path.isfile(fname):
+        sys.exit(f'[!] ERROR: unable to open {fname}, are you sure it exists?')
+
     with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
         opts = line.split()
@@ -190,6 +194,9 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: s
 
 
 def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
+    if not os.path.isfile(fname):
+        sys.exit(f'[!] ERROR: unable to open {fname}, are you sure it exists?')
+
     with open(fname, 'r', encoding='utf-8') as f:
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
         for line in f.readlines():
