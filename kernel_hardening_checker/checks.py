@@ -91,6 +91,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y'))]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETPOLINE', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
+                 cpu_sup_intel_not_set)]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
@@ -498,6 +500,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'gather_data_sampling', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'gather_data_sampling', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not off'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -628,6 +634,7 @@ no_kstrtobool_options = [
     'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
     'spec_rstack_overflow', # See srso_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'gather_data_sampling', # See gds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'reg_file_data_sampling', # See rfds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'slub_debug', # See setup_slub_debug() in mm/slub.c
     'iommu', # See iommu_setup() in arch/x86/kernel/pci-dma.c
     'vsyscall', # See vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
