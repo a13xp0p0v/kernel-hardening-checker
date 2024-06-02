@@ -8,13 +8,14 @@ Author: Alexander Popov <alex.popov@linux.com>
 This module contains knowledge for checks.
 """
 
-# pylint: disable=missing-function-docstring,line-too-long,invalid-name
+# pylint: disable=missing-function-docstring,line-too-long
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
 
-from .engine import KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
+from typing import List
+from .engine import StrOrNone, ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
 
 
-def add_kconfig_checks(l, arch):
+def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     assert(arch), 'empty arch'
 
     # Calling the KconfigCheck class constructor:
@@ -64,11 +65,9 @@ def add_kconfig_checks(l, arch):
     if arch in ('X86_64', 'ARM64', 'ARM'):
         l += [vmap_stack_is_set]
     if arch in ('X86_64', 'X86_32'):
-        l += [KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
         microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
         l += [microcode_is_set] # is needed for mitigating CPU bugs
@@ -88,16 +87,26 @@ def add_kconfig_checks(l, arch):
                  cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y'),
                  cpu_sup_amd_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_MITIGATIONS', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETPOLINE', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
+                 cpu_sup_intel_not_set)]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SRSO', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
                  cpu_sup_amd_not_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
@@ -233,7 +242,8 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'kspp', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
+                 KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
@@ -243,9 +253,10 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')] # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
     if arch == 'X86_32':
-        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
+                 KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y'))]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
 
@@ -422,7 +433,7 @@ def add_kconfig_checks(l, arch):
         l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
 
 
-def add_cmdline_checks(l, arch):
+def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     assert(arch), 'empty arch'
 
     # Calling the CmdlineCheck class constructor:
@@ -464,6 +475,10 @@ def add_cmdline_checks(l, arch):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not off'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set')))]
@@ -491,6 +506,10 @@ def add_cmdline_checks(l, arch):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'gather_data_sampling', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'gather_data_sampling', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not off'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -610,6 +629,7 @@ no_kstrtobool_options = [
     'pti', # See pti_check_boottime_disable() in arch/x86/mm/pti.c
     'spectre_v2', # See spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'spectre_v2_user', # See spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spectre_bhi', # See spectre_bhi_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'spec_store_bypass_disable', # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'l1tf', # See l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
     'mds', # See mds_cmdline() in arch/x86/kernel/cpu/bugs.c
@@ -621,6 +641,7 @@ no_kstrtobool_options = [
     'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
     'spec_rstack_overflow', # See srso_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'gather_data_sampling', # See gds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'reg_file_data_sampling', # See rfds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'slub_debug', # See setup_slub_debug() in mm/slub.c
     'iommu', # See iommu_setup() in arch/x86/kernel/pci-dma.c
     'vsyscall', # See vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
@@ -630,7 +651,7 @@ no_kstrtobool_options = [
 ]
 
 
-def normalize_cmdline_options(option, value):
+def normalize_cmdline_options(option: str, value: str) -> str:
     # Don't normalize the cmdline option values if
     # the Linux kernel doesn't use kstrtobool() for them
     if option in no_kstrtobool_options:
@@ -646,7 +667,7 @@ def normalize_cmdline_options(option, value):
     return value
 
 
-# TODO: draft of security hardening sysctls:
+# Ideas of security hardening sysctls:
 #    what about bpf_jit_enable?
 #    vm.mmap_min_addr has a good value
 #    nosmt sysfs control file
@@ -657,7 +678,7 @@ def normalize_cmdline_options(option, value):
 #    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
 
-def add_sysctl_checks(l, _arch):
+def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
 # This function may be called with arch=None
 
 # Calling the SysctlCheck class constructor:
