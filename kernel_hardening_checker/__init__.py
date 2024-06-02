@@ -174,6 +174,9 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: s
 
     with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
+        if not line:
+            sys.exit(f'[!] ERROR: empty "{fname}"')
+
         opts = line.split()
 
         line = f.readline()
