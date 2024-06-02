@@ -69,7 +69,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
         microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
         l += [microcode_is_set] # is needed for mitigating CPU bugs
@@ -89,6 +88,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y'),
                  cpu_sup_amd_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETPOLINE', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y'))]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
@@ -99,7 +100,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y'))]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SRSO', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
                  cpu_sup_amd_not_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
@@ -235,7 +237,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'kspp', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
+                 KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
