@@ -116,12 +116,12 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
                 ok_count += 1
                 if mode == 'show_fail':
                     continue
-            elif opt.result.startswith('FAIL'):
+            else:
+                assert(opt.result.startswith('FAIL')), \
+                       f'unexpected result "{opt.result}" of {opt.name} check'
                 fail_count += 1
                 if mode == 'show_ok':
                     continue
-            else:
-                assert(False), f'unexpected result "{opt.result}" of {opt.name} check'
         opt.table_print(mode, with_results)
         print()
         if mode == 'verbose':
