@@ -287,6 +287,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))] # one of major LSMs implementing MAC
 
+    # N.B. We don't use 'if arch' for the 'cut_attack_surface' checks that require 'is not set'.
+    # It makes the maintainance easier. These kernel options should be disabled anyway.
     # 'cut_attack_surface', 'defconfig'
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP', 'y')]
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP_FILTER', 'y')]
