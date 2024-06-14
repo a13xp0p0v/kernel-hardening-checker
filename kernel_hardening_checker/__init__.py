@@ -53,19 +53,18 @@ def detect_arch(fname: str, archs: List[str]) -> Tuple[StrOrNone, str]:
 
 
 def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
+    # eg. `# Linux/arm64 4.20.0 Kernel Configuration`
+    ver_pattern = re.compile(r"^# Linux/[^ ]+ ([0-9.]+)[^ ]+ Kernel Configuration$")
     with _open(fname) as f:
-        ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
         for line in f.readlines():
-            if ver_pattern.match(line):
-                line = line.strip()
-                parts = line.split()
-                ver_str = parts[2].split('-', 1)[0]
-                ver_numbers = ver_str.split('.')
-                if len(ver_numbers) >= 3:
-                    if all(map(lambda x: x.isdecimal(), ver_numbers)):
-                        return tuple(map(int, ver_numbers)), 'OK'
-                msg = f'failed to parse the version "{parts[2]}"'
-                return None, msg
+            res = ver_pattern.search(line)
+            if not res:
+                continue
+            ver_numbers = res.group(1).split('.')
+            if len(ver_numbers) >= 3:
+                if all(map(lambda x: x.isdecimal(), ver_numbers)):
+                    return tuple(map(int, ver_numbers)), 'OK'
+            return None, f'failed to parse the version "{ver_numbers}"'
         return None, 'no kernel version detected'
 
 
