@@ -135,6 +135,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_ALIGN_RODATA', 'y')]
 
     # 'self_protection', 'kspp'
+    l += [KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'RANDOM_KMALLOC_CACHES', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'SLAB_MERGE_DEFAULT', 'is not set')]
     l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
@@ -163,7 +166,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              vmap_stack_is_set)]
     kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
     l += [kfence_is_set]
-    l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
               kfence_is_set)]
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
@@ -263,13 +266,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
 
-    # 'self_protection', 'clipos'
-    l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
-
-    # 'self_protection', 'a13xp0p0v'
-    l += [KconfigCheck('self_protection', 'a13xp0p0v', 'LIST_HARDENED', 'y')]
-    l += [KconfigCheck('self_protection', 'a13xp0p0v', 'RANDOM_KMALLOC_CACHES', 'y')]
-
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('security_policy', 'defconfig', 'SECURITY', 'y')]
@@ -281,7 +277,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEVELOP', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
-    l += [KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX_DEBUG', 'is not set')]
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEBUG', 'is not set')]
     l += [OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
@@ -320,6 +316,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'OABI_COMPAT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_MSR', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_TIOCSTI', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'MODULE_FORCE_LOAD', 'is not set')]
     l += [modules_not_set]
     l += [devmem_not_set]
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'),
@@ -420,7 +417,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'KGDB', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CORESIGHT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'XFS_SUPPORT_V4', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MODULE_FORCE_LOAD', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set')]
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
@@ -435,7 +431,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
     l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
     if arch == 'X86_64':
-        l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
+        l += [KconfigCheck('harden_userspace', 'kspp', 'X86_USER_SHADOW_STACK', 'y')]
 
 
 def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
