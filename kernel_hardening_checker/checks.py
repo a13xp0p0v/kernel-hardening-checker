@@ -674,7 +674,6 @@ def normalize_cmdline_options(option: str, value: str) -> str:
 #    vm.mmap_min_addr has a good value
 #    nosmt sysfs control file
 #    vm.mmap_rnd_bits=max (?)
-#    kernel.sysrq=0
 #    abi.vsyscall32 (any value except 2)
 #    kernel.oops_limit (think about a proper value)
 #    kernel.warn_limit (think about a proper value)
@@ -714,6 +713,10 @@ def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
     l += [OR(SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1'),
              AND(KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
                  have_kconfig))] # radical, but may be useful in some cases
+
+    l += [OR(SysctlCheck('cut_attack_surface', 'a13xp0p0v', 'kernel.sysrq', '0'),
+             AND(KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set'),
+                 have_kconfig))]
 
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_hardlinks', '1')]
