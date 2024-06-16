@@ -424,7 +424,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_SERIAL', 'is not set'),
              KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
-
     # 'harden_userspace'
     if arch == 'ARM64':
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
@@ -678,8 +677,6 @@ def normalize_cmdline_options(option: str, value: str) -> str:
 #    nosmt sysfs control file
 #    vm.mmap_rnd_bits=max (?)
 #    abi.vsyscall32 (any value except 2)
-#    kernel.oops_limit (think about a proper value)
-#    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
 
 def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
@@ -694,6 +691,12 @@ def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
     l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
              AND(KconfigCheck('-', '-', 'BPF_JIT', 'is not set'),
                  have_kconfig))]
+    # Choosing a right value for 'kernel.oops_limit' and 'kernel.warn_limit' is not easy.
+    # A small value (e.g. 1, which is recommended by KSPP) allows easy DoS.
+    # A large value (e.g. 10000, which is default 'kernel.oops_limit') may miss the exploit attempt.
+    # Let's choose 100 as a reasonable compromise.
+    l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
+    l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
