@@ -421,6 +421,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set')]
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
+    l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_SERIAL', 'is not set'),
+             KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
 
     # 'harden_userspace'
