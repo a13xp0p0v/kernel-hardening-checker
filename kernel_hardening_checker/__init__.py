@@ -10,6 +10,7 @@ This module performs input/output.
 
 # pylint: disable=missing-function-docstring,line-too-long,too-many-branches,too-many-statements
 
+import os
 import gzip
 import sys
 from argparse import ArgumentParser
@@ -26,9 +27,12 @@ __version__ = '0.6.6'
 
 
 def _open(file: str) -> TextIO:
-    if file.endswith('.gz'):
-        return gzip.open(file, 'rt', encoding='utf-8')
-    return open(file, 'rt', encoding='utf-8')
+    try:
+        if file.endswith('.gz'):
+            return gzip.open(file, 'rt', encoding='utf-8')
+        return open(file, 'rt', encoding='utf-8')
+    except FileNotFoundError:
+        sys.exit(f'[!] ERROR: unable to open {file}, are you sure it exists?')
 
 
 def detect_arch(fname: str, archs: List[str]) -> Tuple[StrOrNone, str]:
@@ -112,12 +116,12 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
                 ok_count += 1
                 if mode == 'show_fail':
                     continue
-            elif opt.result.startswith('FAIL'):
+            else:
+                assert(opt.result.startswith('FAIL')), \
+                       f'unexpected result "{opt.result}" of {opt.name} check'
                 fail_count += 1
                 if mode == 'show_ok':
                     continue
-            else:
-                assert(False), f'unexpected result "{opt.result}" of {opt.name} check'
         opt.table_print(mode, with_results)
         print()
         if mode == 'verbose':
@@ -165,8 +169,14 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: 
 
 
 def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
+    if not os.path.isfile(fname):
+        sys.exit(f'[!] ERROR: unable to open {fname}, are you sure it exists?')
+
     with open(fname, 'r', encoding='utf-8') as f:
         line = f.readline()
+        if not line:
+            sys.exit(f'[!] ERROR: empty "{fname}"')
+
         opts = line.split()
 
         line = f.readline()
@@ -187,6 +197,9 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: s
 
 
 def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
+    if not os.path.isfile(fname):
+        sys.exit(f'[!] ERROR: unable to open {fname}, are you sure it exists?')
+
     with open(fname, 'r', encoding='utf-8') as f:
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
         for line in f.readlines():

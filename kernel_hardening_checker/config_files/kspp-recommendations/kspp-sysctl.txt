@@ -1,6 +1,7 @@
 kernel.printk = 3	4	1	7
 kernel.kptr_restrict = 2
 kernel.dmesg_restrict = 1
+kernel.modules_disabled = 1
 kernel.perf_event_paranoid = 3
 kernel.kexec_load_disabled = 1
 kernel.randomize_va_space = 2
@@ -9,6 +10,8 @@ user.max_user_namespaces = 0
 dev.tty.ldisc_autoload = 0
 dev.tty.legacy_tiocsti = 0
 kernel.unprivileged_bpf_disabled = 1
+kernel.warn_limit = 1
+kernel.oops_limit = 1
 net.core.bpf_jit_harden = 2
 vm.unprivileged_userfaultfd = 0
 fs.protected_symlinks = 1

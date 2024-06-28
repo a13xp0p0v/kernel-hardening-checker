@@ -70,13 +70,17 @@ coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m json
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m show_ok
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m show_fail
 
+echo ">>>>> test -v (kernel version detection) <<<<<"
+cp kernel_hardening_checker/config_files/distros/fedora_34.config ./test.config
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -v /proc/version
+
 echo "Collect coverage for error handling"
 
 echo ">>>>> -c and -p together <<<<<"
-coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -c kernel_hardening_checker/config_files/distros/fedora_34.config && exit 1
+coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -c ./test.config && exit 1
 
 echo ">>>>> -c and -g together <<<<<"
-coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -c kernel_hardening_checker/config_files/distros/fedora_34.config && exit 1
+coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -c ./test.config && exit 1
 
 echo ">>>>> -l without -c <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -l /proc/cmdline && exit 1
@@ -97,15 +101,30 @@ coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -m show_fail && 
 echo ">>>>> wrong mode for -g <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -m show_ok && exit 1
 
-cp kernel_hardening_checker/config_files/distros/fedora_34.config ./test.config
+echo ">>>>> no kconfig file <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -c ./nosuchfile && exit 1
+
+echo ">>>>> no cmdline file <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -l ./nosuchfile && exit 1
+
+echo ">>>>> empty cmdline file <<<<<"
+touch ./empty_file
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -l ./empty_file && exit 1
+
+echo ">>>>> no sysctl file <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -s ./nosuchfile && exit 1
 
 echo ">>>>> no kernel version <<<<<"
 sed '3d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
-echo ">>>>> strange kernel version string <<<<<"
+echo ">>>>> strange kernel version in kconfig <<<<<"
 sed '3 s/5./version 5./' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
+
+echo ">>>>> strange kernel version via -v <<<<<"
+sed '3d' test.config > error.config
+coverage run -a --branch bin/kernel-hardening-checker -c error.config -v /proc/cmdline && exit 1
 
 echo ">>>>> no arch <<<<<"
 sed '305d' test.config > error.config
@@ -147,7 +166,6 @@ echo 'some strange line' >> error_sysctls
 coverage run -a --branch bin/kernel-hardening-checker -c test.config -s error_sysctls && exit 1
 
 echo ">>>>> invalid sysctl file <<<<<"
-touch empty_file
 coverage run -a --branch bin/kernel-hardening-checker -c test.config -s empty_file && exit 1
 
 echo "The end of the functional tests"

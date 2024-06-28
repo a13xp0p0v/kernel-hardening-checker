@@ -65,11 +65,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('X86_64', 'ARM64', 'ARM'):
         l += [vmap_stack_is_set]
     if arch in ('X86_64', 'X86_32'):
-        l += [KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'SYN_COOKIES', 'y')] # another reason?
         microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
         l += [microcode_is_set] # is needed for mitigating CPU bugs
@@ -89,16 +87,26 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y'),
                  cpu_sup_amd_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_MITIGATIONS', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETPOLINE', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
+                 cpu_sup_intel_not_set)]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SRSO', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
                  cpu_sup_amd_not_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
@@ -127,6 +135,11 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_ALIGN_RODATA', 'y')]
 
     # 'self_protection', 'kspp'
+    l += [KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'RANDOM_KMALLOC_CACHES', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'SLAB_MERGE_DEFAULT', 'is not set')]
+    l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_HARDENED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_RANDOM', 'y')]
@@ -153,14 +166,14 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              vmap_stack_is_set)]
     kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
     l += [kfence_is_set]
-    l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
               kfence_is_set)]
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
     l += [randstruct_is_set]
-    l += [AND(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_PERFORMANCE', 'is not set'),
-              KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
-              randstruct_is_set)]
+#   l += [AND(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_PERFORMANCE', 'is not set'),
+#             KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
+#             randstruct_is_set)] # Comment this out for now: KSPP has revoked this recommendation
     hardened_usercopy_is_set = KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
     l += [hardened_usercopy_is_set]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
@@ -234,7 +247,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch == 'X86_64':
-        l += [KconfigCheck('self_protection', 'kspp', 'SLS', 'y')] # vs CVE-2021-26341 in Straight-Line-Speculation
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
+                 KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
@@ -242,20 +256,15 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'UNWIND_PATCH_PAC_INTO_SCS', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')] # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
     if arch == 'X86_32':
-        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
+                 KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y'))]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
-
-    # 'self_protection', 'clipos'
-    l += [KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set')]
-
-    # 'self_protection', 'a13xp0p0v'
-    l += [KconfigCheck('self_protection', 'a13xp0p0v', 'LIST_HARDENED', 'y')]
-    l += [KconfigCheck('self_protection', 'a13xp0p0v', 'RANDOM_KMALLOC_CACHES', 'y')]
 
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
@@ -268,12 +277,14 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEVELOP', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
-    l += [KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX_DEBUG', 'is not set')]
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEBUG', 'is not set')]
     l += [OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))] # one of major LSMs implementing MAC
 
+    # N.B. We don't use 'if arch' for the 'cut_attack_surface' checks that require 'is not set'.
+    # It makes the maintainance easier. These kernel options should be disabled anyway.
     # 'cut_attack_surface', 'defconfig'
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP', 'y')]
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP_FILTER', 'y')]
@@ -305,6 +316,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'OABI_COMPAT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_MSR', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_TIOCSTI', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'MODULE_FORCE_LOAD', 'is not set')]
     l += [modules_not_set]
     l += [devmem_not_set]
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'),
@@ -393,7 +405,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KSM', 'is not set')] # to prevent FLUSH+RELOAD attack
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KALLSYMS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KEXEC_FILE', 'is not set')] # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'USER_NS', 'is not set')] # user.max_user_namespaces=0
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_CPUID', 'is not set')]
@@ -402,6 +413,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'AIO', 'is not set')]
 #   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')] # no, IKCONFIG is needed for this check :)
+    l += [OR(KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set'),
+             KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
     # 'cut_attack_surface', 'lockdown'
     l += [KconfigCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
@@ -420,11 +433,11 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'KGDB', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CORESIGHT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'XFS_SUPPORT_V4', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MODULE_FORCE_LOAD', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set')]
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
-
+    l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_SERIAL', 'is not set'),
+             KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
     # 'harden_userspace'
     if arch == 'ARM64':
@@ -435,7 +448,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
     l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
     if arch == 'X86_64':
-        l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'X86_USER_SHADOW_STACK', 'y')]
+        l += [KconfigCheck('harden_userspace', 'kspp', 'X86_USER_SHADOW_STACK', 'y')]
 
 
 def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
@@ -480,6 +493,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not off'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set')))]
@@ -507,6 +524,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'gather_data_sampling', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'gather_data_sampling', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not off'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -527,6 +548,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
+    l += [CmdlineCheck('self_protection', 'kspp', 'cfi', 'kcfi')]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
              AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set'),
@@ -626,6 +648,7 @@ no_kstrtobool_options = [
     'pti', # See pti_check_boottime_disable() in arch/x86/mm/pti.c
     'spectre_v2', # See spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'spectre_v2_user', # See spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spectre_bhi', # See spectre_bhi_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'spec_store_bypass_disable', # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'l1tf', # See l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
     'mds', # See mds_cmdline() in arch/x86/kernel/cpu/bugs.c
@@ -637,6 +660,7 @@ no_kstrtobool_options = [
     'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
     'spec_rstack_overflow', # See srso_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'gather_data_sampling', # See gds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'reg_file_data_sampling', # See rfds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'slub_debug', # See setup_slub_debug() in mm/slub.c
     'iommu', # See iommu_setup() in arch/x86/kernel/pci-dma.c
     'vsyscall', # See vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
@@ -667,10 +691,7 @@ def normalize_cmdline_options(option: str, value: str) -> str:
 #    vm.mmap_min_addr has a good value
 #    nosmt sysfs control file
 #    vm.mmap_rnd_bits=max (?)
-#    kernel.sysrq=0
 #    abi.vsyscall32 (any value except 2)
-#    kernel.oops_limit (think about a proper value)
-#    kernel.warn_limit (think about a proper value)
 #    net.ipv4.tcp_syncookies=1 (?)
 
 def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
@@ -685,6 +706,12 @@ def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
     l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
              AND(KconfigCheck('-', '-', 'BPF_JIT', 'is not set'),
                  have_kconfig))]
+    # Choosing a right value for 'kernel.oops_limit' and 'kernel.warn_limit' is not easy.
+    # A small value (e.g. 1, which is recommended by KSPP) allows easy DoS.
+    # A large value (e.g. 10000, which is default 'kernel.oops_limit') may miss the exploit attempt.
+    # Let's choose 100 as a reasonable compromise.
+    l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
+    l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
@@ -704,9 +731,13 @@ def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
           # At first, it disabled unprivileged userfaultfd,
           # and since v5.11 it enables unprivileged userfaultfd for user-mode only.
 
-    l += [OR(SysctlCheck('cut_attack_surface', 'clipos', 'kernel.modules_disabled', '1'),
+    l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.modules_disabled', '1'),
              AND(KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
                  have_kconfig))] # radical, but may be useful in some cases
+
+    l += [OR(SysctlCheck('cut_attack_surface', 'a13xp0p0v', 'kernel.sysrq', '0'),
+             AND(KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set'),
+                 have_kconfig))]
 
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_hardlinks', '1')]
