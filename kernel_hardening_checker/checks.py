@@ -367,7 +367,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'DVB_C8SECTPFE', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'MTD_SLRAM', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'MTD_PHRAM', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsec', 'IO_URING', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'KCMP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'RSEQ', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'LATENCYTOP', 'is not set')]
@@ -385,6 +384,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD_RAWCMD', 'is not set')] # recommended by Denis Efremov in /pull/62
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'NOUVEAU_LEGACY_CTX_SUPPORT', 'is not set')]
                                             # recommended by Dave Airlie in kernel commit b30a43ac7132cdda
+
+    # 'cut_attack_surface', 'kernelctf'
+    l += [KconfigCheck('cut_attack_surface', 'kernelctf', 'IO_URING', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'kernelctf', 'NF_TABLES', 'is not set')]
 
     # 'cut_attack_surface', 'clipos'
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]

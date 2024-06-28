@@ -28,6 +28,7 @@ The security hardening recommendations are based on:
   - Last public [grsecurity][3] patch (options which they disable)
   - [SECURITY_LOCKDOWN_LSM][5] patchset
   - [Direct feedback from the Linux kernel maintainers][23]
+  - Googles [kernelctf][25]
 
 I also created the [__Linux Kernel Defence Map__][4], which is a graphical representation of the
 relationships between security hardening features and the corresponding vulnerability classes
@@ -506,3 +507,4 @@ try to install `gcc-7-plugin-dev` package, it should help.
 [22]: https://github.com/a13xp0p0v/kernel-hardening-checker/issues/56
 [23]: https://github.com/a13xp0p0v/kernel-hardening-checker/issues?q=label%3Akernel_maintainer_feedback
 [24]: https://github.com/a13xp0p0v/kernel-hardening-checker#motivation
+[25]: https://google.github.io/security-research/kernelctf/rules.html
