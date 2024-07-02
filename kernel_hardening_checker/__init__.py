@@ -158,7 +158,7 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: 
                 assert(value == 'is not set'), \
                        f'unexpected value of disabled Kconfig option "{line}"'
             elif line != '' and not line.startswith('#'):
-                sys.exit(f'[!] ERROR: unexpected line in Kconfig file: "{line}"')
+                print(f'[!] WARNING: unexpected line in Kconfig file: "{line}"')
 
             if option in parsed_options:
                 sys.exit(f'[!] ERROR: Kconfig option "{line}" is found multiple times')
