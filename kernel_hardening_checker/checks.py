@@ -535,7 +535,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
     l += [CmdlineCheck('self_protection', 'kspp', 'cfi', 'kcfi')]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
-             AND(KconfigCheck('self_protection', 'clipos', 'SLAB_MERGE_DEFAULT', 'is not set'),
+             AND(KconfigCheck('self_protection', 'kspp', 'SLAB_MERGE_DEFAULT', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
