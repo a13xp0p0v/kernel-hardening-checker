@@ -166,7 +166,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              vmap_stack_is_set)]
     kfence_is_set = KconfigCheck('self_protection', 'kspp', 'KFENCE', 'y')
     l += [kfence_is_set]
-    l += [AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
               kfence_is_set)]
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
@@ -575,7 +575,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
 
     # 'self_protection', 'a13xp0p0v'
     l += [OR(CmdlineCheck('self_protection', 'a13xp0p0v', 'kfence.sample_interval', 'is not off'),
-             AND(KconfigCheck('self_protection', 'a13xp0p0v', 'KFENCE_SAMPLE_INTERVAL', 'is not off'),
+             AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
                  CmdlineCheck('self_protection', 'a13xp0p0v', 'kfence.sample_interval', 'is not set')))]
 
     # 'cut_attack_surface', 'defconfig'
