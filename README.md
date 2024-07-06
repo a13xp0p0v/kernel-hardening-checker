@@ -5,8 +5,8 @@ __(formerly kconfig-hardened-check)__<br /><br />
 [![functional test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=functional_test)](https://app.codecov.io/gh/a13xp0p0v/kernel-hardening-checker?flags%5B0%5D=functional_test)<br />
 [![engine unit-test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/engine%20unit-test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/engine_unit-test.yml)
 [![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=engine_unit-test)](https://app.codecov.io/gh/a13xp0p0v/kernel-hardening-checker?flags%5B0%5D=engine_unit-test)<br />
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kernel-hardening-checker?label=release)](https://github.com/a13xp0p0v/kernel-hardening-checker/tags)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Motivation
 
@@ -16,13 +16,30 @@ make our systems more secure.
 
 But nobody likes checking configs manually. So let the computers do their job!
 
-__kernel-hardening-checker__ (formerly __kconfig-hardened-check__) is a tool for checking the security hardening options of the Linux kernel. License: GPL-3.0.
+__kernel-hardening-checker__ (formerly __kconfig-hardened-check__) is a tool for checking the security hardening options of the Linux kernel.
 
-The tool supports checking:
+License: GPL-3.0.
+
+## Repositories
+
+ - At GitHub <https://github.com/a13xp0p0v/kernel-hardening-checker>
+ - At Codeberg: <https://codeberg.org/a13xp0p0v/kernel-hardening-checker> (go there if something goes wrong with GitHub)
+ - At GitFlic: <https://gitflic.ru/project/a13xp0p0v/kernel-hardening-checker>
+
+## Features
+
+`kernel-hardening-checker` supports checking:
 
   - Kconfig options (compile-time)
   - Kernel cmdline arguments (boot-time)
   - Sysctl parameters (runtime)
+
+Supported microarchitectures:
+
+  - X86_64
+  - X86_32
+  - ARM64
+  - ARM
 
 The security hardening recommendations are based on:
 
@@ -36,25 +53,12 @@ I also created the [__Linux Kernel Defence Map__][4], which is a graphical repre
 relationships between security hardening features and the corresponding vulnerability classes
 or exploitation techniques.
 
-__Attention!__ Changing Linux kernel security parameters may also affect system performance
+## Attention!
+
+Changing Linux kernel security parameters may also affect system performance
 and functionality of userspace software. So for choosing these parameters, consider
 the threat model of your Linux-based information system and perform thorough testing
 of its typical workload.
-
-## Repositories
-
- - Main at GitHub <https://github.com/a13xp0p0v/kernel-hardening-checker>
- - Mirror at Codeberg: <https://codeberg.org/a13xp0p0v/kernel-hardening-checker>
- - Mirror at GitFlic: <https://gitflic.ru/project/a13xp0p0v/kernel-hardening-checker>
-
-## Supported microarchitectures
-
-  - X86_64
-  - X86_32
-  - ARM64
-  - ARM
-
-TODO: RISC-V (issue [#56][22])
 
 ## Installation
 
@@ -485,7 +489,7 @@ __A:__ It means that your gcc doesn't support plugins. For example, if you have 
 try to install `gcc-7-plugin-dev` package, it should help.
 
 
-[1]: http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
+[1]: https://kspp.github.io/Recommended_Settings
 [2]: https://docs.clip-os.org/clipos/kernel.html#configuration
 [3]: https://grsecurity.net/
 [4]: https://github.com/a13xp0p0v/linux-kernel-defence-map
