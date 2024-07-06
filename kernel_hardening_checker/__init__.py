@@ -142,7 +142,7 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
 
 def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
     with _open(fname) as f:
-        opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.+$")
+        opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.*$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
 
         for line in f.readlines():
@@ -154,6 +154,8 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: 
                 option, value = line.split('=', 1)
                 if value == 'is not set':
                     sys.exit(f'[!] ERROR: bad enabled Kconfig option "{line}"')
+                if value == '':
+                    print(f'[!] WARNING: found strange Kconfig option {option} with empty value')
             elif opt_is_off.match(line):
                 option, value = line[2:].split(' ', 1)
                 assert(value == 'is not set'), \
@@ -165,7 +167,7 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: 
                 sys.exit(f'[!] ERROR: Kconfig option "{line}" is found multiple times')
 
             if option:
-                assert(value), f'unexpected empty value for {option}'
+                assert(value is not None), f'unexpected None value for {option}'
                 parsed_options[option] = value
 
 
