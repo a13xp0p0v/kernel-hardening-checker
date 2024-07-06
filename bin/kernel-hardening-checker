@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
-# For using the tool without installation via setuptools
+"""
+This tool is for checking the security hardening options of the Linux kernel.
+
+SPDX-FileCopyrightText: Alexander Popov <alex.popov@linux.com>
+SPDX-License-Identifier: GPL-3.0-only
+
+This file is for using the tool without installation via setuptools.
+"""
 
 import os
 import sys
