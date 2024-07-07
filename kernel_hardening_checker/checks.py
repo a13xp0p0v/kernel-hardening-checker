@@ -392,6 +392,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KSM', 'is not set')] # to prevent FLUSH+RELOAD attack
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KALLSYMS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KEXEC_FILE', 'is not set')] # refers to LOCKDOWN (permissive)
+    l += [KconfigCheck('cut_attack_surface', 'clipos', 'CRASH_DUMP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'USER_NS', 'is not set')] # user.max_user_namespaces=0
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_CPUID', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')] # refers to LOCKDOWN
