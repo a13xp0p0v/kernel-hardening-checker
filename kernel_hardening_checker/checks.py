@@ -556,6 +556,9 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
               # Consequence of the HARDENED_USERCOPY_FALLBACK check by kspp.
               # Don't require slab_common.usercopy_fallback=0,
               # since HARDENED_USERCOPY_FALLBACK was removed in Linux v5.16.
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'kfence.sample_interval', '100'),
+             AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
+                 CmdlineCheck('self_protection', 'kspp', 'kfence.sample_interval', 'is not set')))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
@@ -573,11 +576,6 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     # 'self_protection', 'clipos'
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'clipos', 'iommu', 'force')]
-
-    # 'self_protection', 'a13xp0p0v'
-    l += [OR(CmdlineCheck('self_protection', 'a13xp0p0v', 'kfence.sample_interval', 'is not off'),
-             AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
-                 CmdlineCheck('self_protection', 'a13xp0p0v', 'kfence.sample_interval', 'is not set')))]
 
     # 'cut_attack_surface', 'defconfig'
     if arch in ('X86_64', 'X86_32'):
