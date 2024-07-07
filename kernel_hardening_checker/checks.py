@@ -386,6 +386,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD_RAWCMD', 'is not set')] # recommended by Denis Efremov in /pull/62
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'NOUVEAU_LEGACY_CTX_SUPPORT', 'is not set')]
                                             # recommended by Dave Airlie in kernel commit b30a43ac7132cdda
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'N_GSM', 'is not set')]
+                                            # recommended by Greg KH at https://www.openwall.com/lists/oss-security/2024/04/17/1
 
     # 'cut_attack_surface', 'clipos'
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
