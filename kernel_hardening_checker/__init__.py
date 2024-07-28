@@ -36,21 +36,23 @@ def _open(file: str) -> TextIO:
         sys.exit(f'[!] ERROR: unable to open {file}, are you sure it exists?')
 
 
-def detect_arch(fname: str, archs: List[str]) -> Tuple[StrOrNone, str]:
+def detect_arch(fname: str, supported_archs: List[str]) -> Tuple[StrOrNone, str]:
+    arch = None
+
     with _open(fname) as f:
-        arch_pattern = re.compile(r"CONFIG_[a-zA-Z0-9_]+=y$")
-        arch = None
         for line in f.readlines():
-            if arch_pattern.match(line):
-                option, _ = line[7:].split('=', 1)
-                if option in archs:
-                    if arch is None:
-                        arch = option
-                    else:
-                        return None, 'detected more than one microarchitecture'
-        if arch is None:
-            return None, 'failed to detect microarchitecture'
-        return arch, 'OK'
+            if m := re.search("CONFIG_([A-Z0-9_]+)=y$", line):
+                option = m.group(1)
+                if option not in supported_archs:
+                    continue
+                if arch is None:
+                    arch = option
+                else:
+                    return None, 'detected more than one microarchitecture'
+
+    if arch is None:
+        return None, 'failed to detect microarchitecture'
+    return arch, 'OK'
 
 
 def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
