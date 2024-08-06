@@ -100,6 +100,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM_SMMU', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM_SMMU_V3', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
