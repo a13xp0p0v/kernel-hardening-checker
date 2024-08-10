@@ -442,13 +442,17 @@ The rationale:
 
 __Q:__ KSPP and CLIP OS recommend `CONFIG_PANIC_ON_OOPS=y`. Why doesn't this tool do the same?
 
-__A:__ I personally don't support this recommendation because:
-  - It decreases system safety (kernel oops is still not a rare situation)
+__A:__ I can't support this recommendation because:
+  - It decreases system robustness (kernel oops is still not a rare situation even on production systems)
   - It allows easier denial-of-service attacks for the whole system
 
-I think having `CONFIG_BUG` is enough here.
-If a kernel oops happens in the process context, the offending/attacking process is killed.
-In other cases, the kernel panics, which is similar to `CONFIG_PANIC_ON_OOPS=y`.
+You should enable `CONFIG_PANIC_ON_OOPS` if:
+  - Your kernel doesn't encounter oopses during a typical workload
+  - Occasional system reboot is not a problem in your use case
+
+I see a good compromise, which `kernel-hardening-checker` recommends:
+  - Enable the `CONFIG_BUG` kconfig option. If a kernel oops happens in the process context, the offending/attacking process is killed. In other cases, the kernel panics, which is similar to `CONFIG_PANIC_ON_OOPS=y`.
+  - Set the sysctl options `kernel.oops_limit` and `kernel.warn_limit` to `100`, for example. On the one hand, this value doesn't allow easy DoS. On the other hand, it is not too large to miss the vulnerability exploitation attempts generating a lot of kernel warnings or oopses.
 
 <br />
 
