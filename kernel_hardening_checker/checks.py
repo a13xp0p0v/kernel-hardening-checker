@@ -59,7 +59,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              # REFCOUNT_FULL is enabled by default since v5.5,
              # and this is backported to v5.4.208
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'INIT_STACK_ALL_ZERO', 'y'),
-             KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y'))]
+             AND(KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK', 'y'),
+                 KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y')))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
     vmap_stack_is_set = KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')
