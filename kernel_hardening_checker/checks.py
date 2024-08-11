@@ -684,7 +684,8 @@ def normalize_cmdline_options(option: str, value: str) -> str:
 #    what about bpf_jit_enable?
 #    vm.mmap_min_addr has a good value
 #    nosmt sysfs control file
-#    vm.mmap_rnd_bits=max (?)
+#    vm.mmap_rnd_bits=max
+#    vm.mmap_rnd_compat_bits=max
 #    abi.vsyscall32 (any value except 2)
 #    net.ipv4.tcp_syncookies=1 (?)
 
