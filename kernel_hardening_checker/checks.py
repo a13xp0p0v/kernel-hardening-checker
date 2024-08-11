@@ -403,7 +403,11 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'AIO', 'is not set')]
 #   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')] # no, IKCONFIG is needed for this check :)
     l += [OR(KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set'),
-             KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
+             KconfigCheck('cut_attack_surface', 'grapheneos', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
+
+    # 'cut_attack_surface', 'grapheneos'
+    l += [OR(KconfigCheck('cut_attack_surface', 'grapheneos', 'MAGIC_SYSRQ_SERIAL', 'is not set'),
+             KconfigCheck('cut_attack_surface', 'grapheneos', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
     # 'cut_attack_surface', 'lockdown'
     l += [KconfigCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
@@ -428,8 +432,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                                             # dangerous, only for debugging the kernel hardening features!
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
-    l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_SERIAL', 'is not set'),
-             KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
     # 'harden_userspace'
     if arch == 'ARM64':
@@ -617,8 +619,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(CmdlineCheck('cut_attack_surface', 'grsec', 'debugfs', 'off'),
              KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set'))] # ... the end
 
+    # 'cut_attack_surface', 'grapheneos'
+    l += [CmdlineCheck('cut_attack_surface', 'grapheneos', 'sysrq_always_enabled', 'is not set')]
+
     # 'cut_attack_surface', 'a13xp0p0v'
-    l += [CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'sysrq_always_enabled', 'is not set')]
     l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', '0'),
              AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', 'is not set')))]
