@@ -368,7 +368,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'DVB_C8SECTPFE', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'MTD_SLRAM', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'MTD_PHRAM', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsec', 'IO_URING', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'KCMP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'RSEQ', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'LATENCYTOP', 'is not set')]
@@ -388,6 +387,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                                             # recommended by Dave Airlie in kernel commit b30a43ac7132cdda
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'N_GSM', 'is not set')]
                                             # recommended by Greg KH at https://www.openwall.com/lists/oss-security/2024/04/17/1
+
+    # 'cut_attack_surface', 'kernelctf'
+    l += [KconfigCheck('cut_attack_surface', 'kernelctf', 'IO_URING', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'kernelctf', 'NF_TABLES', 'is not set')]
 
     # 'cut_attack_surface', 'clipos'
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
