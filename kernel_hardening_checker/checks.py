@@ -391,8 +391,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'KCOV', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'PROVIDE_OHCI1394_DMA_INIT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'SUNRPC_DEBUG', 'is not set')]
-    l += [AND(KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set'),
-              KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set'))]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'X86_16BIT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'BLK_DEV_UBLK', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'VCAP_KUNIT_TEST', 'is not set')]
@@ -406,6 +404,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'MPTCP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'TLS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'TIPC', 'is not set')]
+    l += [AND(KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set'),
+              KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set'))]
 
     # 'cut_attack_surface', 'clipos'
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
