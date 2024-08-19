@@ -393,8 +393,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'SUNRPC_DEBUG', 'is not set')]
     l += [AND(KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set'),
               KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set'))]
-    l += [AND(KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set'),
-              KconfigCheck('cut_attack_surface', 'grsec', 'ARM_PTDUMP', 'is not set'))]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'X86_16BIT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'BLK_DEV_UBLK', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'VCAP_KUNIT_TEST', 'is not set')]
@@ -452,6 +450,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                                             # dangerous, only for debugging the kernel hardening features!
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
+    l += [AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP_DEBUGFS', 'is not set'),
+              KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP', 'is not set'))]
 
     # 'harden_userspace'
     if arch == 'ARM64':
