@@ -401,6 +401,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'MPTCP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'TLS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'TIPC', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'IP_SCTP', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'KGDB', 'is not set')]
     l += [AND(KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set'),
               KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set'))]
 
@@ -434,11 +436,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'LIVEPATCH', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IP_DCCP', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IP_SCTP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FTRACE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'VIDEO_VIVID', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'KGDB', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CORESIGHT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'XFS_SUPPORT_V4', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set')]
