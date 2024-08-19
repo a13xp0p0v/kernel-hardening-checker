@@ -259,6 +259,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
                   iommu_support_is_set)]
+        l += [KconfigCheck('self_protection', 'defconfig', 'AMD_MEM_ENCRYPT', 'y')]
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
