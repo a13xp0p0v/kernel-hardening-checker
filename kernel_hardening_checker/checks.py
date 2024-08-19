@@ -398,6 +398,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'PREEMPTIRQ_TRACEPOINTS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'ENABLE_DEFAULT_TRACERS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'PROVE_LOCKING', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'TEST_DEBUG_VIRTUAL', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'MPTCP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'TLS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'TIPC', 'is not set')]
