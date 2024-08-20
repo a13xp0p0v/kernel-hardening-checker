@@ -560,6 +560,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
+    cfi_clang_is_set = KconfigCheck('self_protection', 'kspp', 'CFI_CLANG', 'y')
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'cfi', 'kcfi'),
              AND(CmdlineCheck('self_protection', 'kspp', 'cfi', 'is not set'),
                  KconfigCheck('self_protection','kspp','CONFIG_CFI_AUTO_DEFAULT','is not set'),
