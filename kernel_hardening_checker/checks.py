@@ -563,8 +563,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     cfi_clang_is_set = KconfigCheck('self_protection', 'kspp', 'CFI_CLANG', 'y')
     cc_is_clang = KconfigCheck('-', '-', 'CC_IS_CLANG', 'y')
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'cfi', 'kcfi'),
-             AND(CmdlineCheck('self_protection', 'kspp', 'cfi', 'is not set'),
-                 KconfigCheck('self_protection','kspp','CONFIG_CFI_AUTO_DEFAULT','is not set'),
+             AND(KconfigCheck('self_protection','kspp','CONFIG_CFI_AUTO_DEFAULT','is not set'),
                  KconfigCheck('self_protection','kspp','CONFIG_CFI_PERMISSIVE','is not set'),
                  AND(cfi_clang_is_set,
                   cc_is_clang)
