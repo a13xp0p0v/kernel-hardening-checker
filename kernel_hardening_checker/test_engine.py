@@ -12,13 +12,14 @@ This module performs unit-testing of the kernel-hardening-checker engine.
 # pylint: disable=missing-function-docstring,line-too-long
 
 import unittest
+from unittest import mock
 import io
 import sys
 import json
 import inspect
 from typing import Union, Optional, List, Dict, Tuple
 from .engine import StrOrBool, ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
-from .engine import populate_with_data, perform_checks, override_expected_value, print_unknown_options
+from .engine import populate_with_data, perform_checks, override_expected_value, print_unknown_options, colorize_result
 
 
 ResultType = List[Union[Dict[str, StrOrBool], str]]
@@ -703,3 +704,25 @@ name_6                                  |sysctl | expected_6 |decision_6|     re
              '[?] No check for kconfig option CONFIG_NOCHECK_NAME_8 (expected_8)\n'
              '[?] No check for cmdline option NOCHECK_name_6 (expected_6)\n'
              '[?] No check for sysctl option NOCHECK_name_7 (expected_7)\n'])
+
+    def test_colorize_result(self) -> None:
+        # 1. prepare the checklists
+        with_color = ['\x1b[32mOK\x1b[0m']
+        with_color += ['\x1b[31mFAIL: expected_1\x1b[0m']
+        no_color = ['OK']
+        no_color += ['FAIL: expected_1']
+
+        # 2. run and check that results are correct with sys.stdout.isatty()=True
+        with mock.patch('sys.stdout') as stdout:
+            stdout.isatty.return_value = True
+            self.assertEqual(with_color,
+                             [colorize_result('OK'),
+                              colorize_result('FAIL: expected_1')])
+
+        # 3. run and check that results are correct with sys.stdout.isatty()=False
+        with mock.patch('sys.stdout') as stdout:
+            stdout.isatty.return_value = False
+            self.assertEqual(None, colorize_result(None))
+            self.assertEqual(no_color,
+                             [colorize_result('OK'),
+                              colorize_result('FAIL: expected_1')])
