@@ -748,6 +748,10 @@ def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
              AND(KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
                  have_kconfig))] # radical, but may be useful in some cases
 
+    l += [OR(SysctlCheck('cut_attack_surface', 'grsec', 'kernel.io_uring_disabled', '2'),
+             AND(KconfigCheck('cut_attack_surface', 'grsec', 'IO_URING', 'is not set'),
+                 have_kconfig))] # compatible with the 'IO_URING' kconfig check by grsecurity
+
     l += [OR(SysctlCheck('cut_attack_surface', 'a13xp0p0v', 'kernel.sysrq', '0'),
              AND(KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set'),
                  have_kconfig))]
