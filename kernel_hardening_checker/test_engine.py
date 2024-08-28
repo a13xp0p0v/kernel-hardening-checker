@@ -429,6 +429,8 @@ class TestEngine(unittest.TestCase):
         config_checklist += [AND(KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'),
                                  CmdlineCheck('reason_5', 'decision_5', 'name_5', 'expected_5'),
                                  SysctlCheck('reason_6', 'decision_6', 'name_6', 'expected_6'))]
+        config_checklist += [AND(KconfigCheck('reason_7', 'decision_7', 'NAME_7', 'expected_7'),
+                                 VersionCheck((42, 43, 44)))]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options  = {}
@@ -443,16 +445,20 @@ class TestEngine(unittest.TestCase):
         parsed_sysctl_options  = {}
         parsed_sysctl_options['name_6'] = 'expected_6'
 
-        # 5. run the engine
-        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, None)
+        # 5. prepare the kernel version
+        kernel_version = (42, 43, 43)
 
-        # 6. check that the results are correct
+        # 6. run the engine
+        self.run_engine(config_checklist, parsed_kconfig_options, parsed_cmdline_options, parsed_sysctl_options, kernel_version)
+
+        # 7. check that the results are correct
         json_result = [] # type: ResultType
         self.get_engine_result(config_checklist, json_result, 'json')
         self.assertEqual(
                 json_result,
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'desired_val': 'expected_1', 'decision': 'decision_1', 'reason': 'reason_1', 'check_result': 'OK: name_2 is "expected_2"', 'check_result_bool': True},
-                 {'option_name': 'CONFIG_NAME_4', 'type': 'kconfig', 'desired_val': 'expected_4', 'decision': 'decision_4', 'reason': 'reason_4', 'check_result': 'FAIL: name_5 is not "expected_5"', 'check_result_bool': False}]
+                 {'option_name': 'CONFIG_NAME_4', 'type': 'kconfig', 'desired_val': 'expected_4', 'decision': 'decision_4', 'reason': 'reason_4', 'check_result': 'FAIL: name_5 is not "expected_5"', 'check_result_bool': False},
+                 {'option_name': 'CONFIG_NAME_7', 'type': 'kconfig', 'desired_val': 'expected_7', 'decision': 'decision_7', 'reason': 'reason_7', 'check_result': 'FAIL: version < (42, 43, 44)', 'check_result_bool': False}]
         )
 
         stdout_result = [] # type: ResultType
@@ -463,6 +469,7 @@ class TestEngine(unittest.TestCase):
 '\
 CONFIG_NAME_1                           |kconfig| expected_1 |decision_1|     reason_1     | OK: name_2 is "expected_2"\
 CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | FAIL: name_5 is not "expected_5"\
+CONFIG_NAME_7                           |kconfig| expected_7 |decision_7|     reason_7     | FAIL: version < (42, 43, 44)\
 '               ]
         )
 
@@ -482,6 +489,11 @@ name_3                                  |sysctl | expected_3 |decision_3|     re
 CONFIG_NAME_4                           |kconfig| expected_4 |decision_4|     reason_4     | None\n\
 name_5                                  |cmdline| expected_5 |decision_5|     reason_5     | FAIL: "UNexpected_5"\n\
 name_6                                  |sysctl | expected_6 |decision_6|     reason_6     | OK\
+'
+'\
+    <<< AND >>>                                                                            | FAIL: version < (42, 43, 44)\n\
+CONFIG_NAME_7                           |kconfig| expected_7 |decision_7|     reason_7     | None\n\
+kernel version >= (42, 43, 44)                                                             | FAIL: version < (42, 43, 44)\
 '               ]
         )
 
