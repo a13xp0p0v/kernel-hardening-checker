@@ -565,7 +565,6 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
 
     # 'self_protection', 'kspp'
-    l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
@@ -605,8 +604,12 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
+        l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
         l += [AND(CmdlineCheck('self_protection', 'kspp', 'pti', 'on'),
                   CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set'))]
+    if arch == 'ARM64':
+        l += [OR(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto'),
+                 CmdlineCheck('self_protection', 'kspp', 'mitigations', 'is not set'))] # same as 'auto'
 
     # 'self_protection', 'clipos'
     if arch in ('X86_64', 'X86_32'):
