@@ -120,16 +120,16 @@ class OptCheck:
     def json_dump(self, with_results: bool) -> Dict[str, StrOrBool]:
         assert(self.opt_type), f'unexpected empty opt_type in {self.name}'
         dump = {
-            "option_name": self.name,
-            "type": self.opt_type,
-            "desired_val": self.expected,
-            "decision": self.decision,
-            "reason": self.reason,
+            'option_name': self.name,
+            'type': self.opt_type,
+            'desired_val': self.expected,
+            'decision': self.decision,
+            'reason': self.reason,
         } # type: Dict[str, StrOrBool]
         if with_results:
             assert(self.result), f'unexpected empty result in {self.name}'
-            dump["check_result"] = self.result
-            dump["check_result_bool"] = self.result.startswith('OK')
+            dump['check_result'] = self.result
+            dump['check_result_bool'] = self.result.startswith('OK')
         return dump
 
 
@@ -250,8 +250,8 @@ class ComplexOptCheck:
         if with_results:
             # Add the 'check_result' and 'check_result_bool' keys to the dictionary
             assert(self.result), f'unexpected empty result in {self.name}'
-            dump["check_result"] = self.result
-            dump["check_result_bool"] = self.result.startswith('OK')
+            dump['check_result'] = self.result
+            dump['check_result_bool'] = self.result.startswith('OK')
         return dump
 
 
@@ -392,7 +392,7 @@ def override_expected_value(checklist: List[ChecklistObjType], name: str, new_va
     for opt in checklist:
         if opt.name == name:
             assert(isinstance(opt, SimpleNamedOptCheckTypes)), \
-                   f'overriding an expected value for {opt}" is not supported yet'
+                   f'overriding an expected value for "{opt}" is not supported yet'
             opt.expected = new_val
 
 
