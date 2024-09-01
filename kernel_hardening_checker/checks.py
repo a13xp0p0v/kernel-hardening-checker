@@ -258,8 +258,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))] # vs CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
                   iommu_support_is_set)]
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
-                  iommu_support_is_set)]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
+                 VersionCheck((6, 7, 0)))] # AMD_IOMMU_V2 was dropped in v6.7
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
