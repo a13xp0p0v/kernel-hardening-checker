@@ -143,8 +143,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'RANDOM_KMALLOC_CACHES', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_MERGE_DEFAULT', 'is not set')]
-    l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_HARDENED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_RANDOM', 'y')]
@@ -236,6 +234,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                   cc_is_gcc)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'ARM64'):
+        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
         l += [AND(cfi_clang_is_set,
                   cc_is_clang)]
         l += [AND(cfi_clang_permissive_not_set,
