@@ -277,6 +277,11 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y'))]
                  # DEBUG_WX has been renamed to ARM_DEBUG_WX on ARM
 
+    # 'self_protection', 'a13xp0p0v'
+    if arch == 'ARM':
+        l += [KconfigCheck('self_protection', 'a13xp0p0v', 'ARM_SMMU', 'y')]
+        l += [KconfigCheck('self_protection', 'a13xp0p0v', 'ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT', 'y')]
+
     # 'security_policy'
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('security_policy', 'defconfig', 'SECURITY', 'y')]
