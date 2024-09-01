@@ -339,15 +339,14 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              devmem_not_set)] # refers to LOCKDOWN
     l += [AND(KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is not set'),
               KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is present'))]
+    l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
+             KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'))]
+             # disabling X86_VSYSCALL_EMULATION turns vsyscall off completely,
+             # and LEGACY_VSYSCALL_NONE can be changed at boot time via the cmdline parameter
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set')]
               # CONFIG_COMPAT_VDSO disabled ASLR of vDSO only on X86_64 and X86_32;
               # on ARM64 this option has different meaning
-    if arch == 'X86_64':
-        l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
-                 KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'))]
-                 # disabling X86_VSYSCALL_EMULATION turns vsyscall off completely,
-                 # and LEGACY_VSYSCALL_NONE can be changed at boot time via the cmdline parameter
     if arch == 'ARM':
         l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
                  devmem_not_set)] # refers to LOCKDOWN
