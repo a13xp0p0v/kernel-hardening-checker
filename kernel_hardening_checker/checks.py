@@ -691,6 +691,7 @@ no_kstrtobool_options = [
     'vsyscall', # See vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
     'vdso32', # See vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
     'vdso', # See vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
+    'cfi', # See cfi_parse_cmdline() in arch/x86/kernel/alternative.c
     'tsx' # See tsx_init() in arch/x86/kernel/cpu/tsx.c
 ]
 
