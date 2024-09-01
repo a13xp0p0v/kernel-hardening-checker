@@ -24,7 +24,7 @@ from .engine import print_unknown_options, populate_with_data, perform_checks, o
 
 
 # kernel-hardening-checker version
-__version__ = '0.6.6'
+__version__ = '0.6.10'
 
 
 def _open(file: str) -> TextIO:
