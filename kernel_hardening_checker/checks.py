@@ -61,6 +61,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'INIT_STACK_ALL_ZERO', 'y'),
              AND(KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y')))]
+    l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_MITIGATIONS', 'y'),
+             KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y'))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
     vmap_stack_is_set = KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')
@@ -89,8 +91,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_AMD', 'y'),
                  cpu_sup_amd_not_set)]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'CPU_MITIGATIONS', 'y'),
-                 KconfigCheck('self_protection', 'defconfig', 'SPECULATION_MITIGATIONS', 'y'))]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETPOLINE', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y'))]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
