@@ -221,8 +221,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
               KconfigCheck('self_protection', 'kspp', 'UBSAN_BOOL', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_ENUM', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_ALIGNMENT', 'is not set'))] # only array index bounds checking with traps
-    l += [AND(KconfigCheck('self_protection', 'kspp', 'UBSAN_SANITIZE_ALL', 'y'),
-              ubsan_bounds_is_set)]
+    l += [OR(KconfigCheck('self_protection', 'kspp', 'UBSAN_SANITIZE_ALL', 'y'),
+             AND(ubsan_bounds_is_set,
+                 VersionCheck((6, 9, 0))))] # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [AND(stackleak_is_set,
