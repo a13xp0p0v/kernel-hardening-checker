@@ -206,7 +206,7 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
         sys.exit(f'[!] ERROR: unable to open {fname}, are you sure it exists?')
 
     with open(fname, 'r', encoding='utf-8') as f:
-        sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
+        sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ ?=.*$")
         for line in f.readlines():
             line = line.strip()
             if not sysctl_pattern.match(line):
