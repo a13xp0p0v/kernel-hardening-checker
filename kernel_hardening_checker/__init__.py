@@ -206,9 +206,11 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
         sys.exit(f'[!] ERROR: unable to open {fname}, are you sure it exists?')
 
     with open(fname, 'r', encoding='utf-8') as f:
-        sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ =.*$")
+        sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ ?=.*$")
         for line in f.readlines():
             line = line.strip()
+            if line.startswith('#'):
+                continue
             if not sysctl_pattern.match(line):
                 sys.exit(f'[!] ERROR: unexpected line in sysctl file: "{line}"')
             option, value = line.split('=', 1)
@@ -220,11 +222,11 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
     # let's check the presence of some ancient sysctl option
     # to ensure that we are parsing the output of `sudo sysctl -a > file`
     if 'kernel.printk' not in parsed_options:
-        sys.exit(f'[!] ERROR: {fname} doesn\'t look like a sysctl output file, please try `sudo sysctl -a > {fname}`')
+        print(f'[!] WARNING: ancient sysctl options are not found in {fname}, please use the output of `sudo sysctl -a`')
 
     # let's check the presence of a sysctl option available for root
     if 'kernel.cad_pid' not in parsed_options and mode != 'json':
-        print(f'[!] WARNING: sysctl option "kernel.cad_pid" available for root is not found in {fname}, please try `sudo sysctl -a > {fname}`')
+        print(f'[!] WARNING: sysctl options available for root are not found in {fname}, please use the output of `sudo sysctl -a`')
 
 
 def main() -> None:
