@@ -278,8 +278,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
 
     # 'self_protection', 'a13xp0p0v'
     if arch == 'X86_64':
-        l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'), # same as 'cfi=kcfi'
-                KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is present'))]
+        l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'),
+                  KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is present'))] # same as 'cfi=kcfi'
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'a13xp0p0v', 'ARM_SMMU', 'y')]
         l += [KconfigCheck('self_protection', 'a13xp0p0v', 'ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT', 'y')]
@@ -614,7 +614,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  CmdlineCheck('self_protection', 'kspp', 'mitigations', 'is not set'))] # same as 'auto'
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'cfi', 'kcfi'),
-                 AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'), # same as 'cfi=kcfi'
+                 AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'),
                      KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is present'),
                      CmdlineCheck('self_protection', 'kspp', 'cfi', 'is not set')))]
 
