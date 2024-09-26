@@ -66,6 +66,30 @@ do
 done
 echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 
+echo ">>>>> test kconfig arch detection <<<<<"
+cp $CONFIG_DIR/defconfigs/x86_64_defconfig_6.6.config ./test.config
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: X86_64"
+cp $CONFIG_DIR/defconfigs/x86_32_defconfig_6.6.config ./test.config
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: X86_32"
+cp $CONFIG_DIR/defconfigs/arm_defconfig_6.6.config ./test.config
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: ARM"
+cp $CONFIG_DIR/defconfigs/arm64_defconfig_6.6.config ./test.config
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: ARM64"
+
+echo ">>>>> test sysctl arch detection <<<<<"
+echo "kernel.arch = x86_64" > /tmp/sysctl_arch # same as output of `sysctl kernel.arch`
+coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: X86_64"
+echo "kernel.arch = i386" > /tmp/sysctl_arch
+coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: X86_32"
+echo "kernel.arch = armv7l" > /tmp/sysctl_arch
+coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: ARM"
+echo "kernel.arch = aarch64" > /tmp/sysctl_arch
+coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: ARM64"
+echo "kernel.arch = armv8b" > /tmp/sysctl_arch
+coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: ARM64"
+echo "kernel.arch = bad" > /tmp/sysctl_arch
+coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "bad is an unsupported arch, arch-dependent checks will be dropped"
+
 echo ">>>>> check sysctl separately <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m verbose > /dev/null
