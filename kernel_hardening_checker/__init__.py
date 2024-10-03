@@ -57,9 +57,9 @@ def detect_arch_kconfig(fname: str, supported_archs: List[str]) -> Tuple[StrOrNo
 
 def detect_arch_sysctl(fname: str, supported_archs: List[str]) -> Tuple[StrOrNone, str]:
     arch_mapping = {
-        'ARM64': r'^aarch64|armv8', # armv8+ is 64-bit
-        'ARM': r'^armv[3-7]',       # armv? is 32-bit (below 8)
-        'X86_32': r'^i[3-6]?86',    # i?86 is 32-bit
+        'ARM64': r'^aarch64|armv8',
+        'ARM': r'^armv[3-7]',
+        'X86_32': r'^i[3-6]?86',
         'X86_64': r'^x86_64'
     }
     with _open(fname) as f:
