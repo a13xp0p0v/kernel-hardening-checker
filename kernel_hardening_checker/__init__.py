@@ -36,7 +36,7 @@ def _open(file: str) -> TextIO:
         sys.exit(f'[!] ERROR: unable to open {file}, are you sure it exists?')
 
 
-def detect_arch(fname: str, supported_archs: List[str]) -> Tuple[StrOrNone, str]:
+def detect_arch_kconfig(fname: str, supported_archs: List[str]) -> Tuple[StrOrNone, str]:
     arch = None
 
     with _open(fname) as f:
@@ -48,11 +48,30 @@ def detect_arch(fname: str, supported_archs: List[str]) -> Tuple[StrOrNone, str]
                 if arch is None:
                     arch = option
                 else:
-                    return None, 'detected more than one microarchitecture'
+                    return None, 'detected more than one microarchitecture in kconfig'
 
     if arch is None:
-        return None, 'failed to detect microarchitecture'
+        return None, 'failed to detect microarchitecture in kconfig'
     return arch, 'OK'
+
+
+def detect_arch_sysctl(fname: str, supported_archs: List[str]) -> Tuple[StrOrNone, str]:
+    arch_mapping = {
+        'ARM64': r'^aarch64|armv8',
+        'ARM': r'^armv[3-7]',
+        'X86_32': r'^i[3-6]?86',
+        'X86_64': r'^x86_64'
+    }
+    with _open(fname) as f:
+        for line in f.readlines():
+            if line.startswith('kernel.arch'):
+                value = line.split('=', 1)[1].strip()
+                for arch, pattern in arch_mapping.items():
+                    assert(arch in supported_archs), 'invalid arch mapping in sysctl'
+                    if re.search(pattern, value):
+                        return arch, value
+                return None, f'{value} is an unsupported arch'
+        return None, 'failed to detect microarchitecture in sysctl'
 
 
 def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
@@ -221,7 +240,7 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
 
     # let's check the presence of some ancient sysctl option
     # to ensure that we are parsing the output of `sudo sysctl -a > file`
-    if 'kernel.printk' not in parsed_options:
+    if 'kernel.printk' not in parsed_options and mode != 'json':
         print(f'[!] WARNING: ancient sysctl options are not found in {fname}, please use the output of `sudo sysctl -a`')
 
     # let's check the presence of a sysctl option available for root
@@ -277,7 +296,7 @@ def main() -> None:
             if args.sysctl:
                 print(f'[+] Sysctl output file to check: {args.sysctl}')
 
-        arch, msg = detect_arch(args.config, supported_archs)
+        arch, msg = detect_arch_kconfig(args.config, supported_archs)
         if arch is None:
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
@@ -366,11 +385,16 @@ def main() -> None:
         if args.generate:
             sys.exit('[!] ERROR: --sysctl and --generate can\'t be used together')
 
+        arch, msg = detect_arch_sysctl(args.sysctl, supported_archs)
         if mode != 'json':
             print(f'[+] Sysctl output file to check: {args.sysctl}')
+            if arch is None:
+                print(f'[!] WARNING: {msg}, arch-dependent checks will be dropped')
+            else:
+                print(f'[+] Detected microarchitecture: {arch} ({msg})')
 
         # add relevant sysctl checks to the checklist
-        add_sysctl_checks(config_checklist, None)
+        add_sysctl_checks(config_checklist, arch)
 
         # populate the checklist with the parsed sysctl data
         parsed_sysctl_options = {}
