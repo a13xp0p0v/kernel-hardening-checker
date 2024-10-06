@@ -403,7 +403,6 @@ def main() -> None:
         sys.exit('[!] ERROR: checking cmdline depends on checking Kconfig')
     elif args.sysctl:
         # separate sysctl checking (without kconfig)
-        assert(args.config is None and args.cmdline is None), 'unexpected args'
         if args.print:
             sys.exit('[!] ERROR: --sysctl and --print can\'t be used together')
         if args.generate:
@@ -441,7 +440,6 @@ def main() -> None:
         if mode:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
         arch = args.generate
-        assert(arch), 'unexpected empty arch from ArgumentParser'
         config_checklist = []
         add_kconfig_checks(config_checklist, arch)
         print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the microarchitecture
