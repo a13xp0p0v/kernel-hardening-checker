@@ -373,18 +373,19 @@ def main() -> None:
         if mode != 'json':
             print(f'[+] Special report mode: {mode}')
 
+    if mode != 'json':
+        if args.config:
+            print(f'[+] Kconfig file to check: {args.config}')
+        if args.cmdline:
+            print(f'[+] Kernel cmdline file to check: {args.cmdline}')
+        if args.sysctl:
+            print(f'[+] Sysctl output file to check: {args.sysctl}')
+
     if args.config:
         if args.print:
             sys.exit('[!] ERROR: --config and --print can\'t be used together')
         if args.generate:
             sys.exit('[!] ERROR: --config and --generate can\'t be used together')
-
-        if mode != 'json':
-            print(f'[+] Kconfig file to check: {args.config}')
-            if args.cmdline:
-                print(f'[+] Kernel cmdline file to check: {args.cmdline}')
-            if args.sysctl:
-                print(f'[+] Sysctl output file to check: {args.sysctl}')
 
         if args.kernel_version:
             kernel_version, msg = detect_kernel_version(args.kernel_version)
@@ -407,10 +408,6 @@ def main() -> None:
             sys.exit('[!] ERROR: --sysctl and --print can\'t be used together')
         if args.generate:
             sys.exit('[!] ERROR: --sysctl and --generate can\'t be used together')
-
-        if mode != 'json':
-            print(f'[+] Sysctl output file to check: {args.sysctl}')
-
         perform_checking(mode, None, None, None, args.sysctl)
         sys.exit(0)
 
