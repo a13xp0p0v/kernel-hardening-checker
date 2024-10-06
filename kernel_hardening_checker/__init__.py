@@ -328,13 +328,23 @@ def main() -> None:
             # add relevant sysctl checks to the checklist
             add_sysctl_checks(config_checklist, arch)
 
+        # populate the checklist with the kernel version data
+        populate_with_data(config_checklist, kernel_version, 'version')
+
         # populate the checklist with the parsed Kconfig data
         parsed_kconfig_options = {} # type: Dict[str, str]
         parse_kconfig_file(mode, parsed_kconfig_options, args.config)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
 
-        # populate the checklist with the kernel version data
-        populate_with_data(config_checklist, kernel_version, 'version')
+        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
+        mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
+        if mmap_rnd_bits_max:
+            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
+        else:
+            # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
+            if mode != 'json':
+                print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
+            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
 
         if args.cmdline:
             # populate the checklist with the parsed cmdline data
@@ -347,16 +357,6 @@ def main() -> None:
             parsed_sysctl_options = {} # type: Dict[str, str]
             parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
             populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
-
-        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
-        mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
-        if mmap_rnd_bits_max:
-            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
-        else:
-            # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
-            if mode != 'json':
-                print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
-            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
 
         # now everything is ready, perform the checks
         perform_checks(config_checklist)
