@@ -293,12 +293,6 @@ def main() -> None:
             if args.sysctl:
                 print(f'[+] Sysctl output file to check: {args.sysctl}')
 
-        arch, msg = detect_arch_kconfig(args.config, supported_archs)
-        if arch is None:
-            sys.exit(f'[!] ERROR: {msg}')
-        if mode != 'json':
-            print(f'[+] Detected microarchitecture: {arch}')
-
         if args.kernel_version:
             kernel_version, msg = detect_kernel_version(args.kernel_version)
         else:
@@ -309,6 +303,12 @@ def main() -> None:
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
             print(f'[+] Detected kernel version: {kernel_version}')
+
+        arch, msg = detect_arch_kconfig(args.config, supported_archs)
+        if arch is None:
+            sys.exit(f'[!] ERROR: {msg}')
+        if mode != 'json':
+            print(f'[+] Detected microarchitecture: {arch}')
 
         compiler, msg = detect_compiler(args.config)
         if mode != 'json':
