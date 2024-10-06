@@ -161,6 +161,11 @@ cp test.config error.config
 echo 'CONFIG_FOO=is not set' >> error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
+echo ">>>>> kconfig option without a value (should emit a warning) <<<<<"
+cp test.config error.config
+echo 'CONFIG_FOO=' >> error.config
+coverage run -a --branch bin/kernel-hardening-checker -c error.config | grep "WARNING: found strange Kconfig option CONFIG_FOO with empty value"
+
 echo ">>>>> one config option multiple times <<<<<"
 cp test.config error.config
 echo 'CONFIG_BUG=y' >> error.config
