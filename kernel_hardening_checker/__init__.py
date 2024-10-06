@@ -247,50 +247,70 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
         print(f'[!] WARNING: sysctl options available for root are not found in {fname}, please use the output of `sudo sysctl -a`')
 
 
-def perform_checking(mode: StrOrNone, version: Tuple[int, ...], kconfig: str, cmdline: str, sysctl: str) -> None:
+def perform_checking(mode: StrOrNone, version: TupleOrNone,
+                     kconfig: StrOrNone, cmdline: StrOrNone, sysctl: StrOrNone) -> None:
     config_checklist = [] # type: List[ChecklistObjType]
+    arch = None
 
-    arch, msg = detect_arch_kconfig(kconfig)
-    if arch is None:
-        sys.exit(f'[!] ERROR: {msg}')
-    if mode != 'json':
-        print(f'[+] Detected microarchitecture: {arch}')
+    # detect the kernel microarchitecture
+    if kconfig:
+        arch, msg = detect_arch_kconfig(kconfig)
+        if arch is None:
+            sys.exit(f'[!] ERROR: {msg}')
+        if mode != 'json':
+            print(f'[+] Detected microarchitecture: {arch}')
+    else:
+        assert(not cmdline), 'wrong perform_checking() usage'
+        assert(sysctl), 'wrong perform_checking() usage'
+        arch, msg = detect_arch_sysctl(sysctl)
+        if mode != 'json':
+            if arch is None:
+                print(f'[!] WARNING: {msg}, arch-dependent checks will be dropped')
+            else:
+                print(f'[+] Detected microarchitecture: {arch} ({msg})')
 
-    compiler, msg = detect_compiler(kconfig)
-    if mode != 'json':
-        if compiler:
-            print(f'[+] Detected compiler: {compiler}')
-        else:
-            print(f'[-] Can\'t detect the compiler: {msg}')
+    if kconfig:
+        # kconfig allows to determine the compiler for building the kernel
+        compiler, msg = detect_compiler(kconfig)
+        if mode != 'json':
+            if compiler:
+                print(f'[+] Detected compiler: {compiler}')
+            else:
+                print(f'[-] Can\'t detect the compiler: {msg}')
 
-    # add relevant Kconfig checks to the checklist
-    add_kconfig_checks(config_checklist, arch)
+    if kconfig:
+        # add relevant Kconfig checks to the checklist
+        assert(arch), 'arch is mandatory for the kconfig checks'
+        add_kconfig_checks(config_checklist, arch)
 
     if cmdline:
         # add relevant cmdline checks to the checklist
+        assert(arch), 'arch is mandatory for the cmdline checks'
         add_cmdline_checks(config_checklist, arch)
 
     if sysctl:
         # add relevant sysctl checks to the checklist
         add_sysctl_checks(config_checklist, arch)
 
-    # populate the checklist with the kernel version data
-    populate_with_data(config_checklist, version, 'version')
+    if version:
+        # populate the checklist with the kernel version data
+        populate_with_data(config_checklist, version, 'version')
 
-    # populate the checklist with the parsed Kconfig data
-    parsed_kconfig_options = {} # type: Dict[str, str]
-    parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
-    populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
+    if kconfig:
+        # populate the checklist with the parsed Kconfig data
+        parsed_kconfig_options = {} # type: Dict[str, str]
+        parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
+        populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
 
-    # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
-    mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
-    if mmap_rnd_bits_max:
-        override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
-    else:
-        # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
-        if mode != 'json':
-            print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
-        config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
+        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
+        mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
+        if mmap_rnd_bits_max:
+            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
+        else:
+            # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
+            if mode != 'json':
+                print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
+            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
 
     if cmdline:
         # populate the checklist with the parsed cmdline data
@@ -309,7 +329,8 @@ def perform_checking(mode: StrOrNone, version: Tuple[int, ...], kconfig: str, cm
 
     if mode == 'verbose':
         # print the parsed options without the checks (for debugging)
-        print_unknown_options(config_checklist, parsed_kconfig_options, 'kconfig')
+        if kconfig:
+            print_unknown_options(config_checklist, parsed_kconfig_options, 'kconfig')
         if cmdline:
             print_unknown_options(config_checklist, parsed_cmdline_options, 'cmdline')
         if sysctl:
@@ -388,33 +409,10 @@ def main() -> None:
         if args.generate:
             sys.exit('[!] ERROR: --sysctl and --generate can\'t be used together')
 
-        arch, msg = detect_arch_sysctl(args.sysctl)
         if mode != 'json':
             print(f'[+] Sysctl output file to check: {args.sysctl}')
-            if arch is None:
-                print(f'[!] WARNING: {msg}, arch-dependent checks will be dropped')
-            else:
-                print(f'[+] Detected microarchitecture: {arch} ({msg})')
 
-        config_checklist = [] # type: List[ChecklistObjType]
-
-        # add relevant sysctl checks to the checklist
-        add_sysctl_checks(config_checklist, arch)
-
-        # populate the checklist with the parsed sysctl data
-        parsed_sysctl_options = {} # type: Dict[str, str]
-        parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
-        populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
-
-        # now everything is ready, perform the checks
-        perform_checks(config_checklist)
-
-        if mode == 'verbose':
-            # print the parsed options without the checks (for debugging)
-            print_unknown_options(config_checklist, parsed_sysctl_options, 'sysctl')
-
-        # finally print the results
-        print_checklist(mode, config_checklist, True)
+        perform_checking(mode, None, None, None, args.sysctl)
         sys.exit(0)
 
     if args.print:
@@ -425,7 +423,7 @@ def main() -> None:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         assert(arch), 'unexpected empty arch from ArgumentParser'
-        config_checklist = []
+        config_checklist = [] # type: List[ChecklistObjType]
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
         add_sysctl_checks(config_checklist, arch)
