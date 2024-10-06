@@ -225,7 +225,7 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ ?=.*$")
         for line in f.readlines():
             line = line.strip()
-            if line.startswith('#'):
+            if not line or line.startswith('#'):
                 continue
             if not sysctl_pattern.match(line):
                 sys.exit(f'[!] ERROR: unexpected line in sysctl file: "{line}"')

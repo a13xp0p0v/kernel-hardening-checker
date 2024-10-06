@@ -92,11 +92,14 @@ coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep
 
 echo ">>>>> check sysctl separately <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE
-coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m verbose > /dev/null
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m json
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m show_ok
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m show_fail
+
+echo ">>>>> check sysctl.conf (it should not fail) <<<<<"
+cat /etc/sysctl.conf
+coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 
 echo ">>>>> test -v (kernel version detection) <<<<<"
 cp kernel_hardening_checker/config_files/distros/fedora_34.config ./test.config
