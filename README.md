@@ -450,6 +450,10 @@ New value: CONFIG_BUG_ON_DATA_CORRUPTION=y
  ...
 ```
 
+## Thanks
+
+Thanks to the [contributors][26] and users of this project!
+
 ## Questions and answers
 
 __Q:__ How all these kernel parameters influence the Linux kernel security?
@@ -552,3 +556,4 @@ try to install `gcc-14-plugin-dev` package, it should help.
 [23]: https://github.com/a13xp0p0v/kernel-hardening-checker/issues?q=label%3Akernel_maintainer_feedback
 [24]: https://github.com/a13xp0p0v/kernel-hardening-checker#motivation
 [25]: https://grapheneos.org/features
+[26]: https://github.com/a13xp0p0v/kernel-hardening-checker/graphs/contributors
