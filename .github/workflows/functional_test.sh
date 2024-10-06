@@ -92,6 +92,7 @@ coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep
 
 echo ">>>>> check sysctl separately <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE
+coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m verbose > /dev/null
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m json
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m show_ok
@@ -130,16 +131,6 @@ coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -m show_ok && ex
 
 echo ">>>>> no kconfig file <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -c ./nosuchfile && exit 1
-
-echo ">>>>> no cmdline file <<<<<"
-coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -l ./nosuchfile && exit 1
-
-echo ">>>>> empty cmdline file <<<<<"
-touch ./empty_file
-coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -l ./empty_file && exit 1
-
-echo ">>>>> no sysctl file <<<<<"
-coverage run -a --branch bin/kernel-hardening-checker -s ./nosuchfile && exit 1
 
 echo ">>>>> no kernel version <<<<<"
 sed '3d' test.config > error.config
@@ -182,17 +173,27 @@ cp test.config error.config
 echo 'some strange line' >> error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
+echo ">>>>> no cmdline file <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -l ./nosuchfile && exit 1
+
+echo ">>>>> empty cmdline file <<<<<"
+touch ./empty_file
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -l ./empty_file && exit 1
+
 echo ">>>>> multi-line cmdline file <<<<<"
 echo 'hey man 1' > cmdline
 echo 'hey man 2' >> cmdline
 coverage run -a --branch bin/kernel-hardening-checker -c test.config -l cmdline && exit 1
 
+echo ">>>>> no sysctl file <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -s ./nosuchfile && exit 1
+
+echo ">>>>> empty sysctl file <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -c test.config -s empty_file && exit 1
+
 echo ">>>>> unexpected line in the sysctl file <<<<<"
 cp $SYSCTL_EXAMPLE error_sysctls
 echo 'some strange line' >> error_sysctls
 coverage run -a --branch bin/kernel-hardening-checker -c test.config -s error_sysctls && exit 1
-
-echo ">>>>> invalid sysctl file <<<<<"
-coverage run -a --branch bin/kernel-hardening-checker -c test.config -s empty_file && exit 1
 
 echo "The end of the functional tests"
