@@ -720,14 +720,13 @@ def normalize_cmdline_options(option: str, value: str) -> str:
 
 # Ideas of security hardening sysctls:
 #    what about bpf_jit_enable?
-#    vm.mmap_min_addr has a good value
 #    nosmt sysfs control file
 #    vm.mmap_rnd_bits=max
 #    vm.mmap_rnd_compat_bits=max
 #    abi.vsyscall32 (any value except 2)
 #    net.ipv4.tcp_syncookies=1 (?)
 
-def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
+def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
 # This function may be called with arch=None
 
 # Calling the SysctlCheck class constructor:
@@ -745,6 +744,11 @@ def add_sysctl_checks(l: List[ChecklistObjType], _arch: StrOrNone) -> None:
     # Let's choose 100 as a reasonable compromise.
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
+    if arch in ('X86_64', 'X86_32'):
+        l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '65536')]
+    if arch in ('ARM64', 'ARM'):
+        l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '32768')]
+        # compatible with the 'DEFAULT_MMAP_MIN_ADDR' kconfig check by KSPP
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
