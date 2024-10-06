@@ -26,6 +26,8 @@ from .engine import print_unknown_options, populate_with_data, perform_checks, o
 # kernel-hardening-checker version
 __version__ = '0.6.10'
 
+SUPPORTED_ARCHS = ['X86_64', 'X86_32', 'ARM64', 'ARM']
+
 
 def _open(file: str) -> TextIO:
     try:
@@ -36,14 +38,14 @@ def _open(file: str) -> TextIO:
         sys.exit(f'[!] ERROR: unable to open {file}, are you sure it exists?')
 
 
-def detect_arch_kconfig(fname: str, supported_archs: List[str]) -> Tuple[StrOrNone, str]:
+def detect_arch_kconfig(fname: str) -> Tuple[StrOrNone, str]:
     arch = None
 
     with _open(fname) as f:
         for line in f.readlines():
             if m := re.search("CONFIG_([A-Z0-9_]+)=y$", line):
                 option = m.group(1)
-                if option not in supported_archs:
+                if option not in SUPPORTED_ARCHS:
                     continue
                 if arch is None:
                     arch = option
@@ -55,7 +57,7 @@ def detect_arch_kconfig(fname: str, supported_archs: List[str]) -> Tuple[StrOrNo
     return arch, 'OK'
 
 
-def detect_arch_sysctl(fname: str, supported_archs: List[str]) -> Tuple[StrOrNone, str]:
+def detect_arch_sysctl(fname: str) -> Tuple[StrOrNone, str]:
     arch_mapping = {
         'ARM64': r'^aarch64|armv8',
         'ARM': r'^armv[3-7]',
@@ -67,7 +69,7 @@ def detect_arch_sysctl(fname: str, supported_archs: List[str]) -> Tuple[StrOrNon
             if line.startswith('kernel.arch'):
                 value = line.split('=', 1)[1].strip()
                 for arch, pattern in arch_mapping.items():
-                    assert(arch in supported_archs), 'invalid arch mapping in sysctl'
+                    assert(arch in SUPPORTED_ARCHS), 'invalid arch mapping in sysctl'
                     if re.search(pattern, value):
                         return arch, value
                 return None, f'{value} is an unsupported arch'
@@ -245,6 +247,79 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
         print(f'[!] WARNING: sysctl options available for root are not found in {fname}, please use the output of `sudo sysctl -a`')
 
 
+def perform_checking(mode: StrOrNone, version: Tuple[int, ...], kconfig: str, cmdline: str, sysctl: str) -> None:
+    config_checklist = [] # type: List[ChecklistObjType]
+
+    arch, msg = detect_arch_kconfig(kconfig)
+    if arch is None:
+        sys.exit(f'[!] ERROR: {msg}')
+    if mode != 'json':
+        print(f'[+] Detected microarchitecture: {arch}')
+
+    compiler, msg = detect_compiler(kconfig)
+    if mode != 'json':
+        if compiler:
+            print(f'[+] Detected compiler: {compiler}')
+        else:
+            print(f'[-] Can\'t detect the compiler: {msg}')
+
+    # add relevant Kconfig checks to the checklist
+    add_kconfig_checks(config_checklist, arch)
+
+    if cmdline:
+        # add relevant cmdline checks to the checklist
+        add_cmdline_checks(config_checklist, arch)
+
+    if sysctl:
+        # add relevant sysctl checks to the checklist
+        add_sysctl_checks(config_checklist, arch)
+
+    # populate the checklist with the kernel version data
+    populate_with_data(config_checklist, version, 'version')
+
+    # populate the checklist with the parsed Kconfig data
+    parsed_kconfig_options = {} # type: Dict[str, str]
+    parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
+    populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
+
+    # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
+    mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
+    if mmap_rnd_bits_max:
+        override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
+    else:
+        # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
+        if mode != 'json':
+            print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
+        config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
+
+    if cmdline:
+        # populate the checklist with the parsed cmdline data
+        parsed_cmdline_options = {} # type: Dict[str, str]
+        parse_cmdline_file(mode, parsed_cmdline_options, cmdline)
+        populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
+
+    if sysctl:
+        # populate the checklist with the parsed sysctl data
+        parsed_sysctl_options = {} # type: Dict[str, str]
+        parse_sysctl_file(mode, parsed_sysctl_options, sysctl)
+        populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
+
+    # now everything is ready, perform the checks
+    perform_checks(config_checklist)
+
+    if mode == 'verbose':
+        # print the parsed options without the checks (for debugging)
+        print_unknown_options(config_checklist, parsed_kconfig_options, 'kconfig')
+        if cmdline:
+            print_unknown_options(config_checklist, parsed_cmdline_options, 'cmdline')
+        if sysctl:
+            print_unknown_options(config_checklist, parsed_sysctl_options, 'sysctl')
+
+    # finally print the results
+    print_checklist(mode, config_checklist, True)
+    sys.exit(0)
+
+
 def main() -> None:
     # Report modes:
     #   * verbose mode for
@@ -252,7 +327,6 @@ def main() -> None:
     #     - verbose printing of ComplexOptCheck items
     #   * json mode for printing the results in JSON format
     report_modes = ['verbose', 'json', 'show_ok', 'show_fail']
-    supported_archs = ['X86_64', 'X86_32', 'ARM64', 'ARM']
     parser = ArgumentParser(prog='kernel-hardening-checker',
                             description='A tool for checking the security hardening options of the Linux kernel')
     parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
@@ -266,9 +340,9 @@ def main() -> None:
                         help='check the security hardening options in the sysctl output file (`sudo sysctl -a > file`)')
     parser.add_argument('-v', '--kernel-version',
                         help='extract the version from the kernel version file (contents of /proc/version)')
-    parser.add_argument('-p', '--print', choices=supported_archs,
+    parser.add_argument('-p', '--print', choices=SUPPORTED_ARCHS,
                         help='print the security hardening recommendations for the selected microarchitecture')
-    parser.add_argument('-g', '--generate', choices=supported_archs,
+    parser.add_argument('-g', '--generate', choices=SUPPORTED_ARCHS,
                         help='generate a Kconfig fragment with the security hardening options for the selected microarchitecture')
     args = parser.parse_args()
 
@@ -277,8 +351,6 @@ def main() -> None:
         mode = args.mode
         if mode != 'json':
             print(f'[+] Special report mode: {mode}')
-
-    config_checklist = [] # type: List[ChecklistObjType]
 
     if args.config:
         if args.print:
@@ -304,73 +376,7 @@ def main() -> None:
         if mode != 'json':
             print(f'[+] Detected kernel version: {kernel_version}')
 
-        arch, msg = detect_arch_kconfig(args.config, supported_archs)
-        if arch is None:
-            sys.exit(f'[!] ERROR: {msg}')
-        if mode != 'json':
-            print(f'[+] Detected microarchitecture: {arch}')
-
-        compiler, msg = detect_compiler(args.config)
-        if mode != 'json':
-            if compiler:
-                print(f'[+] Detected compiler: {compiler}')
-            else:
-                print(f'[-] Can\'t detect the compiler: {msg}')
-
-        # add relevant Kconfig checks to the checklist
-        add_kconfig_checks(config_checklist, arch)
-
-        if args.cmdline:
-            # add relevant cmdline checks to the checklist
-            add_cmdline_checks(config_checklist, arch)
-
-        if args.sysctl:
-            # add relevant sysctl checks to the checklist
-            add_sysctl_checks(config_checklist, arch)
-
-        # populate the checklist with the kernel version data
-        populate_with_data(config_checklist, kernel_version, 'version')
-
-        # populate the checklist with the parsed Kconfig data
-        parsed_kconfig_options = {} # type: Dict[str, str]
-        parse_kconfig_file(mode, parsed_kconfig_options, args.config)
-        populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
-
-        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
-        mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
-        if mmap_rnd_bits_max:
-            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
-        else:
-            # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
-            if mode != 'json':
-                print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
-            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
-
-        if args.cmdline:
-            # populate the checklist with the parsed cmdline data
-            parsed_cmdline_options = {} # type: Dict[str, str]
-            parse_cmdline_file(mode, parsed_cmdline_options, args.cmdline)
-            populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
-
-        if args.sysctl:
-            # populate the checklist with the parsed sysctl data
-            parsed_sysctl_options = {} # type: Dict[str, str]
-            parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
-            populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
-
-        # now everything is ready, perform the checks
-        perform_checks(config_checklist)
-
-        if mode == 'verbose':
-            # print the parsed options without the checks (for debugging)
-            print_unknown_options(config_checklist, parsed_kconfig_options, 'kconfig')
-            if args.cmdline:
-                print_unknown_options(config_checklist, parsed_cmdline_options, 'cmdline')
-            if args.sysctl:
-                print_unknown_options(config_checklist, parsed_sysctl_options, 'sysctl')
-
-        # finally print the results
-        print_checklist(mode, config_checklist, True)
+        perform_checking(mode, kernel_version, args.config, args.cmdline, args.sysctl)
         sys.exit(0)
     elif args.cmdline:
         sys.exit('[!] ERROR: checking cmdline depends on checking Kconfig')
@@ -382,7 +388,7 @@ def main() -> None:
         if args.generate:
             sys.exit('[!] ERROR: --sysctl and --generate can\'t be used together')
 
-        arch, msg = detect_arch_sysctl(args.sysctl, supported_archs)
+        arch, msg = detect_arch_sysctl(args.sysctl)
         if mode != 'json':
             print(f'[+] Sysctl output file to check: {args.sysctl}')
             if arch is None:
@@ -390,11 +396,13 @@ def main() -> None:
             else:
                 print(f'[+] Detected microarchitecture: {arch} ({msg})')
 
+        config_checklist = [] # type: List[ChecklistObjType]
+
         # add relevant sysctl checks to the checklist
         add_sysctl_checks(config_checklist, arch)
 
         # populate the checklist with the parsed sysctl data
-        parsed_sysctl_options = {}
+        parsed_sysctl_options = {} # type: Dict[str, str]
         parse_sysctl_file(mode, parsed_sysctl_options, args.sysctl)
         populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
 
@@ -417,6 +425,7 @@ def main() -> None:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         assert(arch), 'unexpected empty arch from ArgumentParser'
+        config_checklist = []
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
         add_sysctl_checks(config_checklist, arch)
@@ -435,6 +444,7 @@ def main() -> None:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
         arch = args.generate
         assert(arch), 'unexpected empty arch from ArgumentParser'
+        config_checklist = []
         add_kconfig_checks(config_checklist, arch)
         print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the microarchitecture
         for opt in config_checklist:
