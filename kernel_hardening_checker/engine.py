@@ -73,7 +73,7 @@ class OptCheck:
 
     @property
     def opt_type(self) -> StrOrNone:
-        return None
+        raise NotImplementedError # pragma: no cover
 
     def set_state(self, data: StrOrNone) -> None:
         assert(data is None or isinstance(data, str)), \
@@ -228,6 +228,9 @@ class ComplexOptCheck:
     def expected(self) -> str:
         assert hasattr(self.opts[0], 'expected') # true for SimpleNamedOptCheckTypes
         return self.opts[0].expected
+
+    def check(self) -> None:
+        raise NotImplementedError # pragma: no cover
 
     def table_print(self, mode: StrOrNone, with_results: bool) -> None:
         if mode == 'verbose':
