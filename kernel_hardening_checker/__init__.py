@@ -193,10 +193,7 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: 
 
 
 def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
-    if not os.path.isfile(fname):
-        sys.exit(f'[!] ERROR: unable to open {fname}, are you sure it exists?')
-
-    with open(fname, 'r', encoding='utf-8') as f:
+    with _open(fname) as f:
         line = f.readline()
         if not line:
             sys.exit(f'[!] ERROR: empty cmdline file "{fname}"')
@@ -221,10 +218,7 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: s
 
 
 def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
-    if not os.path.isfile(fname):
-        sys.exit(f'[!] ERROR: unable to open {fname}, are you sure it exists?')
-
-    with open(fname, 'r', encoding='utf-8') as f:
+    with _open(fname) as f:
         if os.stat(fname).st_size == 0:
             sys.exit(f'[!] ERROR: empty sysctl file "{fname}"')
 
