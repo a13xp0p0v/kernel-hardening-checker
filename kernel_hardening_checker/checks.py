@@ -458,6 +458,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FAULT_INJECTION', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP_DEBUGFS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP', 'is not set')] # the old name of ARM_PTDUMP_DEBUGFS
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'SECCOMP_CACHE_DEBUG', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'LKDTM', 'is not set')]
                                             # dangerous, only for debugging the kernel hardening features!
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
