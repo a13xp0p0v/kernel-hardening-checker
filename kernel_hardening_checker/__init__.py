@@ -302,7 +302,7 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
 
-        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
+        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS and CONFIG_ARCH_MMAP_RND_COMPAT_BITS checks
         mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
         if mmap_rnd_bits_max:
             override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
@@ -311,6 +311,14 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
             if mode != 'json':
                 print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
             config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
+        mmap_rnd_compat_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX', None)
+        if mmap_rnd_compat_bits_max:
+            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', mmap_rnd_compat_bits_max)
+        else:
+            # remove the CONFIG_ARCH_MMAP_RND_COMPAT_BITS check to avoid false results
+            if mode != 'json':
+                print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_COMPAT_BITS without CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
+            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS']
 
     if cmdline:
         # populate the checklist with the parsed cmdline data
