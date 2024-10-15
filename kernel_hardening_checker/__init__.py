@@ -14,6 +14,9 @@ This module performs input/output.
 import os
 import gzip
 import sys
+import glob
+import tempfile
+import subprocess
 from argparse import ArgumentParser
 from typing import List, Tuple, Dict, TextIO
 import re
@@ -365,6 +368,9 @@ def main() -> None:
                         help='print the security hardening recommendations for the selected microarchitecture')
     parser.add_argument('-g', '--generate', choices=SUPPORTED_ARCHS,
                         help='generate a Kconfig fragment with the security hardening options for the selected microarchitecture')
+    parser.add_argument('-a', '--autodetect',
+                        help='autodetect the running kernel and infer the corresponding Kconfig file',
+                        action='store_true')
     args = parser.parse_args()
 
     mode = None
@@ -372,6 +378,38 @@ def main() -> None:
         mode = args.mode
         if mode != 'json':
             print(f'[+] Special report mode: {mode}')
+
+    if args.autodetect:
+        cmdline = '/proc/cmdline'
+        config = '/proc/config.gz'
+        if os.path.isfile('/proc/config.gz'):
+            kernel_version, msg = detect_kernel_version(config)
+            assert kernel_version
+            kernel_version_str = '.'.join(map(str, kernel_version))
+        else:
+            kernel_version, msg = detect_kernel_version('/proc/version')
+            assert kernel_version
+            kernel_version_str = '.'.join(map(str, kernel_version))
+            config_files = glob.glob(f'/boot/config-{kernel_version_str}-*')
+            if not config_files:
+                sys.exit(f'[!] ERROR: unable to find a Kconfig file for {kernel_version_str}')
+            config = config_files[0]
+            if mode != 'json':
+                if len(config_files) > 1:
+                    print(f'[+] Multiple Kconfig files found for {kernel_version_str}, picking {config}')
+
+        _, tmpfile = tempfile.mkstemp()
+        with open(tmpfile, 'w', encoding='utf-8') as f:
+            subprocess.call(['sysctl', '-a'], stdout=f, stderr=subprocess.DEVNULL, shell=False)
+
+        if mode != 'json':
+            print(f'[+] Detected running kernel version: {kernel_version_str}')
+            print(f'[+] Kconfig file to check: {config}')
+
+        perform_checking(mode, kernel_version, config, cmdline, tmpfile)
+
+        os.remove(tmpfile)
+        sys.exit(0)
 
     if mode != 'json':
         if args.config:
