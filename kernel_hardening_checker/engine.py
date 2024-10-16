@@ -348,7 +348,6 @@ def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: DictOrTuple, da
     assert(opt.opt_type != 'complex'), f'unexpected opt_type "{opt.opt_type}" for {opt}'
     assert(opt.opt_type in SIMPLE_OPTION_TYPES), f'invalid opt_type "{opt.opt_type}"'
     assert(data_type in SIMPLE_OPTION_TYPES), f'invalid data_type "{data_type}"'
-    assert(data), 'empty data'
 
     if data_type != opt.opt_type:
         return
