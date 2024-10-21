@@ -369,21 +369,20 @@ def main() -> None:
     parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
     parser.add_argument('-m', '--mode', choices=report_modes,
                         help='choose the report mode')
+    parser.add_argument('-a', '--autodetect', action='store_true',
+                        help='autodetect and check the security hardening options of the running kernel')
     parser.add_argument('-c', '--config',
-                        help='check the security hardening options in the kernel Kconfig file (also supports *.gz files)')
+                        help='check the security hardening options in the Kconfig file (also supports *.gz files)')
+    parser.add_argument('-v', '--kernel-version',
+                        help='extract version from the kernel version file (contents of /proc/version) instead of Kconfig file')
     parser.add_argument('-l', '--cmdline',
                         help='check the security hardening options in the kernel cmdline file (contents of /proc/cmdline)')
     parser.add_argument('-s', '--sysctl',
                         help='check the security hardening options in the sysctl output file (`sudo sysctl -a > file`)')
-    parser.add_argument('-v', '--kernel-version',
-                        help='extract the version from the kernel version file (contents of /proc/version)')
     parser.add_argument('-p', '--print', choices=SUPPORTED_ARCHS,
                         help='print the security hardening recommendations for the selected microarchitecture')
     parser.add_argument('-g', '--generate', choices=SUPPORTED_ARCHS,
                         help='generate a Kconfig fragment with the security hardening options for the selected microarchitecture')
-    parser.add_argument('-a', '--autodetect',
-                        help='autodetect the running kernel and infer the corresponding Kconfig file',
-                        action='store_true')
     args = parser.parse_args()
 
     mode = None
@@ -393,6 +392,13 @@ def main() -> None:
             print(f'[+] Special report mode: {mode}')
 
     if args.autodetect:
+        if args.config or args.kernel_version or args.cmdline or args.sysctl:
+            sys.exit('[!] ERROR: --autodetect should find the configuration, no other arguments are needed')
+        if args.print:
+            sys.exit('[!] ERROR: --autodetect and --print can\'t be used together')
+        if args.generate:
+            sys.exit('[!] ERROR: --autodetect and --generate can\'t be used together')
+
         cmdline = '/proc/cmdline'
         config = '/proc/config.gz'
         if os.path.isfile('/proc/config.gz'):
@@ -433,6 +439,7 @@ def main() -> None:
             print(f'[+] Sysctl output file to check: {args.sysctl}')
 
     if args.config:
+        assert(not args.autodetect), 'unexpected args'
         if args.print:
             sys.exit('[!] ERROR: --config and --print can\'t be used together')
         if args.generate:
@@ -455,6 +462,9 @@ def main() -> None:
         sys.exit('[!] ERROR: checking cmdline depends on checking Kconfig')
     elif args.sysctl:
         # separate sysctl checking (without kconfig)
+        assert(not args.autodetect), 'unexpected args'
+        if args.kernel_version:
+            sys.exit('[!] ERROR: --kernel-version is not needed for --sysctl')
         if args.print:
             sys.exit('[!] ERROR: --sysctl and --print can\'t be used together')
         if args.generate:
@@ -463,7 +473,13 @@ def main() -> None:
         sys.exit(0)
 
     if args.print:
-        assert(args.config is None and args.cmdline is None and args.sysctl is None), 'unexpected args'
+        assert(not args.autodetect and
+               args.config is None and
+               args.cmdline is None and
+               args.sysctl is None), \
+               'unexpected args'
+        if args.kernel_version:
+            sys.exit('[!] ERROR: --kernel-version is not needed for --print')
         if args.generate:
             sys.exit('[!] ERROR: --print and --generate can\'t be used together')
         if mode and mode not in ('verbose', 'json'):
@@ -480,13 +496,16 @@ def main() -> None:
         sys.exit(0)
 
     if args.generate:
-        assert(args.config is None and
+        assert(not args.autodetect and
+               args.config is None and
                args.cmdline is None and
                args.sysctl is None and
                args.print is None), \
                'unexpected args'
         if mode:
             sys.exit(f'[!] ERROR: wrong mode "{mode}" for --generate')
+        if args.kernel_version:
+            sys.exit('[!] ERROR: --kernel-version is not needed for --generate')
         arch = args.generate
         config_checklist = []
         add_kconfig_checks(config_checklist, arch)
