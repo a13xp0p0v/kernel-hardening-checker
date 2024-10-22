@@ -102,7 +102,7 @@ cat /etc/sysctl.conf
 coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 
 echo ">>>>> test -v (kernel version detection) <<<<<"
-cp kernel_hardening_checker/config_files/distros/fedora_34.config ./test.config
+cp kernel_hardening_checker/config_files/distros/Fedora_39_Core_x86_64.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -v /proc/version
 
 echo "Collect coverage for error handling"
@@ -148,7 +148,7 @@ sed '3d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config -v /proc/cmdline && exit 1
 
 echo ">>>>> no arch <<<<<"
-sed '305d' test.config > error.config
+sed '/CONFIG_X86_64/d; /CONFIG_ARM64/d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> more than one arch <<<<<"
