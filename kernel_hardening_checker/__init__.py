@@ -20,8 +20,7 @@ import re
 import json
 from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options, add_sysctl_checks
 from .engine import StrOrNone, TupleOrNone, ChecklistObjType
-from .engine import print_unknown_options, populate_with_data, perform_checks, override_expected_value
-
+from .engine import print_unknown_options, populate_with_data, perform_checks, override_expected_value, refine_check
 
 # kernel-hardening-checker version
 __version__ = '0.6.10'
@@ -301,16 +300,8 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         parsed_kconfig_options = {} # type: Dict[str, str]
         parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
-
-        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
-        mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
-        if mmap_rnd_bits_max:
-            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
-        else:
-            # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
-            if mode != 'json':
-                print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
-            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
+        refine_check(mode, config_checklist, parsed_kconfig_options, 'CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
+        refine_check(mode, config_checklist, parsed_kconfig_options, 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
 
     if cmdline:
         # populate the checklist with the parsed cmdline data
@@ -323,6 +314,10 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         parsed_sysctl_options = {} # type: Dict[str, str]
         parse_sysctl_file(mode, parsed_sysctl_options, sysctl)
         populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
+
+    if kconfig and sysctl:
+        refine_check(mode, config_checklist, parsed_kconfig_options, 'vm.mmap_rnd_bits', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
+        refine_check(mode, config_checklist, parsed_kconfig_options, 'vm.mmap_rnd_compat_bits', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
 
     # now everything is ready, perform the checks
     perform_checks(config_checklist)

@@ -398,6 +398,19 @@ def override_expected_value(checklist: List[ChecklistObjType], name: str, new_va
             opt.expected = new_val
 
 
+def refine_check(mode: StrOrNone, checklist: List[ChecklistObjType], parsed_options: Dict[str, str], target: str, source: str) -> None:
+    # example: overriding sys.opt (target) from sysctl (checklist) with CONFIG_OPT_MAX (source value) from kconfig (parsed_options)
+    # override_check(mode, parsed_kconfig_options, config_checklist, 'CONFIG_OPT_MAX', 'sys.opt2')
+    source_option = parsed_options.get(source, None)
+    if source_option:
+        override_expected_value(checklist, target, source)
+    else:
+        # remove the target check to avoid false results
+        if mode != 'json':
+            print(f'[-] Can\'t {target} without {source}')
+        checklist[:] = [o for o in checklist if o.name != target]
+
+
 def perform_checks(checklist: List[ChecklistObjType]) -> None:
     for opt in checklist:
         opt.check()
