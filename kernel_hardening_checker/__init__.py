@@ -247,6 +247,23 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
         print(f'[!] WARNING: sysctl options available for root are not found in {fname}, please use the output of `sudo sysctl -a`')
 
 
+def refine_check(mode: StrOrNone, checklist: List[ChecklistObjType], parsed_options: Dict[str, str], target: str, source: str) -> None:
+    source_option = parsed_options.get(source, None)
+    if source_option:
+        override_expected_value(checklist, target, source_option)
+    else:
+        # remove the target check to avoid false results
+        if mode != 'json':
+            print(f'[-] Can\'t check {target} without {source}')
+        checklist[:] = [o for o in checklist if o.name != target]
+
+
+def clean_unoverrided(mode: StrOrNone, checklist: List[ChecklistObjType], target: str, source: str) -> None:
+    if mode != 'json':
+        print(f'[-] Can\'t check {target} without {source}: no config')
+    checklist[:] = [o for o in checklist if o.name != target]
+
+
 def perform_checking(mode: StrOrNone, version: TupleOrNone,
                      kconfig: StrOrNone, cmdline: StrOrNone, sysctl: StrOrNone) -> None:
     config_checklist = [] # type: List[ChecklistObjType]
@@ -301,16 +318,8 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         parsed_kconfig_options = {} # type: Dict[str, str]
         parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
-
-        # hackish refinement of the CONFIG_ARCH_MMAP_RND_BITS check
-        mmap_rnd_bits_max = parsed_kconfig_options.get('CONFIG_ARCH_MMAP_RND_BITS_MAX', None)
-        if mmap_rnd_bits_max:
-            override_expected_value(config_checklist, 'CONFIG_ARCH_MMAP_RND_BITS', mmap_rnd_bits_max)
-        else:
-            # remove the CONFIG_ARCH_MMAP_RND_BITS check to avoid false results
-            if mode != 'json':
-                print('[-] Can\'t check CONFIG_ARCH_MMAP_RND_BITS without CONFIG_ARCH_MMAP_RND_BITS_MAX')
-            config_checklist[:] = [o for o in config_checklist if o.name != 'CONFIG_ARCH_MMAP_RND_BITS']
+        refine_check(mode, config_checklist, parsed_kconfig_options, 'CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
+        refine_check(mode, config_checklist, parsed_kconfig_options, 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
 
     if cmdline:
         # populate the checklist with the parsed cmdline data
@@ -323,6 +332,13 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         parsed_sysctl_options = {} # type: Dict[str, str]
         parse_sysctl_file(mode, parsed_sysctl_options, sysctl)
         populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
+        if kconfig:
+            refine_check(mode, config_checklist, parsed_kconfig_options, 'vm.mmap_rnd_bits', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
+            refine_check(mode, config_checklist, parsed_kconfig_options, 'vm.mmap_rnd_compat_bits', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
+        else:
+            clean_unoverrided(mode, config_checklist, 'vm.mmap_rnd_bits', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
+            clean_unoverrided(mode, config_checklist, 'vm.mmap_rnd_compat_bits', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
+
 
     # now everything is ready, perform the checks
     perform_checks(config_checklist)
