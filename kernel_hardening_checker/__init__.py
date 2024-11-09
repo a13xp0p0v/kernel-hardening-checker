@@ -313,10 +313,12 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         # populate the checklist with the parsed Kconfig data
         parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
+        # refine the values of some checks
         refine_check(mode, config_checklist, parsed_kconfig_options,
                      'CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
         refine_check(mode, config_checklist, parsed_kconfig_options,
                      'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
+        # and don't forget to skip these Kconfig checks in --generate
 
     if cmdline:
         # populate the checklist with the parsed cmdline data
@@ -329,6 +331,7 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         parsed_sysctl_options = {} # type: Dict[str, str]
         parse_sysctl_file(mode, parsed_sysctl_options, sysctl)
         populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
+        # refine the values of some checks
         refine_check(mode, config_checklist, parsed_kconfig_options,
                      'vm.mmap_rnd_bits', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
         refine_check(mode, config_checklist, parsed_kconfig_options,
@@ -451,8 +454,8 @@ def main() -> None:
         add_kconfig_checks(config_checklist, arch)
         print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the microarchitecture
         for opt in config_checklist:
-            if opt.name == 'CONFIG_ARCH_MMAP_RND_BITS':
-                continue # don't add CONFIG_ARCH_MMAP_RND_BITS because its value needs refinement
+            if opt.name in ('CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS'):
+                continue # don't add Kconfig options with a value that needs refinement
             if opt.expected == 'is not off':
                 continue # don't add Kconfig options without explicitly recommended values
             if opt.expected == 'is not set':
