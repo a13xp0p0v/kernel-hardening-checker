@@ -14,7 +14,6 @@ This module performs input/output.
 import os
 import gzip
 import sys
-import glob
 import tempfile
 import subprocess
 from argparse import ArgumentParser
@@ -39,6 +38,25 @@ def _open(file: str) -> TextIO:
         return open(file, 'rt', encoding='utf-8')
     except FileNotFoundError:
         sys.exit(f'[!] ERROR: unable to open {file}, are you sure it exists?')
+
+
+def detect_kconfig(version_fname: str) -> Tuple[StrOrNone, str]:
+    kconfig_1 = '/proc/config.gz'
+    if os.path.isfile(kconfig_1):
+        return kconfig_1, 'OK'
+
+    kconfig_2 = '/boot/config-'
+    with _open(version_fname) as f:
+        line = f.readline()
+        assert(line), f'empty {version_fname}'
+        assert(line.startswith('Linux version ')), f'unexpected contents of {version_fname}'
+        parts = line.split()
+        ver_str = parts[2]
+        kconfig_2 = kconfig_2 + ver_str
+    if os.path.isfile(kconfig_2):
+        return kconfig_2, 'OK'
+
+    return None, f'didn\'t find {kconfig_1} or {kconfig_2}'
 
 
 def detect_arch_by_kconfig(fname: str) -> Tuple[StrOrNone, str]:
@@ -243,11 +261,11 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
     # let's check the presence of some ancient sysctl option
     # to ensure that we are parsing the output of `sudo sysctl -a > file`
     if 'kernel.printk' not in parsed_options and mode != 'json':
-        print(f'[!] WARNING: ancient sysctl options are not found in {fname}, please use the output of `sudo sysctl -a`')
+        print(f'[!] WARNING: ancient sysctl options are not found in {fname}, try checking the output of `sudo sysctl -a`')
 
     # let's check the presence of a sysctl option available for root
     if 'kernel.cad_pid' not in parsed_options and mode != 'json':
-        print(f'[!] WARNING: sysctl options available for root are not found in {fname}, please use the output of `sudo sysctl -a`')
+        print(f'[!] WARNING: sysctl options available for root are not found in {fname}, try checking the output of `sudo sysctl -a`')
 
 
 def refine_check(mode: StrOrNone, checklist: List[ChecklistObjType], parsed_options: Dict[str, str],
@@ -399,35 +417,39 @@ def main() -> None:
         if args.generate:
             sys.exit('[!] ERROR: --autodetect and --generate can\'t be used together')
 
-        cmdline = '/proc/cmdline'
-        config = '/proc/config.gz'
-        if os.path.isfile('/proc/config.gz'):
-            kernel_version, msg = detect_kernel_version(config)
-            assert kernel_version
-            kernel_version_str = '.'.join(map(str, kernel_version))
-        else:
-            kernel_version, msg = detect_kernel_version('/proc/version')
-            assert kernel_version
-            kernel_version_str = '.'.join(map(str, kernel_version))
-            config_files = glob.glob(f'/boot/config-{kernel_version_str}-*')
-            if not config_files:
-                sys.exit(f'[!] ERROR: unable to find a Kconfig file for {kernel_version_str}')
-            config = config_files[0]
-            if mode != 'json':
-                if len(config_files) > 1:
-                    print(f'[+] Multiple Kconfig files found for {kernel_version_str}, picking {config}')
-
-        _, tmpfile = tempfile.mkstemp()
-        with open(tmpfile, 'w', encoding='utf-8') as f:
-            subprocess.call(['sysctl', '-a'], stdout=f, stderr=subprocess.DEVNULL, shell=False)
-
         if mode != 'json':
-            print(f'[+] Detected running kernel version: {kernel_version_str}')
-            print(f'[+] Kconfig file to check: {config}')
+            print('[+] Going to autodetect and check the security hardening options of the running kernel')
 
-        perform_checking(mode, kernel_version, config, cmdline, tmpfile)
+        version_file = '/proc/version'
+        kernel_version, msg = detect_kernel_version(version_file)
+        if kernel_version is None:
+            sys.exit(f'[!] ERROR: parsing {version_file} failed: {msg}')
+        if mode != 'json':
+            print(f'[+] Detected version of the running kernel: {kernel_version}')
 
-        os.remove(tmpfile)
+        kconfig_file, msg = detect_kconfig(version_file)
+        if kconfig_file is None:
+            sys.exit(f'[!] ERROR: detecting kconfig file failed: {msg}')
+        if mode != 'json':
+            print(f'[+] Detected kconfig file of the running kernel: {kconfig_file}')
+
+        cmdline_file = '/proc/cmdline'
+        if not os.path.isfile(cmdline_file):
+            sys.exit(f'[!] ERROR: no kernel cmdline file {cmdline_file}')
+        if mode != 'json':
+            print(f'[+] Detected cmdline parameters of the running kernel: {cmdline_file}')
+
+        _, sysctl_file = tempfile.mkstemp(prefix='sysctl-')
+        with open(sysctl_file, 'w', encoding='utf-8') as f:
+            ret = subprocess.run(['sysctl', '-a'], check=False, stdout=f, stderr=subprocess.DEVNULL, shell=False).returncode
+            if ret != 0:
+                sys.exit(f'[!] ERROR: sysctl command returned {ret}')
+        if mode != 'json':
+            print(f'[+] Saved sysctl output to {sysctl_file}')
+
+        perform_checking(mode, kernel_version, kconfig_file, cmdline_file, sysctl_file)
+
+        os.remove(sysctl_file)
         sys.exit(0)
 
     if mode != 'json':
