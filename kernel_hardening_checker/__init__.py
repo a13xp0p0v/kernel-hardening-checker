@@ -41,7 +41,7 @@ def _open(file: str) -> TextIO:
         sys.exit(f'[!] ERROR: unable to open {file}, are you sure it exists?')
 
 
-def detect_arch_kconfig(fname: str) -> Tuple[StrOrNone, str]:
+def detect_arch_by_kconfig(fname: str) -> Tuple[StrOrNone, str]:
     arch = None
 
     with _open(fname) as f:
@@ -60,7 +60,7 @@ def detect_arch_kconfig(fname: str) -> Tuple[StrOrNone, str]:
     return arch, 'OK'
 
 
-def detect_arch_sysctl(fname: str) -> Tuple[StrOrNone, str]:
+def detect_arch_by_sysctl(fname: str) -> Tuple[StrOrNone, str]:
     arch_mapping = {
         'ARM64': r'^aarch64|armv8',
         'ARM': r'^armv[3-7]',
@@ -269,7 +269,7 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
 
     # detect the kernel microarchitecture
     if kconfig:
-        arch, msg = detect_arch_kconfig(kconfig)
+        arch, msg = detect_arch_by_kconfig(kconfig)
         if arch is None:
             sys.exit(f'[!] ERROR: {msg}')
         if mode != 'json':
@@ -277,7 +277,7 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
     else:
         assert(not cmdline), 'wrong perform_checking() usage'
         assert(sysctl), 'wrong perform_checking() usage'
-        arch, msg = detect_arch_sysctl(sysctl)
+        arch, msg = detect_arch_by_sysctl(sysctl)
         if mode != 'json':
             if arch is None:
                 print(f'[!] WARNING: {msg}, arch-dependent checks will be dropped')
