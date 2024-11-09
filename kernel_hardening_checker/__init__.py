@@ -258,12 +258,6 @@ def refine_check(mode: StrOrNone, checklist: List[ChecklistObjType], parsed_opti
         checklist[:] = [o for o in checklist if o.name != target]
 
 
-def clean_unoverrided(mode: StrOrNone, checklist: List[ChecklistObjType], target: str, source: str) -> None:
-    if mode != 'json':
-        print(f'[-] Can\'t check {target} without {source}: no config')
-    checklist[:] = [o for o in checklist if o.name != target]
-
-
 def perform_checking(mode: StrOrNone, version: TupleOrNone,
                      kconfig: StrOrNone, cmdline: StrOrNone, sysctl: StrOrNone) -> None:
     config_checklist = [] # type: List[ChecklistObjType]
@@ -313,9 +307,9 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         # populate the checklist with the kernel version data
         populate_with_data(config_checklist, version, 'version')
 
+    parsed_kconfig_options = {} # type: Dict[str, str]
     if kconfig:
         # populate the checklist with the parsed Kconfig data
-        parsed_kconfig_options = {} # type: Dict[str, str]
         parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
         populate_with_data(config_checklist, parsed_kconfig_options, 'kconfig')
         refine_check(mode, config_checklist, parsed_kconfig_options, 'CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
@@ -332,13 +326,8 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         parsed_sysctl_options = {} # type: Dict[str, str]
         parse_sysctl_file(mode, parsed_sysctl_options, sysctl)
         populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
-        if kconfig:
-            refine_check(mode, config_checklist, parsed_kconfig_options, 'vm.mmap_rnd_bits', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
-            refine_check(mode, config_checklist, parsed_kconfig_options, 'vm.mmap_rnd_compat_bits', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
-        else:
-            clean_unoverrided(mode, config_checklist, 'vm.mmap_rnd_bits', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
-            clean_unoverrided(mode, config_checklist, 'vm.mmap_rnd_compat_bits', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
-
+        refine_check(mode, config_checklist, parsed_kconfig_options, 'vm.mmap_rnd_bits', 'CONFIG_ARCH_MMAP_RND_BITS_MAX')
+        refine_check(mode, config_checklist, parsed_kconfig_options, 'vm.mmap_rnd_compat_bits', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS_MAX')
 
     # now everything is ready, perform the checks
     perform_checks(config_checklist)
