@@ -471,8 +471,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('ARM', 'X86_32'):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
-    l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
-    l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_COMPAT_BITS', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
+    l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')]
+                       # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
+    l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_COMPAT_BITS', 'MAX')]
+                       # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
     if arch == 'X86_64':
         l += [KconfigCheck('harden_userspace', 'kspp', 'X86_USER_SHADOW_STACK', 'y')]
 
@@ -789,5 +791,7 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.suid_dumpable', '0')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.randomize_va_space', '2')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.yama.ptrace_scope', '3')]
-    l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_bits', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
-    l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_compat_bits', 'MAX')] # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
+    l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_bits', 'MAX')]
+                      # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
+    l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_compat_bits', 'MAX')]
+                      # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
