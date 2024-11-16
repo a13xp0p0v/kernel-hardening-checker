@@ -41,6 +41,13 @@ coverage run -a --branch bin/kernel-hardening-checker -g X86_32
 coverage run -a --branch bin/kernel-hardening-checker -g ARM64
 coverage run -a --branch bin/kernel-hardening-checker -g ARM
 
+echo ">>>>> try autodetection <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -a
+coverage run -a --branch bin/kernel-hardening-checker -a -m verbose
+coverage run -a --branch bin/kernel-hardening-checker -a -m json
+coverage run -a --branch bin/kernel-hardening-checker -a -m show_ok
+coverage run -a --branch bin/kernel-hardening-checker -a -m show_fail
+
 echo ">>>>> check the example kconfig files, cmdline, and sysctl <<<<<"
 cat /proc/cmdline
 echo "l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0" > ./cmdline_example
