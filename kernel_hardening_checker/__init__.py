@@ -375,7 +375,6 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
 
     # finally print the results
     print_checklist(mode, config_checklist, True)
-    sys.exit(0)
 
 
 def main() -> None:
