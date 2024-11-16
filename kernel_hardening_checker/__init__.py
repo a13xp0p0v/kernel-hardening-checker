@@ -38,6 +38,8 @@ def _open(file: str) -> TextIO:
         return open(file, 'rt', encoding='utf-8')
     except FileNotFoundError:
         sys.exit(f'[!] ERROR: unable to open {file}, are you sure it exists?')
+    except PermissionError:
+        sys.exit(f'[!] ERROR: unable to open {file}, permission denied')
 
 
 def detect_kconfig(version_fname: str) -> Tuple[StrOrNone, str]:
