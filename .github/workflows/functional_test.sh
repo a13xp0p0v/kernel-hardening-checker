@@ -114,6 +114,21 @@ coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -v /proc/
 
 echo "Collect coverage for error handling"
 
+echo ">>>>> -a and any config args together <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -a -c ./test.config && exit 1
+coverage run -a --branch bin/kernel-hardening-checker -a -l /proc/cmdline && exit 1
+coverage run -a --branch bin/kernel-hardening-checker -a -s $SYSCTL_EXAMPLE && exit 1
+coverage run -a --branch bin/kernel-hardening-checker -a -v /proc/version && exit 1
+
+echo ">>>>> -a and -p together <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -a && exit 1
+
+echo ">>>>> -a and -g together <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -a && exit 1
+
+echo ">>>>> permission denied <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -c /proc/slabinfo && exit 1
+
 echo ">>>>> -c and -p together <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -c ./test.config && exit 1
 
@@ -123,11 +138,17 @@ coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -c ./test.config
 echo ">>>>> -l without -c <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -l /proc/cmdline && exit 1
 
+echo ">>>>> -s and -v together <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -v /proc/version && exit 1
+
 echo ">>>>> -s and -p together <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -s $SYSCTL_EXAMPLE && exit 1
 
 echo ">>>>> -s and -g together <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -s $SYSCTL_EXAMPLE && exit 1
+
+echo ">>>>> -p and -v together <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -v /proc/version && exit 1
 
 echo ">>>>> -p and -g together <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -g X86_64 && exit 1
@@ -135,6 +156,9 @@ coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -g X86_64 && exi
 echo ">>>>> wrong modes for -p <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -m show_ok && exit 1
 coverage run -a --branch bin/kernel-hardening-checker -p X86_64 -m show_fail && exit 1
+
+echo ">>>>> -g and -v together <<<<<"
+coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -v /proc/version && exit 1
 
 echo ">>>>> wrong mode for -g <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -m show_ok && exit 1
