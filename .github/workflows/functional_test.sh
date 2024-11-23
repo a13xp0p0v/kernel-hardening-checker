@@ -49,10 +49,9 @@ coverage run -a --branch bin/kernel-hardening-checker -a -m show_ok
 coverage run -a --branch bin/kernel-hardening-checker -a -m show_fail
 
 echo ">>>>> check the example kconfig files, cmdline, and sysctl <<<<<"
-cat /proc/cmdline
-echo "l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0" > ./cmdline_example
+cat /proc/cmdline > ./cmdline_example
+sed -i "1s/^/l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0 /" ./cmdline_example
 cat ./cmdline_example
-sysctl -a > /tmp/sysctls
 CONFIG_DIR=`find . -name config_files`
 SYSCTL_EXAMPLE=$CONFIG_DIR/distros/example_sysctls.txt
 KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
@@ -62,14 +61,13 @@ do
         COUNT=$(expr $COUNT + 1)
         echo "\n>>>>> checking kconfig number $COUNT <<<<<"
         coverage run -a --branch bin/kernel-hardening-checker -c $C
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -m verbose > /dev/null
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -l /proc/cmdline
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -s /tmp/sysctls
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -s $SYSCTL_EXAMPLE
         coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE
         coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m verbose > /dev/null
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m json
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_ok
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_fail
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m json > /dev/null
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_ok > /dev/null
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_fail > /dev/null
 done
 echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 
@@ -109,7 +107,7 @@ cat /etc/sysctl.conf
 coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 
 echo ">>>>> test -v (kernel version detection) <<<<<"
-cp kernel_hardening_checker/config_files/distros/fedora_34.config ./test.config
+cp kernel_hardening_checker/config_files/distros/Arch_x86_64.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -v /proc/version
 
 echo "Collect coverage for error handling"
@@ -171,7 +169,7 @@ sed '3d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> strange kernel version in kconfig <<<<<"
-sed '3 s/5./version 5./' test.config > error.config
+sed '3s/Linux/WAT/' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> strange kernel version via -v <<<<<"
@@ -179,7 +177,7 @@ sed '3d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config -v /proc/cmdline && exit 1
 
 echo ">>>>> no arch <<<<<"
-sed '305d' test.config > error.config
+sed '/CONFIG_X86_64=y/d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> more than one arch <<<<<"
@@ -204,7 +202,7 @@ coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> invalid compiler versions <<<<<"
 cp test.config error.config
-sed '8 s/CONFIG_CLANG_VERSION=0/CONFIG_CLANG_VERSION=120000/' test.config > error.config
+sed 's/CONFIG_CLANG_VERSION=0/CONFIG_CLANG_VERSION=120000/' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> unexpected line in the kconfig file <<<<<"
