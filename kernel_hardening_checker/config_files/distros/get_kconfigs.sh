@@ -2,7 +2,7 @@
 
 oracle_git_url="https://raw.githubusercontent.com/oracle/kconfigs/refs/heads/gh-pages/out/"
 
-distros_from_oracle=(
+kconfigs_from_oracle=(
     "Android 12 (5.10) aarch64"
     "Android 15 (6.6) aarch64"
     "Arch x86_64"
@@ -21,9 +21,9 @@ distros_from_oracle=(
     "Ubuntu 24.04 LTS Noble x86_64"
 )
 
-for distro in "${distros_from_oracle[@]}"; do
-    filename=$(echo ${distro// /_}) # Replace spaces with underscores
-    wget -O "${filename}.config" "${oracle_git_url}${distro}/config" # Fetch kconfig
+for kconfig in "${kconfigs_from_oracle[@]}"; do
+    filename=$(echo ${kconfig// /_}) # Replace spaces with underscores
+    wget -O "${filename}.config" "${oracle_git_url}${kconfig}/config" # Fetch kconfig
 done
 
 # Fetch some other kconfigs
