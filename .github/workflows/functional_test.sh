@@ -109,7 +109,7 @@ cat /etc/sysctl.conf
 coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 
 echo ">>>>> test -v (kernel version detection) <<<<<"
-cp kernel_hardening_checker/config_files/distros/fedora_34.config ./test.config
+cp kernel_hardening_checker/config_files/distros/Arch_x86_64.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -v /proc/version
 
 echo "Collect coverage for error handling"
@@ -171,7 +171,7 @@ sed '3d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> strange kernel version in kconfig <<<<<"
-sed '3 s/5./version 5./' test.config > error.config
+sed '3 s/Linux/WAT/' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> strange kernel version via -v <<<<<"
@@ -179,7 +179,7 @@ sed '3d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config -v /proc/cmdline && exit 1
 
 echo ">>>>> no arch <<<<<"
-sed '305d' test.config > error.config
+sed '/CONFIG_X86_64=y/d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> more than one arch <<<<<"
@@ -204,7 +204,7 @@ coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> invalid compiler versions <<<<<"
 cp test.config error.config
-sed '8 s/CONFIG_CLANG_VERSION=0/CONFIG_CLANG_VERSION=120000/' test.config > error.config
+sed 's/CONFIG_CLANG_VERSION=0/CONFIG_CLANG_VERSION=120000/' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> unexpected line in the kconfig file <<<<<"
