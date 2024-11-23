@@ -22,8 +22,8 @@ kconfigs_from_oracle=(
 )
 
 for kconfig in "${kconfigs_from_oracle[@]}"; do
-    filename=$(echo ${kconfig// /_}) # Replace spaces with underscores
-    wget -O "${filename}.config" "${oracle_git_url}${kconfig}/config" # Fetch kconfig
+    filename="${kconfig// /_}.config" # Replace spaces with underscores
+    wget -O "${filename}" "${oracle_git_url}${kconfig}/config" # Fetch kconfig
 done
 
 # Fetch some other kconfigs
