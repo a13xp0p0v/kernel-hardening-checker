@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 oracle_git_url="https://raw.githubusercontent.com/oracle/kconfigs/refs/heads/gh-pages/out/"
 
 kconfigs_from_oracle=(
@@ -33,3 +34,5 @@ wget -O OpenSUSE_x86_64.config https://raw.githubusercontent.com/openSUSE/kernel
 wget -O OpenSUSE_aarch64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/master/config/arm64/default
 wget -O SLE-15-SP7_x86_64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/SLE15-SP7/config/x86_64/default
 wget -O SLE-15-SP7_aarch64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/SLE15-SP7/config/arm64/default
+
+echo "Well done!"
