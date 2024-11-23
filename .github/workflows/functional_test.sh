@@ -171,6 +171,8 @@ coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 echo ">>>>> strange kernel version in kconfig <<<<<"
 sed '3s/Linux/WAT/' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
+sed '3s/6\./a\./' test.config > error.config
+coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> strange kernel version via -v <<<<<"
 sed '3d' test.config > error.config
