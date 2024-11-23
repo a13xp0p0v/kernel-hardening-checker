@@ -6,7 +6,6 @@ set -e
 oracle_git_url="https://raw.githubusercontent.com/oracle/kconfigs/refs/heads/gh-pages/out/"
 
 kconfigs_from_oracle=(
-    "Android 12 (5.10) aarch64"
     "Android 15 (6.6) aarch64"
     "Arch x86_64"
     "CentOS 9 Stream aarch64"
