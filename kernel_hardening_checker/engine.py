@@ -93,8 +93,8 @@ class OptCheck:
         if self.expected == 'is not off':
             if self.state == 'off':
                 self.result = 'FAIL: is off'
-            elif self.state == '0':
-                self.result = 'FAIL: is off, "0"'
+            elif self.state == '0' or self.state == 'is not set':
+                self.result = f'FAIL: is off, "{self.state}"'
             elif self.state is None:
                 self.result = 'FAIL: is off, not found'
             else:
@@ -316,7 +316,7 @@ class AND(ComplexOptCheck):
                         self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
                     elif opt.result == 'FAIL: is not present':
                         self.result = f'FAIL: {opt.name} is not present'
-                    elif opt.result in ('FAIL: is off', 'FAIL: is off, "0"'):
+                    elif opt.result in ('FAIL: is off', 'FAIL: is off, "0"', 'FAIL: is off, "is not set"'):
                         self.result = f'FAIL: {opt.name} is off'
                     else:
                         assert(opt.result == 'FAIL: is off, not found'), \
