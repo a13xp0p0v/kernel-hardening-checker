@@ -28,8 +28,8 @@ done
 
 # Fetch some other kconfigs
 wget -O Arch_hardened_x86_64.config https://gitlab.archlinux.org/archlinux/packaging/packages/linux-hardened/-/raw/main/config
+wget -O Azure_Linux_x86_64.config https://raw.githubusercontent.com/microsoft/azurelinux/refs/heads/3.0/SPECS/kernel/config
 wget -O OpenSUSE_x86_64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/master/config/x86_64/default
 wget -O OpenSUSE_aarch64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/master/config/arm64/default
 wget -O SLE-15-SP7_x86_64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/SLE15-SP7/config/x86_64/default
 wget -O SLE-15-SP7_aarch64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/SLE15-SP7/config/arm64/default
-wget -O Azure_linux_x86_64.config https://raw.githubusercontent.com/microsoft/azurelinux/refs/heads/1.0/SPECS/kernel/config
