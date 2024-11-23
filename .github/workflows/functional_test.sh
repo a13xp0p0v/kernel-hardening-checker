@@ -42,6 +42,10 @@ coverage run -a --branch bin/kernel-hardening-checker -g ARM64
 coverage run -a --branch bin/kernel-hardening-checker -g ARM
 
 echo ">>>>> try autodetection <<<<<"
+cat /proc/cmdline
+cat /proc/version
+ls -l /boot
+ls -l /proc/config.gz
 coverage run -a --branch bin/kernel-hardening-checker -a
 coverage run -a --branch bin/kernel-hardening-checker -a -m verbose
 coverage run -a --branch bin/kernel-hardening-checker -a -m json
