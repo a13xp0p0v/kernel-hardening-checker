@@ -49,10 +49,9 @@ coverage run -a --branch bin/kernel-hardening-checker -a -m show_ok
 coverage run -a --branch bin/kernel-hardening-checker -a -m show_fail
 
 echo ">>>>> check the example kconfig files, cmdline, and sysctl <<<<<"
-cat /proc/cmdline
-echo "l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0" > ./cmdline_example
+cat /proc/cmdline > ./cmdline_example
+sed -i "1s/^/l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0 /" ./cmdline_example
 cat ./cmdline_example
-sysctl -a > /tmp/sysctls
 CONFIG_DIR=`find . -name config_files`
 SYSCTL_EXAMPLE=$CONFIG_DIR/distros/example_sysctls.txt
 KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
@@ -62,14 +61,13 @@ do
         COUNT=$(expr $COUNT + 1)
         echo "\n>>>>> checking kconfig number $COUNT <<<<<"
         coverage run -a --branch bin/kernel-hardening-checker -c $C
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -m verbose > /dev/null
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -l /proc/cmdline
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -s /tmp/sysctls
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -s $SYSCTL_EXAMPLE
         coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE
         coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m verbose > /dev/null
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m json
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_ok
-        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_fail
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m json > /dev/null
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_ok > /dev/null
+        coverage run -a --branch bin/kernel-hardening-checker -c $C -l ./cmdline_example -s $SYSCTL_EXAMPLE -m show_fail > /dev/null
 done
 echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 
@@ -171,7 +169,7 @@ sed '3d' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> strange kernel version in kconfig <<<<<"
-sed '3 s/Linux/WAT/' test.config > error.config
+sed '3s/Linux/WAT/' test.config > error.config
 coverage run -a --branch bin/kernel-hardening-checker -c error.config && exit 1
 
 echo ">>>>> strange kernel version via -v <<<<<"
