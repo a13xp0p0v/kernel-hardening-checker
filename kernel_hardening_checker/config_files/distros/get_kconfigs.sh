@@ -1,6 +1,8 @@
 #!/bin/bash
 
 set -x
+set -e
+
 oracle_git_url="https://raw.githubusercontent.com/oracle/kconfigs/refs/heads/gh-pages/out/"
 
 kconfigs_from_oracle=(
