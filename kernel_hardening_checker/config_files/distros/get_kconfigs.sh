@@ -28,8 +28,6 @@ for distro in "${distros_from_oracle[@]}"; do
 done
 
 # Fetch some other kconfigs
-wget -O Clearlinux_x86_64.config https://raw.githubusercontent.com/clearlinux-pkgs/linux/master/config
-wget -O Clearlinux_x86_64.cmdline https://raw.githubusercontent.com/clearlinux-pkgs/linux/master/cmdline
 wget -O OpenSUSE_x86_64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/master/config/x86_64/default
 wget -O OpenSUSE_aarch64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/master/config/arm64/default
 wget -O SLE-15-SP7_x86_64.config https://raw.githubusercontent.com/openSUSE/kernel-source/refs/heads/SLE15-SP7/config/x86_64/default
