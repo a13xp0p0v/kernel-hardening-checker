@@ -223,6 +223,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              AND(ubsan_bounds_is_set,
                  VersionCheck((6, 9, 0))))] # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
     if arch in ('X86_64', 'ARM64', 'X86_32'):
+        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [AND(stackleak_is_set,
                   cc_is_gcc)]
@@ -243,14 +244,12 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                   cc_is_clang)]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
         l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                   iommu_support_is_set)]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch == 'X86_64':
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
@@ -272,6 +271,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
     if arch == 'ARM':
+        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'ARM_DEBUG_WX', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y'))]
                  # DEBUG_WX has been renamed to ARM_DEBUG_WX on ARM
@@ -748,9 +748,9 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     # Let's choose 100 as a reasonable compromise.
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
-    if arch in ('X86_64', 'X86_32'):
+    if arch in ('X86_64', 'X86_32', 'ARM64'):
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '65536')]
-    if arch in ('ARM64', 'ARM'):
+    if arch == 'ARM':
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '32768')]
         # compatible with the 'DEFAULT_MMAP_MIN_ADDR' kconfig check by KSPP
 
