@@ -53,6 +53,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_RODATA', 'y'))] # before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STRICT_MODULE_RWX', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_SET_MODULE_RONX', 'y'),
+             KconfigCheck('self_protection', 'defconfig', 'HARDENED_MODULE_MAPPINGS', 'y'),
              modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
              VersionCheck((5, 4, 208)))]
