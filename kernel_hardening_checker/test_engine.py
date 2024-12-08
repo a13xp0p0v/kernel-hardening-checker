@@ -130,6 +130,8 @@ class TestEngine(unittest.TestCase):
         config_checklist += [KconfigCheck('reason_8', 'decision_8', 'NAME_8', 'is not off')]
         config_checklist += [KconfigCheck('reason_9', 'decision_9', 'NAME_9', 'is not off')]
         config_checklist += [KconfigCheck('reason_10', 'decision_10', 'NAME_10', 'is not off')]
+        config_checklist += [KconfigCheck('reason_11', 'decision_11', 'NAME_11', '*expected_11*')]
+        config_checklist += [KconfigCheck('reason_12', 'decision_12', 'NAME_11', '*expected_12*')]
 
         # 2. prepare the parsed kconfig options
         parsed_kconfig_options  = {}
@@ -139,6 +141,7 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_7'] = 'really_not_off'
         parsed_kconfig_options['CONFIG_NAME_8'] = 'off'
         parsed_kconfig_options['CONFIG_NAME_9'] = '0'
+        parsed_kconfig_options['CONFIG_NAME_11'] = '"expected_11,something,UNexpected_12"'
 
         # 3. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
@@ -157,7 +160,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_7', 'type': 'kconfig', 'desired_val': 'is not off', 'decision': 'decision_7', 'reason': 'reason_7', 'check_result': 'OK: is not off, "really_not_off"', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_8', 'type': 'kconfig', 'desired_val': 'is not off', 'decision': 'decision_8', 'reason': 'reason_8', 'check_result': 'FAIL: is off', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_9', 'type': 'kconfig', 'desired_val': 'is not off', 'decision': 'decision_9', 'reason': 'reason_9', 'check_result': 'FAIL: is off, "0"', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'desired_val': 'is not off', 'decision': 'decision_10', 'reason': 'reason_10', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}]
+                 {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'desired_val': 'is not off', 'decision': 'decision_10', 'reason': 'reason_10', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False},
+                 {"option_name": 'CONFIG_NAME_11', 'type': 'kconfig', 'desired_val': '*expected_11*', 'decision': 'decision_11', 'reason': 'reason_11', "check_result": "OK: \"\"expected_11,something,UNexpected_12\"\"", "check_result_bool": True},
+                 {"option_name": 'CONFIG_NAME_11', 'type': 'kconfig', 'desired_val': '*expected_12*', 'decision': 'decision_12', 'reason': 'reason_12', "check_result": "FAIL: \"\"expected_11,something,UNexpected_12\"\"", "check_result_bool": False}]
         )
 
     def test_simple_cmdline(self) -> None:

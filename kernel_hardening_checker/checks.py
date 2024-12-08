@@ -153,6 +153,11 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'LSM', '*lockdown*'),
+          OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y'),
@@ -222,6 +227,16 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(KconfigCheck('self_protection', 'kspp', 'UBSAN_SANITIZE_ALL', 'y'),
              AND(ubsan_bounds_is_set,
                  VersionCheck((6, 9, 0))))] # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
+    l += [KconfigCheck('security_policy', 'kspp', 'LSM', '*yama*'),
+          OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))]
+    l += [KconfigCheck('security_policy', 'kspp', 'LSM', '*landlock*'),
+          OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
