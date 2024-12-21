@@ -81,6 +81,22 @@ class OptCheck:
         self.state = data
 
     def check(self) -> None:
+        # handle the *special* check
+        if self.expected.startswith('*') and self.expected.endswith('*'):
+            if self.state is not None:
+                if self.state.startswith('"') and self.state.endswith('"'):
+                    option = self.expected.strip('*')
+                    optlist  = list(self.state.strip('"').split(','))
+                    if option in optlist:
+                        self.result = f'OK: {self.state}'
+                    else:
+                        self.result = f'FAIL: {self.state}'
+                else:
+                    self.result = f'FAIL: {self.state}'
+            else:
+                self.result = f'FAIL: {self.state}'
+            return
+
         # handle the 'is present' check
         if self.expected == 'is present':
             if self.state is None:
