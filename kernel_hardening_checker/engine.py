@@ -90,7 +90,7 @@ class OptCheck:
             assert(self.state.startswith('"') and self.state.endswith('"')), \
                    f'not a list enclosed in double quotes: {self.name}={self.state}'
             val = self.expected.strip('*')
-            val_list = list(self.state.strip('"').split(','))
+            val_list = self.state.strip('"').split(',')
             if val in val_list:
                 self.result = f'OK: in {self.state}'
             else:
