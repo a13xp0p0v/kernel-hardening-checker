@@ -88,7 +88,7 @@ class OptCheck:
                 self.result = 'FAIL: is off, not found'
                 return
             assert(self.state.startswith('"') and self.state.endswith('"')), \
-                   f'{self.name} should contain list enclosed in double quotes'
+                   f'not a list enclosed in double quotes: {self.name}={self.state}'
             val = self.expected.strip('*')
             val_list = list(self.state.strip('"').split(','))
             if val in val_list:
