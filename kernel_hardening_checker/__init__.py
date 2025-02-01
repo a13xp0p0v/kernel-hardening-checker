@@ -439,7 +439,11 @@ def main() -> None:
 
         _, sysctl_file = tempfile.mkstemp(prefix='sysctl-')
         with open(sysctl_file, 'w', encoding='utf-8') as f:
-            sysctl_bin = shutil.which("sysctl")
+            sysctl_bin = shutil.which('sysctl')
+            if not sysctl_bin:
+                # fix for Debian
+                if os.path.isfile('/sbin/sysctl'):
+                    sysctl_bin = '/sbin/sysctl'
             if not sysctl_bin:
                 sys.exit(f'[!] ERROR: sysctl command is not found on this machine')
             ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f,
