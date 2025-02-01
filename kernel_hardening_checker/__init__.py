@@ -16,6 +16,7 @@ import gzip
 import sys
 import tempfile
 import subprocess
+import shutil
 from argparse import ArgumentParser
 from typing import List, Tuple, Dict, TextIO, Any
 import re
@@ -438,7 +439,11 @@ def main() -> None:
 
         _, sysctl_file = tempfile.mkstemp(prefix='sysctl-')
         with open(sysctl_file, 'w', encoding='utf-8') as f:
-            ret = subprocess.run(['sysctl', '-a'], check=False, stdout=f, stderr=subprocess.DEVNULL, shell=False).returncode
+            sysctl_bin = shutil.which("sysctl")
+            if not sysctl_bin:
+                sys.exit(f'[!] ERROR: sysctl command is not found on this machine')
+            ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f,
+                                 stderr=subprocess.DEVNULL, shell=False).returncode
             if ret != 0:
                 sys.exit(f'[!] ERROR: sysctl command returned {ret}')
         mprint(mode, f'[+] Saved sysctl output to {sysctl_file}')
