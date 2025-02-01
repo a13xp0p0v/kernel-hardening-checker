@@ -756,10 +756,14 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
-    l += [SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0')] # may break the upower daemon in Ubuntu
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kptr_restrict', '2')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', '0')]
+    l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0'),
+             SysctlCheck('cut_attack_surface', 'debian', 'kernel.unprivileged_userns_clone', '0'))]
+         # 1) Debian-specific sysctl kernel.unprivileged_userns_clone is deprecated
+         # 2) user.max_user_namespaces=0 may break the upower daemon in Ubuntu
+         # 3) Ubuntu developers are working on some compromise with AppArmor profiles, let's see...
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1'),
              AND(KconfigCheck('-', '-', 'KEXEC_CORE', 'is not set'),
                  have_kconfig))]
