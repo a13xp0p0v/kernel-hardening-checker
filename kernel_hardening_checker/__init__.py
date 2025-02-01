@@ -48,7 +48,7 @@ def _open(file: str) -> TextIO:
         sys.exit(f'[!] ERROR: unable to open {file}, permission denied')
 
 
-def detect_kconfig(version_fname: str) -> Tuple[StrOrNone, str]:
+def get_local_kconfig_file(version_fname: str) -> Tuple[StrOrNone, str]:
     kconfig_1 = '/proc/config.gz'
     if os.path.isfile(kconfig_1):
         return kconfig_1, 'OK'
@@ -65,6 +65,24 @@ def detect_kconfig(version_fname: str) -> Tuple[StrOrNone, str]:
         return kconfig_2, 'OK'
 
     return None, f'didn\'t find {kconfig_1} or {kconfig_2}'
+
+
+def get_local_sysctl_file() -> Tuple[StrOrNone, str]:
+    sysctl_bin = shutil.which('sysctl')
+    if not sysctl_bin:
+        # fix for Debian
+        if os.path.isfile('/sbin/sysctl'):
+            sysctl_bin = '/sbin/sysctl'
+    if not sysctl_bin:
+        return None, 'sysctl command is not found on this machine'
+
+    _, sysctl_tmpfile = tempfile.mkstemp(prefix='sysctl-')
+    with open(sysctl_tmpfile, 'w', encoding='utf-8') as f:
+        ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f,
+                             stderr=subprocess.DEVNULL, shell=False).returncode
+        if ret != 0:
+            return None, f'sysctl command returned {ret}, stdout is saved to {sysctl_tmpfile}'
+    return sysctl_tmpfile, 'OK'
 
 
 def detect_arch_by_kconfig(fname: str) -> Tuple[StrOrNone, str]:
@@ -427,7 +445,7 @@ def main() -> None:
             sys.exit(f'[!] ERROR: parsing {version_file} failed: {msg}')
         mprint(mode, f'[+] Detected version of the running kernel: {kernel_version}')
 
-        kconfig_file, msg = detect_kconfig(version_file)
+        kconfig_file, msg = get_local_kconfig_file(version_file)
         if kconfig_file is None:
             sys.exit(f'[!] ERROR: detecting kconfig file failed: {msg}')
         mprint(mode, f'[+] Detected kconfig file of the running kernel: {kconfig_file}')
@@ -437,20 +455,10 @@ def main() -> None:
             sys.exit(f'[!] ERROR: no kernel cmdline file {cmdline_file}')
         mprint(mode, f'[+] Detected cmdline parameters of the running kernel: {cmdline_file}')
 
-        _, sysctl_file = tempfile.mkstemp(prefix='sysctl-')
-        with open(sysctl_file, 'w', encoding='utf-8') as f:
-            sysctl_bin = shutil.which('sysctl')
-            if not sysctl_bin:
-                # fix for Debian
-                if os.path.isfile('/sbin/sysctl'):
-                    sysctl_bin = '/sbin/sysctl'
-            if not sysctl_bin:
-                sys.exit(f'[!] ERROR: sysctl command is not found on this machine')
-            ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f,
-                                 stderr=subprocess.DEVNULL, shell=False).returncode
-            if ret != 0:
-                sys.exit(f'[!] ERROR: sysctl command returned {ret}')
-        mprint(mode, f'[+] Saved sysctl output to {sysctl_file}')
+        sysctl_file, msg = get_local_sysctl_file()
+        if sysctl_file is None:
+            sys.exit(f'[!] ERROR: failed to get sysctls: {msg}')
+        mprint(mode, f'[+] Saved sysctls to a temporary file {sysctl_file}')
 
         perform_checking(mode, kernel_version, kconfig_file, cmdline_file, sysctl_file)
 
