@@ -81,7 +81,9 @@ def get_local_sysctl_file() -> Tuple[StrOrNone, str]:
         ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f,
                              stderr=subprocess.DEVNULL, shell=False).returncode
         if ret != 0:
-            return None, f'sysctl command returned {ret}, stdout is saved to {sysctl_tmpfile}'
+            print(f'[!] WARNING: sysctl command returned {ret}')
+        if os.stat(sysctl_tmpfile).st_size == 0:
+            return None, f'sysctl command returned {ret}, stdout is empty'
     return sysctl_tmpfile, 'OK'
 
 
