@@ -81,6 +81,22 @@ class OptCheck:
         self.state = data
 
     def check(self) -> None:
+        # handle the '*value*' check
+        # (search value in a comma-separated list enclosed in double quotes)
+        if self.expected.startswith('*') and self.expected.endswith('*'):
+            if self.state is None:
+                self.result = 'FAIL: is not found'
+                return
+            assert(self.state.startswith('"') and self.state.endswith('"')), \
+                   f'not a list enclosed in double quotes: {self.name}={self.state}'
+            val = self.expected.strip('*')
+            val_list = self.state.strip('"').split(',')
+            if val in val_list:
+                self.result = f'OK: in {self.state}'
+            else:
+                self.result = f'FAIL: not in {self.state}'
+            return
+
         # handle the 'is present' check
         if self.expected == 'is present':
             if self.state is None:
@@ -278,6 +294,8 @@ class OR(ComplexOptCheck):
                     else:
                         if opt.result == 'OK':
                             self.result = f'OK: {opt.name} is "{opt.expected}"'
+                        elif opt.result.startswith('OK: in \"'):
+                            self.result = f'OK: "{opt.expected.strip("*")}" is in {opt.name}'
                         elif opt.result == 'OK: is not found':
                             self.result = f'OK: {opt.name} is not found'
                         elif opt.result == 'OK: is present':
@@ -314,6 +332,8 @@ class AND(ComplexOptCheck):
                 else:
                     if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: is not found':
                         self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
+                    elif opt.result.startswith('FAIL: not in \"'):
+                        self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'
                     elif opt.result == 'FAIL: is not present':
                         self.result = f'FAIL: {opt.name} is not present'
                     elif opt.result in ('FAIL: is off', 'FAIL: is off, "0"', 'FAIL: is off, "is not set"'):
