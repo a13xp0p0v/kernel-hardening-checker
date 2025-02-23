@@ -545,7 +545,7 @@ def main() -> None:
         add_kconfig_checks(config_checklist, arch)
         print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the microarchitecture
         for opt in config_checklist:
-            if opt.name in ('CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS'):
+            if opt.name in ('CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_LSM'):
                 continue # don't add Kconfig options with a value that needs refinement
             if opt.expected == 'is not off':
                 continue # don't add Kconfig options without explicitly recommended values

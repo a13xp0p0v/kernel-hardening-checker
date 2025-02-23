@@ -153,6 +153,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
     l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'LSM', '*lockdown*')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y'),
@@ -290,7 +291,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch == 'ARM':
         l += [KconfigCheck('security_policy', 'kspp', 'SECURITY', 'y')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_YAMA', 'y')]
+    l += [KconfigCheck('security_policy', 'kspp', 'LSM', '*yama*')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_LANDLOCK', 'y')]
+    l += [KconfigCheck('security_policy', 'kspp', 'LSM', '*landlock*')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DISABLE', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEVELOP', 'is not set')]
@@ -300,6 +303,12 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))] # one of major LSMs implementing MAC
+    l += [OR(KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*selinux*'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*apparmor*'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*smack*'),
+             KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*tomoyo*'))]
+             # N.B. Here we check that one of major LSMs implementing MAC is in the CONFIG_LSM list,
+             # but we can't be sure that it's the same module that was detected in the check above.
 
     # N.B. We don't use 'if arch' for the 'cut_attack_surface' checks that require 'is not set'.
     # It makes the maintainance easier. These kernel options should be disabled anyway.
