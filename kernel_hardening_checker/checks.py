@@ -140,6 +140,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_ALIGN_RODATA', 'y')]
     if arch == 'RISCV':
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_SG', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'LIST_HARDENED', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'DEBUG_LIST', 'y'))]
 
     # 'self_protection', 'kspp'
     l += [KconfigCheck('self_protection', 'kspp', 'RANDOM_KMALLOC_CACHES', 'y')]
@@ -157,8 +159,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'kspp', 'LSM', '*lockdown*')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
-    l += [OR(KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y'),
-             KconfigCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y'))]
     cfi_clang_is_set = KconfigCheck('self_protection', 'kspp', 'CFI_CLANG', 'y')
     cfi_clang_permissive_not_set = KconfigCheck('self_protection', 'kspp', 'CFI_PERMISSIVE', 'is not set')
     l += [OR(KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y'),
@@ -226,6 +226,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  VersionCheck((6, 9, 0))))] # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
     if arch in ('X86_64', 'ARM64', 'X86_32', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_SG', 'y')]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y'),
+                 KconfigCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y'))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
