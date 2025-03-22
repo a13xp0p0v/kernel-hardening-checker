@@ -78,7 +78,7 @@ echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 echo ">>>>> test kconfig arch detection <<<<<"
 cp $CONFIG_DIR/defconfigs/x86_64_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: X86_64"
-cp $CONFIG_DIR/defconfigs/x86_32_defconfig_6.6.config ./test.config
+cp $CONFIG_DIR/defconfigs/i386_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: X86_32"
 cp $CONFIG_DIR/defconfigs/arm_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: ARM"
