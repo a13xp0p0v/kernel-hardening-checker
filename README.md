@@ -40,6 +40,7 @@ Supported microarchitectures:
   - X86_32
   - ARM64
   - ARM
+  - RISC-V
 
 The security hardening recommendations are based on:
 
@@ -77,35 +78,33 @@ Some Linux distributions also provide `kernel-hardening-checker` as a package.
 ```
 ./bin/kernel-hardening-checker -h
 usage: kernel-hardening-checker [-h] [--version] [-m {verbose,json,show_ok,show_fail}]
-                                [-a] [-c CONFIG] [-v KERNEL_VERSION] [-l CMDLINE] [-s SYSCTL]
-                                [-p {X86_64,X86_32,ARM64,ARM}]
-                                [-g {X86_64,X86_32,ARM64,ARM}]
+                                [-a] [-c CONFIG] [-v KERNEL_VERSION] [-l CMDLINE]
+                                [-s SYSCTL] [-p {X86_64,X86_32,ARM64,ARM,RISCV}]
+                                [-g {X86_64,X86_32,ARM64,ARM,RISCV}]
 
 A tool for checking the security hardening options of the Linux kernel
 
 options:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
-  -m {verbose,json,show_ok,show_fail}, --mode {verbose,json,show_ok,show_fail}
+  -m, --mode {verbose,json,show_ok,show_fail}
                         choose the report mode
-  -a, --autodetect      autodetect and check the security hardening options
-                        of the running kernel
-  -c CONFIG, --config CONFIG
-                        check the security hardening options in the Kconfig file
-                        (also supports *.gz files)
-  -v KERNEL_VERSION, --kernel-version KERNEL_VERSION
+  -a, --autodetect      autodetect and check the security hardening options of the
+                        running kernel
+  -c, --config CONFIG   check the security hardening options in the Kconfig file (also
+                        supports *.gz files)
+  -v, --kernel-version KERNEL_VERSION
                         extract version from the kernel version file (contents of
                         /proc/version) instead of Kconfig file
-  -l CMDLINE, --cmdline CMDLINE
+  -l, --cmdline CMDLINE
                         check the security hardening options in the kernel cmdline file
                         (contents of /proc/cmdline)
-  -s SYSCTL, --sysctl SYSCTL
-                        check the security hardening options in the sysctl output file
+  -s, --sysctl SYSCTL   check the security hardening options in the sysctl output file
                         (`sudo sysctl -a > file`)
-  -p {X86_64,X86_32,ARM64,ARM}, --print {X86_64,X86_32,ARM64,ARM}
+  -p, --print {X86_64,X86_32,ARM64,ARM,RISCV}
                         print the security hardening recommendations for the selected
                         microarchitecture
-  -g {X86_64,X86_32,ARM64,ARM}, --generate {X86_64,X86_32,ARM64,ARM}
+  -g, --generate {X86_64,X86_32,ARM64,ARM,RISCV}
                         generate a Kconfig fragment with the security hardening options
                         for the selected microarchitecture
 ```
