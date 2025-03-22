@@ -66,7 +66,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y')]
     vmap_stack_is_set = KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')
-    if arch in ('X86_64', 'ARM64', 'ARM'):
+    if arch in ('X86_64', 'ARM64', 'ARM', 'RISCV'):
         l += [vmap_stack_is_set]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
