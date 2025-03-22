@@ -84,6 +84,8 @@ cp $CONFIG_DIR/defconfigs/arm_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: ARM"
 cp $CONFIG_DIR/defconfigs/arm64_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: ARM64"
+cp $CONFIG_DIR/defconfigs/riscv_defconfig_6.6.config ./test.config
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: RISCV"
 
 echo ">>>>> test sysctl arch detection <<<<<"
 echo "kernel.arch = x86_64" > /tmp/sysctl_arch # same as output of `sysctl kernel.arch`
@@ -96,6 +98,8 @@ echo "kernel.arch = aarch64" > /tmp/sysctl_arch
 coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: ARM64"
 echo "kernel.arch = armv8b" > /tmp/sysctl_arch
 coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: ARM64"
+echo "kernel.arch = riscv64" > /tmp/sysctl_arch
+coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: RISCV"
 echo "kernel.arch = bad" > /tmp/sysctl_arch
 coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "bad is an unsupported arch, arch-dependent checks will be dropped"
 
