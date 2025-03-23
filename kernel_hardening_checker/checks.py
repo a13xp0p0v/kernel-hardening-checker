@@ -40,6 +40,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'defconfig', 'BUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
+    l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
     iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
     l += [iommu_support_is_set] # is needed for mitigating DMA attacks
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR', 'y'),
@@ -100,7 +101,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
@@ -253,7 +253,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                   iommu_support_is_set)]
     if arch in ('ARM64', 'ARM'):
@@ -530,6 +529,9 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nobti', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nopauth', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nomte', 'is not set')]
+    l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', '0'),
+             AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
+                 CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -619,9 +621,6 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
-        l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', '0'),
-                 AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
-                     CmdlineCheck('self_protection', 'kspp', 'iommu.passthrough', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
