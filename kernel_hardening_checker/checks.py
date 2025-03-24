@@ -100,9 +100,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  cpu_sup_intel_not_set)]
     if arch in ('ARM64', 'ARM', 'RISCV'):
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
