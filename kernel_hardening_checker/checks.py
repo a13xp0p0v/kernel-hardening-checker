@@ -293,7 +293,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'a13xp0p0v', 'ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT', 'y')]
 
     # 'security_policy'
-    if arch in ('X86_64', 'ARM64', 'X86_32'):
+    if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [KconfigCheck('security_policy', 'defconfig', 'SECURITY', 'y')]
     if arch == 'ARM':
         l += [KconfigCheck('security_policy', 'kspp', 'SECURITY', 'y')]
