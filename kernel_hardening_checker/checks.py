@@ -98,9 +98,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
                  cpu_sup_intel_not_set)]
+    if arch in ('ARM64', 'ARM', 'RISCV'):
+        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
@@ -574,6 +575,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not set')))]
+    if arch in ('ARM64', 'ARM', 'RISCV'):
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', '1'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
+                     CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -618,13 +623,13 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
              AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
                  CmdlineCheck('self_protection', 'kspp', 'kfence.sample_interval', 'is not set')))]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
-        l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
-                 AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
-                     CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
+        l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
+                 AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
+                     CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
         l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
         l += [AND(CmdlineCheck('self_protection', 'kspp', 'pti', 'on'),
                   CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set'))]
