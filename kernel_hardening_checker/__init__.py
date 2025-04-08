@@ -174,7 +174,7 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
     if with_results:
         sep_line_len += 30
     print('=' * sep_line_len)
-    print(f'{"option_name":^40}|{"type":^7}|{"desired_val":^12}|{"decision":^10}|{"reason":^18}', end='')
+    print(f'{"option_name":^40}|{"type":^7}|{"reason":^18}|{"decision":^10}|{"desired_val":^12}', end='')
     if with_results:
         print('| check_result', end='')
     print()

@@ -129,7 +129,7 @@ class OptCheck:
             self.result = f'FAIL: "{self.state}"'
 
     def table_print(self, _mode: StrOrNone, with_results: bool) -> None:
-        print(f'{self.name:<40}|{self.opt_type:^7}|{self.expected:^12}|{self.decision:^10}|{self.reason:^18}', end='')
+        print(f'{self.name:<40}|{self.opt_type:^7}|{self.reason:^18}|{self.decision:^10}|{self.expected:^12}', end='')
         if with_results:
             print(f'| {colorize_result(self.result)}', end='')
 
@@ -138,9 +138,9 @@ class OptCheck:
         dump = {
             'option_name': self.name,
             'type': self.opt_type,
-            'desired_val': self.expected,
-            'decision': self.decision,
             'reason': self.reason,
+            'decision': self.decision,
+            'desired_val': self.expected,
         } # type: Dict[str, StrOrBool]
         if with_results:
             assert(self.result), f'unexpected empty result in {self.name}'
