@@ -493,7 +493,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
     l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')]
                        # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
-    l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_COMPAT_BITS', 'MAX')]
+    l += [OR(KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_COMPAT_BITS', 'MAX'),
+             KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
                        # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
     if arch == 'X86_64':
         l += [KconfigCheck('harden_userspace', 'kspp', 'X86_USER_SHADOW_STACK', 'y')]
