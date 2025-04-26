@@ -287,6 +287,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(KconfigCheck('self_protection', 'kspp', 'ARM_DEBUG_WX', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y'))]
                  # DEBUG_WX has been renamed to ARM_DEBUG_WX on ARM
+    if arch == 'RISCV':
+        l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_BASE', 'y')]
 
     # 'self_protection', 'a13xp0p0v'
     if arch == 'X86_64':
