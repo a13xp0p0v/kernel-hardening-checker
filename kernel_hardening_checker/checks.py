@@ -247,6 +247,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('X86_64', 'ARM64', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
+    if arch in ('X86_64', 'X86_32', 'RISCV'):
+        l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
     if arch in ('ARM64', 'ARM', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
         l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
@@ -257,7 +259,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                   cfi_clang_is_set,
                   cc_is_clang)]
     if arch in ('X86_64', 'X86_32'):
-        l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                   iommu_support_is_set)]
