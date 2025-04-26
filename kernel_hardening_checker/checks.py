@@ -537,6 +537,9 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', '0'),
              AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
                  CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', 'is not set')))]
+    if arch in ('X86_64', 'X86_32', 'ARM', 'RISCV'):
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'on'),
+                 CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
     if arch in ('ARM64', 'ARM', 'RISCV'):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', '1'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
@@ -600,9 +603,6 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
                      CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set')))]
-    else:
-        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'on'),
-                 CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
 
     # 'self_protection', 'kspp'
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
