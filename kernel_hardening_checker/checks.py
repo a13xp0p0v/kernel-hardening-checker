@@ -775,7 +775,7 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     # Let's choose 100 as a reasonable compromise.
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
-    if arch in ('X86_64', 'X86_32', 'ARM64'):
+    if arch in ('X86_64', 'X86_32', 'ARM64', 'RISCV'):
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '65536')]
     if arch == 'ARM':
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '32768')]
