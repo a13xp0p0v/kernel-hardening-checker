@@ -157,7 +157,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_VIRTUAL', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
-    l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'LSM', '*lockdown*')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
@@ -226,6 +225,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              AND(ubsan_bounds_is_set,
                  VersionCheck((6, 9, 0))))] # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
     if arch in ('X86_64', 'ARM64', 'X86_32', 'ARM'):
+        l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_SG', 'y')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y'))]
