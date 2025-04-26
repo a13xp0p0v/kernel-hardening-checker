@@ -537,6 +537,12 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', '0'),
              AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
                  CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', 'is not set')))]
+    if arch in ('ARM64', 'ARM', 'RISCV'):
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', '1'),
+                 AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
+                     CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
+                 CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))] # same as 'auto'
     if arch in ('X86_64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -579,17 +585,17 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not set')))]
-    if arch in ('ARM64', 'ARM', 'RISCV'):
-        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', '1'),
-                 AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
-                     CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
-                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                 AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
+                     CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set')),
+                 AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'),
                      CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'kernel'),
                  CmdlineCheck('self_protection', 'a13xp0p0v', 'ssbd', 'force-on'),
-                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                 AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
+                     CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'is not set')),
+                 AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'),
                      CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
@@ -631,15 +637,12 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
+        l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
-        l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
         l += [AND(CmdlineCheck('self_protection', 'kspp', 'pti', 'on'),
                   CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set'))]
-    if arch == 'ARM64':
-        l += [OR(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto'),
-                 CmdlineCheck('self_protection', 'kspp', 'mitigations', 'is not set'))] # same as 'auto'
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'cfi', 'kcfi'),
                  AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'),
