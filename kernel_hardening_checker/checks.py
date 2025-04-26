@@ -366,7 +366,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set')]
               # CONFIG_COMPAT_VDSO disabled ASLR of vDSO only on X86_64 and X86_32;
               # on ARM64 this option has different meaning
-    if arch == 'ARM':
+    if arch in ('ARM', 'RISCV'):
         l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
                  devmem_not_set)] # refers to LOCKDOWN
 
