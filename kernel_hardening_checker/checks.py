@@ -259,6 +259,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('ARM64', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
+    if arch in ('ARM64', 'RISCV'):
+        l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     if arch == 'X86_64':
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))] # vs CVE-2021-26341 in Straight-Line-Speculation
@@ -267,7 +269,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
                  VersionCheck((6, 7, 0)))] # AMD_IOMMU_V2 was dropped in v6.7
     if arch == 'ARM64':
-        l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')] # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
