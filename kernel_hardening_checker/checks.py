@@ -243,11 +243,12 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                   stackleak_is_set,
                   cc_is_gcc)]
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
+    if arch in ('X86_64', 'ARM64', 'RISCV'):
+        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
     if arch in ('ARM64', 'ARM', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
     if arch in ('X86_64', 'ARM64'):
-        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
         l += [AND(cfi_clang_is_set,
                   cc_is_clang)]
         l += [AND(cfi_clang_permissive_not_set,
