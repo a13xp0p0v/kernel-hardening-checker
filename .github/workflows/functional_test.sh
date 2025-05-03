@@ -58,8 +58,7 @@ coverage run -a --branch bin/kernel-hardening-checker -a -m show_ok
 coverage run -a --branch bin/kernel-hardening-checker -a -m show_fail
 
 echo ">>>>> check the example kconfig files, cmdline, and sysctl <<<<<"
-cat /proc/cmdline > ./cmdline_example
-sed -i "1s/^/l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0 /" ./cmdline_example
+echo "root=/dev/sda l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0 hey hey"  > ./cmdline_example
 cat ./cmdline_example
 CONFIG_DIR=`find . -name config_files`
 SYSCTL_EXAMPLE=$CONFIG_DIR/distros/example_sysctls.txt
