@@ -35,11 +35,16 @@ coverage run -a --branch bin/kernel-hardening-checker -p ARM
 coverage run -a --branch bin/kernel-hardening-checker -p ARM -m verbose
 coverage run -a --branch bin/kernel-hardening-checker -p ARM -m json
 
+coverage run -a --branch bin/kernel-hardening-checker -p RISCV
+coverage run -a --branch bin/kernel-hardening-checker -p RISCV -m verbose
+coverage run -a --branch bin/kernel-hardening-checker -p RISCV -m json
+
 echo ">>>>> generate the Kconfig fragment <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -g X86_64
 coverage run -a --branch bin/kernel-hardening-checker -g X86_32
 coverage run -a --branch bin/kernel-hardening-checker -g ARM64
 coverage run -a --branch bin/kernel-hardening-checker -g ARM
+coverage run -a --branch bin/kernel-hardening-checker -g RISCV
 
 echo ">>>>> try autodetection <<<<<"
 cat /proc/cmdline
