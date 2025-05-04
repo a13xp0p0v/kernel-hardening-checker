@@ -413,9 +413,14 @@ def populate_with_data(checklist: List[ChecklistObjType], data: DictOrTuple, dat
 def override_expected_value(checklist: List[ChecklistObjType], name: str, new_val: str) -> None:
     for opt in checklist:
         if opt.name == name:
-            assert(isinstance(opt, SimpleNamedOptCheckTypes)), \
-                   f'overriding an expected value for "{opt}" is not supported yet'
-            opt.expected = new_val
+            if isinstance(opt, SimpleNamedOptCheckTypes):
+                opt.expected = new_val
+            else:
+                for o in opt.opts:
+                    assert(isinstance(o, SimpleNamedOptCheckTypes)), \
+                           f'overriding an expected value for "{o}" is not supported yet'
+                    if o.name == name:
+                        o.expected = new_val
 
 
 def perform_checks(checklist: List[ChecklistObjType]) -> None:

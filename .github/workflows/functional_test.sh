@@ -35,11 +35,16 @@ coverage run -a --branch bin/kernel-hardening-checker -p ARM
 coverage run -a --branch bin/kernel-hardening-checker -p ARM -m verbose
 coverage run -a --branch bin/kernel-hardening-checker -p ARM -m json
 
+coverage run -a --branch bin/kernel-hardening-checker -p RISCV
+coverage run -a --branch bin/kernel-hardening-checker -p RISCV -m verbose
+coverage run -a --branch bin/kernel-hardening-checker -p RISCV -m json
+
 echo ">>>>> generate the Kconfig fragment <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -g X86_64
 coverage run -a --branch bin/kernel-hardening-checker -g X86_32
 coverage run -a --branch bin/kernel-hardening-checker -g ARM64
 coverage run -a --branch bin/kernel-hardening-checker -g ARM
+coverage run -a --branch bin/kernel-hardening-checker -g RISCV
 
 echo ">>>>> try autodetection <<<<<"
 cat /proc/cmdline
@@ -53,8 +58,7 @@ coverage run -a --branch bin/kernel-hardening-checker -a -m show_ok
 coverage run -a --branch bin/kernel-hardening-checker -a -m show_fail
 
 echo ">>>>> check the example kconfig files, cmdline, and sysctl <<<<<"
-cat /proc/cmdline > ./cmdline_example
-sed -i "1s/^/l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0 /" ./cmdline_example
+echo "root=/dev/sda l1tf=off mds=full mitigations=off randomize_kstack_offset=on retbleed=0 iommu.passthrough=0 hey hey"  > ./cmdline_example
 cat ./cmdline_example
 CONFIG_DIR=`find . -name config_files`
 SYSCTL_EXAMPLE=$CONFIG_DIR/distros/example_sysctls.txt
@@ -78,12 +82,14 @@ echo "\n>>>>> have checked $COUNT kconfigs <<<<<"
 echo ">>>>> test kconfig arch detection <<<<<"
 cp $CONFIG_DIR/defconfigs/x86_64_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: X86_64"
-cp $CONFIG_DIR/defconfigs/x86_32_defconfig_6.6.config ./test.config
+cp $CONFIG_DIR/defconfigs/i386_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: X86_32"
 cp $CONFIG_DIR/defconfigs/arm_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: ARM"
 cp $CONFIG_DIR/defconfigs/arm64_defconfig_6.6.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: ARM64"
+cp $CONFIG_DIR/defconfigs/riscv_defconfig_6.6.config ./test.config
+coverage run -a --branch bin/kernel-hardening-checker -c ./test.config | grep "Detected microarchitecture: RISCV"
 
 echo ">>>>> test sysctl arch detection <<<<<"
 echo "kernel.arch = x86_64" > /tmp/sysctl_arch # same as output of `sysctl kernel.arch`
@@ -96,6 +102,8 @@ echo "kernel.arch = aarch64" > /tmp/sysctl_arch
 coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: ARM64"
 echo "kernel.arch = armv8b" > /tmp/sysctl_arch
 coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: ARM64"
+echo "kernel.arch = riscv64" > /tmp/sysctl_arch
+coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "Detected microarchitecture: RISCV"
 echo "kernel.arch = bad" > /tmp/sysctl_arch
 coverage run -a --branch bin/kernel-hardening-checker -s /tmp/sysctl_arch | grep "bad is an unsupported arch, arch-dependent checks will be dropped"
 
