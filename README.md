@@ -34,7 +34,7 @@ License: GPL-3.0.
   - Kernel cmdline arguments (boot-time)
   - Sysctl parameters (runtime)
 
-Supported microarchitectures:
+Supported architectures:
 
   - X86_64
   - X86_32
@@ -103,10 +103,10 @@ options:
                         (`sudo sysctl -a > file`)
   -p, --print {X86_64,X86_32,ARM64,ARM,RISCV}
                         print the security hardening recommendations for the selected
-                        microarchitecture
+                        architecture
   -g, --generate {X86_64,X86_32,ARM64,ARM,RISCV}
                         generate a Kconfig fragment with the security hardening options
-                        for the selected microarchitecture
+                        for the selected architecture
 ```
 
 ## Output modes
@@ -134,7 +134,7 @@ $ ./bin/kernel-hardening-checker -a
 [+] Detected kconfig file of the running kernel: /boot/config-6.11.0-1012-azure
 [+] Detected cmdline parameters of the running kernel: /proc/cmdline
 [+] Saved sysctls to a temporary file /tmp/sysctl-d0j9yhrh
-[+] Detected microarchitecture: X86_64
+[+] Detected architecture: X86_64
 [+] Detected compiler: GCC 130300
 [!] WARNING: cmdline option "console" is found multiple times
 [!] WARNING: sysctl options available for root are not found in /tmp/sysctl-d0j9yhrh, try checking the output of `sudo sysctl -a`
@@ -449,7 +449,7 @@ vm.mmap_rnd_compat_bits                 |sysctl |     16     |a13xp0p0v | harden
 
 ## Generating a Kconfig fragment with the security hardening options
 
-With the `-g` argument, the tool generates a Kconfig fragment with the security hardening options for the selected microarchitecture.
+With the `-g` argument, the tool generates a Kconfig fragment with the security hardening options for the selected architecture.
 
 This Kconfig fragment can be merged with the existing Linux kernel config:
 ```

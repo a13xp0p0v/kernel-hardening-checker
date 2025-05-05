@@ -99,10 +99,10 @@ def detect_arch_by_kconfig(fname: str) -> Tuple[StrOrNone, str]:
                 if arch is None:
                     arch = option
                 else:
-                    return None, 'detected more than one microarchitecture in kconfig'
+                    return None, 'detected more than one architecture in kconfig'
 
     if arch is None:
-        return None, 'failed to detect microarchitecture in kconfig'
+        return None, 'failed to detect architecture in kconfig'
     return arch, 'OK'
 
 
@@ -123,7 +123,7 @@ def detect_arch_by_sysctl(fname: str) -> Tuple[StrOrNone, str]:
                     if re.search(pattern, value):
                         return arch, value
                 return None, f'{value} is an unsupported arch'
-        return None, 'failed to detect microarchitecture in sysctl'
+        return None, 'failed to detect architecture in sysctl'
 
 
 def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
@@ -313,12 +313,12 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
     config_checklist = [] # type: List[ChecklistObjType]
     arch = None
 
-    # detect the kernel microarchitecture
+    # detect the kernel architecture
     if kconfig:
         arch, msg = detect_arch_by_kconfig(kconfig)
         if arch is None:
             sys.exit(f'[-] ERROR: {msg}')
-        mprint(mode, f'[+] Detected microarchitecture: {arch}')
+        mprint(mode, f'[+] Detected architecture: {arch}')
     else:
         assert(not cmdline), 'wrong perform_checking() usage'
         assert(sysctl), 'wrong perform_checking() usage'
@@ -326,7 +326,7 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         if arch is None:
             mprint(mode, f'[!] WARNING: {msg}, arch-dependent checks will be dropped')
         else:
-            mprint(mode, f'[+] Detected microarchitecture: {arch} ({msg})')
+            mprint(mode, f'[+] Detected architecture: {arch} ({msg})')
 
     if kconfig:
         # kconfig allows to determine the compiler for building the kernel
@@ -422,9 +422,9 @@ def main() -> None:
     parser.add_argument('-s', '--sysctl',
                         help='check the security hardening options in the sysctl output file (`sudo sysctl -a > file`)')
     parser.add_argument('-p', '--print', choices=SUPPORTED_ARCHS,
-                        help='print the security hardening recommendations for the selected microarchitecture')
+                        help='print the security hardening recommendations for the selected architecture')
     parser.add_argument('-g', '--generate', choices=SUPPORTED_ARCHS,
-                        help='generate a Kconfig fragment with the security hardening options for the selected microarchitecture')
+                        help='generate a Kconfig fragment with the security hardening options for the selected architecture')
     args = parser.parse_args()
 
     mode = None
@@ -544,7 +544,7 @@ def main() -> None:
         arch = args.generate
         config_checklist = []
         add_kconfig_checks(config_checklist, arch)
-        print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the microarchitecture
+        print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the architecture
         for opt in config_checklist:
             if opt.name in ('CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_LSM'):
                 continue # don't add Kconfig options with a value that needs refinement
