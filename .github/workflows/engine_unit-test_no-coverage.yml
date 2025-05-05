@@ -1,5 +1,8 @@
 name: engine unit-test no coverage
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ master ]

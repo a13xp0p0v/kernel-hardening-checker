@@ -1,5 +1,8 @@
 name: engine unit-test
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ master ]

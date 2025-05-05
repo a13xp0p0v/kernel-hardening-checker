@@ -1,5 +1,8 @@
 name: functional test no coverage
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ master ]

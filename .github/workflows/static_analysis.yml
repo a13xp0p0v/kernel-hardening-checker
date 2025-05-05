@@ -1,5 +1,8 @@
 name: static analysis
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ master ]
