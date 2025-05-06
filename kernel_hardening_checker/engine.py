@@ -129,7 +129,7 @@ class OptCheck:
             self.result = f'FAIL: "{self.state}"'
 
     def table_print(self, _mode: StrOrNone, with_results: bool) -> None:
-        print(f'{self.name:<40}|{self.opt_type:^7}|{self.reason:^18}|{self.decision:^10}|{self.expected:^12}', end='')
+        print(f'{self.name:<38}|{self.opt_type:^7}|{self.reason:^18}|{self.decision:^10}|{self.expected:^12}', end='')
         if with_results:
             print(f'| {colorize_result(self.result)}', end='')
 
