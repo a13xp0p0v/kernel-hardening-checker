@@ -40,7 +40,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'defconfig', 'BUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'SLUB_DEBUG', 'y')]
     l += [KconfigCheck('self_protection', 'defconfig', 'THREAD_INFO_IN_TASK', 'y')]
-    l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')] # true if IOMMU_DEFAULT_DMA_STRICT is set
+    l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')]
+          # mutually exclusive with IOMMU_DEFAULT_DMA_STRICT
     iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
     l += [iommu_support_is_set] # is needed for mitigating DMA attacks
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR', 'y'),
@@ -54,11 +55,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_RODATA', 'y'))] # before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STRICT_MODULE_RWX', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_SET_MODULE_RONX', 'y'),
-             modules_not_set)] # DEBUG_SET_MODULE_RONX was before v4.11
+             modules_not_set)] # DEBUG_SET_MODULE_RONX existed before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
              VersionCheck((5, 4, 208)))]
-             # REFCOUNT_FULL is enabled by default since v5.5,
-             # and this is backported to v5.4.208
+             # REFCOUNT_FULL is enabled by default since v5.5 and backported to v5.4.208
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'INIT_STACK_ALL_ZERO', 'y'),
              AND(KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STRUCTLEAK_BYREF_ALL', 'y')))]
@@ -178,7 +178,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [randstruct_is_set]
 #   l += [AND(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_PERFORMANCE', 'is not set'),
 #             KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT_PERFORMANCE', 'is not set'),
-#             randstruct_is_set)] # Comment this out for now: KSPP has revoked this recommendation
+#             randstruct_is_set)] # comment this out for now: KSPP has revoked this recommendation
     hardened_usercopy_is_set = KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
     l += [hardened_usercopy_is_set]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
@@ -220,10 +220,12 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
               KconfigCheck('self_protection', 'kspp', 'UBSAN_SIGNED_WRAP', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_BOOL', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_ENUM', 'is not set'),
-              KconfigCheck('self_protection', 'kspp', 'UBSAN_ALIGNMENT', 'is not set'))] # only array index bounds checking with traps
+              KconfigCheck('self_protection', 'kspp', 'UBSAN_ALIGNMENT', 'is not set'))]
+              # only array index bounds checking with traps
     l += [OR(KconfigCheck('self_protection', 'kspp', 'UBSAN_SANITIZE_ALL', 'y'),
              AND(ubsan_bounds_is_set,
-                 VersionCheck((6, 9, 0))))] # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
+                 VersionCheck((6, 9, 0))))]
+             # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
     if arch in ('X86_64', 'ARM64', 'X86_32', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_SG', 'y')]
@@ -266,7 +268,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     if arch == 'X86_64':
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
-                 KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))] # vs CVE-2021-26341 in Straight-Line-Speculation
+                 KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))]
+                 # this feature protects against CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
                   iommu_support_is_set)]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
@@ -274,7 +277,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')] # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
+        l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')]
+              # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
     if arch == 'X86_32':
         l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
@@ -315,13 +319,14 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SMACK', 'y'),
-             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))] # one of major LSMs implementing MAC
+             KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_TOMOYO', 'y'))]
+             # one of major LSMs implementing MAC
     l += [OR(KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*selinux*'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*apparmor*'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*smack*'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*tomoyo*'))]
              # N.B. Here we check that one of major LSMs implementing MAC is in the CONFIG_LSM list,
-             # but we can't be sure that it's the same module that was detected in the check above.
+             # but we can't be sure that it's the same module that was detected in the check above
 
     # N.B. We don't use 'if arch' for the 'cut_attack_surface' checks that require 'is not set'.
     # It makes the maintainance easier. These kernel options should be disabled anyway.
@@ -376,15 +381,20 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  devmem_not_set)] # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'maintainer'
-    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')] # recommended by Daniel Vetter in /issues/38
-    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'FB', 'is not set')] # recommended by Daniel Vetter in /issues/38
-    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'VT', 'is not set')] # recommended by Daniel Vetter in /issues/38
-    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD', 'is not set')] # recommended by Denis Efremov in /pull/54
-    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD_RAWCMD', 'is not set')] # recommended by Denis Efremov in /pull/62
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')]
+          # recommended by Daniel Vetter in /issues/38
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'FB', 'is not set')]
+          # recommended by Daniel Vetter in /issues/38
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'VT', 'is not set')]
+          # recommended by Daniel Vetter in /issues/38
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD', 'is not set')]
+          # recommended by Denis Efremov in /pull/54
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD_RAWCMD', 'is not set')]
+          # recommended by Denis Efremov in /pull/62
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'NOUVEAU_LEGACY_CTX_SUPPORT', 'is not set')]
-                                            # recommended by Dave Airlie in kernel commit b30a43ac7132cdda
+          # recommended by Dave Airlie in kernel commit b30a43ac7132cdda
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'N_GSM', 'is not set')]
-                                            # recommended by Greg KH at https://www.openwall.com/lists/oss-security/2024/04/17/1
+          # recommended by Greg KH at https://www.openwall.com/lists/oss-security/2024/04/17/1
 
     # 'cut_attack_surface', 'grsec'
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'ZSMALLOC_STAT', 'is not set')]
@@ -473,7 +483,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IP_DCCP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FTRACE', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'VIDEO_VIVID', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'INPUT_EVBUG', 'is not set')] # Can be used as a keylogger
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'INPUT_EVBUG', 'is not set')] # can be used as a keylogger
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CORESIGHT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'XFS_SUPPORT_V4', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set')]
@@ -482,7 +492,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP', 'is not set')] # the old name of ARM_PTDUMP_DEBUGFS
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'SECCOMP_CACHE_DEBUG', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'LKDTM', 'is not set')]
-                                            # dangerous, only for debugging the kernel hardening features!
+          # dangerous, only for debugging the kernel hardening features!
     l += [OR(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'TRIM_UNUSED_KSYMS', 'y'),
              modules_not_set)]
 
@@ -494,10 +504,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
     l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')]
-                       # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
+          # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
     l += [OR(KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_COMPAT_BITS', 'MAX'),
              KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
-                       # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
+             # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
     if arch == 'X86_64':
         l += [KconfigCheck('harden_userspace', 'kspp', 'X86_USER_SHADOW_STACK', 'y')]
 
@@ -629,8 +639,8 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', 'is not set')))]
     l += [AND(CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'))]
-              # Consequence of the HARDENED_USERCOPY_FALLBACK check by kspp.
-              # Don't require slab_common.usercopy_fallback=0,
+              # consequence of the HARDENED_USERCOPY_FALLBACK check by kspp;
+              # but we don't require slab_common.usercopy_fallback=0,
               # since HARDENED_USERCOPY_FALLBACK was removed in Linux v5.16.
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'kfence.sample_interval', '100'),
              AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
@@ -675,7 +685,8 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
-                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', 'is not set')))] # the vdso32 parameter must not be 2
+                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', 'is not set')))]
+                 # the vdso32 parameter must not be 2
     if arch == 'X86_32':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', '0'),
@@ -683,7 +694,8 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
                      CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', 'is not set'),
-                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', 'is not set')))] # the vdso and vdso32 parameters must not be 2
+                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', 'is not set')))]
+                 # the vdso and vdso32 parameters must not be 2
 
     # 'cut_attack_surface', 'grsec'
     # The cmdline checks compatible with the kconfig options disabled by grsecurity...
@@ -697,6 +709,8 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', '0'),
              AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', 'is not set')))]
+                 # bdev_allow_write_mounted=0 may break snap and its applications on Ubuntu,
+                 # since snap uses the squashfs filesystem and creates loop devices
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
@@ -708,65 +722,54 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
 
 
 no_kstrtobool_options = [
-    'debugfs', # See debugfs_kernel() in fs/debugfs/inode.c
-    'mitigations', # See mitigations_parse_cmdline() in kernel/cpu.c
-    'pti', # See pti_check_boottime_disable() in arch/x86/mm/pti.c
-    'spectre_v2', # See spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'spectre_v2_user', # See spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'spectre_bhi', # See spectre_bhi_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'spec_store_bypass_disable', # See ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'l1tf', # See l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'mds', # See mds_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'tsx_async_abort', # See tsx_async_abort_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'srbds', # See srbds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'mmio_stale_data', # See mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'retbleed', # See retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'rodata', # See set_debug_rodata() in init/main.c
-    'ssbd', # See parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
-    'spec_rstack_overflow', # See srso_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'gather_data_sampling', # See gds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'reg_file_data_sampling', # See rfds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'slub_debug', # See setup_slub_debug() in mm/slub.c
-    'iommu', # See iommu_setup() in arch/x86/kernel/pci-dma.c
-    'vsyscall', # See vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
-    'vdso32', # See vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
-    'vdso', # See vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
-    'cfi', # See cfi_parse_cmdline() in arch/x86/kernel/alternative.c
-    'tsx' # See tsx_init() in arch/x86/kernel/cpu/tsx.c
+    'debugfs', # see debugfs_kernel() in fs/debugfs/inode.c
+    'mitigations', # see mitigations_parse_cmdline() in kernel/cpu.c
+    'pti', # see pti_check_boottime_disable() in arch/x86/mm/pti.c
+    'spectre_v2', # see spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spectre_v2_user', # see spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spectre_bhi', # see spectre_bhi_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spec_store_bypass_disable', # see ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'l1tf', # see l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'mds', # see mds_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'tsx_async_abort', # see tsx_async_abort_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'srbds', # see srbds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'mmio_stale_data', # see mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'retbleed', # see retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'rodata', # see set_debug_rodata() in init/main.c
+    'ssbd', # see parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
+    'spec_rstack_overflow', # see srso_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'gather_data_sampling', # see gds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'reg_file_data_sampling', # see rfds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'slub_debug', # see setup_slub_debug() in mm/slub.c
+    'iommu', # see iommu_setup() in arch/x86/kernel/pci-dma.c
+    'vsyscall', # see vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
+    'vdso32', # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
+    'vdso', # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
+    'cfi', # see cfi_parse_cmdline() in arch/x86/kernel/alternative.c
+    'tsx' # see tsx_init() in arch/x86/kernel/cpu/tsx.c
 ]
 
 
 def normalize_cmdline_options(option: str, value: str) -> str:
-    # Don't normalize the cmdline option values if
-    # the Linux kernel doesn't use kstrtobool() for them
+    # Don't normalize an option value if the Linux kernel doesn't use kstrtobool() for it:
     if option in no_kstrtobool_options:
         return value
 
-    # Implement a limited part of the kstrtobool() logic
+    # Implement a limited part of the kstrtobool() logic:
     if value.lower() in ('1', 'on', 'y', 'yes', 't', 'true'):
         return '1'
     if value.lower() in ('0', 'off', 'n', 'no', 'f', 'false'):
         return '0'
 
-    # Preserve unique values
+    # Preserve unique values:
     return value
 
 
-# Ideas of security hardening sysctls:
-#    what about bpf_jit_enable?
-#    nosmt sysfs control file
-#    vm.mmap_rnd_bits=max
-#    vm.mmap_rnd_compat_bits=max
-#    abi.vsyscall32 (any value except 2)
-#    net.ipv4.tcp_syncookies=1 (?)
-
 def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
-# This function may be called with arch=None
+    # Calling the SysctlCheck class constructor:
+    #   SysctlCheck(reason, decision, name, expected)
 
-# Calling the SysctlCheck class constructor:
-#   SysctlCheck(reason, decision, name, expected)
-
-    # Use an omnipresent kconfig symbol to see if we have a kconfig file for checking
+    # Use an omnipresent kconfig symbol to see if we have a kconfig file for checking:
     have_kconfig = KconfigCheck('-', '-', 'LOCALVERSION', 'is present')
 
     l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
@@ -778,22 +781,23 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     # Let's choose 100 as a reasonable compromise.
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
+    # Compatible with the 'DEFAULT_MMAP_MIN_ADDR' kconfig check by KSPP:
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '65536')]
     if arch == 'ARM':
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '32768')]
-        # compatible with the 'DEFAULT_MMAP_MIN_ADDR' kconfig check by KSPP
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
-    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')] # with a custom patch, see https://lwn.net/Articles/696216/
+    l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')]
+          # depends on a custom patch, see https://lwn.net/Articles/696216/
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kptr_restrict', '2')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', '0')]
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'user.max_user_namespaces', '0'),
              SysctlCheck('cut_attack_surface', 'debian', 'kernel.unprivileged_userns_clone', '0'))]
-         # 1) Debian-specific sysctl kernel.unprivileged_userns_clone is deprecated
-         # 2) user.max_user_namespaces=0 may break the upower daemon in Ubuntu
-         # 3) Ubuntu developers are working on some compromise with AppArmor profiles, let's see...
+             # 1) Debian-specific sysctl kernel.unprivileged_userns_clone is deprecated
+             # 2) user.max_user_namespaces=0 may break the upower daemon in Ubuntu
+             # 3) Ubuntu developers are working on some compromise with AppArmor profiles, let's see...
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1'),
              AND(KconfigCheck('-', '-', 'KEXEC_CORE', 'is not set'),
                  have_kconfig))]
@@ -803,12 +807,14 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'vm.unprivileged_userfaultfd', '0'),
              AND(KconfigCheck('cut_attack_surface', 'grsec', 'USERFAULTFD', 'is not set'),
                  have_kconfig))]
-          # At first, it disabled unprivileged userfaultfd,
-          # and since v5.11 it enables unprivileged userfaultfd for user-mode only.
+             # at first, it disabled unprivileged userfaultfd,
+             # and since v5.11 it enables unprivileged userfaultfd for user-mode only
 
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.modules_disabled', '1'),
              AND(KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
-                 have_kconfig))] # radical, but may be useful in some cases
+                 have_kconfig))]
+             # kernel.modules_disabled=1 should be set (e.g. with systemd) after
+             # the kernel startup, when all the required modules have loaded
 
     l += [OR(SysctlCheck('cut_attack_surface', 'grsec', 'kernel.io_uring_disabled', '2'),
              AND(KconfigCheck('cut_attack_surface', 'grsec', 'IO_URING', 'is not set'),
@@ -826,6 +832,6 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.randomize_va_space', '2')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.yama.ptrace_scope', '3')]
     l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_bits', 'MAX')]
-                      # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
+          # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
     l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_compat_bits', 'MAX')]
-                      # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
+          # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
