@@ -697,6 +697,8 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', '0'),
              AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', 'is not set')))]
+                 # enabling this kernel's command-line parameter can break snap and its applications on Ubuntu,
+                 # since snap uses the squashfs filesystem and creates loop devices
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
@@ -808,7 +810,8 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
 
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.modules_disabled', '1'),
              AND(KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
-                 have_kconfig))] # radical, but may be useful in some cases
+                 have_kconfig))] # should be enabled after loading the kernel with all
+                                 # modules required for starting (e.g. with systemd).
 
     l += [OR(SysctlCheck('cut_attack_surface', 'grsec', 'kernel.io_uring_disabled', '2'),
              AND(KconfigCheck('cut_attack_surface', 'grsec', 'IO_URING', 'is not set'),
