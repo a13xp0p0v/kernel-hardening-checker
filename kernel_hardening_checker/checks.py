@@ -539,6 +539,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'defconfig', 'nosmap', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nokaslr', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set')]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'no_hash_pointers', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_bhb', 'is not set')]
