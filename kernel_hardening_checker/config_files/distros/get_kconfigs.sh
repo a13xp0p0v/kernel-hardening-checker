@@ -3,29 +3,16 @@
 set -x
 set -e
 
-oracle_git_url="https://raw.githubusercontent.com/oracle/kconfigs/refs/heads/gh-pages/out/"
+oracle_git_url="https://raw.githubusercontent.com/oracle/kconfigs/refs/heads/gh-pages/"
 
-kconfigs_from_oracle=(
-    "Android 15 (6.6) aarch64"
-    "Arch x86_64"
-    "CentOS 9 Stream aarch64"
-    "CentOS 9 Stream x86_64"
-    "Debian 10 Buster x86_64"
-    "Debian 13 Trixie aarch64"
-    "Debian 13 Trixie x86_64"
-    "Fedora 41 Updates aarch64"
-    "Fedora 41 Updates x86_64"
-    "Oracle Linux 7 (UEK 4) x86_64"
-    "Oracle Linux 9 (UEK-NEXT) aarch64"
-    "Oracle Linux 9 (UEK-NEXT) x86_64"
-    "Ubuntu 20.04 LTS Focal x86_64"
-    "Ubuntu 24.04 LTS Noble aarch64"
-    "Ubuntu 24.04 LTS Noble x86_64"
+readarray -t kconfigs_from_oracle < <(
+  # wget output could alternatively be piped to jq -r '.distros[].unique_name'
+  wget -qO- "${oracle_git_url}docs/summary.json" | grep -o '"unique_name": "[^"]*"' |  awk -F'"' '{print $4}'
 )
 
 for kconfig in "${kconfigs_from_oracle[@]}"; do
     filename="${kconfig// /_}.config" # Replace spaces with underscores
-    wget -O "${filename}" "${oracle_git_url}${kconfig}/config" # Fetch kconfig
+    wget -O "${filename}" "${oracle_git_url}out/${kconfig}/config" # Fetch kconfig
 done
 
 # Fetch some other kconfigs
