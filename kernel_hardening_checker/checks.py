@@ -652,12 +652,25 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'kfence.sample_interval', '100'),
              AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
                  CmdlineCheck('-', '-', 'kfence.sample_interval', 'is not set')))]
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'lockdown', 'confidentiality'),
+             AND(KconfigCheck('self_protection', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y'),
+                 CmdlineCheck('-', '-', 'lockdown', 'is not set')))]
+             # consequence of the LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY check by kspp
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'module.sig_enforce', '1'),
+             KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
+             AND(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
+                 CmdlineCheck('-', '-', 'module.sig_enforce', 'is not set')))]
+             # consequence of the MODULE_SIG_FORCE check by kspp
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
                      CmdlineCheck('-', '-', 'randomize_kstack_offset', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
+        l += [OR(CmdlineCheck('self_protection', 'kspp', 'intel_iommu', 'on'),
+                 AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
+                     CmdlineCheck('-', '-', 'intel_iommu', 'is not set')))]
+                 # consequence of INTEL_IOMMU_DEFAULT_ON check by kspp
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                      CmdlineCheck('-', '-', 'iommu.strict', 'is not set')))]
@@ -684,6 +697,13 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
 
     # 'cut_attack_surface', 'kspp'
     l += [CmdlineCheck('cut_attack_surface', 'kspp', 'nosmt', 'is present')] # slow (high performance penalty)
+
+    l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'efi', '*disable_early_pci_dma*'),
+             KconfigCheck('-', '-', 'EFI', 'is not set'),
+             AND(KconfigCheck('cut_attack_surface', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
+                 CmdlineCheck('-', '-', 'efi', 'is not set')))]
+             # consequence of EFI_DISABLE_PCI_DMA check by kspp
+             # worth creating a rule 'no_disable_early_pci_dma is not in the list'
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
@@ -694,6 +714,11 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
                      CmdlineCheck('-', '-', 'vdso32', 'is not set')))]
                  # the vdso32 parameter must not be 2
+        l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'ia32_emulation', '0'),
+                 KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
+                 AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IA32_EMULATION_DEFAULT_DISABLED', 'y'),
+                     CmdlineCheck('-', '-', 'ia32_emulation', 'is not set')))]
+                 # consequence of the IA32_EMULATION check by kspp
     if arch == 'X86_32':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', '0'),
@@ -720,11 +745,6 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  # since snap uses the squashfs filesystem and creates loop devices.
                  # 2) On Gentoo with openrc-init, bdev_allow_write_mounted=0 makes fsck fail
                  # on boot during the root filesystem check.
-    if arch == 'X86_64':
-        l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', '0'),
-                 KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
-                 AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IA32_EMULATION_DEFAULT_DISABLED', 'y'),
-                     CmdlineCheck('-', '-', 'ia32_emulation', 'is not set')))]
 
     # 'harden_userspace'
     l += [CmdlineCheck('harden_userspace', 'defconfig', 'norandmaps', 'is not set')]
@@ -755,7 +775,10 @@ no_kstrtobool_options = [
     'vdso32', # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
     'vdso', # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
     'cfi', # see cfi_parse_cmdline() in arch/x86/kernel/alternative.c
-    'tsx' # see tsx_init() in arch/x86/kernel/cpu/tsx.c
+    'tsx', # see tsx_init() in arch/x86/kernel/cpu/tsx.c
+    'lockdown' # see lockdown_param() in security/lockdown/lockdown.c
+    'intel_iommu' # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
+    'efi' # see parse_efi_cmdline in drivers/firmware/efi/efi.c
 ]
 
 
