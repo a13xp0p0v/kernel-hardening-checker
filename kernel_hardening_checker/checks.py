@@ -235,7 +235,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  vmap_stack_is_set)]
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
         l += [AND(stackleak_is_set,
@@ -250,6 +249,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
     if arch in ('X86_64', 'X86_32', 'RISCV'):
+        l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
         l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
     if arch in ('ARM64', 'ARM', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'SYN_COOKIES', 'y')] # another reason?
@@ -279,6 +279,11 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'KASAN_HW_TAGS', 'y')]
               # see also: kasan=on, kasan.stacktrace=off, kasan.fault=panic
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536'),
+                  KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
+                  # LSM_MMAP_MIN_ADDR in security/Kconfig has the default value
+                  # 32768 if ARM || (ARM64 && COMPAT). That's why we require
+                  # COMPAT disabled for setting DEFAULT_MMAP_MIN_ADDR=65536 on ARM64.
     if arch == 'X86_32':
         l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
@@ -786,8 +791,12 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
     # Compatible with the 'DEFAULT_MMAP_MIN_ADDR' kconfig check by KSPP:
-    if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
+    if arch in ('X86_64', 'X86_32', 'RISCV'):
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '65536')]
+    if arch == 'ARM64':
+        l += [AND(SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '65536'),
+                  KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
+                  # see the comment about DEFAULT_MMAP_MIN_ADDR for ARM64 above
     if arch == 'ARM':
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '32768')]
 
