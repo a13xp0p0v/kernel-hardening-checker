@@ -2,7 +2,6 @@
 steps:
   unit-test:
     image: python:3
-    pull: true
     commands:
       - echo "Prepare the engine unit-test..."
       - python --version

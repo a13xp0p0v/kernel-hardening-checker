@@ -2,7 +2,6 @@
 steps:
   installation-test:
     image: python:3
-    pull: true
     commands:
       - echo "Prepare for the installation..."
       - cd ..
@@ -23,7 +22,6 @@ steps:
       - echo "Have checked $COUNT kconfigs"
   static-typing-checking:
     image: python:3
-    pull: true
     commands:
       - echo "Install the mypy tool..."
       - python --version
@@ -31,7 +29,6 @@ steps:
       - mypy kernel_hardening_checker/ --show-error-context --pretty --no-incremental --check-untyped-defs --disallow-untyped-defs --strict-equality
   pylint-checking:
     image: python:3
-    pull: true
     commands:
       - echo "Install the pylint tool..."
       - python --version
@@ -40,7 +37,6 @@ steps:
       - pylint --recursive=y kernel_hardening_checker setup.py
   functional-test-with-coverage:
     image: python:3
-    pull: true
     commands:
       - echo "Install the coverage tool..."
       - python --version
