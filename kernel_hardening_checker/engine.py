@@ -251,7 +251,7 @@ class ComplexOptCheck:
     def table_print(self, mode: StrOrNone, with_results: bool) -> None:
         if mode == 'verbose':
             class_name = f'<<< {self.__class__.__name__} >>>'
-            print(f'    {class_name:87}', end='')
+            print(f'    {class_name:85}', end='')
             if with_results:
                 print(f'| {colorize_result(self.result)}', end='')
             for o in self.opts:
