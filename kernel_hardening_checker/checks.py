@@ -198,9 +198,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              modules_not_set)] # refers to LOCKDOWN
     l += [OR(KconfigCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'),
              KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'))]
-             # CONFIG_INIT_ON_FREE_DEFAULT_ON was added in v5.3.
-             # CONFIG_PAGE_POISONING_ZERO was removed in v5.11.
-             # Starting from v5.11 CONFIG_PAGE_POISONING unconditionally checks
+             # INIT_ON_FREE_DEFAULT_ON was added in v5.3.
+             # PAGE_POISONING_ZERO was removed in v5.11.
+             # Starting from v5.11 PAGE_POISONING unconditionally checks
              # the 0xAA poison pattern on allocation.
              # That brings higher performance penalty.
     l += [OR(KconfigCheck('self_protection', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
@@ -325,7 +325,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*apparmor*'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*smack*'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'LSM', '*tomoyo*'))]
-             # N.B. Here we check that one of major LSMs implementing MAC is in the CONFIG_LSM list,
+             # N.B. Here we check that one of major LSMs implementing MAC is in the LSM list,
              # but we can't be sure that it's the same module that was detected in the check above
 
     # N.B. We don't use 'if arch' for the 'cut_attack_surface' checks that require 'is not set'.
@@ -374,7 +374,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              # and LEGACY_VSYSCALL_NONE can be changed at boot time via the cmdline parameter
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set')]
-              # CONFIG_COMPAT_VDSO disabled ASLR of vDSO only on X86_64 and X86_32;
+              # COMPAT_VDSO disabled ASLR of vDSO only on X86_64 and X86_32;
               # on ARM64 this option has different meaning
     if arch in ('ARM', 'RISCV'):
         l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
