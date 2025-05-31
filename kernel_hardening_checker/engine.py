@@ -215,7 +215,7 @@ class VersionCheck:
 
     def table_print(self, _mode: StrOrNone, with_results: bool) -> None:
         ver_req = f'kernel version >= {self.ver_expected}'
-        print(f'{ver_req:<91}', end='')
+        print(f'{ver_req:<89}', end='')
         if with_results:
             print(f'| {colorize_result(self.result)}', end='')
 
