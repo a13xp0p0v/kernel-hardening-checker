@@ -487,6 +487,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CORESIGHT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'XFS_SUPPORT_V4', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set')]
+          # see the comment about bdev_allow_write_mounted below
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FAULT_INJECTION', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP_DEBUGFS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP', 'is not set')] # the old name of ARM_PTDUMP_DEBUGFS
@@ -710,8 +711,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', '0'),
              AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', 'is not set')))]
-                 # bdev_allow_write_mounted=0 may break snap and its applications on Ubuntu,
-                 # since snap uses the squashfs filesystem and creates loop devices
+                 # 1) bdev_allow_write_mounted=0 may break snap and its applications on Ubuntu,
+                 # since snap uses the squashfs filesystem and creates loop devices.
+                 # 2) On Gentoo with openrc-init, bdev_allow_write_mounted=0 makes fsck fail
+                 # on boot during the root filesystem check.
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
