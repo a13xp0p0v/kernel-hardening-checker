@@ -46,11 +46,21 @@ coverage run -a --branch bin/kernel-hardening-checker -g ARM64
 coverage run -a --branch bin/kernel-hardening-checker -g ARM
 coverage run -a --branch bin/kernel-hardening-checker -g RISCV
 
-echo ">>>>> try autodetection <<<<<"
+echo ">>>>> test the autodetection mode <<<<<"
 cat /proc/cmdline
 cat /proc/version
 ls -l /boot
 ls -l /proc/c*
+FILE1=/proc/config.gz
+FILE2=/boot/config-`uname -r`
+if [ ! -f "$FILE1" ] ; then
+    echo "$FILE1 does not exist"
+    if [ ! -f "$FILE2" ] ; then
+        echo "$FILE2 does not exist, create it"
+        cp kernel_hardening_checker/config_files/distros/Arch_x86_64.config "$FILE2"
+    fi
+fi
+ls -l /boot
 coverage run -a --branch bin/kernel-hardening-checker -a
 coverage run -a --branch bin/kernel-hardening-checker -a -m verbose
 coverage run -a --branch bin/kernel-hardening-checker -a -m json
