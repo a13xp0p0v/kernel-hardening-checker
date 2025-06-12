@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=80.0"]
+build-backend = "setuptools.build_meta"
+
+[options]
+packages = [
+    "kernel_hardening_checker",
+    "kernel_hardening_checker.config_files",
+    "kernel_hardening_checker.config_files.defconfigs",
+    "kernel_hardening_checker.config_files.distros",
+    "kernel_hardening_checker.config_files.kspp-recommendations",
+]
+include_package_data = true
+
+[project]
+name = "kernel-hardening-checker"
+description = "A tool for checking the security hardening options of the Linux kernel"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE.txt"]
+maintainers = [{ name = "Alexander Popov", email = "alex.popov@linux.com" }]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Security",
+    "Operating System :: POSIX :: Linux",
+    "Environment :: Console",
+    "Programming Language :: Python :: 3",
+]
+dynamic = ["version", "readme"]
+
+[project.urls]
+Homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
+Source = "https://github.com/a13xp0p0v/kernel-hardening-checker"
+Download = "https://github.com/a13xp0p0v/kernel-hardening-checker#files"
+"Bug Tracker" = "https://github.com/a13xp0p0v/kernel-hardening-checker/issues"
+
+[project.scripts]
+kernel-hardening-checker = "kernel_hardening_checker:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "kernel_hardening_checker.__version__" }
+readme = { file = ["README.md"] }
