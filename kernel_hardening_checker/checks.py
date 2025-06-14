@@ -534,7 +534,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     # that __overrides__ the 'PARAM_X_DEFAULT' kconfig option:
     #   l += [OR(CmdlineCheck(reason, decision, 'param_x', '1'),
     #            AND(KconfigCheck(reason, decision, 'PARAM_X_DEFAULT_ON', 'y'),
-    #                CmdlineCheck(reason, decision, 'param_x, 'is not set')))]
+    #                CmdlineCheck('-', '-', 'param_x, 'is not set')))]
     #
     # Here we don't check the kconfig options or minimal kernel version
     # required for the cmdline parameters. That would make the checks
@@ -556,73 +556,73 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nomte', 'is not set')]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', '0'),
              AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
-                 CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', 'is not set')))]
+                 CmdlineCheck('-', '-', 'iommu.passthrough', 'is not set')))]
     if arch in ('X86_64', 'X86_32', 'ARM', 'RISCV'):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'on'),
                  CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set'))]
     if arch in ('ARM64', 'ARM', 'RISCV'):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', '1'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
-                     CmdlineCheck('self_protection', 'defconfig', 'iommu.strict', 'is not set')))]
+                     CmdlineCheck('-', '-', 'iommu.strict', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
                  CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))] # same as 'auto'
     if arch in ('X86_64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not set')))]
+                     CmdlineCheck('-', '-', 'spectre_v2', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'spectre_v2_user', 'is not set')))]
+                     CmdlineCheck('-', '-', 'spectre_v2_user', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not off'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not set')))]
+                     CmdlineCheck('-', '-', 'spectre_bhi', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not set')))]
+                     CmdlineCheck('-', '-', 'spec_store_bypass_disable', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'l1tf', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'l1tf', 'is not set')))]
+                     CmdlineCheck('-', '-', 'l1tf', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mds', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'mds', 'is not set')))]
+                     CmdlineCheck('-', '-', 'mds', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'tsx_async_abort', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'tsx_async_abort', 'is not set')))]
+                     CmdlineCheck('-', '-', 'tsx_async_abort', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'srbds', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'srbds', 'is not set')))]
+                     CmdlineCheck('-', '-', 'srbds', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'mmio_stale_data', 'is not set')))]
+                     CmdlineCheck('-', '-', 'mmio_stale_data', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'retbleed', 'is not set')))]
+                     CmdlineCheck('-', '-', 'retbleed', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_rstack_overflow', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'spec_rstack_overflow', 'is not set')))]
+                     CmdlineCheck('-', '-', 'spec_rstack_overflow', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'gather_data_sampling', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'gather_data_sampling', 'is not set')))]
+                     CmdlineCheck('-', '-', 'gather_data_sampling', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not off'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
                      CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
-                     CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not set')))]
+                     CmdlineCheck('-', '-', 'reg_file_data_sampling', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
-                     CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set')),
+                     CmdlineCheck('-', '-', 'kpti', 'is not set')),
                  AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'),
-                     CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not set')))]
+                     CmdlineCheck('-', '-', 'kpti', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'kernel'),
                  CmdlineCheck('self_protection', 'a13xp0p0v', 'ssbd', 'force-on'),
                  AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
-                     CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'is not set')),
+                     CmdlineCheck('-', '-', 'ssbd', 'is not set')),
                  AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'),
-                     CmdlineCheck('self_protection', 'defconfig', 'ssbd', 'is not set')))]
+                     CmdlineCheck('-', '-', 'ssbd', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'rodata', 'full'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RODATA_FULL_DEFAULT_ENABLED', 'y'),
-                     CmdlineCheck('self_protection', 'defconfig', 'rodata', 'is not set')))]
+                     CmdlineCheck('-', '-', 'rodata', 'is not set')))]
 
     # 'self_protection', 'kspp'
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
@@ -634,16 +634,16 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y'),
-                 CmdlineCheck('self_protection', 'kspp', 'init_on_alloc', 'is not set')))]
+                 CmdlineCheck('-', '-', 'init_on_alloc', 'is not set')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'init_on_free', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'),
-                 CmdlineCheck('self_protection', 'kspp', 'init_on_free', 'is not set')),
+                 CmdlineCheck('-', '-', 'init_on_free', 'is not set')),
              AND(CmdlineCheck('self_protection', 'kspp', 'page_poison', '1'),
                  KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'slub_debug', 'P')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', '1'),
              AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y'),
-                 CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', 'is not set')))]
+                 CmdlineCheck('-', '-', 'hardened_usercopy', 'is not set')))]
     l += [AND(CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'))]
               # consequence of the HARDENED_USERCOPY_FALLBACK check by kspp;
@@ -651,23 +651,23 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
               # since HARDENED_USERCOPY_FALLBACK was removed in Linux v5.16.
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'kfence.sample_interval', '100'),
              AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
-                 CmdlineCheck('self_protection', 'kspp', 'kfence.sample_interval', 'is not set')))]
+                 CmdlineCheck('-', '-', 'kfence.sample_interval', 'is not set')))]
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
-                     CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', 'is not set')))]
+                     CmdlineCheck('-', '-', 'randomize_kstack_offset', 'is not set')))]
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt')]
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
-                     CmdlineCheck('self_protection', 'kspp', 'iommu.strict', 'is not set')))]
+                     CmdlineCheck('-', '-', 'iommu.strict', 'is not set')))]
         l += [AND(CmdlineCheck('self_protection', 'kspp', 'pti', 'on'),
                   CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set'))]
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'cfi', 'kcfi'),
                  AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'),
                      KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is present'),
-                     CmdlineCheck('self_protection', 'kspp', 'cfi', 'is not set')))]
+                     CmdlineCheck('-', '-', 'cfi', 'is not set')))]
 
     # 'self_protection', 'clipos'
     if arch in ('X86_64', 'X86_32'):
@@ -688,11 +688,11 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
-                     CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'is not set')))]
+                     CmdlineCheck('-', '-', 'vsyscall', 'is not set')))]
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
-                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', 'is not set')))]
+                     CmdlineCheck('-', '-', 'vdso32', 'is not set')))]
                  # the vdso32 parameter must not be 2
     if arch == 'X86_32':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
@@ -700,8 +700,8 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', '1'),
                  CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
-                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', 'is not set'),
-                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso', 'is not set')))]
+                     CmdlineCheck('-', '-', 'vdso32', 'is not set'),
+                     CmdlineCheck('-', '-', 'vdso', 'is not set')))]
                  # the vdso and vdso32 parameters must not be 2
 
     # 'cut_attack_surface', 'grsec'
@@ -715,7 +715,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     # 'cut_attack_surface', 'a13xp0p0v'
     l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', '0'),
              AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set'),
-                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', 'is not set')))]
+                 CmdlineCheck('-', '-', 'bdev_allow_write_mounted', 'is not set')))]
                  # 1) bdev_allow_write_mounted=0 may break snap and its applications on Ubuntu,
                  # since snap uses the squashfs filesystem and creates loop devices.
                  # 2) On Gentoo with openrc-init, bdev_allow_write_mounted=0 makes fsck fail
@@ -724,7 +724,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
                  AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IA32_EMULATION_DEFAULT_DISABLED', 'y'),
-                     CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', 'is not set')))]
+                     CmdlineCheck('-', '-', 'ia32_emulation', 'is not set')))]
 
     # 'harden_userspace'
     l += [CmdlineCheck('harden_userspace', 'defconfig', 'norandmaps', 'is not set')]
