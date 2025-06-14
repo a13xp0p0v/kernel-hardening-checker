@@ -673,6 +673,19 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('X86_64', 'X86_32'):
         l += [CmdlineCheck('self_protection', 'clipos', 'iommu', 'force')]
 
+    # 'self_protection', 'a13xp0p0v'
+    l += [OR(CmdlineCheck('self_protection', 'a13xp0p0v', 'lockdown', 'confidentiality'),
+             AND(KconfigCheck('self_protection', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y'),
+                 CmdlineCheck('self_protection', 'a13xp0p0v', 'lockdown', 'is not set')))]
+    l += [OR(CmdlineCheck('self_protectioыn', 'a13xp0p0v', 'module.sig_enforce', '1'),
+             KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
+             AND(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
+                 CmdlineCheck('self_protection', 'a13xp0p0v', 'module.sig_enforce', 'is not set')))]
+    if arch in ('X86_64', 'X86_32'):
+        l += [OR(CmdlineCheck('self_protection', 'a13xp0p0v', 'intel_iommu', 'on'),
+                 AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
+                     CmdlineCheck('self_protection', 'a13xp0p0v', 'intel_iommu', 'is not set')))]
+
     # 'cut_attack_surface', 'defconfig'
     if arch in ('X86_64', 'X86_32'):
         tsx_not_set = CmdlineCheck('cut_attack_surface', 'defconfig', 'tsx', 'is not set')
@@ -720,6 +733,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  # since snap uses the squashfs filesystem and creates loop devices.
                  # 2) On Gentoo with openrc-init, bdev_allow_write_mounted=0 makes fsck fail
                  # on boot during the root filesystem check.
+    l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'efi', 'disable_early_pci_dma'),
+             KconfigCheck('-', '-', 'EFI', 'is not set'),
+             AND(KconfigCheck('cut_attack_surface', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
+                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'efi', 'is not set')))]
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
