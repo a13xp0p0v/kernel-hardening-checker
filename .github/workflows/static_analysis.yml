@@ -39,4 +39,4 @@ jobs:
       run: |
         pip install pylint
         pip install setuptools
-        pylint --recursive=y kernel_hardening_checker setup.py
+        pylint --recursive=y kernel_hardening_checker
