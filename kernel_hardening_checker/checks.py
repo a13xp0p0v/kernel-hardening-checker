@@ -824,7 +824,10 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
 
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')]
-          # depends on a custom patch, see https://lwn.net/Articles/696216/
+          # Value '3' behaves identically to '2' without custom hardening patches.
+          # Good detection method is to check for the presence of SECURITY_PERF_EVENTS_RESTRICT kconfig,
+          # mostly relevant for Debian-based distributions.
+          # See https://lkml.org/lkml/2016/1/11/587 and https://lwn.net/Articles/696216/
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.ldisc_autoload', '0')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kptr_restrict', '2')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'dev.tty.legacy_tiocsti', '0')]
