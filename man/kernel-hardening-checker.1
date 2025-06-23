@@ -1,0 +1,73 @@
+.TH KERNEL-HARDENING-CHECKER 1 "June 2025" "kernel-hardening-checker" "User Commands"
+.SH NAME
+kernel-hardening-checker \- tool for checking Linux kernel security hardening options
+.SH SYNOPSIS
+.B kernel-hardening-checker
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B kernel-hardening-checker
+is a tool for auditing and reporting on the security hardening options of the Linux kernel. It can analyze configuration files, kernel command line, and sysctl outputs to provide recommendations for improving kernel security.
+
+.PP
+The following options are available:
+
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+
+.TP
+.BR \-\-version
+Show program's version number and exit.
+
+.TP
+.BR \-m " {"verbose,json,show_ok,show_fail"}" ", " \-\-mode " {"verbose,json,show_ok,show_fail"}"
+Choose the report output mode:
+.RS
+.IP \fBverbose\fR
+Detailed human-readable report.
+.IP \fBjson\fR
+Report in JSON format.
+.IP \fBshow_ok\fR
+Show only successful checks.
+.IP \fBshow_fail\fR
+Show only failed checks.
+.RE
+
+.TP
+.BR \-a ", " \-\-autodetect
+Autodetect and check the security hardening options of the running kernel.
+
+.TP
+.BR \-c " CONFIG, " \-\-config " CONFIG"
+Check kernel security hardening options in a Kconfig file (also supports *.gz files).
+
+.TP
+.BR \-v " KERNEL_VERSION, " \-\-kernel-version " KERNEL_VERSION"
+Extract the kernel version from a version file (such as the contents of /proc/version) instead of using a Kconfig file.
+
+.TP
+.BR \-l " CMDLINE, " \-\-cmdline " CMDLINE"
+Check kernel security hardening options in a kernel command line file (such as the contents of /proc/cmdline).
+
+.TP
+.BR \-s " SYSCTL, " \-\-sysctl " SYSCTL"
+Check kernel security hardening options in a sysctl output file (for example, output of "sudo sysctl -a > file").
+
+.TP
+.BR \-p " {"X86_64,X86_32,ARM64,ARM,RISCV"}," \-\-print " {"X86_64,X86_32,ARM64,ARM,RISCV"}"
+Print security hardening recommendations for the selected architecture.
+
+.TP
+.BR \-g " {"X86_64,X86_32,ARM64,ARM,RISCV"}," \-\-generate " {"X86_64,X86_32,ARM64,ARM,RISCV"}"
+Generate a Kconfig fragment containing security hardening options for the selected architecture.
+
+.SH AUTHOR
+Written by Alexander Popov.
+
+.SH REPORTING BUGS
+Report bugs at: <https://github.com/a13xp0p0v/kernel-hardening-checker/issues>
+
+.SH COPYRIGHT
+Copyright: 2020-2025, Alexander Popov <alex.popov@linux.com>
+.br
+License: GPL-3.0
