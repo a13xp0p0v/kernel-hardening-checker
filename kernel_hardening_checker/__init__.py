@@ -276,7 +276,7 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
         if os.stat(fname).st_size == 0:
             sys.exit(f'[-] ERROR: empty sysctl file "{fname}"')
 
-        sysctl_pattern = re.compile(r"[a-zA-Z0-9/\._-]+ ?=.*$")
+        sysctl_pattern = re.compile(r"[a-zA-Z0-9/*._-]+ ?=.*$")
         for line in f.readlines():
             line = line.strip()
             if not line or line.startswith('#'):
