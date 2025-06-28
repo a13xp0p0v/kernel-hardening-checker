@@ -134,8 +134,9 @@ def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
             if ver_pattern.match(line):
                 line = line.strip()
                 parts = line.split()
-                ver_str = parts[2].split('-', 1)[0]
-                ver_numbers = ver_str.split('.')
+                ver_str = parts[2].replace('+', '-')
+                ver_numbers_str = ver_str.split('-', 1)[0]
+                ver_numbers = ver_numbers_str.split('.')
                 if len(ver_numbers) >= 3:
                     if all(map(lambda x: x.isdecimal(), ver_numbers)):
                         return tuple(map(int, ver_numbers)), 'OK'
