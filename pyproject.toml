@@ -16,6 +16,7 @@ include_package_data = true
 name = "kernel-hardening-checker"
 requires-python = ">= 3.8"
 description = "A tool for checking the security hardening options of the Linux kernel"
+readme = "README.md"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE.txt"]
 maintainers = [{ name = "Alexander Popov", email = "alex.popov@linux.com" }]
@@ -39,4 +40,3 @@ kernel-hardening-checker = "kernel_hardening_checker:main"
 
 [tool.setuptools.dynamic]
 version = { attr = "kernel_hardening_checker.__version__" }
-readme = { file = ["README.md"] }
