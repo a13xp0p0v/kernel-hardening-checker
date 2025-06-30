@@ -21,7 +21,7 @@ requires-python = ">= 3.8"
 dynamic = ["version"]
 description = "A tool for checking the security hardening options of the Linux kernel"
 readme = "README.md"
-license = "GPL-3.0-or-later"
+license = "GPL-3.0-only"
 license-files = ["LICENSE.txt"]
 maintainers = [{ name = "Alexander Popov", email = "alex.popov@linux.com" }]
 classifiers = [
