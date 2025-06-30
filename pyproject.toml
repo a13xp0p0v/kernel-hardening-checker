@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=80.0"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [options]
@@ -14,6 +14,7 @@ include_package_data = true
 
 [project]
 name = "kernel-hardening-checker"
+requires-python = ">= 3.8"
 description = "A tool for checking the security hardening options of the Linux kernel"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE.txt"]
