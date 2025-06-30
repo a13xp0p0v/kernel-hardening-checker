@@ -2,15 +2,8 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[options]
-packages = [
-    "kernel_hardening_checker",
-    "kernel_hardening_checker.config_files",
-    "kernel_hardening_checker.config_files.defconfigs",
-    "kernel_hardening_checker.config_files.distros",
-    "kernel_hardening_checker.config_files.kspp-recommendations",
-]
-include_package_data = true
+[tool.setuptools.packages.find]
+where = ["."]
 
 [tool.setuptools.dynamic]
 version = {attr = "kernel_hardening_checker.__version__"}
