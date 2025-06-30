@@ -10,7 +10,7 @@ version = {attr = "kernel_hardening_checker.__version__"}
 
 [project]
 name = "kernel-hardening-checker"
-requires-python = ">= 3.8"
+requires-python = ">= 3.9"
 dynamic = ["version"]
 description = "A tool for checking the security hardening options of the Linux kernel"
 readme = "README.md"
