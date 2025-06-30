@@ -12,9 +12,13 @@ packages = [
 ]
 include_package_data = true
 
+[tool.setuptools.dynamic]
+version = {attr = "kernel_hardening_checker.__version__"}
+
 [project]
 name = "kernel-hardening-checker"
 requires-python = ">= 3.8"
+dynamic = ["version"]
 description = "A tool for checking the security hardening options of the Linux kernel"
 readme = "README.md"
 license = "GPL-3.0-or-later"
@@ -27,7 +31,6 @@ classifiers = [
     "Environment :: Console",
     "Programming Language :: Python :: 3",
 ]
-dynamic = ["version", "readme"]
 
 [project.urls]
 Homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
@@ -38,5 +41,3 @@ Download = "https://github.com/a13xp0p0v/kernel-hardening-checker#files"
 [project.scripts]
 kernel-hardening-checker = "kernel_hardening_checker:main"
 
-[tool.setuptools.dynamic]
-version = { attr = "kernel_hardening_checker.__version__" }
