@@ -29,7 +29,7 @@ jobs:
 
     - name: Install package
       run: |
-        python -m pip install --upgrade pip
+        python3 -m pip install --upgrade pip
         echo "Install the package via pip..."
         pip --verbose install git+https://github.com/a13xp0p0v/kernel-hardening-checker
         echo "Run the installed tool..."

@@ -7,7 +7,7 @@ steps:
       - cd ..
       - pwd
       - ls -la
-      - python --version
+      - python3 --version
       - echo "Install the package via pip..."
       - pip --verbose install --no-cache-dir git+https://github.com/a13xp0p0v/kernel-hardening-checker
       - echo "Run the installed tool..."
@@ -24,14 +24,14 @@ steps:
     image: python:3
     commands:
       - echo "Install the mypy tool..."
-      - python --version
+      - python3 --version
       - pip install --no-cache-dir mypy
       - mypy kernel_hardening_checker/ --show-error-context --pretty --no-incremental --check-untyped-defs --disallow-untyped-defs --strict-equality
   pylint-checking:
     image: python:3
     commands:
       - echo "Install the pylint tool..."
-      - python --version
+      - python3 --version
       - pip install --no-cache-dir pylint
       - pip install --no-cache-dir setuptools
       - pylint --recursive=y kernel_hardening_checker
@@ -39,7 +39,7 @@ steps:
     image: python:3
     commands:
       - echo "Install the coverage tool..."
-      - python --version
+      - python3 --version
       - pip install --no-cache-dir coverage
       - echo "Run the functional tests and collect the coverage..."
       - sh .github/workflows/functional_test.sh
