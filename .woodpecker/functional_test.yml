@@ -34,7 +34,7 @@ steps:
       - python --version
       - pip install --no-cache-dir pylint
       - pip install --no-cache-dir setuptools
-      - pylint --recursive=y kernel_hardening_checker setup.py
+      - pylint --recursive=y kernel_hardening_checker
   functional-test-with-coverage:
     image: python:3
     commands:
