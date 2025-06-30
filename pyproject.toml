@@ -32,12 +32,10 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 
-[project.urls]
-Homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
-Source = "https://github.com/a13xp0p0v/kernel-hardening-checker"
-Download = "https://github.com/a13xp0p0v/kernel-hardening-checker#files"
-"Bug Tracker" = "https://github.com/a13xp0p0v/kernel-hardening-checker/issues"
-
 [project.scripts]
 kernel-hardening-checker = "kernel_hardening_checker:main"
 
+[project.urls]
+homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
+repository = "https://github.com/a13xp0p0v/kernel-hardening-checker"
+bugtracker = "https://github.com/a13xp0p0v/kernel-hardening-checker/issues"
