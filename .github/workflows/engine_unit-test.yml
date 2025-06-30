@@ -33,7 +33,7 @@ jobs:
     - name: Install coverage
       run: |
         python3 -m pip install --upgrade pip
-        pip install coverage
+        python3 -m pip install coverage
 
     - name: Run unit-tests and collect coverage
       run: |

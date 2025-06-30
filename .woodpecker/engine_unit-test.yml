@@ -5,7 +5,8 @@ steps:
     commands:
       - echo "Prepare the engine unit-test..."
       - python3 --version
-      - pip install --no-cache-dir coverage
+      - python3 -m pip install --upgrade pip
+      - python3 -m pip install coverage
       - echo "Run unit-tests and collect coverage..."
       - coverage run --include=kernel_hardening_checker/engine.py,kernel_hardening_checker/test_engine.py -m unittest -v -b
       - echo "Show the coverage report..."

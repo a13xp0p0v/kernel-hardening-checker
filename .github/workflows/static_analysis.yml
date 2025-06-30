@@ -32,11 +32,11 @@ jobs:
 
     - name: Check static typing with mypy
       run: |
-        pip install mypy
+        python3 -m pip install --upgrade pip
+        python3 -m pip install mypy
         mypy kernel_hardening_checker/ --show-error-context --pretty --no-incremental --check-untyped-defs --disallow-untyped-defs --strict-equality
 
     - name: Check code with pylint
       run: |
-        pip install pylint
-        pip install setuptools
+        python3 -m pip install pylint
         pylint --recursive=y kernel_hardening_checker
