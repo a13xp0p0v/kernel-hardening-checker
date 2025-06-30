@@ -35,5 +35,5 @@ kernel-hardening-checker = "kernel_hardening_checker:main"
 
 [project.urls]
 homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
-repository = "https://github.com/a13xp0p0v/kernel-hardening-checker"
+repository = "https://github.com/a13xp0p0v/kernel-hardening-checker.git"
 bugtracker = "https://github.com/a13xp0p0v/kernel-hardening-checker/issues"
