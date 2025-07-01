@@ -32,6 +32,7 @@ jobs:
         python3 -m pip install --upgrade pip
         echo "Install the package via pip..."
         python3 -m pip --verbose install git+https://github.com/a13xp0p0v/kernel-hardening-checker
+        python3 -m pip check
         echo "Run the installed tool..."
         kernel-hardening-checker
 
