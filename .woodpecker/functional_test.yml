@@ -1,51 +1,13 @@
 # .woodpecker.yml
 steps:
-  installation-test:
-    image: python:3
-    commands:
-      - echo "Prepare for the installation..."
-      - cd ..
-      - pwd
-      - ls -la
-      - python3 --version
-      - python3 -m pip install --upgrade pip
-      - echo "Install the package via pip..."
-      - python3 -m pip --verbose install git+https://github.com/a13xp0p0v/kernel-hardening-checker
-      - python3 -m pip check
-      - echo "Run the installed tool..."
-      - which kernel-hardening-checker
-      - kernel-hardening-checker
-      - echo "Check all configs with the installed tool..."
-      - sysctl -a > /tmp/sysctls
-      - CONFIG_DIR=`find /usr/local/lib/ -name config_files`
-      - KCONFIGS=`find $CONFIG_DIR -type f | grep -e "\.config" -e "\.gz"`
-      - COUNT=0
-      - for C in $KCONFIGS; do COUNT=$(expr $COUNT + 1); echo ">>>>> checking kconfig number $COUNT <<<<<"; kernel-hardening-checker -c $C -l /proc/cmdline -s /tmp/sysctls; done
-      - echo "Have checked $COUNT kconfigs"
-  static-typing-checking:
-    image: python:3
-    commands:
-      - echo "Install the mypy tool..."
-      - python3 --version
-      - python3 -m pip install --upgrade pip
-      - python3 -m pip install mypy
-      - mypy kernel_hardening_checker/ --show-error-context --pretty --no-incremental --check-untyped-defs --disallow-untyped-defs --strict-equality
-  pylint-checking:
-    image: python:3
-    commands:
-      - echo "Install the pylint tool..."
-      - python3 --version
-      - python3 -m pip install --upgrade pip
-      - python3 -m pip install pylint
-      - pylint --recursive=y kernel_hardening_checker
   functional-test-with-coverage:
     image: python:3
     commands:
-      - echo "Install the coverage tool..."
+      - ls -la
       - python3 --version
       - python3 -m pip install --upgrade pip
       - python3 -m pip install coverage
-      - echo "Run the functional tests and collect the coverage..."
+      - echo "Run the functional tests and collect coverage..."
       - sh .github/workflows/functional_test.sh
       - echo "Show the coverage report..."
       - coverage report

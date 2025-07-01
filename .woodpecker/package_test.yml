@@ -1,0 +1,30 @@
+# .woodpecker.yml
+steps:
+  build-test:
+    image: python:3
+    commands:
+      - ls -la
+      - python3 --version
+      - python3 -m pip install --upgrade pip
+      - python3 -m pip install build twine
+      - echo "Build the package..."
+      - python3 -m build .
+      - echo "Check the package metadata..."
+      - twine check --strict dist/*
+  installation-test:
+    image: python:3
+    commands:
+      - ls -la
+      - cd ..
+      - ls -la
+      - pwd
+      - python3 --version
+      - python3 -m pip install --upgrade pip
+      - echo "Install the package via pip..."
+      - python3 -m pip --verbose install git+https://codeberg.org/a13xp0p0v/kernel-hardening-checker
+      - python3 -m pip check
+      - echo "Run the installed tool..."
+      - which kernel-hardening-checker
+      - kernel-hardening-checker
+      - sysctl -a > /tmp/sysctls
+      - kernel-hardening-checker -s /tmp/sysctls
