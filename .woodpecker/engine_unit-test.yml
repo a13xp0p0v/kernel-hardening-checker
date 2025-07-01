@@ -1,13 +1,15 @@
 # .woodpecker.yml
 steps:
-  unit-test:
+  - name: unit-test
     image: python:3
+    when:
+      - event: [push, tag, manual]
     commands:
-      - echo "Prepare the engine unit-test..."
+      - ls -la
       - python3 --version
       - python3 -m pip install --upgrade pip
       - python3 -m pip install coverage
-      - echo "Run unit-tests and collect coverage..."
+      - echo "Run the unit-tests and collect coverage..."
       - coverage run --include=kernel_hardening_checker/engine.py,kernel_hardening_checker/test_engine.py -m unittest -v -b
       - echo "Show the coverage report..."
       - coverage report

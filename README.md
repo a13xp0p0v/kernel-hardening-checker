@@ -1,13 +1,15 @@
 # kernel-hardening-checker
 
 __(formerly kconfig-hardened-check)__<br /><br />
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kernel-hardening-checker?label=release)](https://github.com/a13xp0p0v/kernel-hardening-checker/tags)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)<br />
 [![functional test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/functional%20test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/functional_test.yml)
 [![functional test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=functional_test)](https://app.codecov.io/gh/a13xp0p0v/kernel-hardening-checker?flags%5B0%5D=functional_test)<br />
 [![engine unit-test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/engine%20unit-test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/engine_unit-test.yml)
 [![unit-test coverage](https://codecov.io/gh/a13xp0p0v/kernel-hardening-checker/graph/badge.svg?flag=engine_unit-test)](https://app.codecov.io/gh/a13xp0p0v/kernel-hardening-checker?flags%5B0%5D=engine_unit-test)<br />
-[![status-badge](https://ci.codeberg.org/api/badges/12605/status.svg)](https://ci.codeberg.org/repos/12605)<br />
-[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/a13xp0p0v/kernel-hardening-checker?label=release)](https://github.com/a13xp0p0v/kernel-hardening-checker/tags)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![status-badge](https://ci.codeberg.org/api/badges/12605/status.svg)](https://ci.codeberg.org/repos/12605)
+[![static analysis](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/static%20analysis/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/static_analysis.yml)
+[![package test](https://github.com/a13xp0p0v/kernel-hardening-checker/workflows/package%20test/badge.svg)](https://github.com/a13xp0p0v/kernel-hardening-checker/actions/workflows/package_test.yml)
 
 ## Motivation
 
