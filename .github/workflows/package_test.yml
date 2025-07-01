@@ -1,4 +1,4 @@
-name: functional test no coverage
+name: package test
 
 permissions:
   contents: read
@@ -10,7 +10,7 @@ on:
     branches: [ master ]
 
 jobs:
-  functional_test_no-coverage:
+  package_test:
 
     runs-on: ubuntu-latest
 
@@ -30,8 +30,24 @@ jobs:
     - name: Get source code
       uses: actions/checkout@v4
 
-    - name: Run the functional tests
+    - name: Prepare building the package
       run: |
         python3 -m pip install --upgrade pip
-        python3 -m pip install coverage
-        sh .github/workflows/functional_test.sh
+        python3 -m pip install build twine
+
+    - name: Build the package
+      run: |
+        python3 -m build .
+
+    - name: Check the package metadata
+      run: |
+        twine check --strict dist/*
+
+    - name: Install the package
+      run: |
+        python3 -m pip --verbose install git+https://github.com/a13xp0p0v/kernel-hardening-checker
+        python3 -m pip check
+
+    - name: Run the installed tool
+      run: |
+        kernel-hardening-checker -a
