@@ -1,7 +1,9 @@
 # .woodpecker.yml
 steps:
-  unit-test:
+  - name: unit-test
     image: python:3
+    when:
+      - event: [push, tag, manual]
     commands:
       - ls -la
       - python3 --version
