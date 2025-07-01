@@ -65,15 +65,17 @@ of its typical workload.
 
 ## Installation
 
-You can install the package:
+There are multiple options:
 
-```
-pipx install git+https://github.com/a13xp0p0v/kernel-hardening-checker
-```
+  - You can install the package from this Git repository using `pip`:
+    ```
+    python3 -m pip install git+https://github.com/a13xp0p0v/kernel-hardening-checker
+    ```
+    If you encounter an error due to an externally managed environment, create a virtual environment using `python3 -m venv`.
 
-or simply run `./bin/kernel-hardening-checker` from the cloned repository.
+  - You can install the `kernel-hardening-checker` package via the package manager on some GNU/Linux distributions.
 
-Some Linux distributions also provide the `kernel-hardening-checker` package via the package manager.
+  - Alternatively, you can simply run `./bin/kernel-hardening-checker` from the cloned repository without installation.
 
 ## Usage
 ```
