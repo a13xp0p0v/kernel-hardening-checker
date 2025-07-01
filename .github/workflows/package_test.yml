@@ -27,7 +27,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Get source code
+    - name: Get the source code
       uses: actions/checkout@v4
 
     - name: Prepare building the package

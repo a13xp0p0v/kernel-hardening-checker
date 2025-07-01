@@ -30,6 +30,6 @@ jobs:
     - name: Get the source code
       uses: actions/checkout@v4
 
-    - name: Run unit-tests
+    - name: Run the unit-tests
       run: |
         python3 -m unittest -v -b

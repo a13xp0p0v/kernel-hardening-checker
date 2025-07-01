@@ -27,16 +27,19 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Get source code for collecting coverage
+    - name: Get the source code
       uses: actions/checkout@v4
 
-    - name: Run the functional tests and collect the coverage
+    - name: Install coverage
       run: |
         python3 -m pip install --upgrade pip
         python3 -m pip install coverage
+
+    - name: Run the functional tests and collect coverage
+      run: |
         sh .github/workflows/functional_test.sh
 
-    - name: Prepare final coverage report
+    - name: Prepare the final coverage report
       run: |
         coverage xml -i -o coverage.xml
 
