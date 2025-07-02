@@ -122,13 +122,13 @@ options:
   - `-m verbose` for printing additional info:
     - the configuration options without a corresponding check
     - the internals of complex checks with AND/OR, like this:
-      ```
-      -------------------------------------------------------------------------------------------
-          <<< OR >>>                                                                             
-      CONFIG_STRICT_DEVMEM                  |kconfig|cut_attack_surface|defconfig |     y      
-      CONFIG_DEVMEM                         |kconfig|cut_attack_surface|   kspp   | is not set 
-      -------------------------------------------------------------------------------------------
-      ```
+    ```
+    -------------------------------------------------------------------------------------------
+        <<< OR >>>                                                                             
+    CONFIG_STRICT_DEVMEM                  |kconfig|cut_attack_surface|defconfig |     y      
+    CONFIG_DEVMEM                         |kconfig|cut_attack_surface|   kspp   | is not set 
+    -------------------------------------------------------------------------------------------
+    ```
   - `-m json` for printing the results in JSON format (for combining `kernel-hardening-checker` with other tools)
   - `-m show_ok` for showing only successful checks
   - `-m show_fail` for showing only failed checks
