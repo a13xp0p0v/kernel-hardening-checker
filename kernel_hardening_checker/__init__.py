@@ -289,13 +289,13 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
             parsed_options[option] = value
 
     # let's check the presence of some ancient sysctl option
-    # to ensure that we are parsing the output of `sudo sysctl -a > file`
+    # to ensure that we are parsing the output of "sudo sysctl -a > file"
     if 'kernel.printk' not in parsed_options and mode != 'json':
-        print(f'[!] WARNING: ancient sysctl options are not found in {fname}, try checking the output of `sudo sysctl -a`')
+        print(f'[!] WARNING: ancient sysctl options are not found in {fname}, try checking the output of "sudo sysctl -a"')
 
     # let's check the presence of a sysctl option available for root
     if 'kernel.cad_pid' not in parsed_options and mode != 'json':
-        print(f'[!] WARNING: sysctl options available for root are not found in {fname}, try checking the output of `sudo sysctl -a`')
+        print(f'[!] WARNING: sysctl options available for root are not found in {fname}, try checking the output of "sudo sysctl -a"')
 
 
 def refine_check(mode: StrOrNone, checklist: List[ChecklistObjType], parsed_options: Dict[str, str],
@@ -406,26 +406,26 @@ def main() -> None:
     #     - reporting about unknown kernel options in the Kconfig
     #     - verbose printing of ComplexOptCheck items
     #   * json mode for printing the results in JSON format
-    report_modes = ['verbose', 'json', 'show_ok', 'show_fail']
+    output_modes = ['verbose', 'json', 'show_ok', 'show_fail']
     parser = ArgumentParser(prog='kernel-hardening-checker',
                             description='A tool for checking the security hardening options of the Linux kernel')
     parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
-    parser.add_argument('-m', '--mode', choices=report_modes,
-                        help='choose the report mode')
+    parser.add_argument('-m', '--mode', choices=output_modes,
+                        help='select a special output mode instead of the default one')
     parser.add_argument('-a', '--autodetect', action='store_true',
                         help='autodetect and check the security hardening options of the running kernel')
     parser.add_argument('-c', '--config',
-                        help='check the security hardening options in the Kconfig file (also supports *.gz files)')
+                        help='check the security hardening options in a Kconfig file (also supports *.gz files)')
     parser.add_argument('-v', '--kernel-version',
-                        help='extract version from the kernel version file (contents of /proc/version) instead of Kconfig file')
+                        help='extract the kernel version from a version file (such as /proc/version) instead of using a Kconfig file')
     parser.add_argument('-l', '--cmdline',
-                        help='check the security hardening options in the kernel cmdline file (contents of /proc/cmdline)')
+                        help='check the security hardening options in a kernel command line file (such as /proc/cmdline)')
     parser.add_argument('-s', '--sysctl',
-                        help='check the security hardening options in the sysctl output file (`sudo sysctl -a > file`)')
+                        help='check the security hardening options in a sysctl output file (the result of "sudo sysctl -a > file")')
     parser.add_argument('-p', '--print', choices=SUPPORTED_ARCHS,
-                        help='print the security hardening recommendations for the selected architecture')
+                        help='print security hardening recommendations for the selected architecture')
     parser.add_argument('-g', '--generate', choices=SUPPORTED_ARCHS,
-                        help='generate a Kconfig fragment with the security hardening options for the selected architecture')
+                        help='generate a Kconfig fragment containing the security hardening options for the selected architecture')
     args = parser.parse_args()
 
     mode = None

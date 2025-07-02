@@ -13,7 +13,7 @@ The following options are available:
 
 .TP
 \fB\-h\fR, \fB\-\-help\fR
-Show help message and exit.
+Show the help message and exit.
 
 .TP
 \fB\-\-version\fR
@@ -21,7 +21,7 @@ Show program's version number and exit.
 
 .TP
 \fB\-m\fR {verbose,json,show_ok,show_fail}, \fB\-\-mode\fR {verbose,json,show_ok,show_fail}
-Choose the report output mode:
+Choose the output mode:
 .RS
 .IP \fBverbose\fR
 Detailed human-readable report.
@@ -39,19 +39,19 @@ Autodetect and check the security hardening options of the running kernel.
 
 .TP
 \fB\-c\fR CONFIG, \fB\-\-config\fR CONFIG
-Check kernel security hardening options in a Kconfig file (also supports *.gz files).
+Check the security hardening options in a Kconfig file (also supports *.gz files).
 
 .TP
 \fB\-v\fR KERNEL_VERSION, \fB\-\-kernel\-version\fR KERNEL_VERSION
-Extract the kernel version from a version file (such as the contents of /proc/version) instead of using a Kconfig file.
+Extract the kernel version from a version file (such as /proc/version) instead of using a Kconfig file.
 
 .TP
 \fB\-l\fR CMDLINE, \fB\-\-cmdline\fR CMDLINE
-Check kernel security hardening options in a kernel command line file (such as the contents of /proc/cmdline).
+Check the security hardening options in a kernel command line file (such as /proc/cmdline).
 
 .TP
 \fB\-s\fR SYSCTL, \fB\-\-sysctl\fR SYSCTL
-Check kernel security hardening options in a sysctl output file (for example, output of "sudo sysctl -a > file").
+Check the security hardening options in a sysctl output file (the result of "sudo sysctl -a > file").
 
 .TP
 \fB\-p\fR {X86_64,X86_32,ARM64,ARM,RISCV}, \fB\-\-print\fR {X86_64,X86_32,ARM64,ARM,RISCV}
@@ -59,7 +59,7 @@ Print security hardening recommendations for the selected architecture.
 
 .TP
 \fB\-g\fR {X86_64,X86_32,ARM64,ARM,RISCV}, \fB\-\-generate\fR {X86_64,X86_32,ARM64,ARM,RISCV}
-Generate a Kconfig fragment containing security hardening options for the selected architecture.
+Generate a Kconfig fragment containing the security hardening options for the selected architecture.
 
 .SH AUTHOR
 Written by Alexander Popov.
