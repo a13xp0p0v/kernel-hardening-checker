@@ -1,0 +1,79 @@
+.TH KERNEL-HARDENING-CHECKER "1" "July 2025" "kernel-hardening-checker" "User Commands"
+
+.SH NAME
+kernel-hardening-checker \- tool for checking the security hardening options of the Linux kernel
+
+.SH SYNOPSIS
+\fBkernel-hardening-checker\fR [\fIOPTIONS\fR]
+
+.SH DESCRIPTION
+\fBkernel-hardening-checker\fR is a tool for checking the security hardening options of the Linux kernel.
+It can analyze Kconfig options (compile-time), kernel command line arguments (boot-time), and sysctl parameters (runtime)
+for the following architectures: X86_64, X86_32, ARM64, ARM, RISC-V.
+
+Please note that changing the Linux kernel security parameters may also affect system performance
+and functionality of userspace software. Therefore, when setting these parameters, consider
+the threat model of your Linux-based information system and thoroughly test its typical workload.
+
+.SH OPTIONS
+
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show the help message and exit.
+
+.TP
+\fB\-\-version\fR
+Show program's version number and exit.
+
+.TP
+\fB\-m\fR {verbose,json,show_ok,show_fail}, \fB\-\-mode\fR {verbose,json,show_ok,show_fail}
+Select a special output mode instead of the default one:
+.RS
+.IP \fBverbose\fR
+Provide additional information: print the configuration options without a corresponding check and show the internals of complex checks.
+.IP \fBjson\fR
+Report in JSON format.
+.IP \fBshow_ok\fR
+Show only successful checks.
+.IP \fBshow_fail\fR
+Show only failed checks.
+.RE
+
+.TP
+\fB\-a\fR, \fB\-\-autodetect\fR
+Autodetect and check the security hardening options of the running kernel.
+
+.TP
+\fB\-c\fR CONFIG, \fB\-\-config\fR CONFIG
+Check the security hardening options in a Kconfig file (also supports *.gz files).
+
+.TP
+\fB\-v\fR KERNEL_VERSION, \fB\-\-kernel\-version\fR KERNEL_VERSION
+Extract the kernel version from a version file (such as /proc/version) instead of using a Kconfig file.
+
+.TP
+\fB\-l\fR CMDLINE, \fB\-\-cmdline\fR CMDLINE
+Check the security hardening options in a kernel command line file (such as /proc/cmdline).
+
+.TP
+\fB\-s\fR SYSCTL, \fB\-\-sysctl\fR SYSCTL
+Check the security hardening options in a sysctl output file (the result of "sudo sysctl -a > file").
+
+.TP
+\fB\-p\fR {X86_64,X86_32,ARM64,ARM,RISCV}, \fB\-\-print\fR {X86_64,X86_32,ARM64,ARM,RISCV}
+Print security hardening recommendations for the selected architecture.
+
+.TP
+\fB\-g\fR {X86_64,X86_32,ARM64,ARM,RISCV}, \fB\-\-generate\fR {X86_64,X86_32,ARM64,ARM,RISCV}
+Generate a Kconfig fragment containing the security hardening options for the selected architecture.
+
+.SH AUTHOR
+Written by Alexander Popov with help from the contributors.
+
+.SH REPORTING BUGS
+Report bugs at: <https://github.com/a13xp0p0v/kernel-hardening-checker/issues>
+
+.SH COPYRIGHT
+Copyright: 2018-2025, Alexander Popov <alex.popov@linux.com>
+.br
+License: GPL-3.0

@@ -34,7 +34,7 @@ License: GPL-3.0.
 `kernel-hardening-checker` supports checking:
 
   - Kconfig options (compile-time)
-  - Kernel cmdline arguments (boot-time)
+  - Kernel command line arguments (boot-time)
   - Sysctl parameters (runtime)
 
 Supported architectures:
@@ -60,10 +60,9 @@ or exploitation techniques.
 
 ## Attention!
 
-Changing Linux kernel security parameters may also affect system performance
-and functionality of userspace software. So for choosing these parameters, consider
-the threat model of your Linux-based information system and perform thorough testing
-of its typical workload.
+Please note that changing the Linux kernel security parameters may also affect system performance
+and functionality of userspace software. Therefore, when setting these parameters, consider
+the threat model of your Linux-based information system and thoroughly test its typical workload.
 
 ## Installation
 
@@ -82,9 +81,11 @@ There are multiple options:
 ## Usage
 ```
 $ ./bin/kernel-hardening-checker -h
-usage: kernel-hardening-checker [-h] [--version] [-m {verbose,json,show_ok,show_fail}]
-                                [-a] [-c CONFIG] [-v KERNEL_VERSION] [-l CMDLINE]
-                                [-s SYSCTL] [-p {X86_64,X86_32,ARM64,ARM,RISCV}]
+usage: kernel-hardening-checker [-h] [--version]
+                                [-m {verbose,json,show_ok,show_fail}] [-a]
+                                [-c CONFIG] [-v KERNEL_VERSION] [-l CMDLINE]
+                                [-s SYSCTL]
+                                [-p {X86_64,X86_32,ARM64,ARM,RISCV}]
                                 [-g {X86_64,X86_32,ARM64,ARM,RISCV}]
 
 A tool for checking the security hardening options of the Linux kernel
@@ -93,43 +94,44 @@ options:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -m, --mode {verbose,json,show_ok,show_fail}
-                        choose the report mode
-  -a, --autodetect      autodetect and check the security hardening options of the
-                        running kernel
-  -c, --config CONFIG   check the security hardening options in the Kconfig file (also
-                        supports *.gz files)
+                        select a special output mode instead of the default
+                        one
+  -a, --autodetect      autodetect and check the security hardening options of
+                        the running kernel
+  -c, --config CONFIG   check the security hardening options in a Kconfig file
+                        (also supports *.gz files)
   -v, --kernel-version KERNEL_VERSION
-                        extract version from the kernel version file (contents of
-                        /proc/version) instead of Kconfig file
+                        extract the kernel version from a version file (such
+                        as /proc/version) instead of using a Kconfig file
   -l, --cmdline CMDLINE
-                        check the security hardening options in the kernel cmdline file
-                        (contents of /proc/cmdline)
-  -s, --sysctl SYSCTL   check the security hardening options in the sysctl output file
-                        (`sudo sysctl -a > file`)
+                        check the security hardening options in a kernel
+                        command line file (such as /proc/cmdline)
+  -s, --sysctl SYSCTL   check the security hardening options in a sysctl
+                        output file (the result of "sudo sysctl -a > file")
   -p, --print {X86_64,X86_32,ARM64,ARM,RISCV}
-                        print the security hardening recommendations for the selected
-                        architecture
+                        print security hardening recommendations for the
+                        selected architecture
   -g, --generate {X86_64,X86_32,ARM64,ARM,RISCV}
-                        generate a Kconfig fragment with the security hardening options
-                        for the selected architecture
+                        generate a Kconfig fragment containing the security
+                        hardening options for the selected architecture
 ```
 
 ## Output modes
 
   -  no `-m` argument for the default output mode (see the example below)
   - `-m verbose` for printing additional info:
-    - config options without a corresponding check
-    - internals of complex checks with AND/OR, like this:
-```
--------------------------------------------------------------------------------------------
-    <<< OR >>>                                                                             
-CONFIG_STRICT_DEVMEM                  |kconfig|cut_attack_surface|defconfig |     y      
-CONFIG_DEVMEM                         |kconfig|cut_attack_surface|   kspp   | is not set 
--------------------------------------------------------------------------------------------
-```
-  - `-m show_fail` for showing only the failed checks
-  - `-m show_ok` for showing only the successful checks
+    - the configuration options without a corresponding check
+    - the internals of complex checks with AND/OR, like this:
+      ```
+      -------------------------------------------------------------------------------------------
+          <<< OR >>>                                                                             
+      CONFIG_STRICT_DEVMEM                  |kconfig|cut_attack_surface|defconfig |     y      
+      CONFIG_DEVMEM                         |kconfig|cut_attack_surface|   kspp   | is not set 
+      -------------------------------------------------------------------------------------------
+      ```
   - `-m json` for printing the results in JSON format (for combining `kernel-hardening-checker` with other tools)
+  - `-m show_ok` for showing only successful checks
+  - `-m show_fail` for showing only failed checks
 
 ## Example output
 ```
