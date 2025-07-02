@@ -1,4 +1,4 @@
-.TH KERNEL-HARDENING-CHECKER 1 "June 2025" "kernel-hardening-checker" "User Commands"
+.TH KERNEL-HARDENING-CHECKER "1" "July 2025" "kernel-hardening-checker" "User Commands"
 .SH NAME
 kernel-hardening-checker \- tool for checking Linux kernel security hardening options
 .SH SYNOPSIS
@@ -12,15 +12,15 @@ is a tool for auditing and reporting on the security hardening options of the Li
 The following options are available:
 
 .TP
-.BR \-h ", " \-\-help
+\fB\-h\fR, \fB\-\-help\fR
 Show help message and exit.
 
 .TP
-.BR \-\-version
+\fB\-\-version\fR
 Show program's version number and exit.
 
 .TP
-.BR \-m " {"verbose,json,show_ok,show_fail"}" ", " \-\-mode " {"verbose,json,show_ok,show_fail"}"
+\fB\-m\fR {verbose,json,show_ok,show_fail}, \fB\-\-mode\fR {verbose,json,show_ok,show_fail}
 Choose the report output mode:
 .RS
 .IP \fBverbose\fR
@@ -34,31 +34,31 @@ Show only failed checks.
 .RE
 
 .TP
-.BR \-a ", " \-\-autodetect
+\fB\-a\fR, \fB\-\-autodetect\fR
 Autodetect and check the security hardening options of the running kernel.
 
 .TP
-.BR \-c " CONFIG, " \-\-config " CONFIG"
+\fB\-c\fR CONFIG, \fB\-\-config\fR CONFIG
 Check kernel security hardening options in a Kconfig file (also supports *.gz files).
 
 .TP
-.BR \-v " KERNEL_VERSION, " \-\-kernel-version " KERNEL_VERSION"
+\fB\-v\fR KERNEL_VERSION, \fB\-\-kernel\-version\fR KERNEL_VERSION
 Extract the kernel version from a version file (such as the contents of /proc/version) instead of using a Kconfig file.
 
 .TP
-.BR \-l " CMDLINE, " \-\-cmdline " CMDLINE"
+\fB\-l\fR CMDLINE, \fB\-\-cmdline\fR CMDLINE
 Check kernel security hardening options in a kernel command line file (such as the contents of /proc/cmdline).
 
 .TP
-.BR \-s " SYSCTL, " \-\-sysctl " SYSCTL"
+\fB\-s\fR SYSCTL, \fB\-\-sysctl\fR SYSCTL
 Check kernel security hardening options in a sysctl output file (for example, output of "sudo sysctl -a > file").
 
 .TP
-.BR \-p " {"X86_64,X86_32,ARM64,ARM,RISCV"}," \-\-print " {"X86_64,X86_32,ARM64,ARM,RISCV"}"
+\fB\-p\fR {X86_64,X86_32,ARM64,ARM,RISCV}, \fB\-\-print\fR {X86_64,X86_32,ARM64,ARM,RISCV}
 Print security hardening recommendations for the selected architecture.
 
 .TP
-.BR \-g " {"X86_64,X86_32,ARM64,ARM,RISCV"}," \-\-generate " {"X86_64,X86_32,ARM64,ARM,RISCV"}"
+\fB\-g\fR {X86_64,X86_32,ARM64,ARM,RISCV}, \fB\-\-generate\fR {X86_64,X86_32,ARM64,ARM,RISCV}
 Generate a Kconfig fragment containing security hardening options for the selected architecture.
 
 .SH AUTHOR
