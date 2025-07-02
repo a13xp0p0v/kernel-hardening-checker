@@ -32,7 +32,7 @@ License: GPL-3.0.
 `kernel-hardening-checker` supports checking:
 
   - Kconfig options (compile-time)
-  - Kernel cmdline arguments (boot-time)
+  - Kernel command line arguments (boot-time)
   - Sysctl parameters (runtime)
 
 Supported architectures:
@@ -58,10 +58,9 @@ or exploitation techniques.
 
 ## Attention!
 
-Changing Linux kernel security parameters may also affect system performance
-and functionality of userspace software. So for choosing these parameters, consider
-the threat model of your Linux-based information system and perform thorough testing
-of its typical workload.
+Please note that changing the Linux kernel security parameters may also affect system performance
+and functionality of userspace software. Therefore, when setting these parameters, consider
+the threat model of your Linux-based information system and thoroughly test its typical workload.
 
 ## Installation
 
@@ -117,18 +116,18 @@ options:
 
   -  no `-m` argument for the default output mode (see the example below)
   - `-m verbose` for printing additional info:
-    - config options without a corresponding check
-    - internals of complex checks with AND/OR, like this:
-```
--------------------------------------------------------------------------------------------
-    <<< OR >>>                                                                             
-CONFIG_STRICT_DEVMEM                  |kconfig|cut_attack_surface|defconfig |     y      
-CONFIG_DEVMEM                         |kconfig|cut_attack_surface|   kspp   | is not set 
--------------------------------------------------------------------------------------------
-```
-  - `-m show_fail` for showing only the failed checks
-  - `-m show_ok` for showing only the successful checks
+    - the configuration options without a corresponding check
+    - the internals of complex checks with AND/OR, like this:
+      ```
+      -------------------------------------------------------------------------------------------
+          <<< OR >>>                                                                             
+      CONFIG_STRICT_DEVMEM                  |kconfig|cut_attack_surface|defconfig |     y      
+      CONFIG_DEVMEM                         |kconfig|cut_attack_surface|   kspp   | is not set 
+      -------------------------------------------------------------------------------------------
+      ```
   - `-m json` for printing the results in JSON format (for combining `kernel-hardening-checker` with other tools)
+  - `-m show_ok` for showing only successful checks
+  - `-m show_fail` for showing only failed checks
 
 ## Example output
 ```

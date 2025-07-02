@@ -1,15 +1,21 @@
 .TH KERNEL-HARDENING-CHECKER "1" "July 2025" "kernel-hardening-checker" "User Commands"
-.SH NAME
-kernel-hardening-checker \- tool for checking Linux kernel security hardening options
-.SH SYNOPSIS
-.B kernel-hardening-checker
-[\fIOPTIONS\fR]
-.SH DESCRIPTION
-.B kernel-hardening-checker
-is a tool for auditing and reporting on the security hardening options of the Linux kernel. It can analyze configuration files, kernel command line, and sysctl outputs to provide recommendations for improving kernel security.
 
-.PP
-The following options are available:
+.SH NAME
+kernel-hardening-checker \- tool for checking the security hardening options of the Linux kernel
+
+.SH SYNOPSIS
+\fBkernel-hardening-checker\fR [\fIOPTIONS\fR]
+
+.SH DESCRIPTION
+\fBkernel-hardening-checker\fR is a tool for checking the security hardening options of the Linux kernel.
+It can analyze Kconfig options (compile-time), kernel command line arguments (boot-time), and sysctl parameters (runtime)
+for the following architectures: X86_64, X86_32, ARM64, ARM, RISC-V.
+
+Please note that changing the Linux kernel security parameters may also affect system performance
+and functionality of userspace software. Therefore, when setting these parameters, consider
+the threat model of your Linux-based information system and thoroughly test its typical workload.
+
+.SH OPTIONS
 
 .TP
 \fB\-h\fR, \fB\-\-help\fR
@@ -21,10 +27,10 @@ Show program's version number and exit.
 
 .TP
 \fB\-m\fR {verbose,json,show_ok,show_fail}, \fB\-\-mode\fR {verbose,json,show_ok,show_fail}
-Choose the output mode:
+Select a special output mode instead of the default one:
 .RS
 .IP \fBverbose\fR
-Detailed human-readable report.
+Provide additional information: print the configuration options without a corresponding check and show the internals of complex checks.
 .IP \fBjson\fR
 Report in JSON format.
 .IP \fBshow_ok\fR
@@ -62,12 +68,12 @@ Print security hardening recommendations for the selected architecture.
 Generate a Kconfig fragment containing the security hardening options for the selected architecture.
 
 .SH AUTHOR
-Written by Alexander Popov.
+Written by Alexander Popov with help from the contributors.
 
 .SH REPORTING BUGS
 Report bugs at: <https://github.com/a13xp0p0v/kernel-hardening-checker/issues>
 
 .SH COPYRIGHT
-Copyright: 2020-2025, Alexander Popov <alex.popov@linux.com>
+Copyright: 2018-2025, Alexander Popov <alex.popov@linux.com>
 .br
 License: GPL-3.0
