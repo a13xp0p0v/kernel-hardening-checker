@@ -775,8 +775,8 @@ no_kstrtobool_options = [
     'vdso', # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
     'cfi', # see cfi_parse_cmdline() in arch/x86/kernel/alternative.c
     'tsx', # see tsx_init() in arch/x86/kernel/cpu/tsx.c
-    'lockdown' # see lockdown_param() in security/lockdown/lockdown.c
-    'intel_iommu' # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
+    'lockdown', # see lockdown_param() in security/lockdown/lockdown.c
+    'intel_iommu', # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
     'efi' # see parse_efi_cmdline in drivers/firmware/efi/efi.c
 ]
 
