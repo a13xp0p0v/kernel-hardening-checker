@@ -777,7 +777,7 @@ no_kstrtobool_options = [
     'tsx', # see tsx_init() in arch/x86/kernel/cpu/tsx.c
     'lockdown', # see lockdown_param() in security/lockdown/lockdown.c
     'intel_iommu', # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
-    'efi' # see parse_efi_cmdline in drivers/firmware/efi/efi.c
+    'efi' # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
 ]
 
 
