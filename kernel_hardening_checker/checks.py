@@ -660,6 +660,12 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
              KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
              KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'))]
              # consequence of the MODULE_SIG_FORCE check by kspp
+    l += [OR(CmdlineCheck('self_protection', 'kspp', 'efi', '*disable_early_pci_dma*'),
+             KconfigCheck('-', '-', 'EFI', 'is not set'),
+             AND(KconfigCheck('self_protection', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
+                 CmdlineCheck('-', '-', 'efi', 'is not set')))]
+             # consequence of EFI_DISABLE_PCI_DMA check by kspp
+             # worth creating a rule 'no_disable_early_pci_dma is not in the list'
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
@@ -696,13 +702,6 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
 
     # 'cut_attack_surface', 'kspp'
     l += [CmdlineCheck('cut_attack_surface', 'kspp', 'nosmt', 'is present')] # slow (high performance penalty)
-
-    l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'efi', '*disable_early_pci_dma*'),
-             KconfigCheck('-', '-', 'EFI', 'is not set'),
-             AND(KconfigCheck('cut_attack_surface', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
-                 CmdlineCheck('-', '-', 'efi', 'is not set')))]
-             # consequence of EFI_DISABLE_PCI_DMA check by kspp
-             # worth creating a rule 'no_disable_early_pci_dma is not in the list'
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
