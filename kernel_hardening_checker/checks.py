@@ -664,8 +664,9 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
              KconfigCheck('-', '-', 'EFI', 'is not set'),
              AND(KconfigCheck('self_protection', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
                  CmdlineCheck('-', '-', 'efi', 'is not set')))]
-             # consequence of EFI_DISABLE_PCI_DMA check by kspp
-             # worth creating a rule 'no_disable_early_pci_dma is not in the list'
+             # consequence of the EFI_DISABLE_PCI_DMA check by kspp;
+             # it's better to check in the last line that the efi parameter
+             # doesn't contain no_disable_early_pci_dma (this feature should be added in engine.py)
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y'),
@@ -675,7 +676,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'intel_iommu', 'on'),
                  AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                      CmdlineCheck('-', '-', 'intel_iommu', 'is not set')))]
-                 # consequence of INTEL_IOMMU_DEFAULT_ON check by kspp
+                 # consequence of the INTEL_IOMMU_DEFAULT_ON check by kspp
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'iommu.strict', '1'),
                  AND(KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                      CmdlineCheck('-', '-', 'iommu.strict', 'is not set')))]
