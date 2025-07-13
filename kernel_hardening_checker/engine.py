@@ -81,14 +81,12 @@ class OptCheck:
         self.state = data
 
     def check(self) -> None:
-        # handle the '*value*' check
-        # (search value in a comma-separated list enclosed in double quotes)
+        # handle the '*value*' check:
+        # search value in a comma-separated list, which may be enclosed in double quotes
         if self.expected.startswith('*') and self.expected.endswith('*'):
             if self.state is None:
                 self.result = 'FAIL: is not found'
                 return
-            assert(self.state.startswith('"') and self.state.endswith('"')), \
-                   f'not a list enclosed in double quotes: {self.name}={self.state}'
             val = self.expected.strip('*')
             val_list = self.state.strip('"').split(',')
             if val in val_list:
