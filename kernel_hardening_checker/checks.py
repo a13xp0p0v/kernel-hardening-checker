@@ -657,9 +657,8 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  CmdlineCheck('-', '-', 'lockdown', 'is not set')))]
              # consequence of the LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY check by kspp
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'module.sig_enforce', '1'),
-             KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
-             AND(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
-                 CmdlineCheck('-', '-', 'module.sig_enforce', 'is not set')))]
+             KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
+             KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'))]
              # consequence of the MODULE_SIG_FORCE check by kspp
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [OR(CmdlineCheck('self_protection', 'kspp', 'randomize_kstack_offset', '1'),
