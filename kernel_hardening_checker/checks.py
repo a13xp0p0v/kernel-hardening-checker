@@ -251,6 +251,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('X86_64', 'ARM64', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '65536')]
     if arch in ('X86_64', 'X86_32', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
         l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
@@ -294,10 +295,12 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y'))]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
+        l += [KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '32768')]
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'ARM_DEBUG_WX', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y'))]
+        l += [KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '32768')]
                  # DEBUG_WX has been renamed to ARM_DEBUG_WX on ARM
     if arch == 'RISCV':
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_BASE', 'y')]
@@ -876,3 +879,13 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
           # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
     l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_compat_bits', 'MAX')]
           # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_redirects', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_source_route', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.rp_filter', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_source_route', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.rp_filter', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_redirects', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_ra', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.route.flush', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.route.flush', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.tcp_syncookies', '1')]
