@@ -173,6 +173,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [kfence_is_set]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
               kfence_is_set)]
+    l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
     l += [randstruct_is_set]
