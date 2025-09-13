@@ -161,6 +161,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'kspp', 'LSM', '*lockdown*')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
+          # ZERO_CALL_USED_REGS is useless against ROP, however AMD claims that it makes
+          # the BTC-RET attack harder (Branch Type Confusion for RET instructions, CVE-2022-29900)
     cfi_clang_is_set = KconfigCheck('self_protection', 'kspp', 'CFI_CLANG', 'y')
     cfi_clang_permissive_not_set = KconfigCheck('self_protection', 'kspp', 'CFI_PERMISSIVE', 'is not set')
     l += [OR(KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y'),
@@ -173,7 +176,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [kfence_is_set]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'KFENCE_SAMPLE_INTERVAL', '100'),
               kfence_is_set)]
-    l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
     randstruct_is_set = OR(KconfigCheck('self_protection', 'kspp', 'RANDSTRUCT_FULL', 'y'),
                            KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_RANDSTRUCT', 'y'))
     l += [randstruct_is_set]
