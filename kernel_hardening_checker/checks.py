@@ -834,9 +834,7 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_redirects', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.default.accept_redirects', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_source_route', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.rp_filter', '1')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_source_route', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.rp_filter', '1')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_ra', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.tcp_syncookies', '1')]
     # The following recommendations from the CIS Benchmark may impact normal network functionality:
@@ -845,6 +843,9 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.forwarding', '0')]
     #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.send_redirects', '0')]
     #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.default.send_redirects', '0')]
+    #  CAUTION: rp_filter for network packets breaks asymmetrical routing (BGP, OSPF, etc) and some VPNs
+    #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.rp_filter', '1')]
+    #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.default.rp_filter', '1')]
 
     # 'self_protection', 'a13xp0p0v'
     # Choosing a right value for 'kernel.oops_limit' and 'kernel.warn_limit' is not easy.
