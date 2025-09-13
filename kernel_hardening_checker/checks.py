@@ -828,6 +828,7 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
 
     # 'self_protection', 'cis'
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.icmp_ignore_bogus_error_responses', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.icmp_echo_ignore_broadcasts', '1')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_redirects', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_source_route', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.rp_filter', '1')]
