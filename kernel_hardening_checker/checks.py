@@ -812,15 +812,10 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     # Use an omnipresent kconfig symbol to see if we have a kconfig file for checking:
     have_kconfig = KconfigCheck('-', '-', 'LOCALVERSION', 'is present')
 
+    # 'self_protection', 'kspp'
     l += [OR(SysctlCheck('self_protection', 'kspp', 'net.core.bpf_jit_harden', '2'),
              AND(KconfigCheck('-', '-', 'BPF_JIT', 'is not set'),
                  have_kconfig))]
-    # Choosing a right value for 'kernel.oops_limit' and 'kernel.warn_limit' is not easy.
-    # A small value (e.g. 1, which is recommended by KSPP) allows easy DoS.
-    # A large value (e.g. 10000, which is default 'kernel.oops_limit') may miss the exploit attempt.
-    # Let's choose 100 as a reasonable compromise.
-    l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
-    l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
     # Compatible with the 'DEFAULT_MMAP_MIN_ADDR' kconfig check by KSPP:
     if arch in ('X86_64', 'X86_32', 'RISCV'):
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '65536')]
@@ -831,6 +826,27 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     if arch == 'ARM':
         l += [SysctlCheck('self_protection', 'kspp', 'vm.mmap_min_addr', '32768')]
 
+    # 'self_protection', 'cis'
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_redirects', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_source_route', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.rp_filter', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_source_route', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.rp_filter', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_redirects', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_ra', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.route.flush', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.route.flush', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.tcp_syncookies', '1')]
+
+    # 'self_protection', 'a13xp0p0v'
+    # Choosing a right value for 'kernel.oops_limit' and 'kernel.warn_limit' is not easy.
+    # A small value (e.g. 1, which is recommended by KSPP) allows easy DoS.
+    # A large value (e.g. 10000, which is default 'kernel.oops_limit') may miss the exploit attempt.
+    # Let's choose 100 as a reasonable compromise.
+    l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
+    l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
+
+    # 'cut_attack_surface', 'kspp'
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.perf_event_paranoid', '3')]
           # Without the custom patch that adds CONFIG_SECURITY_PERF_EVENTS_RESTRICT,
@@ -856,21 +872,23 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
                  have_kconfig))]
              # at first, it disabled unprivileged userfaultfd,
              # and since v5.11 it enables unprivileged userfaultfd for user-mode only
-
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.modules_disabled', '1'),
              AND(KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'),
                  have_kconfig))]
              # kernel.modules_disabled=1 should be set (e.g. with systemd) after
              # the kernel startup, when all the required modules have loaded
 
+    # 'cut_attack_surface', 'grsec'
     l += [OR(SysctlCheck('cut_attack_surface', 'grsec', 'kernel.io_uring_disabled', '2'),
              AND(KconfigCheck('cut_attack_surface', 'grsec', 'IO_URING', 'is not set'),
                  have_kconfig))] # compatible with the 'IO_URING' kconfig check by grsecurity
 
+    # 'cut_attack_surface', 'a13xp0p0v'
     l += [OR(SysctlCheck('cut_attack_surface', 'a13xp0p0v', 'kernel.sysrq', '0'),
              AND(KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set'),
                  have_kconfig))]
 
+    # 'harden_userspace', 'kspp'
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_hardlinks', '1')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_fifos', '2')]
@@ -878,17 +896,9 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.suid_dumpable', '0')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.randomize_va_space', '2')]
     l += [SysctlCheck('harden_userspace', 'kspp', 'kernel.yama.ptrace_scope', '3')]
+
+    # 'harden_userspace', 'a13xp0p0v'
     l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_bits', 'MAX')]
           # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
     l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_compat_bits', 'MAX')]
           # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_redirects', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.accept_source_route', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.rp_filter', '1')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_source_route', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.rp_filter', '1')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_redirects', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_ra', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.route.flush', '1')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.route.flush', '1')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.tcp_syncookies', '1')]
