@@ -834,8 +834,6 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.rp_filter', '1')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_redirects', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_ra', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.route.flush', '1')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.route.flush', '1')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.tcp_syncookies', '1')]
 
     # 'self_protection', 'a13xp0p0v'
