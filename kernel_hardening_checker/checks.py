@@ -902,11 +902,13 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.send_redirects', '0')]
     #  CAUTION: it's strange to ignore ICMP redirects from your default gateway
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.all.secure_redirects', '0')]
+    #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.secure_redirects', '0')]
     #  CAUTION: rp_filter for network packets breaks asymmetrical routing (BGP, OSPF, etc) and some VPNs
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.all.rp_filter', '1')]
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.rp_filter', '1')]
     #  CAUTION: messages about packets with un-routable source addresses may clog up the kernel log
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.all.log_martians', '1')]
+    #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.log_martians', '1')]
 
     # 'harden_userspace', 'kspp'
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
