@@ -837,8 +837,9 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.default.accept_source_route', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_source_route', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.default.accept_source_route', '0')]
-    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_ra', '0')]
     l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.tcp_syncookies', '1')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.all.accept_ra', '0')]
+    l += [SysctlCheck('self_protection', 'cis', 'net.ipv6.conf.default.accept_ra', '0')]
     # The following recommendations from the CIS Benchmark may impact normal network functionality:
     #  CAUTION: without IP forwarding your system can not act as a router
     #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.ip_forward', '0')]
