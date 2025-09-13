@@ -69,6 +69,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     vmap_stack_is_set = KconfigCheck('self_protection', 'defconfig', 'VMAP_STACK', 'y')
     if arch in ('X86_64', 'ARM64', 'ARM', 'RISCV'):
         l += [vmap_stack_is_set]
+    if arch in ('X86_64', 'X86_32', 'RISCV'):
+        l += [KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '65536')]
     if arch in ('X86_64', 'X86_32'):
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
@@ -134,11 +136,15 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                      VersionCheck((5, 9, 0))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
                  VersionCheck((5, 10, 0)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+        l += [AND(KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '65536'),
+                  KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
+                  # LSM_MMAP_MIN_ADDR for ARM64 requires disabled COMPAT (see security/Kconfig)
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_HISTORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_ALIGN_RODATA', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '32768')]
     if arch == 'RISCV':
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_SG', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'LIST_HARDENED', 'y'),
@@ -251,7 +257,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('X86_64', 'ARM64', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
-        l += [KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '65536')]
     if arch in ('X86_64', 'X86_32', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '65536')]
         l += [KconfigCheck('self_protection', 'kspp', 'HW_RANDOM_TPM', 'y')]
@@ -295,12 +300,10 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y'))]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
-        l += [KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '32768')]
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'ARM_DEBUG_WX', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y'))]
-        l += [KconfigCheck('self_protection', 'defconfig', 'LSM_MMAP_MIN_ADDR', '32768')]
                  # DEBUG_WX has been renamed to ARM_DEBUG_WX on ARM
     if arch == 'RISCV':
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_BASE', 'y')]
