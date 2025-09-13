@@ -851,6 +851,8 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     #  CAUTION: rp_filter for network packets breaks asymmetrical routing (BGP, OSPF, etc) and some VPNs
     #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.rp_filter', '1')]
     #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.default.rp_filter', '1')]
+    #  CAUTION: messages about packets with un-routable source addresses may clog up the kernel log
+    #   l += [SysctlCheck('self_protection', 'cis', 'net.ipv4.conf.all.log_martians', '1')]
 
     # 'self_protection', 'a13xp0p0v'
     # Choosing a right value for 'kernel.oops_limit' and 'kernel.warn_limit' is not easy.
