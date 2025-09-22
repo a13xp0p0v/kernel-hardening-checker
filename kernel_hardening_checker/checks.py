@@ -527,6 +527,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [OR(KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_COMPAT_BITS', 'MAX'),
              KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
              # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
+    l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'PROC_MEM_NO_FORCE', 'y')]
     if arch == 'X86_64':
         l += [KconfigCheck('harden_userspace', 'kspp', 'X86_USER_SHADOW_STACK', 'y')]
 
@@ -760,6 +761,9 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
 
     # 'harden_userspace'
     l += [CmdlineCheck('harden_userspace', 'defconfig', 'norandmaps', 'is not set')]
+    l += [OR(CmdlineCheck('harden_userspace', 'a13xp0p0v', 'proc_mem.force_override', 'never'),
+             AND(KconfigCheck('harden_userspace', 'a13xp0p0v', 'PROC_MEM_NO_FORCE', 'y'),
+                 CmdlineCheck('-', '-', 'proc_mem.force_override', 'is not set')))]
 
 
 no_kstrtobool_options = [
@@ -790,7 +794,8 @@ no_kstrtobool_options = [
     'tsx', # see tsx_init() in arch/x86/kernel/cpu/tsx.c
     'lockdown', # see lockdown_param() in security/lockdown/lockdown.c
     'intel_iommu', # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
-    'efi' # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
+    'efi', # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
+    'proc_mem.force_override' # see early_proc_mem_force_override() in fs/proc/base.c
 ]
 
 
