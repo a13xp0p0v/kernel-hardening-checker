@@ -142,6 +142,9 @@ echo ">>>>> test -v (kernel version detection) <<<<<"
 cp kernel_hardening_checker/config_files/distros/Arch_x86_64.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -v /proc/version
 
+echo ">>>>> test colorizing results via terminal emulation <<<<<"
+script -c "coverage run -a --branch bin/kernel-hardening-checker -c ./test.config" /dev/null # emulate tty for colorize_result() coverage
+
 echo "Collect coverage for error handling"
 
 echo ">>>>> -a and any config args together <<<<<"
