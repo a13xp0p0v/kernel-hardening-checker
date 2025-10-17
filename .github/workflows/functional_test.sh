@@ -132,6 +132,12 @@ fi
 cat /etc/sysctl.conf
 coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 
+echo ">>>>> check no sysctl in PATH (simulate Debian setup) <<<<<"
+(
+  PATH=$(echo "$PATH" | tr ":" "\n" | grep -vE "/usr/sbin|/sbin" | tr "\n" ":" | sed 's/:$//')
+  coverage run -a --branch bin/kernel-hardening-checker -a
+)
+
 echo ">>>>> test -v (kernel version detection) <<<<<"
 cp kernel_hardening_checker/config_files/distros/Arch_x86_64.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -v /proc/version
