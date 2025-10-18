@@ -143,8 +143,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch == 'RISCV':
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'LIST_HARDENED', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'DEBUG_LIST', 'y'))]
-        l += [OR(KconfigCheck('self_protection', 'defconfig', 'SCHED_STACK_END_CHECK', 'y'),
-                 vmap_stack_is_set)]
 
     # 'self_protection', 'kspp'
     l += [KconfigCheck('self_protection', 'kspp', 'RANDOM_KMALLOC_CACHES', 'y')]
@@ -230,12 +228,12 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              AND(ubsan_bounds_is_set,
                  VersionCheck((6, 9, 0))))]
              # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
+    l += [OR(KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y'),
+             vmap_stack_is_set)]
     if arch in ('X86_64', 'ARM64', 'X86_32', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y'))]
-        l += [OR(KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y'),
-                 vmap_stack_is_set)]
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
     if arch in ('X86_64', 'ARM64', 'X86_32'):
