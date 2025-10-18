@@ -347,13 +347,13 @@ class AND(ComplexOptCheck):
 #  1) basic simple check objects
 SIMPLE_OPTION_TYPES = ('kconfig', 'cmdline', 'sysctl', 'version')
 SimpleOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck]
-SimpleOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck)
+SimpleOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck) # pylint: disable=C0103
 SimpleNamedOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck]
-SimpleNamedOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck)
+SimpleNamedOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck) # pylint: disable=C0103
 
 #  2) complex objects that may contain complex and simple objects
 ComplexOptCheckType = Union[OR, AND]
-ComplexOptCheckTypes = (OR, AND)
+ComplexOptCheckTypes = (OR, AND) # pylint: disable=C0103
 
 #  3) objects that can be added to the checklist
 ChecklistObjType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, OR, AND]
