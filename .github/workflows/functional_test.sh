@@ -125,6 +125,10 @@ coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m show
 coverage run -a --branch bin/kernel-hardening-checker -s $SYSCTL_EXAMPLE -m show_fail
 
 echo ">>>>> check sysctl.conf (it should not fail) <<<<<"
+if [ ! -f "/etc/sysctl.conf" ] ; then
+    echo "/etc/sysctl.conf does not exist, create a fake one"
+    echo "# sysctl.conf contents here" > /etc/sysctl.conf
+fi
 cat /etc/sysctl.conf
 coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 
