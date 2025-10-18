@@ -141,7 +141,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_HISTORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_ALIGN_RODATA', 'y')]
     if arch == 'RISCV':
-        l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_SG', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'LIST_HARDENED', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'DEBUG_LIST', 'y'))]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'SCHED_STACK_END_CHECK', 'y'),
@@ -162,6 +161,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'kspp', 'LSM', '*lockdown*')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_SG', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'ZERO_CALL_USED_REGS', 'y')]
           # ZERO_CALL_USED_REGS is useless against ROP, however AMD claims that it makes
           # the BTC-RET attack harder (Branch Type Confusion for RET instructions, CVE-2022-29900)
@@ -232,7 +232,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
     if arch in ('X86_64', 'ARM64', 'X86_32', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
-        l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_SG', 'y')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y'))]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y'),
