@@ -230,22 +230,21 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
              # UBSAN_SANITIZE_ALL was enabled by default in UBSAN in v6.9
     l += [OR(KconfigCheck('self_protection', 'kspp', 'SCHED_STACK_END_CHECK', 'y'),
              vmap_stack_is_set)]
+    stackleak_is_set = OR(KconfigCheck('self_protection', 'kspp', 'KSTACK_ERASE', 'y'),
+                          KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y'))
+    l += [stackleak_is_set]
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'KSTACK_ERASE_METRICS', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'STACKLEAK_METRICS', 'is not set'),
+              stackleak_is_set)]
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'KSTACK_ERASE_RUNTIME_DISABLE', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'),
+              stackleak_is_set)]
     if arch in ('X86_64', 'ARM64', 'X86_32', 'ARM'):
         l += [KconfigCheck('self_protection', 'kspp', 'SCHED_CORE', 'y')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'LIST_HARDENED', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'DEBUG_LIST', 'y'))]
     if arch in ('X86_64', 'ARM64', 'X86_32', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_KSTACK_OFFSET_DEFAULT', 'y')]
-    if arch in ('X86_64', 'ARM64', 'X86_32'):
-        stackleak_is_set = KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_STACKLEAK', 'y')
-        l += [AND(stackleak_is_set,
-                  cc_is_gcc)]
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'STACKLEAK_METRICS', 'is not set'),
-                  stackleak_is_set,
-                  cc_is_gcc)]
-        l += [AND(KconfigCheck('self_protection', 'kspp', 'STACKLEAK_RUNTIME_DISABLE', 'is not set'),
-                  stackleak_is_set,
-                  cc_is_gcc)]
     if arch in ('X86_64', 'ARM64', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_CHECK_ENFORCED', 'y')]
