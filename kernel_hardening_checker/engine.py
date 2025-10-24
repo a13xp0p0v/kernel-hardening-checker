@@ -292,7 +292,7 @@ class OR(ComplexOptCheck):
                     else:
                         if opt.result == 'OK':
                             self.result = f'OK: {opt.name} is "{opt.expected}"'
-                        elif opt.result.startswith('OK: in \"'):
+                        elif opt.result.startswith('OK: in'):
                             self.result = f'OK: "{opt.expected.strip("*")}" is in {opt.name}'
                         elif opt.result == 'OK: is not found':
                             self.result = f'OK: {opt.name} is not found'
@@ -330,7 +330,7 @@ class AND(ComplexOptCheck):
                 else:
                     if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: is not found':
                         self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
-                    elif opt.result.startswith('FAIL: not in \"'):
+                    elif opt.result.startswith('FAIL: not in'):
                         self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'
                     elif opt.result == 'FAIL: is not present':
                         self.result = f'FAIL: {opt.name} is not present'
