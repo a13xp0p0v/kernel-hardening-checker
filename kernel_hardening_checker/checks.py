@@ -75,6 +75,9 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_WX', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'WERROR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_MCE', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_V1', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_V2', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SSB', 'y')]
         microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
         l += [microcode_is_set] # is needed for mitigating CPU bugs
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_INTEL', 'y'),
@@ -95,10 +98,28 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                  cpu_sup_amd_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETPOLINE', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'RETPOLINE', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_GDS', 'y'),
+                 cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
                  cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
                  cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_MDS', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_TAA', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_MMIO_STALE_DATA', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_L1TF', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETBLEED', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SRBDS', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_TSA', 'y'),
+                 cpu_sup_amd_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_VMSCAPE', 'y'),
+                 KconfigCheck('-', '-', 'KVM', 'is not set'))]
     if arch in ('ARM64', 'ARM', 'RISCV'):
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
@@ -109,9 +130,17 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_CALL_DEPTH_TRACKING', 'y'),
+                 cpu_sup_intel_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_IBPB_ENTRY', 'y'),
+                 cpu_sup_amd_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_IBRS_ENTRY', 'y'),
+                 cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SRSO', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'CPU_SRSO', 'y'),
                  cpu_sup_amd_not_set)]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_ITS', 'y'),
+                 cpu_sup_intel_not_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
         l += [AND(KconfigCheck('self_protection', 'defconfig', 'AMD_IOMMU', 'y'),
