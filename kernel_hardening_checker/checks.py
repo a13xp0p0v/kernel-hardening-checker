@@ -624,8 +624,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('-', '-', 'spectre_v2_user', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_bhi', 'is not off'),
-                 AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_BHI', 'y'),
-                     CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('-', '-', 'spectre_bhi', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spec_store_bypass_disable', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -655,8 +654,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('-', '-', 'gather_data_sampling', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'reg_file_data_sampling', 'is not off'),
-                 AND(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RFDS', 'y'),
-                     CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('-', '-', 'reg_file_data_sampling', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
