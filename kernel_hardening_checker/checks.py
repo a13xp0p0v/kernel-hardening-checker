@@ -597,13 +597,13 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'defconfig', 'setcpuid', 'is not set')] # [X86]
     l += [CmdlineCheck('self_protection', 'defconfig', 'clearcpuid', 'is not set')] # [X86]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')] # [X86]
     l += [CmdlineCheck('self_protection', 'defconfig', 'nospec_store_bypass_disable', 'is not set')] # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')] # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')] # [X86, ARM64]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_bhb', 'is not set')] # [ARM64]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nobti', 'is not set')] # [ARM64]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nopauth', 'is not set')] # [ARM64]
     l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nomte', 'is not set')] # [ARM64]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_bhb', 'is not set')] # [ARM64]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', '0'),
              AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
                  CmdlineCheck('-', '-', 'iommu.passthrough', 'is not set')))]
