@@ -321,12 +321,16 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                   # 32768 if ARM || (ARM64 && COMPAT). That's why we require
                   # COMPAT disabled for setting DEFAULT_MMAP_MIN_ADDR=65536 on ARM64.
     if arch == 'X86_32':
-        l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y'))]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y'),
+                 AND(KconfigCheck('self_protection', 'kspp', 'HIGHMEM4G', 'y'),
+                     VersionCheck((6, 15, 0))))]
+                 # The commit bbeb69ce301323e84f1677484eb8e4cd8fb1f9f8 in Linux v6.15
+                 # removed HIGHMEM64G support
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'ARM_DEBUG_WX', 'y'),
