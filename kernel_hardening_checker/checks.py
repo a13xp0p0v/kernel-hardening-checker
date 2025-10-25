@@ -546,6 +546,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch == 'ARM64':
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_PTR_AUTH', 'y')]
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_BTI', 'y')]
+        l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_GCS', 'y')]
     if arch in ('ARM', 'X86_32'):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
