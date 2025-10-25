@@ -301,6 +301,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('ARM64', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     if arch == 'X86_64':
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is not set'),
+                  KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is present'))] # consequence of 'cfi=kcfi' by kspp
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))]
                  # this feature protects against CVE-2021-26341 in Straight-Line-Speculation
@@ -319,12 +321,16 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
                   # 32768 if ARM || (ARM64 && COMPAT). That's why we require
                   # COMPAT disabled for setting DEFAULT_MMAP_MIN_ADDR=65536 on ARM64.
     if arch == 'X86_32':
-        l += [KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'X86_PAE', 'y')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'PAGE_TABLE_ISOLATION', 'y'))]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU', 'y'),
                   iommu_support_is_set)]
+        l += [OR(KconfigCheck('self_protection', 'kspp', 'HIGHMEM64G', 'y'),
+                 AND(KconfigCheck('self_protection', 'kspp', 'HIGHMEM4G', 'y'),
+                     VersionCheck((6, 15, 0))))]
+                 # The commit bbeb69ce301323e84f1677484eb8e4cd8fb1f9f8 in Linux v6.15
+                 # removed HIGHMEM64G support
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'kspp', 'DEFAULT_MMAP_MIN_ADDR', '32768')]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'ARM_DEBUG_WX', 'y'),
@@ -334,9 +340,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_BASE', 'y')]
 
     # 'self_protection', 'a13xp0p0v'
-    if arch == 'X86_64':
-        l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'),
-                  KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is present'))] # same as 'cfi=kcfi'
     if arch == 'ARM64':
         l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'LSM_MMAP_MIN_ADDR', '65536'),
                   KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
@@ -407,6 +410,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_MSR', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_TIOCSTI', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'MODULE_FORCE_LOAD', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'M486', 'is not set')] # M486 support is incompatible with X86_PAE
     l += [modules_not_set]
     l += [devmem_not_set]
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'),
