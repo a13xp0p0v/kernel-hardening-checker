@@ -329,6 +329,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_BASE', 'y')]
 
     # 'self_protection', 'a13xp0p0v'
+    l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'HARDENED_USERCOPY_DEFAULT_ON', 'y'),
+              hardened_usercopy_is_set)]
     if arch == 'X86_64':
         l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'),
                   KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is present'))] # same as 'cfi=kcfi'
@@ -687,7 +689,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'),
                  CmdlineCheck('self_protection', 'kspp', 'slub_debug', 'P')))]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'hardened_usercopy', '1'),
-             AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y'),
+             AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_DEFAULT_ON', 'y'),
                  CmdlineCheck('-', '-', 'hardened_usercopy', 'is not set')))]
     l += [AND(CmdlineCheck('self_protection', 'kspp', 'slab_common.usercopy_fallback', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'))]
