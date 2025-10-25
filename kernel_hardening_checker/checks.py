@@ -662,6 +662,9 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'indirect_target_selection', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('-', '-', 'indirect_target_selection', 'is not set')))]
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'vmscape', 'is not off'),
+                 AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
+                     CmdlineCheck('-', '-', 'vmscape', 'is not set')))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
@@ -827,6 +830,7 @@ no_kstrtobool_options = [
     'reg_file_data_sampling', # see rfds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'tsa', # see tsa_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'indirect_target_selection', # see its_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'vmscape', # see vmscape_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
     'slub_debug', # see setup_slub_debug() in mm/slub.c
     'iommu', # see iommu_setup() in arch/x86/kernel/pci-dma.c
     'vsyscall', # see vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
