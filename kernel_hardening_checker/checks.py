@@ -215,6 +215,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
 #             randstruct_is_set)] # comment this out for now: KSPP has revoked this recommendation
     hardened_usercopy_is_set = KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY', 'y')
     l += [hardened_usercopy_is_set]
+    l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_DEFAULT_ON', 'y'),
+              hardened_usercopy_is_set)]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
               hardened_usercopy_is_set)] # usercopy whitelist violations should be prohibited
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_PAGESPAN', 'is not set'),
@@ -332,8 +334,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_BASE', 'y')]
 
     # 'self_protection', 'a13xp0p0v'
-    l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'HARDENED_USERCOPY_DEFAULT_ON', 'y'),
-              hardened_usercopy_is_set)]
     if arch == 'X86_64':
         l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'),
                   KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is present'))] # same as 'cfi=kcfi'
