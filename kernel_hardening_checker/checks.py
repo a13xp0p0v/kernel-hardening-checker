@@ -301,6 +301,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch in ('ARM64', 'RISCV'):
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     if arch == 'X86_64':
+        l += [AND(KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is not set'),
+                  KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is present'))] # consequence of 'cfi=kcfi' by kspp
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))]
                  # this feature protects against CVE-2021-26341 in Straight-Line-Speculation
@@ -334,9 +336,6 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'RANDOMIZE_BASE', 'y')]
 
     # 'self_protection', 'a13xp0p0v'
-    if arch == 'X86_64':
-        l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is not set'),
-                  KconfigCheck('self_protection', 'a13xp0p0v', 'CFI_AUTO_DEFAULT', 'is present'))] # same as 'cfi=kcfi'
     if arch == 'ARM64':
         l += [AND(KconfigCheck('self_protection', 'a13xp0p0v', 'LSM_MMAP_MIN_ADDR', '65536'),
                   KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
