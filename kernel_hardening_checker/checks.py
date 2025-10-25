@@ -249,6 +249,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
               KconfigCheck('self_protection', 'kspp', 'UBSAN_DIV_ZERO', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_UNREACHABLE', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_SIGNED_WRAP', 'is not set'),
+              KconfigCheck('self_protection', 'kspp', 'UBSAN_INTEGER_WRAP', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_BOOL', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_ENUM', 'is not set'),
               KconfigCheck('self_protection', 'kspp', 'UBSAN_ALIGNMENT', 'is not set'))]
