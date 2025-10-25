@@ -128,8 +128,11 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     if arch == 'X86_64':
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MEMORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'X86_KERNEL_IBT', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_RETHUNK', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_PAGE_TABLE_ISOLATION', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'PAGE_TABLE_ISOLATION', 'y'))]
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_UNRET_ENTRY', 'y'),
+                 cpu_sup_amd_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_CALL_DEPTH_TRACKING', 'y'),
                  cpu_sup_intel_not_set)]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_IBPB_ENTRY', 'y'),
