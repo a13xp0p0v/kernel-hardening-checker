@@ -406,6 +406,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_MSR', 'is not set')] # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_TIOCSTI', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'MODULE_FORCE_LOAD', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'M486', 'is not set')] # M486 support is incompatible with X86_PAE
     l += [modules_not_set]
     l += [devmem_not_set]
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'),
