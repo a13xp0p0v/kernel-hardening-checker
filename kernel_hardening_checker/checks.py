@@ -566,7 +566,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
           # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
     l += [OR(KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_COMPAT_BITS', 'MAX'),
              KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
-             # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
+             # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX,
+             # however ARCH_MMAP_RND_COMPAT_BITS disappears if COMPAT is disabled.
     if arch == 'X86_64':
         l += [KconfigCheck('harden_userspace', 'kspp', 'X86_USER_SHADOW_STACK', 'y')]
 
@@ -979,5 +980,7 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
     # 'harden_userspace', 'a13xp0p0v'
     l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_bits', 'MAX')]
           # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
-    l += [SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_compat_bits', 'MAX')]
-          # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX
+    l += [OR(SysctlCheck('harden_userspace', 'a13xp0p0v', 'vm.mmap_rnd_compat_bits', 'MAX'),
+             KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set'))]
+             # 'MAX' value is refined using ARCH_MMAP_RND_COMPAT_BITS_MAX,
+             # however vm.mmap_rnd_compat_bits disappears if COMPAT is disabled.
