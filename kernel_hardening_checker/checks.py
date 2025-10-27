@@ -692,6 +692,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
+    l += [CmdlineCheck('self_protection', 'kspp', 'hash_pointers', 'always')]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
              AND(KconfigCheck('self_protection', 'kspp', 'SLAB_MERGE_DEFAULT', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set'),
@@ -848,6 +849,7 @@ no_kstrtobool_options = [
     'lockdown', # see lockdown_param() in security/lockdown/lockdown.c
     'intel_iommu', # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
     'efi', # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
+    'hash_pointers', # see hash_pointers_mode_parse() in lib/vsprintf.c
     'proc_mem.force_override' # see early_proc_mem_force_override() in fs/proc/base.c
 ]
 
