@@ -773,10 +773,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
                      CmdlineCheck('-', '-', 'vsyscall', 'is not set')))]
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
-                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
                      CmdlineCheck('-', '-', 'vdso32', 'is not set')))]
-                 # the vdso32 parameter must not be 2
+                 # disable 32-bit VDSO entirely or at least ensure that COMPAT_VDSO is disabled
+                 # (on old kernels, this kconfig option turned on dangerous vdso32=2)
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
                  AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IA32_EMULATION_DEFAULT_DISABLED', 'y'),
