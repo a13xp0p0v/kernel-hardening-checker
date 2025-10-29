@@ -75,7 +75,7 @@ There are multiple options:
     ```
     If you encounter an error due to an externally managed environment, create a virtual environment using `python3 -m venv`.
 
-  - You can install the `kernel-hardening-checker` package via the package manager on some GNU/Linux distributions. See https://repology.org/project/kernel-hardening-checker/versions
+  - You can install the `kernel-hardening-checker` package via the package manager on some GNU/Linux distributions. See <https://repology.org/project/kernel-hardening-checker/versions>
 
   - Alternatively, you can simply run `./bin/kernel-hardening-checker` from the cloned repository without installation.
 
