@@ -4,6 +4,13 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 set -x
+
+# A trick to make this test work both in GitHub Actions and in Woodpecker CI.
+# 1) GitHub Actions employ an unprivileged user to run scripts,
+# 2) Woodpecker CI employs the root user to run scripts and doesn't have the sudo command.
+# So let's use sudo for privileged commands if it is available.
+SUDO=`which sudo`
+
 set -e
 
 git status
@@ -57,7 +64,7 @@ if [ ! -f "$FILE1" ] ; then
     echo "$FILE1 does not exist"
     if [ ! -f "$FILE2" ] ; then
         echo "$FILE2 does not exist, create it"
-        cp kernel_hardening_checker/config_files/distros/Arch_x86_64.config "$FILE2"
+        $SUDO cp kernel_hardening_checker/config_files/distros/Arch_x86_64.config "$FILE2"
     fi
 fi
 ls -l /boot
@@ -208,9 +215,9 @@ if [ -f "$FILE3" ]; then
 fi
 if [ -f "$FILE4" ]; then
     echo "$FILE4 exists, hiding it temporarily"
-    sudo mv "$FILE4" "$FILE4.bak"
+    $SUDO mv "$FILE4" "$FILE4.bak"
     ret=0; coverage run -a --branch bin/kernel-hardening-checker -a || ret=$? # check the test result after restoring /boot/config-*
-    sudo mv "$FILE4.bak" "$FILE4"
+    $SUDO mv "$FILE4.bak" "$FILE4"
     [ $ret -eq 0 ] && exit 1
 else
     coverage run -a --branch bin/kernel-hardening-checker -a && exit 1
@@ -288,11 +295,11 @@ echo 'some strange line' >> error_sysctls
 coverage run -a --branch bin/kernel-hardening-checker -c test.config -s error_sysctls && exit 1
 
 echo ">>>>> broken sysctl binary <<<<<"
-sudo mv /sbin/sysctl /sbin/sysctl.bak
+$SUDO mv /sbin/sysctl /sbin/sysctl.bak
 ret_1=0; coverage run -a --branch bin/kernel-hardening-checker -a || ret_1=$? # check the test result after restoring /sbin/sysctl
-sudo bash -c 'echo -e "#!/bin/bash\nexit 1" > /sbin/sysctl; chmod +x /sbin/sysctl'
+$SUDO bash -c 'echo -e "#!/bin/bash\nexit 1" > /sbin/sysctl; chmod +x /sbin/sysctl'
 ret_2=0; coverage run -a --branch bin/kernel-hardening-checker -a || ret_2=$? # check the test result after restoring /sbin/sysctl
-sudo mv /sbin/sysctl.bak /sbin/sysctl
+$SUDO mv /sbin/sysctl.bak /sbin/sysctl
 [ $ret_1 -eq 0 ] && exit 1
 [ $ret_2 -eq 0 ] && exit 1
 
