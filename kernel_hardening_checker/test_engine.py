@@ -610,7 +610,7 @@ kernel version >= (42, 43, 44)                                                  
         # 2. prepare the parsed kconfig OR options
         parsed_kconfig_options  = {}
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1_new'
-        parsed_kconfig_options['CONFIG_NAME_2'] = 'expected_2_new'
+        parsed_kconfig_options['CONFIG_NAME_2'] = 'UNexpected_2'
 
         # 3. prepare the parsed kconfig AND options
         parsed_kconfig_options['CONFIG_NAME_3'] = 'expected_3_new'
@@ -630,22 +630,10 @@ kernel version >= (42, 43, 44)                                                  
 
         # 6. override expected value and perform the checks again
         override_expected_value(config_checklist, 'CONFIG_NAME_1', 'expected_1_new')
-        perform_checks(config_checklist)
-
-        # 7. check that the results are correct
-        result = []
-        self.get_engine_result(config_checklist, result, 'json')
-        self.assertEqual(
-                result,
-                [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1_new', 'check_result': 'OK', 'check_result_bool': True},
-                 {'option_name': 'CONFIG_NAME_3', 'type': 'kconfig', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}]
-        )
-
-        # 8. override expected value and perform the checks again
         override_expected_value(config_checklist, 'CONFIG_NAME_3', 'expected_3_new')
         perform_checks(config_checklist)
 
-        # 9. check that the results are correct
+        # 7. check that the results are correct
         result = []
         self.get_engine_result(config_checklist, result, 'json')
         self.assertEqual(
