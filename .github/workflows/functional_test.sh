@@ -132,9 +132,18 @@ fi
 cat /etc/sysctl.conf
 coverage run -a --branch bin/kernel-hardening-checker -s /etc/sysctl.conf
 
+echo ">>>>> check no sysctl in PATH (simulate Debian setup) <<<<<"
+(
+  PATH=$(echo "$PATH" | tr ":" "\n" | grep -vE "/usr/sbin|/sbin" | tr "\n" ":" | sed 's/:$//')
+  coverage run -a --branch bin/kernel-hardening-checker -a
+)
+
 echo ">>>>> test -v (kernel version detection) <<<<<"
 cp kernel_hardening_checker/config_files/distros/Arch_x86_64.config ./test.config
 coverage run -a --branch bin/kernel-hardening-checker -c ./test.config -v /proc/version
+
+echo ">>>>> test colorizing results via terminal emulation <<<<<"
+script -c "coverage run -a --branch bin/kernel-hardening-checker -c ./test.config" /dev/null # emulate tty for colorize_result() coverage
 
 echo "Collect coverage for error handling"
 
@@ -189,6 +198,23 @@ coverage run -a --branch bin/kernel-hardening-checker -g X86_64 -m show_ok && ex
 
 echo ">>>>> no kconfig file <<<<<"
 coverage run -a --branch bin/kernel-hardening-checker -c ./nosuchfile && exit 1
+
+echo ">>>>> no kconfig file for autodetection <<<<<"
+FILE3="/proc/config.gz"
+FILE4="/boot/config-$(uname -r)"
+if [ -f "$FILE3" ]; then
+    echo "$FILE3 exists, cannot simulate the absence of a kconfig"
+    exit 1
+fi
+if [ -f "$FILE4" ]; then
+    echo "$FILE4 exists, hiding it temporarily"
+    sudo mv "$FILE4" "$FILE4.bak"
+    ret=0; coverage run -a --branch bin/kernel-hardening-checker -a || ret=$? # check the test result after restoring /boot/config-*
+    sudo mv "$FILE4.bak" "$FILE4"
+    [ $ret -eq 0 ] && exit 1
+else
+    coverage run -a --branch bin/kernel-hardening-checker -a && exit 1
+fi
 
 echo ">>>>> no kernel version <<<<<"
 sed '3d' test.config > error.config
@@ -260,5 +286,14 @@ echo ">>>>> unexpected line in the sysctl file <<<<<"
 cp $SYSCTL_EXAMPLE error_sysctls
 echo 'some strange line' >> error_sysctls
 coverage run -a --branch bin/kernel-hardening-checker -c test.config -s error_sysctls && exit 1
+
+echo ">>>>> broken sysctl binary <<<<<"
+sudo mv /sbin/sysctl /sbin/sysctl.bak
+ret_1=0; coverage run -a --branch bin/kernel-hardening-checker -a || ret_1=$? # check the test result after restoring /sbin/sysctl
+sudo bash -c 'echo -e "#!/bin/bash\nexit 1" > /sbin/sysctl; chmod +x /sbin/sysctl'
+ret_2=0; coverage run -a --branch bin/kernel-hardening-checker -a || ret_2=$? # check the test result after restoring /sbin/sysctl
+sudo mv /sbin/sysctl.bak /sbin/sysctl
+[ $ret_1 -eq 0 ] && exit 1
+[ $ret_2 -eq 0 ] && exit 1
 
 echo "The end of the functional tests"

@@ -292,7 +292,7 @@ class OR(ComplexOptCheck):
                     else:
                         if opt.result == 'OK':
                             self.result = f'OK: {opt.name} is "{opt.expected}"'
-                        elif opt.result.startswith('OK: in \"'):
+                        elif opt.result.startswith('OK: in '):
                             self.result = f'OK: "{opt.expected.strip("*")}" is in {opt.name}'
                         elif opt.result == 'OK: is not found':
                             self.result = f'OK: {opt.name} is not found'
@@ -330,7 +330,7 @@ class AND(ComplexOptCheck):
                 else:
                     if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: is not found':
                         self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
-                    elif opt.result.startswith('FAIL: not in \"'):
+                    elif opt.result.startswith('FAIL: not in '):
                         self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'
                     elif opt.result == 'FAIL: is not present':
                         self.result = f'FAIL: {opt.name} is not present'
@@ -414,6 +414,10 @@ def override_expected_value(checklist: List[ChecklistObjType], name: str, new_va
             if isinstance(opt, SimpleNamedOptCheckTypes):
                 opt.expected = new_val
             else:
+                # For ComplexOptCheckTypes, we currently support overriding a value
+                # only for the first check in self.opts. It is the main check, which
+                # gives the name to this ComplexOptCheck. For now, this functionality
+                # is enough, but we may extend this if needed.
                 for o in opt.opts:
                     assert(isinstance(o, SimpleNamedOptCheckTypes)), \
                            f'overriding an expected value for "{o}" is not supported yet'
