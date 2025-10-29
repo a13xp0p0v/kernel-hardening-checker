@@ -414,6 +414,10 @@ def override_expected_value(checklist: List[ChecklistObjType], name: str, new_va
             if isinstance(opt, SimpleNamedOptCheckTypes):
                 opt.expected = new_val
             else:
+                # For ComplexOptCheckTypes, we currently support overriding a value
+                # only for the first check in self.opts. It is the main check, which
+                # gives the name to this ComplexOptCheck. For now, this functionality
+                # is enough, but we may extend this if needed.
                 for o in opt.opts:
                     assert(isinstance(o, SimpleNamedOptCheckTypes)), \
                            f'overriding an expected value for "{o}" is not supported yet'
