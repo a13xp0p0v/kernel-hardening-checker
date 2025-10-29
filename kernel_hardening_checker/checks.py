@@ -692,6 +692,7 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
     l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
+    l += [CmdlineCheck('self_protection', 'kspp', 'hash_pointers', 'always')]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
              AND(KconfigCheck('self_protection', 'kspp', 'SLAB_MERGE_DEFAULT', 'is not set'),
                  CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set'),
@@ -773,10 +774,10 @@ def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_VSYSCALL_NONE', 'y'),
                      CmdlineCheck('-', '-', 'vsyscall', 'is not set')))]
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vdso32', '0'),
-                 CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'vdso32', '1'),
                  AND(KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_VDSO', 'is not set'),
                      CmdlineCheck('-', '-', 'vdso32', 'is not set')))]
-                 # the vdso32 parameter must not be 2
+                 # disable 32-bit VDSO entirely or at least ensure that COMPAT_VDSO is disabled
+                 # (on old kernels, this kconfig option turned on dangerous vdso32=2)
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'ia32_emulation', '0'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set'),
                  AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IA32_EMULATION_DEFAULT_DISABLED', 'y'),
@@ -848,6 +849,7 @@ no_kstrtobool_options = [
     'lockdown', # see lockdown_param() in security/lockdown/lockdown.c
     'intel_iommu', # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
     'efi', # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
+    'hash_pointers', # see hash_pointers_mode_parse() in lib/vsprintf.c
     'proc_mem.force_override' # see early_proc_mem_force_override() in fs/proc/base.c
 ]
 
