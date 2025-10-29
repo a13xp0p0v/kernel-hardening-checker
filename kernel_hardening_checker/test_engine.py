@@ -143,7 +143,7 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_8'] = 'off'
         parsed_kconfig_options['CONFIG_NAME_9'] = '0'
         parsed_kconfig_options['CONFIG_NAME_11'] = '"expected_11,something,UNexpected2"'
-        parsed_kconfig_options['CONFIG_NAME_12'] = '"UNexpected_12,something"'
+        parsed_kconfig_options['CONFIG_NAME_12'] = 'UNexpected_12,something'
 
         # 3. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
@@ -164,7 +164,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_9', 'type': 'kconfig', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, "0"', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': '*expected_11*', 'check_result': 'OK: in "expected_11,something,UNexpected2"', 'check_result_bool': True},
-                 {'option_name': 'CONFIG_NAME_12', 'type': 'kconfig', 'reason': 'reason_12', 'decision': 'decision_12', 'desired_val': '*expected_12*', 'check_result': 'FAIL: not in "UNexpected_12,something"', 'check_result_bool': False},
+                 {'option_name': 'CONFIG_NAME_12', 'type': 'kconfig', 'reason': 'reason_12', 'decision': 'decision_12', 'desired_val': '*expected_12*', 'check_result': 'FAIL: not in UNexpected_12,something', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_13', 'type': 'kconfig', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': '*expected_13*', 'check_result': 'FAIL: is not found', 'check_result_bool': False}]
         )
 
@@ -285,9 +285,9 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_10'] = 'UNexpected_10'
         parsed_kconfig_options['CONFIG_NAME_12'] = 'really_not_off'
         parsed_kconfig_options['CONFIG_NAME_13'] = 'UNexpected_13'
-        parsed_kconfig_options['CONFIG_NAME_14'] = 'expected_14,something,UNexpected_14'
+        parsed_kconfig_options['CONFIG_NAME_14'] = '"UNexpected_14,something,expected_14"'
         parsed_kconfig_options['CONFIG_NAME_15'] = 'UNexpected_15'
-        parsed_kconfig_options['CONFIG_NAME_16'] = '"expected_16,something,UNexpected_16"'
+        parsed_kconfig_options['CONFIG_NAME_16'] = 'UNexpected_16,something,expected_16'
 
         # 3. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
@@ -340,9 +340,9 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_10'] = '0'
         parsed_kconfig_options['CONFIG_NAME_11'] = 'expected_11'
         parsed_kconfig_options['CONFIG_NAME_13'] = 'expected_13'
-        parsed_kconfig_options['CONFIG_NAME_14'] = 'UNexpected_14,something'
+        parsed_kconfig_options['CONFIG_NAME_14'] = '"UNexpected_14,something"'
         parsed_kconfig_options['CONFIG_NAME_15'] = 'expected_15'
-        parsed_kconfig_options['CONFIG_NAME_16'] = '"UNexpected_16,something,expected_16"'
+        parsed_kconfig_options['CONFIG_NAME_16'] = 'UNexpected_16,something'
 
         # 3. run the engine
         self.run_engine(config_checklist, parsed_kconfig_options, None, None, None)
@@ -359,7 +359,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_9', 'type': 'kconfig', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'expected_9', 'check_result': 'FAIL: CONFIG_NAME_10 is off', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': 'expected_11', 'check_result': 'FAIL: CONFIG_NAME_12 is off, not found', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_13', 'type': 'kconfig', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': 'expected_13', 'check_result': 'FAIL: "expected_14" is not in CONFIG_NAME_14', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_15', 'type': 'kconfig', 'reason': 'reason_15', 'decision': 'decision_15', 'desired_val': 'expected_15', 'check_result': 'OK', 'check_result_bool': True}]
+                 {'option_name': 'CONFIG_NAME_15', 'type': 'kconfig', 'reason': 'reason_15', 'decision': 'decision_15', 'desired_val': 'expected_15', 'check_result': 'FAIL: "expected_16" is not in CONFIG_NAME_16', 'check_result_bool': False}]
         )
 
     def test_complex_nested(self) -> None:
