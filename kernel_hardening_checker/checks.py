@@ -173,6 +173,8 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_HISTORY', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'DEBUG_ALIGN_RODATA', 'y')]
     if arch == 'RISCV':
+        l += [OR(KconfigCheck('self_protection', 'defconfig', 'ERRATA_THEAD_GHOSTWRITE', 'y'),
+                 KconfigCheck('self_protection', 'defconfig', 'RISCV_ISA_XTHEADVECTOR', 'is not set'))]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'LIST_HARDENED', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'DEBUG_LIST', 'y'))]
 
