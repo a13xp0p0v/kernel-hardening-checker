@@ -28,7 +28,7 @@ from .engine import print_unknown_options, populate_with_data, perform_checks, o
 
 # The kernel-hardening-checker version format:
 #   'major.linux_kernel_version.minor'
-__version__ = '0.6.10.2'
+__version__ = '0.6.17.1'
 
 SUPPORTED_ARCHS = ['X86_64', 'X86_32', 'ARM64', 'ARM', 'RISCV']
 
