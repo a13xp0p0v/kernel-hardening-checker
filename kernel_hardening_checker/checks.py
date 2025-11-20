@@ -914,7 +914,7 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
              SysctlCheck('cut_attack_surface', 'debian', 'kernel.unprivileged_userns_clone', '0'))]
              # 1) Debian-specific sysctl kernel.unprivileged_userns_clone is deprecated
              # 2) user.max_user_namespaces=0 may break the upower daemon in Ubuntu
-             # 3) Ubuntu developers are working on some compromise with AppArmor profiles, let's see...
+             # 3) kernel.apparmor_restrict_unprivileged_unconfined=1 may be compromise option for Ubuntu
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1'),
              AND(KconfigCheck('-', '-', 'KEXEC_CORE', 'is not set'),
                  have_kconfig))]
@@ -979,6 +979,12 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
     #  CAUTION: messages about packets with un-routable source addresses may clog up the kernel log
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.all.log_martians', '1')]
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.log_martians', '1')]
+
+    # 'security_policy', 'a13xp0p0v'
+    l += [SysctlCheck('security_policy', 'a13xp0p0v', 'kernel.apparmor_restrict_unprivileged_unconfined', '1')]
+          # Prevents an attacker from changing own process AppArmor profiles
+          # for example, it can be used to bypassing user namespaces hardenings in Ubuntu
+          # https://u1f383.github.io/linux/2025/06/26/the-journey-of-bypassing-ubuntus-unprivileged-namespace-restriction.html
 
     # 'harden_userspace', 'kspp'
     l += [SysctlCheck('harden_userspace', 'kspp', 'fs.protected_symlinks', '1')]
