@@ -943,23 +943,31 @@ def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
                  have_kconfig))]
 
     # 'network_security', 'cis'
+    ipv6_not_set = CmdlineCheck('-', '-', 'ipv6.disable', '1')
     l += [SysctlCheck('network_security', 'cis', 'net.ipv4.icmp_ignore_bogus_error_responses', '1')]
     l += [SysctlCheck('network_security', 'cis', 'net.ipv4.icmp_echo_ignore_broadcasts', '1')]
     l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.all.accept_redirects', '0')]
     l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.accept_redirects', '0')]
-    l += [SysctlCheck('network_security', 'cis', 'net.ipv6.conf.all.accept_redirects', '0')]
-    l += [SysctlCheck('network_security', 'cis', 'net.ipv6.conf.default.accept_redirects', '0')]
+    l += [OR(SysctlCheck('network_security', 'cis', 'net.ipv6.conf.all.accept_redirects', '0'),
+             ipv6_not_set)]
+    l += [OR(SysctlCheck('network_security', 'cis', 'net.ipv6.conf.default.accept_redirects', '0'),
+             ipv6_not_set)]
     l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.all.accept_source_route', '0')]
     l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.accept_source_route', '0')]
-    l += [SysctlCheck('network_security', 'cis', 'net.ipv6.conf.all.accept_source_route', '0')]
-    l += [SysctlCheck('network_security', 'cis', 'net.ipv6.conf.default.accept_source_route', '0')]
+    l += [OR(SysctlCheck('network_security', 'cis', 'net.ipv6.conf.all.accept_source_route', '0'),
+             ipv6_not_set)]
+    l += [OR(SysctlCheck('network_security', 'cis', 'net.ipv6.conf.default.accept_source_route', '0'),
+             ipv6_not_set)]
     l += [SysctlCheck('network_security', 'cis', 'net.ipv4.tcp_syncookies', '1')]
-    l += [SysctlCheck('network_security', 'cis', 'net.ipv6.conf.all.accept_ra', '0')]
-    l += [SysctlCheck('network_security', 'cis', 'net.ipv6.conf.default.accept_ra', '0')]
+    l += [OR(SysctlCheck('network_security', 'cis', 'net.ipv6.conf.all.accept_ra', '0'),
+             ipv6_not_set)]
+    l += [OR(SysctlCheck('network_security', 'cis', 'net.ipv6.conf.default.accept_ra', '0'),
+             ipv6_not_set)]
     # The following recommendations from the CIS Benchmark may impact normal network functionality:
     #  CAUTION: without IP forwarding your system can not act as a router
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.ip_forward', '0')]
-    #   l += [SysctlCheck('network_security', 'cis', 'net.ipv6.conf.all.forwarding', '0')]
+    #   l += [OR(SysctlCheck('network_security', 'cis', 'net.ipv6.conf.all.forwarding', '0'),
+    #            ipv6_not_set)]
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.all.send_redirects', '0')]
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.send_redirects', '0')]
     #  CAUTION: it's strange to ignore ICMP redirects from your default gateway
