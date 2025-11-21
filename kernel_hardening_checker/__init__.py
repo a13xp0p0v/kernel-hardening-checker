@@ -42,7 +42,7 @@ def _open(file: str) -> TextIO:
     try:
         if file.endswith('.gz'):
             return gzip.open(file, 'rt', encoding='utf-8')
-        return open(file, 'rt', encoding='utf-8')
+        return open(file, encoding='utf-8')
     except FileNotFoundError:
         sys.exit(f'[-] ERROR: unable to open {file}, are you sure it exists?')
     except PermissionError:
