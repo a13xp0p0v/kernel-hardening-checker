@@ -12,11 +12,10 @@ This module contains knowledge for checks.
 # pylint: disable=missing-function-docstring,line-too-long
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
 
-from typing import List
 from .engine import StrOrNone, ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
 
 
-def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
+def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     assert(arch), 'empty arch'
 
     # Calling the KconfigCheck class constructor:
@@ -574,7 +573,7 @@ def add_kconfig_checks(l: List[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('harden_userspace', 'kspp', 'X86_USER_SHADOW_STACK', 'y')]
 
 
-def add_cmdline_checks(l: List[ChecklistObjType], arch: str) -> None:
+def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
     assert(arch), 'empty arch'
 
     # Calling the CmdlineCheck class constructor:
@@ -871,7 +870,7 @@ def normalize_cmdline_options(option: str, value: str) -> str:
     return value
 
 
-def add_sysctl_checks(l: List[ChecklistObjType], arch: StrOrNone) -> None:
+def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
     # Calling the SysctlCheck class constructor:
     #   SysctlCheck(reason, decision, name, expected)
 
