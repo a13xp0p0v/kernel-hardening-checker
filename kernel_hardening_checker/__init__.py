@@ -80,7 +80,7 @@ def get_local_sysctl_file() -> tuple[StrOrNone, str]:
     _, sysctl_tmpfile = tempfile.mkstemp(prefix='sysctl-')
     with open(sysctl_tmpfile, 'w', encoding='utf-8') as f:
         ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f,
-                             stderr=subprocess.DEVNULL, shell=False).returncode
+                             stderr=subprocess.STDOUT, shell=False).returncode
         if ret != 0:
             print(f'[!] WARNING: sysctl command returned {ret}')
         if os.stat(sysctl_tmpfile).st_size == 0:
@@ -277,9 +277,14 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
             sys.exit(f'[-] ERROR: empty sysctl file "{fname}"')
 
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/*._-]+ ?=.*$")
+        no_permisson_pattern = re.compile(r"sysctl: permission denied on key '(.+)'")
         for line in f.readlines():
             line = line.strip()
             if not line or line.startswith('#'):
+                continue
+            if m := no_permisson_pattern.match(line):
+                option = m.group(1)
+                parsed_options[option] = 'permission denied'
                 continue
             if not sysctl_pattern.match(line):
                 sys.exit(f'[-] ERROR: unexpected line in sysctl file: "{line}"')
