@@ -15,12 +15,12 @@ import unittest
 from unittest import mock
 import io
 import sys
-from typing import Union, Optional, List, Dict, Tuple
+from typing import Union, Optional
 from .engine import StrOrBool, ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
 from .engine import populate_with_data, perform_checks, override_expected_value, print_unknown_options, colorize_result
 
 
-ResultType = List[Union[Dict[str, StrOrBool], str]]
+ResultType = list[Union[dict[str, StrOrBool], str]]
 
 
 class TestEngine(unittest.TestCase):
@@ -28,7 +28,7 @@ class TestEngine(unittest.TestCase):
     Example test scenario:
 
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'KCONFIG_NAME', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'cmdline_name', 'expected_2')]
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'sysctl_name', 'expected_3')]
@@ -60,11 +60,11 @@ class TestEngine(unittest.TestCase):
     maxDiff = None
 
     @staticmethod
-    def run_engine(checklist: List[ChecklistObjType],
-                   parsed_kconfig_options: Optional[Dict[str, str]],
-                   parsed_cmdline_options: Optional[Dict[str, str]],
-                   parsed_sysctl_options: Optional[Dict[str, str]],
-                   kernel_version: Optional[Tuple[int, int, int]]) -> None:
+    def run_engine(checklist: list[ChecklistObjType],
+                   parsed_kconfig_options: Optional[dict[str, str]],
+                   parsed_cmdline_options: Optional[dict[str, str]],
+                   parsed_sysctl_options: Optional[dict[str, str]],
+                   kernel_version: Optional[tuple[int, int, int]]) -> None:
         # populate the checklist with data
         if parsed_kconfig_options:
             populate_with_data(checklist, parsed_kconfig_options, 'kconfig')
@@ -79,7 +79,7 @@ class TestEngine(unittest.TestCase):
         perform_checks(checklist)
 
     @staticmethod
-    def get_engine_result(checklist: List[ChecklistObjType], result: ResultType, result_type: str) -> None:
+    def get_engine_result(checklist: list[ChecklistObjType], result: ResultType, result_type: str) -> None:
         assert(result_type in ('json', 'stdout', 'stdout_verbose')), \
                f'invalid result type "{result_type}"'
 
@@ -100,10 +100,10 @@ class TestEngine(unittest.TestCase):
         result.append(captured_output.getvalue())
 
     @staticmethod
-    def get_unknown_options(checklist: List[ChecklistObjType],
-                            parsed_kconfig_options: Optional[Dict[str, str]],
-                            parsed_cmdline_options: Optional[Dict[str, str]],
-                            parsed_sysctl_options: Optional[Dict[str, str]],
+    def get_unknown_options(checklist: list[ChecklistObjType],
+                            parsed_kconfig_options: Optional[dict[str, str]],
+                            parsed_cmdline_options: Optional[dict[str, str]],
+                            parsed_sysctl_options: Optional[dict[str, str]],
                             result: ResultType) -> None:
         captured_output = io.StringIO()
         stdout_backup = sys.stdout
@@ -119,7 +119,7 @@ class TestEngine(unittest.TestCase):
 
     def test_simple_kconfig(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
         config_checklist += [KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2')]
         config_checklist += [KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3')]
@@ -170,7 +170,7 @@ class TestEngine(unittest.TestCase):
 
     def test_simple_cmdline(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [CmdlineCheck('reason_1', 'decision_1', 'name_1', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
         config_checklist += [CmdlineCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
@@ -213,7 +213,7 @@ class TestEngine(unittest.TestCase):
 
     def test_simple_sysctl(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [SysctlCheck('reason_1', 'decision_1', 'name_1', 'expected_1')]
         config_checklist += [SysctlCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
@@ -256,7 +256,7 @@ class TestEngine(unittest.TestCase):
 
     def test_complex_or(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'))]
         config_checklist += [OR(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
@@ -309,7 +309,7 @@ class TestEngine(unittest.TestCase):
 
     def test_complex_and(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [AND(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                  KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'))]
         config_checklist += [AND(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
@@ -364,7 +364,7 @@ class TestEngine(unittest.TestCase):
 
     def test_complex_nested(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [AND(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                  OR(KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'),
                                     KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3')))]
@@ -409,7 +409,7 @@ class TestEngine(unittest.TestCase):
 
     def test_version(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 VersionCheck((41, 101, 0)))]
         config_checklist += [AND(KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'),
@@ -450,7 +450,7 @@ class TestEngine(unittest.TestCase):
 
     def test_stdout(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2'),
                                 SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3'))]
@@ -527,7 +527,7 @@ kernel version >= (42, 43, 44)                                                  
 
     def test_simple_value_overriding(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
@@ -601,7 +601,7 @@ kernel version >= (42, 43, 44)                                                  
 
     def test_complex_value_overriding(self) -> None:
         # 1. prepare the checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'))]
         config_checklist += [AND(KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3'),
@@ -644,7 +644,7 @@ kernel version >= (42, 43, 44)                                                  
 
     def test_print_unknown_options_simple(self) -> None:
         # 1. prepare simple checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1')]
         config_checklist += [CmdlineCheck('reason_2', 'decision_2', 'name_2', 'expected_2')]
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
@@ -676,7 +676,7 @@ kernel version >= (42, 43, 44)                                                  
 
     def test_print_unknown_options_complex(self) -> None:
         # 1. prepare partially complex checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'))]
         config_checklist += [AND(CmdlineCheck('reason_3', 'decision_3', 'name_3', 'expected_3'),
@@ -720,7 +720,7 @@ kernel version >= (42, 43, 44)                                                  
 
     def test_print_unknown_options_complex_nested(self) -> None:
         # 1. prepare partially complex checklist
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         config_checklist += [OR(KconfigCheck('reason_1', 'decision_1', 'NAME_1', 'expected_1'),
                                 AND(KconfigCheck('reason_2', 'decision_2', 'NAME_2', 'expected_2'),
                                     KconfigCheck('reason_3', 'decision_3', 'NAME_3', 'expected_3')))]

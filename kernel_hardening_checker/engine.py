@@ -15,10 +15,10 @@ This module is the engine of checks.
 from __future__ import annotations
 import sys
 
-from typing import Union, Optional, List, Dict, Tuple
+from typing import Union, Optional
 StrOrNone = Optional[str]
-TupleOrNone = Optional[Tuple[int, ...]]
-DictOrTuple = Union[Dict[str, str], Tuple[int, ...]]
+TupleOrNone = Optional[tuple[int, ...]]
+DictOrTuple = Union[dict[str, str], tuple[int, ...]]
 StrOrBool = Union[str, bool]
 
 GREEN_COLOR = '\x1b[32m'
@@ -131,7 +131,7 @@ class OptCheck:
         if with_results:
             print(f'| {colorize_result(self.result)}', end='')
 
-    def json_dump(self, with_results: bool) -> Dict[str, StrOrBool]:
+    def json_dump(self, with_results: bool) -> dict[str, StrOrBool]:
         assert(self.opt_type), f'unexpected empty opt_type in {self.name}'
         dump = {
             'option_name': self.name,
@@ -139,7 +139,7 @@ class OptCheck:
             'reason': self.reason,
             'decision': self.decision,
             'desired_val': self.expected,
-        } # type: Dict[str, StrOrBool]
+        } # type: dict[str, StrOrBool]
         if with_results:
             assert(self.result), f'unexpected empty result in {self.name}'
             dump['check_result'] = self.result
@@ -170,20 +170,20 @@ class SysctlCheck(OptCheck):
 
 
 class VersionCheck:
-    def __init__(self, ver_expected: Tuple[int, int, int]) -> None:
+    def __init__(self, ver_expected: tuple[int, int, int]) -> None:
         assert(ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 3), \
                f'invalid expected version "{ver_expected}" for VersionCheck (1)'
         assert(all(map(lambda x: isinstance(x, int), ver_expected))), \
                f'invalid expected version "{ver_expected}" for VersionCheck (2)'
         self.ver_expected = ver_expected
-        self.ver = (0, 0, 0) # type: Tuple[int, ...]
+        self.ver = (0, 0, 0) # type: tuple[int, ...]
         self.result = None # type: str | None
 
     @property
     def opt_type(self) -> str:
         return 'version'
 
-    def set_state(self, data: Tuple[int, ...]) -> None:
+    def set_state(self, data: tuple[int, ...]) -> None:
         assert(data and isinstance(data, tuple) and len(data) >= 3), \
                f'invalid version "{data}" for VersionCheck (1)'
         assert(all(map(lambda x: isinstance(x, int), data))), \
@@ -261,7 +261,7 @@ class ComplexOptCheck:
             if with_results:
                 print(f'| {colorize_result(self.result)}', end='')
 
-    def json_dump(self, with_results: bool) -> Dict[str, StrOrBool]:
+    def json_dump(self, with_results: bool) -> dict[str, StrOrBool]:
         assert hasattr(self.opts[0], 'json_dump') # true for SimpleNamedOptCheckTypes
         dump = self.opts[0].json_dump(False)
         if with_results:
@@ -403,12 +403,12 @@ def populate_opt_with_data(opt: AnyOptCheckType, data: DictOrTuple, data_type: s
                 populate_opt_with_data(o, data, data_type)
 
 
-def populate_with_data(checklist: List[ChecklistObjType], data: DictOrTuple, data_type: str) -> None:
+def populate_with_data(checklist: list[ChecklistObjType], data: DictOrTuple, data_type: str) -> None:
     for opt in checklist:
         populate_opt_with_data(opt, data, data_type)
 
 
-def override_expected_value(checklist: List[ChecklistObjType], name: str, new_val: str) -> None:
+def override_expected_value(checklist: list[ChecklistObjType], name: str, new_val: str) -> None:
     for opt in checklist:
         if opt.name == name:
             if isinstance(opt, SimpleNamedOptCheckTypes):
@@ -425,12 +425,12 @@ def override_expected_value(checklist: List[ChecklistObjType], name: str, new_va
                         o.expected = new_val
 
 
-def perform_checks(checklist: List[ChecklistObjType]) -> None:
+def perform_checks(checklist: list[ChecklistObjType]) -> None:
     for opt in checklist:
         opt.check()
 
 
-def print_unknown_options(checklist: List[ChecklistObjType], parsed_options: Dict[str, str], opt_type: str) -> None:
+def print_unknown_options(checklist: list[ChecklistObjType], parsed_options: dict[str, str], opt_type: str) -> None:
     known_options = []
 
     for o1 in checklist:

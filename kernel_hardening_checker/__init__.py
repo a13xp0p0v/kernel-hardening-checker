@@ -18,7 +18,7 @@ import tempfile
 import subprocess
 import shutil
 from argparse import ArgumentParser
-from typing import List, Tuple, Dict, TextIO, Any
+from typing import TextIO, Any
 import re
 import json
 from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options, add_sysctl_checks
@@ -42,14 +42,14 @@ def _open(file: str) -> TextIO:
     try:
         if file.endswith('.gz'):
             return gzip.open(file, 'rt', encoding='utf-8')
-        return open(file, 'rt', encoding='utf-8')
+        return open(file, encoding='utf-8')
     except FileNotFoundError:
         sys.exit(f'[-] ERROR: unable to open {file}, are you sure it exists?')
     except PermissionError:
         sys.exit(f'[-] ERROR: unable to open {file}, permission denied')
 
 
-def get_local_kconfig_file(version_fname: str) -> Tuple[StrOrNone, str]:
+def get_local_kconfig_file(version_fname: str) -> tuple[StrOrNone, str]:
     kconfig_1 = '/proc/config.gz'
     if os.path.isfile(kconfig_1):
         return kconfig_1, 'OK'
@@ -68,7 +68,7 @@ def get_local_kconfig_file(version_fname: str) -> Tuple[StrOrNone, str]:
     return None, f'didn\'t find {kconfig_1} or {kconfig_2}'
 
 
-def get_local_sysctl_file() -> Tuple[StrOrNone, str]:
+def get_local_sysctl_file() -> tuple[StrOrNone, str]:
     sysctl_bin = shutil.which('sysctl')
     if not sysctl_bin:
         # fix for Debian
@@ -88,7 +88,7 @@ def get_local_sysctl_file() -> Tuple[StrOrNone, str]:
     return sysctl_tmpfile, 'OK'
 
 
-def detect_arch_by_kconfig(fname: str) -> Tuple[StrOrNone, str]:
+def detect_arch_by_kconfig(fname: str) -> tuple[StrOrNone, str]:
     arch = None
 
     with _open(fname) as f:
@@ -107,7 +107,7 @@ def detect_arch_by_kconfig(fname: str) -> Tuple[StrOrNone, str]:
     return arch, 'OK'
 
 
-def detect_arch_by_sysctl(fname: str) -> Tuple[StrOrNone, str]:
+def detect_arch_by_sysctl(fname: str) -> tuple[StrOrNone, str]:
     arch_mapping = {
         'ARM64': r'^aarch64|armv8',
         'ARM': r'^armv[3-7]',
@@ -127,7 +127,7 @@ def detect_arch_by_sysctl(fname: str) -> Tuple[StrOrNone, str]:
         return None, 'failed to detect architecture in sysctl'
 
 
-def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
+def detect_kernel_version(fname: str) -> tuple[TupleOrNone, str]:
     with _open(fname) as f:
         ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
         for line in f.readlines():
@@ -145,7 +145,7 @@ def detect_kernel_version(fname: str) -> Tuple[TupleOrNone, str]:
         return None, 'no kernel version detected'
 
 
-def detect_compiler(fname: str) -> Tuple[StrOrNone, str]:
+def detect_compiler(fname: str) -> tuple[StrOrNone, str]:
     gcc_version = None
     clang_version = None
     with _open(fname) as f:
@@ -163,7 +163,7 @@ def detect_compiler(fname: str) -> Tuple[StrOrNone, str]:
     sys.exit(f'[-] ERROR: invalid GCC_VERSION and CLANG_VERSION: {gcc_version} {clang_version}')
 
 
-def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_results: bool) -> None:
+def print_checklist(mode: StrOrNone, checklist: list[ChecklistObjType], with_results: bool) -> None:
     if mode == 'json':
         output = []
         for opt in checklist:
@@ -215,7 +215,7 @@ def print_checklist(mode: StrOrNone, checklist: List[ChecklistObjType], with_res
         print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
-def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
+def parse_kconfig_file(_mode: StrOrNone, parsed_options: dict[str, str], fname: str) -> None:
     with _open(fname) as f:
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.*$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
@@ -246,7 +246,7 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: Dict[str, str], fname: 
                 parsed_options[option] = value
 
 
-def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
+def parse_cmdline_file(mode: StrOrNone, parsed_options: dict[str, str], fname: str) -> None:
     with _open(fname) as f:
         line = f.readline()
         if not line:
@@ -271,7 +271,7 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: s
             parsed_options[name] = value
 
 
-def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: str) -> None:
+def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: str) -> None:
     with _open(fname) as f:
         if os.stat(fname).st_size == 0:
             sys.exit(f'[-] ERROR: empty sysctl file "{fname}"')
@@ -299,7 +299,7 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: Dict[str, str], fname: st
         print(f'[!] WARNING: sysctl options available for root are not found in {fname}, try checking the output of "sudo sysctl -a"')
 
 
-def refine_check(mode: StrOrNone, checklist: List[ChecklistObjType], parsed_options: Dict[str, str],
+def refine_check(mode: StrOrNone, checklist: list[ChecklistObjType], parsed_options: dict[str, str],
                  target: str, source: str) -> None:
     source_val = parsed_options.get(source, None)
     if source_val:
@@ -312,7 +312,7 @@ def refine_check(mode: StrOrNone, checklist: List[ChecklistObjType], parsed_opti
 
 def perform_checking(mode: StrOrNone, version: TupleOrNone,
                      kconfig: StrOrNone, cmdline: StrOrNone, sysctl: StrOrNone) -> None:
-    config_checklist = [] # type: List[ChecklistObjType]
+    config_checklist = [] # type: list[ChecklistObjType]
     arch = None
 
     # detect the kernel architecture
@@ -356,7 +356,7 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         # populate the checklist with the kernel version data
         populate_with_data(config_checklist, version, 'version')
 
-    parsed_kconfig_options = {} # type: Dict[str, str]
+    parsed_kconfig_options = {} # type: dict[str, str]
     if kconfig:
         # populate the checklist with the parsed Kconfig data
         parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
@@ -370,13 +370,13 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
 
     if cmdline:
         # populate the checklist with the parsed cmdline data
-        parsed_cmdline_options = {} # type: Dict[str, str]
+        parsed_cmdline_options = {} # type: dict[str, str]
         parse_cmdline_file(mode, parsed_cmdline_options, cmdline)
         populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
     if sysctl:
         # populate the checklist with the parsed sysctl data
-        parsed_sysctl_options = {} # type: Dict[str, str]
+        parsed_sysctl_options = {} # type: dict[str, str]
         parse_sysctl_file(mode, parsed_sysctl_options, sysctl)
         populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
         # refine the values of some checks
@@ -524,7 +524,7 @@ def main() -> None:
             sys.exit(f'[-] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         assert(arch), 'unexpected empty arch from ArgumentParser'
-        config_checklist = [] # type: List[ChecklistObjType]
+        config_checklist = [] # type: list[ChecklistObjType]
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
         add_sysctl_checks(config_checklist, arch)
