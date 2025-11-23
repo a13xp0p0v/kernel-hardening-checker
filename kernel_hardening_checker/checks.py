@@ -561,8 +561,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('harden_userspace', 'defconfig', 'ARM64_GCS', 'y')]
     if arch in ('ARM', 'X86_32'):
         l += [KconfigCheck('harden_userspace', 'defconfig', 'VMSPLIT_3G', 'y')]
+    l += [KconfigCheck('harden_userspace', 'kspp', 'PROC_MEM_NO_FORCE', 'y')]
     l += [KconfigCheck('harden_userspace', 'clipos', 'COREDUMP', 'is not set')]
-    l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'PROC_MEM_NO_FORCE', 'y')]
     l += [KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_BITS', 'MAX')]
           # 'MAX' value is refined using ARCH_MMAP_RND_BITS_MAX
     l += [OR(KconfigCheck('harden_userspace', 'a13xp0p0v', 'ARCH_MMAP_RND_COMPAT_BITS', 'MAX'),
@@ -813,8 +813,8 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
 
     # 'harden_userspace'
     l += [CmdlineCheck('harden_userspace', 'defconfig', 'norandmaps', 'is not set')]
-    l += [OR(CmdlineCheck('harden_userspace', 'a13xp0p0v', 'proc_mem.force_override', 'never'),
-             AND(KconfigCheck('harden_userspace', 'a13xp0p0v', 'PROC_MEM_NO_FORCE', 'y'),
+    l += [OR(CmdlineCheck('harden_userspace', 'kspp', 'proc_mem.force_override', 'never'),
+             AND(KconfigCheck('harden_userspace', 'kspp', 'PROC_MEM_NO_FORCE', 'y'),
                  CmdlineCheck('-', '-', 'proc_mem.force_override', 'is not set')))]
 
 
