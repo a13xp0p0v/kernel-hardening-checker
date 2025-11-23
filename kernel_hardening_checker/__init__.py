@@ -80,7 +80,7 @@ def get_local_sysctl_file() -> tuple[StrOrNone, str]:
     _, sysctl_tmpfile = tempfile.mkstemp(prefix='sysctl-')
     with open(sysctl_tmpfile, 'w', encoding='utf-8') as f:
         ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f,
-                             stderr=subprocess.DEVNULL, shell=False).returncode
+                             stderr=subprocess.STDOUT, shell=False).returncode
         if ret != 0:
             print(f'[!] WARNING: sysctl command returned {ret}')
         if os.stat(sysctl_tmpfile).st_size == 0:
@@ -93,7 +93,7 @@ def detect_arch_by_kconfig(fname: str) -> tuple[StrOrNone, str]:
 
     with _open(fname) as f:
         for line in f.readlines():
-            if m := re.search("CONFIG_([A-Z0-9_]+)=y$", line):
+            if m := re.match("CONFIG_([A-Z0-9_]+)=y$", line):
                 option = m.group(1)
                 if option not in SUPPORTED_ARCHS:
                     continue
@@ -121,7 +121,7 @@ def detect_arch_by_sysctl(fname: str) -> tuple[StrOrNone, str]:
                 value = line.split('=', 1)[1].strip()
                 for arch, pattern in arch_mapping.items():
                     assert(arch in SUPPORTED_ARCHS), 'invalid arch mapping in sysctl'
-                    if re.search(pattern, value):
+                    if re.match(pattern, value):
                         return arch, value
                 return None, f'{value} is an unsupported arch'
         return None, 'failed to detect architecture in sysctl'
@@ -277,9 +277,14 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
             sys.exit(f'[-] ERROR: empty sysctl file "{fname}"')
 
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/*._-]+ ?=.*$")
+        sysctl_eperm_pattern = re.compile(r"sysctl: permission denied on key '([a-zA-Z0-9/*._-]+)'")
         for line in f.readlines():
             line = line.strip()
             if not line or line.startswith('#'):
+                continue
+            if m := sysctl_eperm_pattern.match(line):
+                option = m.group(1)
+                parsed_options[option] = 'permission denied'
                 continue
             if not sysctl_pattern.match(line):
                 sys.exit(f'[-] ERROR: unexpected line in sysctl file: "{line}"')
@@ -297,6 +302,10 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
     # let's check the presence of a sysctl option available for root
     if 'kernel.cad_pid' not in parsed_options and mode != 'json':
         print(f'[!] WARNING: sysctl options available for root are not found in {fname}, try checking the output of "sudo sysctl -a"')
+
+    # also warn about an explicit "permission denied" error for sysctl options available for root
+    if 'permission denied' in parsed_options.values() and mode != 'json':
+        print('[!] WARNING: got "permission denied" for some of sysctl options, try checking the output of "sudo sysctl -a" manually')
 
 
 def refine_check(mode: StrOrNone, checklist: list[ChecklistObjType], parsed_options: dict[str, str],
