@@ -277,12 +277,12 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
             sys.exit(f'[-] ERROR: empty sysctl file "{fname}"')
 
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/*._-]+ ?=.*$")
-        no_permisson_pattern = re.compile(r"sysctl: permission denied on key '(.+)'")
+        sysctl_eperm_pattern = re.compile(r"sysctl: permission denied on key '([a-zA-Z0-9/*._-]+)'")
         for line in f.readlines():
             line = line.strip()
             if not line or line.startswith('#'):
                 continue
-            if m := no_permisson_pattern.match(line):
+            if m := sysctl_eperm_pattern.match(line):
                 option = m.group(1)
                 parsed_options[option] = 'permission denied'
                 continue
