@@ -303,6 +303,10 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
     if 'kernel.cad_pid' not in parsed_options and mode != 'json':
         print(f'[!] WARNING: sysctl options available for root are not found in {fname}, try checking the output of "sudo sysctl -a"')
 
+    # also warn about an explicit "permission denied" error for sysctl options available for root
+    if 'permission denied' in parsed_options.values() and mode != 'json':
+        print('[!] WARNING: got "permission denied" for some of sysctl options, try checking the output of "sudo sysctl -a" manually')
+
 
 def refine_check(mode: StrOrNone, checklist: list[ChecklistObjType], parsed_options: dict[str, str],
                  target: str, source: str) -> None:
