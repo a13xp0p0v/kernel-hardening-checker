@@ -980,8 +980,8 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.all.log_martians', '1')]
     #   l += [SysctlCheck('network_security', 'cis', 'net.ipv4.conf.default.log_martians', '1')]
 
-    # 'security_policy', 'a13xp0p0v'
-    l += [SysctlCheck('security_policy', 'a13xp0p0v', 'kernel.apparmor_restrict_unprivileged_unconfined', '1')]
+    # 'security_policy', 'ubuntu'
+    l += [SysctlCheck('security_policy', 'ubuntu', 'kernel.apparmor_restrict_unprivileged_unconfined', '1')]
           # Prevents an attacker from changing their own process's AppArmor profiles
           # For example, it can be used to bypass user namespaces hardenings in Ubuntu
           # https://u1f383.github.io/linux/2025/06/26/the-journey-of-bypassing-ubuntus-unprivileged-namespace-restriction.html
