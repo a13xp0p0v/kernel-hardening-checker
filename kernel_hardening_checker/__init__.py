@@ -282,9 +282,11 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
             line = line.strip()
             if not line or line.startswith('#'):
                 continue
-            if m := sysctl_eperm_pattern.match(line):
-                option = m.group(1)
-                parsed_options[option] = 'permission denied'
+            if line.startswith('sysctl: '):
+                # this line came from stderr
+                if m := sysctl_eperm_pattern.match(line):
+                    option = m.group(1)
+                    parsed_options[option] = 'permission denied'
                 continue
             if not sysctl_pattern.match(line):
                 sys.exit(f'[-] ERROR: unexpected line in sysctl file: "{line}"')
