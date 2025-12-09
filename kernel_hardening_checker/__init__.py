@@ -105,7 +105,7 @@ def detect_arch_by_kconfig(fname: str) -> tuple[StrOrNone, str]:
 
     with _open(fname) as f:
         for line in f.readlines():
-            if m := re.match('CONFIG_([A-Z0-9_]+)=y$', line):
+            if m := re.match(r'CONFIG_([A-Z0-9_]+)=y$', line):
                 option = m.group(1)
                 if option not in SUPPORTED_ARCHS:
                     continue
