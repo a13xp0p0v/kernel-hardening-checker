@@ -263,7 +263,7 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: dict[str, str], fname: s
                 name, value = opt.split('=', 1)
             else:
                 name = opt
-                value = '' # '' is not None
+                value = ''  # '' is not None
             if name in parsed_options and mode != 'json':
                 print(f'[!] WARNING: cmdline option "{name}" is found multiple times')
             value = normalize_cmdline_options(name, value)
@@ -323,7 +323,7 @@ def refine_check(mode: StrOrNone, checklist: list[ChecklistObjType], parsed_opti
 
 def perform_checking(mode: StrOrNone, version: TupleOrNone,
                      kconfig: StrOrNone, cmdline: StrOrNone, sysctl: StrOrNone) -> None:
-    config_checklist = [] # type: list[ChecklistObjType]
+    config_checklist = []  # type: list[ChecklistObjType]
     arch = None
 
     # detect the kernel architecture
@@ -367,7 +367,7 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
         # populate the checklist with the kernel version data
         populate_with_data(config_checklist, version, 'version')
 
-    parsed_kconfig_options = {} # type: dict[str, str]
+    parsed_kconfig_options = {}  # type: dict[str, str]
     if kconfig:
         # populate the checklist with the parsed Kconfig data
         parse_kconfig_file(mode, parsed_kconfig_options, kconfig)
@@ -381,13 +381,13 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
 
     if cmdline:
         # populate the checklist with the parsed cmdline data
-        parsed_cmdline_options = {} # type: dict[str, str]
+        parsed_cmdline_options = {}  # type: dict[str, str]
         parse_cmdline_file(mode, parsed_cmdline_options, cmdline)
         populate_with_data(config_checklist, parsed_cmdline_options, 'cmdline')
 
     if sysctl:
         # populate the checklist with the parsed sysctl data
-        parsed_sysctl_options = {} # type: dict[str, str]
+        parsed_sysctl_options = {}  # type: dict[str, str]
         parse_sysctl_file(mode, parsed_sysctl_options, sysctl)
         populate_with_data(config_checklist, parsed_sysctl_options, 'sysctl')
         # refine the values of some checks
@@ -535,7 +535,7 @@ def main() -> None:
             sys.exit(f'[-] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         assert(arch), 'unexpected empty arch from ArgumentParser'
-        config_checklist = [] # type: list[ChecklistObjType]
+        config_checklist = []  # type: list[ChecklistObjType]
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
         add_sysctl_checks(config_checklist, arch)
@@ -557,12 +557,12 @@ def main() -> None:
         arch = args.generate
         config_checklist = []
         add_kconfig_checks(config_checklist, arch)
-        print(f'CONFIG_{arch}=y') # the Kconfig fragment should describe the architecture
+        print(f'CONFIG_{arch}=y')  # the Kconfig fragment should describe the architecture
         for opt in config_checklist:
             if opt.name in ('CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_LSM'):
-                continue # don't add Kconfig options with a value that needs refinement
+                continue  # don't add Kconfig options with a value that needs refinement
             if opt.expected == 'is not off':
-                continue # don't add Kconfig options without explicitly recommended values
+                continue  # don't add Kconfig options without explicitly recommended values
             if opt.expected == 'is not set':
                 print(f'# {opt.name} is not set')
             else:

@@ -68,12 +68,12 @@ class OptCheck:
                    f'invalid expected value "{expected}" for "{name}" check (4)'
         self.expected = expected
 
-        self.state = None # type: str | None
-        self.result = None # type: str | None
+        self.state = None  # type: str | None
+        self.result = None  # type: str | None
 
     @property
     def opt_type(self) -> StrOrNone:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def set_state(self, data: StrOrNone) -> None:
         assert(data is None or isinstance(data, str)), \
@@ -139,7 +139,7 @@ class OptCheck:
             'reason': self.reason,
             'decision': self.decision,
             'desired_val': self.expected,
-        } # type: dict[str, StrOrBool]
+        }  # type: dict[str, StrOrBool]
         if with_results:
             assert(self.result), f'unexpected empty result in {self.name}'
             dump['check_result'] = self.result
@@ -176,8 +176,8 @@ class VersionCheck:
         assert(all(map(lambda x: isinstance(x, int), ver_expected))), \
                f'invalid expected version "{ver_expected}" for VersionCheck (2)'
         self.ver_expected = ver_expected
-        self.ver = (0, 0, 0) # type: tuple[int, ...]
-        self.result = None # type: str | None
+        self.ver = (0, 0, 0)  # type: tuple[int, ...]
+        self.result = None  # type: str | None
 
     @property
     def opt_type(self) -> str:
@@ -227,7 +227,7 @@ class ComplexOptCheck:
                f'useless {self.__class__.__name__} check: {opts}'
         assert(isinstance(self.opts[0], SimpleNamedOptCheckTypes)), \
                f'invalid {self.__class__.__name__} check: {opts}'
-        self.result = None # type: str | None
+        self.result = None  # type: str | None
 
     @property
     def opt_type(self) -> str:
@@ -235,16 +235,16 @@ class ComplexOptCheck:
 
     @property
     def name(self) -> str:
-        assert hasattr(self.opts[0], 'name') # true for SimpleNamedOptCheckTypes
+        assert hasattr(self.opts[0], 'name')  # true for SimpleNamedOptCheckTypes
         return self.opts[0].name
 
     @property
     def expected(self) -> str:
-        assert hasattr(self.opts[0], 'expected') # true for SimpleNamedOptCheckTypes
+        assert hasattr(self.opts[0], 'expected')  # true for SimpleNamedOptCheckTypes
         return self.opts[0].expected
 
     def check(self) -> None:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def table_print(self, mode: StrOrNone, with_results: bool) -> None:
         if mode == 'verbose':
@@ -262,7 +262,7 @@ class ComplexOptCheck:
                 print(f'| {colorize_result(self.result)}', end='')
 
     def json_dump(self, with_results: bool) -> dict[str, StrOrBool]:
-        assert hasattr(self.opts[0], 'json_dump') # true for SimpleNamedOptCheckTypes
+        assert hasattr(self.opts[0], 'json_dump')  # true for SimpleNamedOptCheckTypes
         dump = self.opts[0].json_dump(False)
         if with_results:
             # Add the 'check_result' and 'check_result_bool' keys to the dictionary
@@ -326,7 +326,7 @@ class AND(ComplexOptCheck):
                 if isinstance(opt, VersionCheck):
                     assert(opt.result.startswith('FAIL: version')), \
                            f'unexpected VersionCheck result {opt.result}'
-                    self.result = opt.result # VersionCheck provides enough info
+                    self.result = opt.result  # VersionCheck provides enough info
                 else:
                     if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: is not found':
                         self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
@@ -347,13 +347,13 @@ class AND(ComplexOptCheck):
 #  1) basic simple check objects
 SIMPLE_OPTION_TYPES = ('kconfig', 'cmdline', 'sysctl', 'version')
 SimpleOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck]
-SimpleOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck) # pylint: disable=C0103
+SimpleOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck)  # pylint: disable=C0103
 SimpleNamedOptCheckType = Union[KconfigCheck, CmdlineCheck, SysctlCheck]
-SimpleNamedOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck) # pylint: disable=C0103
+SimpleNamedOptCheckTypes = (KconfigCheck, CmdlineCheck, SysctlCheck)  # pylint: disable=C0103
 
 #  2) complex objects that may contain complex and simple objects
 ComplexOptCheckType = Union[OR, AND]
-ComplexOptCheckTypes = (OR, AND) # pylint: disable=C0103
+ComplexOptCheckTypes = (OR, AND)  # pylint: disable=C0103
 
 #  3) objects that can be added to the checklist
 ChecklistObjType = Union[KconfigCheck, CmdlineCheck, SysctlCheck, OR, AND]

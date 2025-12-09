@@ -25,15 +25,15 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     #     when the tool doesn't check the cmdline.
 
     efi_not_set = KconfigCheck('-', '-', 'EFI', 'is not set')
-    cc_is_gcc = KconfigCheck('-', '-', 'CC_IS_GCC', 'y') # exists since v4.18
-    cc_is_clang = KconfigCheck('-', '-', 'CC_IS_CLANG', 'y') # exists since v4.18
+    cc_is_gcc = KconfigCheck('-', '-', 'CC_IS_GCC', 'y')  # exists since v4.18
+    cc_is_clang = KconfigCheck('-', '-', 'CC_IS_CLANG', 'y')  # exists since v4.18
     if arch in ('X86_64', 'X86_32'):
         cpu_sup_amd_not_set = KconfigCheck('-', '-', 'CPU_SUP_AMD', 'is not set')
         cpu_sup_intel_not_set = KconfigCheck('-', '-', 'CPU_SUP_INTEL', 'is not set')
 
-    modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set') # radical, but may be useful in some cases
-    devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set') # refers to LOCKDOWN
-    bpf_syscall_not_set = KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set') # refers to LOCKDOWN
+    modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')  # radical, but may be useful in some cases
+    devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set')  # refers to LOCKDOWN
+    bpf_syscall_not_set = KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')  # refers to LOCKDOWN
 
     # 'self_protection', 'defconfig'
     l += [KconfigCheck('self_protection', 'defconfig', 'BUG', 'y')]
@@ -42,7 +42,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set')]
           # mutually exclusive with IOMMU_DEFAULT_DMA_STRICT
     iommu_support_is_set = KconfigCheck('self_protection', 'defconfig', 'IOMMU_SUPPORT', 'y')
-    l += [iommu_support_is_set] # is needed for mitigating DMA attacks
+    l += [iommu_support_is_set]  # is needed for mitigating DMA attacks
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_REGULAR', 'y'),
@@ -51,10 +51,10 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_STRONG', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'CC_STACKPROTECTOR_STRONG', 'y'))]
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STRICT_KERNEL_RWX', 'y'),
-             KconfigCheck('self_protection', 'defconfig', 'DEBUG_RODATA', 'y'))] # before v4.11
+             KconfigCheck('self_protection', 'defconfig', 'DEBUG_RODATA', 'y'))]  # before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'STRICT_MODULE_RWX', 'y'),
              KconfigCheck('self_protection', 'defconfig', 'DEBUG_SET_MODULE_RONX', 'y'),
-             modules_not_set)] # DEBUG_SET_MODULE_RONX existed before v4.11
+             modules_not_set)]  # DEBUG_SET_MODULE_RONX existed before v4.11
     l += [OR(KconfigCheck('self_protection', 'defconfig', 'REFCOUNT_FULL', 'y'),
              VersionCheck((5, 4, 208)))]
              # REFCOUNT_FULL is enabled by default since v5.5 and backported to v5.4.208
@@ -78,17 +78,17 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SPECTRE_V2', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'MITIGATION_SSB', 'y')]
         microcode_is_set = KconfigCheck('self_protection', 'defconfig', 'MICROCODE', 'y')
-        l += [microcode_is_set] # is needed for mitigating CPU bugs
+        l += [microcode_is_set]  # is needed for mitigating CPU bugs
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_INTEL', 'y'),
                  cpu_sup_intel_not_set,
                  AND(microcode_is_set,
-                     VersionCheck((6, 6, 0))))] # MICROCODE_INTEL was included in MICROCODE since v6.6
+                     VersionCheck((6, 6, 0))))]  # MICROCODE_INTEL was included in MICROCODE since v6.6
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MICROCODE_AMD', 'y'),
                  cpu_sup_amd_not_set,
                  AND(microcode_is_set,
-                     VersionCheck((6, 6, 0))))] # MICROCODE_AMD was included in MICROCODE since v6.6
+                     VersionCheck((6, 6, 0))))]  # MICROCODE_AMD was included in MICROCODE since v6.6
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_SMAP', 'y'),
-                 VersionCheck((5, 19, 0)))] # X86_SMAP is enabled by default since v5.19
+                 VersionCheck((5, 19, 0)))]  # X86_SMAP is enabled by default since v5.19
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_UMIP', 'y'),
                  KconfigCheck('self_protection', 'defconfig', 'X86_INTEL_UMIP', 'y'))]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'X86_MCE_INTEL', 'y'),
@@ -163,9 +163,9 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_MODULE_REGION_FULL', 'y')]
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_EL2_VECTORS', 'y'),
                  AND(KconfigCheck('self_protection', 'defconfig', 'RANDOMIZE_BASE', 'y'),
-                     VersionCheck((5, 9, 0))))] # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
+                     VersionCheck((5, 9, 0))))]  # HARDEN_EL2_VECTORS was included in RANDOMIZE_BASE in v5.9
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
-                 VersionCheck((5, 10, 0)))] # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
+                 VersionCheck((5, 10, 0)))]  # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
     if arch == 'ARM':
         l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
@@ -183,11 +183,11 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_HARDENED', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_RANDOM', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'SHUFFLE_PAGE_ALLOCATOR', 'y')] # requires page_alloc.shuffle=1
+    l += [KconfigCheck('self_protection', 'kspp', 'SHUFFLE_PAGE_ALLOCATOR', 'y')]  # requires page_alloc.shuffle=1
     l += [KconfigCheck('self_protection', 'kspp', 'FORTIFY_SOURCE', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_VIRTUAL', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'INIT_ON_ALLOC_DEFAULT_ON', 'y')]
-    l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')] # needs userspace support
+    l += [KconfigCheck('self_protection', 'kspp', 'STATIC_USERMODEHELPER', 'y')]  # needs userspace support
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'LSM', '*lockdown*')]
     l += [KconfigCheck('self_protection', 'kspp', 'SECURITY_LOCKDOWN_LSM_EARLY', 'y')]
@@ -199,7 +199,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     cfi_clang_is_set = KconfigCheck('self_protection', 'kspp', 'CFI_CLANG', 'y')
     cfi_clang_permissive_not_set = KconfigCheck('self_protection', 'kspp', 'CFI_PERMISSIVE', 'is not set')
     l += [OR(KconfigCheck('self_protection', 'kspp', 'DEBUG_CREDENTIALS', 'y'),
-             VersionCheck((6, 6, 8)))] # DEBUG_CREDENTIALS was dropped in v6.6.8
+             VersionCheck((6, 6, 8)))]  # DEBUG_CREDENTIALS was dropped in v6.6.8
     l += [OR(KconfigCheck('self_protection', 'kspp', 'DEBUG_NOTIFIERS', 'y'),
              AND(cfi_clang_is_set,
                  cfi_clang_permissive_not_set,
@@ -219,9 +219,9 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_DEFAULT_ON', 'y'),
               hardened_usercopy_is_set)]
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_FALLBACK', 'is not set'),
-              hardened_usercopy_is_set)] # usercopy whitelist violations should be prohibited
+              hardened_usercopy_is_set)]  # usercopy whitelist violations should be prohibited
     l += [AND(KconfigCheck('self_protection', 'kspp', 'HARDENED_USERCOPY_PAGESPAN', 'is not set'),
-              hardened_usercopy_is_set)] # this debugging for HARDENED_USERCOPY is not needed for security
+              hardened_usercopy_is_set)]  # this debugging for HARDENED_USERCOPY is not needed for security
     l += [AND(KconfigCheck('self_protection', 'kspp', 'GCC_PLUGIN_LATENT_ENTROPY', 'y'),
               cc_is_gcc)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG', 'y'),
@@ -232,7 +232,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
              KconfigCheck('self_protection', 'a13xp0p0v', 'MODULE_SIG_SHA3_512', 'y'),
              modules_not_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'MODULE_SIG_FORCE', 'y'),
-             modules_not_set)] # refers to LOCKDOWN
+             modules_not_set)]  # refers to LOCKDOWN
     l += [OR(KconfigCheck('self_protection', 'kspp', 'INIT_ON_FREE_DEFAULT_ON', 'y'),
              KconfigCheck('self_protection', 'kspp', 'PAGE_POISONING_ZERO', 'y'))]
              # INIT_ON_FREE_DEFAULT_ON was added in v5.3.
@@ -243,7 +243,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [OR(KconfigCheck('self_protection', 'kspp', 'EFI_DISABLE_PCI_DMA', 'y'),
              efi_not_set)]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'RESET_ATTACK_MITIGATION', 'y'),
-             efi_not_set)] # needs userspace support (systemd)
+             efi_not_set)]  # needs userspace support (systemd)
     ubsan_bounds_is_set = KconfigCheck('self_protection', 'kspp', 'UBSAN_BOUNDS', 'y')
     l += [ubsan_bounds_is_set]
     l += [OR(KconfigCheck('self_protection', 'kspp', 'UBSAN_LOCAL_BOUNDS', 'y'),
@@ -303,14 +303,14 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     if arch == 'X86_64':
         l += [AND(KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is not set'),
-                  KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is present'))] # consequence of 'cfi=kcfi' by kspp
+                  KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is present'))]  # consequence of 'cfi=kcfi' by kspp
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))]
                  # this feature protects against CVE-2021-26341 in Straight-Line-Speculation
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_SVM', 'y'),
                   iommu_support_is_set)]
         l += [OR(KconfigCheck('self_protection', 'kspp', 'AMD_IOMMU_V2', 'y'),
-                 VersionCheck((6, 7, 0)))] # AMD_IOMMU_V2 was dropped in v6.7
+                 VersionCheck((6, 7, 0)))]  # AMD_IOMMU_V2 was dropped in v6.7
     if arch == 'ARM64':
         l += [KconfigCheck('self_protection', 'kspp', 'ARM64_SW_TTBR0_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'SHADOW_CALL_STACK', 'y')]
@@ -363,7 +363,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DISABLE', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEVELOP', 'is not set')]
-    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')] # refers to SECURITY_SELINUX_DISABLE
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')]  # refers to SECURITY_SELINUX_DISABLE
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEBUG', 'is not set')]
     l += [OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
@@ -383,39 +383,39 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP', 'y')]
     l += [KconfigCheck('cut_attack_surface', 'defconfig', 'SECCOMP_FILTER', 'y')]
     l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'BPF_UNPRIV_DEFAULT_OFF', 'y'),
-             bpf_syscall_not_set)] # see unprivileged_bpf_disabled
+             bpf_syscall_not_set)]  # see unprivileged_bpf_disabled
     if arch in ('X86_64', 'ARM64', 'X86_32'):
         l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'STRICT_DEVMEM', 'y'),
-                 devmem_not_set)] # refers to LOCKDOWN
+                 devmem_not_set)]  # refers to LOCKDOWN
     if arch in ('X86_64', 'X86_32'):
         l += [OR(KconfigCheck('cut_attack_surface', 'defconfig', 'X86_INTEL_TSX_MODE_OFF', 'y'),
-                 cpu_sup_intel_not_set)] # tsx=off
+                 cpu_sup_intel_not_set)]  # tsx=off
 
     # 'cut_attack_surface', 'kspp'
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'SECURITY_DMESG_RESTRICT', 'y')]
-    l += [KconfigCheck('cut_attack_surface', 'kspp', 'ACPI_CUSTOM_METHOD', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'ACPI_CUSTOM_METHOD', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT_BRK', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'kspp', 'DEVKMEM', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'DEVKMEM', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'BINFMT_MISC', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'INET_DIAG', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'kspp', 'KEXEC', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'kspp', 'PROC_KCORE', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'KEXEC', 'is not set')]  # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'PROC_KCORE', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_PTYS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'kspp', 'HIBERNATION', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'HIBERNATION', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'COMPAT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'IA32_EMULATION', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_X32', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_X32_ABI', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'MODIFY_LDT_SYSCALL', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'OABI_COMPAT', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_MSR', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'X86_MSR', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'LEGACY_TIOCSTI', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'kspp', 'MODULE_FORCE_LOAD', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'kspp', 'M486', 'is not set')] # M486 support is incompatible with X86_PAE
+    l += [KconfigCheck('cut_attack_surface', 'kspp', 'M486', 'is not set')]  # M486 support is incompatible with X86_PAE
     l += [modules_not_set]
     l += [devmem_not_set]
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'IO_STRICT_DEVMEM', 'y'),
-             devmem_not_set)] # refers to LOCKDOWN
+             devmem_not_set)]  # refers to LOCKDOWN
     l += [AND(KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is not set'),
               KconfigCheck('cut_attack_surface', 'kspp', 'LDISC_AUTOLOAD', 'is present'))]
     l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
@@ -428,7 +428,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
               # on ARM64 this option has different meaning
     if arch in ('ARM', 'RISCV'):
         l += [OR(KconfigCheck('cut_attack_surface', 'kspp', 'STRICT_DEVMEM', 'y'),
-                 devmem_not_set)] # refers to LOCKDOWN
+                 devmem_not_set)]  # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'maintainer'
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'DRM_LEGACY', 'is not set')]
@@ -452,7 +452,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'BINFMT_AOUT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'KPROBE_EVENTS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'UPROBE_EVENTS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsec', 'GENERIC_TRACER', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'GENERIC_TRACER', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'FUNCTION_TRACER', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'STACK_TRACER', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'HIST_TRIGGERS', 'is not set')]
@@ -464,8 +464,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'USERFAULTFD', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'HWPOISON_INJECT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'MEM_SOFT_DIRTY', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEVPORT', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEVPORT', 'is not set')]  # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'NOTIFIER_ERROR_INJECTION', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'FAIL_FUTEX', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'PUNIT_ATOM_DEBUG', 'is not set')]
@@ -497,20 +497,20 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'IP_SCTP', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'KGDB', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set')] # the old name of PTDUMP_DEBUGFS
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set')]  # the old name of PTDUMP_DEBUGFS
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_CLOSURES', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BCACHE_CLOSURES_DEBUG', 'is not set')] # the old name of DEBUG_CLOSURES
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BCACHE_CLOSURES_DEBUG', 'is not set')]  # the old name of DEBUG_CLOSURES
 
     # 'cut_attack_surface', 'clipos'
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'KSM', 'is not set')] # to prevent FLUSH+RELOAD attack
+    l += [KconfigCheck('cut_attack_surface', 'clipos', 'KSM', 'is not set')]  # to prevent FLUSH+RELOAD attack
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'KALLSYMS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'KEXEC_FILE', 'is not set')] # refers to LOCKDOWN (permissive)
+    l += [KconfigCheck('cut_attack_surface', 'clipos', 'KEXEC_FILE', 'is not set')]  # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'CRASH_DUMP', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'USER_NS', 'is not set')] # user.max_user_namespaces=0
+    l += [KconfigCheck('cut_attack_surface', 'clipos', 'USER_NS', 'is not set')]  # user.max_user_namespaces=0
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_CPUID', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'clipos', 'X86_IOPL_IOPERM', 'is not set')]  # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'AIO', 'is not set')]
 #   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')] # no, IKCONFIG is needed for this check :)
@@ -522,25 +522,25 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
              KconfigCheck('cut_attack_surface', 'grapheneos', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
     # 'cut_attack_surface', 'lockdown'
-    l += [KconfigCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')] # refers to LOCKDOWN
-    l += [KconfigCheck('cut_attack_surface', 'lockdown', 'KPROBES', 'is not set')] # refers to LOCKDOWN
-    l += [bpf_syscall_not_set] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'lockdown', 'EFI_TEST', 'is not set')]  # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'lockdown', 'MMIOTRACE_TEST', 'is not set')]  # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'lockdown', 'KPROBES', 'is not set')]  # refers to LOCKDOWN
+    l += [bpf_syscall_not_set]  # refers to LOCKDOWN
 
     # 'cut_attack_surface', 'a13xp0p0v'
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MMIOTRACE', 'is not set')] # refers to LOCKDOWN (permissive)
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'MMIOTRACE', 'is not set')]  # refers to LOCKDOWN (permissive)
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'LIVEPATCH', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'IP_DCCP', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FTRACE', 'is not set')] # refers to LOCKDOWN
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FTRACE', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'VIDEO_VIVID', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'INPUT_EVBUG', 'is not set')] # can be used as a keylogger
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'INPUT_EVBUG', 'is not set')]  # can be used as a keylogger
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CORESIGHT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'XFS_SUPPORT_V4', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set')]
           # see the comment about bdev_allow_write_mounted below
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FAULT_INJECTION', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP_DEBUGFS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP', 'is not set')] # the old name of ARM_PTDUMP_DEBUGFS
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP', 'is not set')]  # the old name of ARM_PTDUMP_DEBUGFS
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'SECCOMP_CACHE_DEBUG', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CRASH_DM_CRYPT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'LKDTM', 'is not set')]
@@ -596,22 +596,22 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
     # very complex and not give a 100% guarantee anyway.
 
     # 'self_protection', 'defconfig'
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nokaslr', 'is not set')] # [KNL]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'no_hash_pointers', 'is not set')] # [KNL]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nosmep', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nosmap', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'dis_ucode_ldr', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'setcpuid', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'clearcpuid', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nospec_store_bypass_disable', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')] # [X86]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')] # [X86, ARM64]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_bhb', 'is not set')] # [ARM64]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nobti', 'is not set')] # [ARM64]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nopauth', 'is not set')] # [ARM64]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nomte', 'is not set')] # [ARM64]
-    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nogcs', 'is not set')] # [ARM64]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nokaslr', 'is not set')]  # [KNL]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'no_hash_pointers', 'is not set')]  # [KNL]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nosmep', 'is not set')]  # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nosmap', 'is not set')]  # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'dis_ucode_ldr', 'is not set')]  # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'setcpuid', 'is not set')]  # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'clearcpuid', 'is not set')]  # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nopti', 'is not set')]  # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospec_store_bypass_disable', 'is not set')]  # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v1', 'is not set')]  # [X86]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_v2', 'is not set')]  # [X86, ARM64]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'nospectre_bhb', 'is not set')]  # [ARM64]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nobti', 'is not set')]  # [ARM64]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nopauth', 'is not set')]  # [ARM64]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nomte', 'is not set')]  # [ARM64]
+    l += [CmdlineCheck('self_protection', 'defconfig', 'arm64.nogcs', 'is not set')]  # [ARM64]
     l += [OR(CmdlineCheck('self_protection', 'defconfig', 'iommu.passthrough', '0'),
              AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_PASSTHROUGH', 'is not set'),
                  CmdlineCheck('-', '-', 'iommu.passthrough', 'is not set')))]
@@ -623,7 +623,7 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
                  AND(KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y'),
                      CmdlineCheck('-', '-', 'iommu.strict', 'is not set')))]
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
-                 CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))] # same as 'auto'
+                 CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'is not set'))]  # same as 'auto'
     if arch in ('X86_64', 'X86_32'):
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'spectre_v2', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
@@ -690,8 +690,8 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
                      CmdlineCheck('-', '-', 'rodata', 'is not set')))]
 
     # 'self_protection', 'kspp'
-    l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
-    l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')] # consequence of 'slab_nomerge' by kspp
+    l += [CmdlineCheck('self_protection', 'kspp', 'slab_merge', 'is not set')]  # consequence of 'slab_nomerge' by kspp
+    l += [CmdlineCheck('self_protection', 'kspp', 'slub_merge', 'is not set')]  # consequence of 'slab_nomerge' by kspp
     l += [CmdlineCheck('self_protection', 'kspp', 'page_alloc.shuffle', '1')]
     l += [CmdlineCheck('self_protection', 'kspp', 'hash_pointers', 'always')]
     l += [OR(CmdlineCheck('self_protection', 'kspp', 'slab_nomerge', 'is present'),
@@ -768,7 +768,7 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
                      tsx_not_set))]
 
     # 'cut_attack_surface', 'kspp'
-    l += [CmdlineCheck('cut_attack_surface', 'kspp', 'nosmt', 'is present')] # slow (high performance penalty)
+    l += [CmdlineCheck('cut_attack_surface', 'kspp', 'nosmt', 'is present')]  # slow (high performance penalty)
     if arch == 'X86_64':
         l += [OR(CmdlineCheck('cut_attack_surface', 'kspp', 'vsyscall', 'none'),
                  KconfigCheck('cut_attack_surface', 'kspp', 'X86_VSYSCALL_EMULATION', 'is not set'),
@@ -797,7 +797,7 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
     # 'cut_attack_surface', 'grsec'
     # The cmdline checks compatible with the kconfig options disabled by grsecurity...
     l += [OR(CmdlineCheck('cut_attack_surface', 'grsec', 'debugfs', 'off'),
-             KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set'))] # ... the end
+             KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set'))]  # ... the end
 
     # 'cut_attack_surface', 'grapheneos'
     l += [CmdlineCheck('cut_attack_surface', 'grapheneos', 'sysrq_always_enabled', 'is not set')]
@@ -819,40 +819,40 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
 
 
 no_kstrtobool_options = [
-    'debugfs', # see debugfs_kernel() in fs/debugfs/inode.c
-    'mitigations', # see mitigations_parse_cmdline() in kernel/cpu.c
-    'pti', # see pti_check_boottime_disable() in arch/x86/mm/pti.c
-    'spectre_v2', # see spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'spectre_v2_user', # see spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'spectre_bhi', # see spectre_bhi_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'spec_store_bypass_disable', # see ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'l1tf', # see l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'mds', # see mds_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'tsx_async_abort', # see tsx_async_abort_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'srbds', # see srbds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'mmio_stale_data', # see mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'retbleed', # see retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'rodata', # see set_debug_rodata() in init/main.c
-    'ssbd', # see parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
-    'spec_rstack_overflow', # see srso_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'gather_data_sampling', # see gds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'reg_file_data_sampling', # see rfds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'tsa', # see tsa_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'indirect_target_selection', # see its_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'vmscape', # see vmscape_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
-    'slub_debug', # see setup_slub_debug() in mm/slub.c
-    'iommu', # see iommu_setup() in arch/x86/kernel/pci-dma.c
-    'vsyscall', # see vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
-    'vdso32', # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
-    'vdso', # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
-    'cfi', # see cfi_parse_cmdline() in arch/x86/kernel/alternative.c
-    'tsx', # see tsx_init() in arch/x86/kernel/cpu/tsx.c
-    'lockdown', # see lockdown_param() in security/lockdown/lockdown.c
-    'intel_iommu', # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
-    'efi', # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
-    'hash_pointers', # see hash_pointers_mode_parse() in lib/vsprintf.c
-    'ipv6.disable', # see the disable_ipv6_mod parameter in net/ipv6/af_inet6.c
-    'proc_mem.force_override' # see early_proc_mem_force_override() in fs/proc/base.c
+    'debugfs',  # see debugfs_kernel() in fs/debugfs/inode.c
+    'mitigations',  # see mitigations_parse_cmdline() in kernel/cpu.c
+    'pti',  # see pti_check_boottime_disable() in arch/x86/mm/pti.c
+    'spectre_v2',  # see spectre_v2_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spectre_v2_user',  # see spectre_v2_parse_user_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spectre_bhi',  # see spectre_bhi_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'spec_store_bypass_disable',  # see ssb_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'l1tf',  # see l1tf_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'mds',  # see mds_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'tsx_async_abort',  # see tsx_async_abort_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'srbds',  # see srbds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'mmio_stale_data',  # see mmio_stale_data_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'retbleed',  # see retbleed_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'rodata',  # see set_debug_rodata() in init/main.c
+    'ssbd',  # see parse_spectre_v4_param() in arch/arm64/kernel/proton-pack.c
+    'spec_rstack_overflow',  # see srso_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'gather_data_sampling',  # see gds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'reg_file_data_sampling',  # see rfds_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'tsa',  # see tsa_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'indirect_target_selection',  # see its_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'vmscape',  # see vmscape_parse_cmdline() in arch/x86/kernel/cpu/bugs.c
+    'slub_debug',  # see setup_slub_debug() in mm/slub.c
+    'iommu',  # see iommu_setup() in arch/x86/kernel/pci-dma.c
+    'vsyscall',  # see vsyscall_setup() in arch/x86/entry/vsyscall/vsyscall_64.c
+    'vdso32',  # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
+    'vdso',  # see vdso32_setup() in arch/x86/entry/vdso/vdso32-setup.c
+    'cfi',  # see cfi_parse_cmdline() in arch/x86/kernel/alternative.c
+    'tsx',  # see tsx_init() in arch/x86/kernel/cpu/tsx.c
+    'lockdown',  # see lockdown_param() in security/lockdown/lockdown.c
+    'intel_iommu',  # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
+    'efi',  # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
+    'hash_pointers',  # see hash_pointers_mode_parse() in lib/vsprintf.c
+    'ipv6.disable',  # see the disable_ipv6_mod parameter in net/ipv6/af_inet6.c
+    'proc_mem.force_override'  # see early_proc_mem_force_override() in fs/proc/base.c
 ]
 
 
@@ -942,7 +942,7 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
     # 'cut_attack_surface', 'grsec'
     l += [OR(SysctlCheck('cut_attack_surface', 'grsec', 'kernel.io_uring_disabled', '2'),
              AND(KconfigCheck('cut_attack_surface', 'grsec', 'IO_URING', 'is not set'),
-                 have_kconfig))] # compatible with the 'IO_URING' kconfig check by grsecurity
+                 have_kconfig))]  # compatible with the 'IO_URING' kconfig check by grsecurity
 
     # 'cut_attack_surface', 'a13xp0p0v'
     l += [OR(SysctlCheck('cut_attack_surface', 'a13xp0p0v', 'kernel.sysrq', '0'),
