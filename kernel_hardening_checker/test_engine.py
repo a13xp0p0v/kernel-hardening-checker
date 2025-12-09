@@ -80,7 +80,7 @@ class TestEngine(unittest.TestCase):
 
     @staticmethod
     def get_engine_result(checklist: list[ChecklistObjType], result: ResultType, result_type: str) -> None:
-        assert(result_type in ('json', 'stdout', 'stdout_verbose')), \
+        assert (result_type in ('json', 'stdout', 'stdout_verbose')), \
                f'invalid result type "{result_type}"'
 
         if result_type == 'json':

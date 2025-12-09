@@ -57,8 +57,8 @@ def get_local_kconfig_file(version_fname: str) -> tuple[StrOrNone, str]:
     kconfig_2 = '/boot/config-'
     with _open(version_fname) as f:
         line = f.readline()
-        assert(line), f'empty {version_fname}'
-        assert(line.startswith('Linux version ')), f'unexpected contents of {version_fname}'
+        assert (line), f'empty {version_fname}'
+        assert (line.startswith('Linux version ')), f'unexpected contents of {version_fname}'
         parts = line.split()
         ver_str = parts[2]
         kconfig_2 = kconfig_2 + ver_str
@@ -120,7 +120,7 @@ def detect_arch_by_sysctl(fname: str) -> tuple[StrOrNone, str]:
             if line.startswith('kernel.arch'):
                 value = line.split('=', 1)[1].strip()
                 for arch, pattern in arch_mapping.items():
-                    assert(arch in SUPPORTED_ARCHS), 'invalid arch mapping in sysctl'
+                    assert (arch in SUPPORTED_ARCHS), 'invalid arch mapping in sysctl'
                     if re.match(pattern, value):
                         return arch, value
                 return None, f'{value} is an unsupported arch'
@@ -187,13 +187,13 @@ def print_checklist(mode: StrOrNone, checklist: list[ChecklistObjType], with_res
     fail_count = 0
     for opt in checklist:
         if with_results:
-            assert(opt.result), f'unexpected empty result of {opt.name} check'
+            assert (opt.result), f'unexpected empty result of {opt.name} check'
             if opt.result.startswith('OK'):
                 ok_count += 1
                 if mode == 'show_fail':
                     continue
             else:
-                assert(opt.result.startswith('FAIL')), \
+                assert (opt.result.startswith('FAIL')), \
                        f'unexpected result "{opt.result}" of {opt.name} check'
                 fail_count += 1
                 if mode == 'show_ok':
@@ -233,7 +233,7 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: dict[str, str], fname: 
                     print(f'[!] WARNING: found strange Kconfig option {option} with empty value')
             elif opt_is_off.match(line):
                 option, value = line[2:].split(' ', 1)
-                assert(value == 'is not set'), \
+                assert (value == 'is not set'), \
                        f'unexpected value of disabled Kconfig option "{line}"'
             elif line != '' and not line.startswith('#'):
                 sys.exit(f'[-] ERROR: unexpected line in Kconfig file: "{line}"')
@@ -242,7 +242,7 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: dict[str, str], fname: 
                 sys.exit(f'[-] ERROR: Kconfig option "{line}" is found multiple times')
 
             if option:
-                assert(value is not None), f'unexpected None value for {option}'
+                assert (value is not None), f'unexpected None value for {option}'
                 parsed_options[option] = value
 
 
@@ -267,7 +267,7 @@ def parse_cmdline_file(mode: StrOrNone, parsed_options: dict[str, str], fname: s
             if name in parsed_options and mode != 'json':
                 print(f'[!] WARNING: cmdline option "{name}" is found multiple times')
             value = normalize_cmdline_options(name, value)
-            assert(value is not None), f'unexpected None value for {name}'
+            assert (value is not None), f'unexpected None value for {name}'
             parsed_options[name] = value
 
 
@@ -333,8 +333,8 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
             sys.exit(f'[-] ERROR: {msg}')
         mprint(mode, f'[+] Detected architecture: {arch}')
     else:
-        assert(not cmdline), 'wrong perform_checking() usage'
-        assert(sysctl), 'wrong perform_checking() usage'
+        assert (not cmdline), 'wrong perform_checking() usage'
+        assert (sysctl), 'wrong perform_checking() usage'
         arch, msg = detect_arch_by_sysctl(sysctl)
         if arch is None:
             mprint(mode, f'[!] WARNING: {msg}, arch-dependent checks will be dropped')
@@ -351,12 +351,12 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
 
     if kconfig:
         # add relevant Kconfig checks to the checklist
-        assert(arch), 'arch is mandatory for the kconfig checks'
+        assert (arch), 'arch is mandatory for the kconfig checks'
         add_kconfig_checks(config_checklist, arch)
 
     if cmdline:
         # add relevant cmdline checks to the checklist
-        assert(arch), 'arch is mandatory for the cmdline checks'
+        assert (arch), 'arch is mandatory for the cmdline checks'
         add_cmdline_checks(config_checklist, arch)
 
     if sysctl:
@@ -489,7 +489,7 @@ def main() -> None:
         mprint(mode, f'[+] Sysctl output file to check: {args.sysctl}')
 
     if args.config:
-        assert(not args.autodetect), 'unexpected args'
+        assert (not args.autodetect), 'unexpected args'
         if args.print:
             sys.exit('[-] ERROR: --config and --print can\'t be used together')
         if args.generate:
@@ -511,7 +511,7 @@ def main() -> None:
         sys.exit('[-] ERROR: checking cmdline depends on checking Kconfig')
     elif args.sysctl:
         # separate sysctl checking (without kconfig)
-        assert(not args.autodetect), 'unexpected args'
+        assert (not args.autodetect), 'unexpected args'
         if args.kernel_version:
             sys.exit('[-] ERROR: --kernel-version is not needed for --sysctl')
         if args.print:
@@ -522,7 +522,7 @@ def main() -> None:
         sys.exit(0)
 
     if args.print:
-        assert(not args.autodetect and
+        assert (not args.autodetect and
                args.config is None and
                args.cmdline is None and
                args.sysctl is None), \
@@ -534,7 +534,7 @@ def main() -> None:
         if mode and mode not in ('verbose', 'json'):
             sys.exit(f'[-] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
-        assert(arch), 'unexpected empty arch from ArgumentParser'
+        assert (arch), 'unexpected empty arch from ArgumentParser'
         config_checklist = []  # type: list[ChecklistObjType]
         add_kconfig_checks(config_checklist, arch)
         add_cmdline_checks(config_checklist, arch)
@@ -544,7 +544,7 @@ def main() -> None:
         sys.exit(0)
 
     if args.generate:
-        assert(not args.autodetect and
+        assert (not args.autodetect and
                args.config is None and
                args.cmdline is None and
                args.sysctl is None and

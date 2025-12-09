@@ -16,7 +16,7 @@ from .engine import StrOrNone, ChecklistObjType, KconfigCheck, CmdlineCheck, Sys
 
 
 def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
-    assert(arch), 'empty arch'
+    assert (arch), 'empty arch'
 
     # Calling the KconfigCheck class constructor:
     #     KconfigCheck(reason, decision, name, expected)
@@ -574,7 +574,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
 
 
 def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
-    assert(arch), 'empty arch'
+    assert (arch), 'empty arch'
 
     # Calling the CmdlineCheck class constructor:
     #     CmdlineCheck(reason, decision, name, expected)
