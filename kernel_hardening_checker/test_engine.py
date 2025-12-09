@@ -524,7 +524,7 @@ CONFIG_NAME_7                         |kconfig|     reason_7     |decision_7| ex
 CONFIG_NAME_1                         |kconfig|     reason_1     |decision_1| expected_1 | FAIL: "UNexpected_1"\n\
 name_2                                |cmdline|     reason_2     |decision_2| expected_2 | OK\n\
 name_3                                |sysctl |     reason_3     |decision_3| expected_3 | None\
-'\
+'
 '\
     <<< AND >>>                                                                          | FAIL: name_5 is not "expected_5"\n\
 CONFIG_NAME_4                         |kconfig|     reason_4     |decision_4| expected_4 | None\n\
