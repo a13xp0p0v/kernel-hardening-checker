@@ -12,9 +12,10 @@ This module is the engine of checks.
 # pylint: disable=missing-class-docstring,missing-function-docstring,too-many-branches
 
 from __future__ import annotations
-import sys
 
-from typing import Union, Optional
+import sys
+from typing import Optional, Union
+
 StrOrNone = Optional[str]
 TupleOrNone = Optional[tuple[int, ...]]
 DictOrTuple = Union[dict[str, str], tuple[int, ...]]

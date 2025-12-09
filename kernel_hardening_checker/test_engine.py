@@ -11,14 +11,27 @@ This module performs unit-testing of the kernel-hardening-checker engine.
 
 # pylint: disable=missing-function-docstring,line-too-long
 
-import unittest
-from unittest import mock
 import io
 import sys
-from typing import Union, Optional
-from .engine import StrOrBool, ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
-from .engine import populate_with_data, perform_checks, override_expected_value, print_unknown_options, colorize_result
+import unittest
+from typing import Optional, Union
+from unittest import mock
 
+from .engine import (
+    AND,
+    OR,
+    ChecklistObjType,
+    CmdlineCheck,
+    KconfigCheck,
+    StrOrBool,
+    SysctlCheck,
+    VersionCheck,
+    colorize_result,
+    override_expected_value,
+    perform_checks,
+    populate_with_data,
+    print_unknown_options,
+)
 
 ResultType = list[Union[dict[str, StrOrBool], str]]
 

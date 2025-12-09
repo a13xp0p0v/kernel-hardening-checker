@@ -11,20 +11,32 @@ This module performs input/output.
 
 # pylint: disable=missing-function-docstring,too-many-branches,too-many-statements
 
-import os
 import gzip
+import json
+import os
+import re
+import shutil
+import subprocess
 import sys
 import tempfile
-import subprocess
-import shutil
 from argparse import ArgumentParser
-from typing import TextIO, Any
-import re
-import json
-from .checks import add_kconfig_checks, add_cmdline_checks, normalize_cmdline_options, add_sysctl_checks
-from .engine import StrOrNone, TupleOrNone, ChecklistObjType
-from .engine import print_unknown_options, populate_with_data, perform_checks, override_expected_value
+from typing import Any, TextIO
 
+from .checks import (
+    add_cmdline_checks,
+    add_kconfig_checks,
+    add_sysctl_checks,
+    normalize_cmdline_options,
+)
+from .engine import (
+    ChecklistObjType,
+    StrOrNone,
+    TupleOrNone,
+    override_expected_value,
+    perform_checks,
+    populate_with_data,
+    print_unknown_options,
+)
 
 # The kernel-hardening-checker version format:
 #   'major.linux_kernel_version.minor'

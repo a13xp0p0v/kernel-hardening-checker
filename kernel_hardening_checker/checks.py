@@ -12,7 +12,16 @@ This module contains knowledge for checks.
 # pylint: disable=missing-function-docstring,too-many-lines
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
 
-from .engine import StrOrNone, ChecklistObjType, KconfigCheck, CmdlineCheck, SysctlCheck, VersionCheck, OR, AND
+from .engine import (
+    AND,
+    OR,
+    ChecklistObjType,
+    CmdlineCheck,
+    KconfigCheck,
+    StrOrNone,
+    SysctlCheck,
+    VersionCheck,
+)
 
 
 def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
