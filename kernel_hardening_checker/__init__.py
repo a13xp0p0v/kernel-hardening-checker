@@ -73,7 +73,7 @@ def get_local_kconfig_file(version_fname: str) -> tuple[StrOrNone, str]:
         assert (line.startswith('Linux version ')), f'unexpected contents of {version_fname}'
         parts = line.split()
         ver_str = parts[2]
-        kconfig_2 = kconfig_2 + ver_str
+        kconfig_2 += ver_str
     if os.path.isfile(kconfig_2):
         return kconfig_2, 'OK'
 
