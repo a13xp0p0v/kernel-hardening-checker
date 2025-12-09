@@ -535,7 +535,7 @@ def main() -> None:
             sys.exit('[-] ERROR: --kernel-version is not needed for --print')
         if args.generate:
             sys.exit('[-] ERROR: --print and --generate can\'t be used together')
-        if mode and mode not in ('verbose', 'json'):
+        if mode and mode not in {'verbose', 'json'}:
             sys.exit(f'[-] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         assert (arch), 'unexpected empty arch from ArgumentParser'
@@ -563,7 +563,7 @@ def main() -> None:
         add_kconfig_checks(config_checklist, arch)
         print(f'CONFIG_{arch}=y')  # the Kconfig fragment should describe the architecture
         for opt in config_checklist:
-            if opt.name in ('CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_LSM'):
+            if opt.name in {'CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_LSM'}:
                 continue  # don't add Kconfig options with a value that needs refinement
             if opt.expected == 'is not off':
                 continue  # don't add Kconfig options without explicitly recommended values

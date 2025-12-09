@@ -57,7 +57,7 @@ class OptCheck:
                f'invalid expected value "{expected}" for "{name}" check (1)'
         val_len = len(expected.split())
         if val_len == 3:
-            assert (expected in ('is not set', 'is not off')), \
+            assert (expected in {'is not set', 'is not off'}), \
                    f'invalid expected value "{expected}" for "{name}" check (2)'
         elif val_len == 2:
             assert (expected == 'is present'), \
@@ -106,7 +106,7 @@ class OptCheck:
         if self.expected == 'is not off':
             if self.state == 'off':
                 self.result = 'FAIL: is off'
-            elif self.state in ('0', 'is not set'):
+            elif self.state in {'0', 'is not set'}:
                 self.result = f'FAIL: is off, "{self.state}"'
             elif self.state is None:
                 self.result = 'FAIL: is off, not found'
@@ -333,7 +333,7 @@ class AND(ComplexOptCheck):
                         self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'
                     elif opt.result == 'FAIL: is not present':
                         self.result = f'FAIL: {opt.name} is not present'
-                    elif opt.result in ('FAIL: is off', 'FAIL: is off, "0"', 'FAIL: is off, "is not set"'):
+                    elif opt.result in {'FAIL: is off', 'FAIL: is off, "0"', 'FAIL: is off, "is not set"'}:
                         self.result = f'FAIL: {opt.name} is off'
                     else:
                         assert (opt.result == 'FAIL: is off, not found'), \
@@ -369,7 +369,7 @@ def populate_simple_opt_with_data(opt: SimpleOptCheckType, data: DictOrTuple, da
     if data_type != opt.opt_type:
         return
 
-    if data_type in ('kconfig', 'cmdline', 'sysctl'):
+    if data_type in {'kconfig', 'cmdline', 'sysctl'}:
         assert (isinstance(data, dict)), \
                f'unexpected data with data_type {data_type}'
         assert (isinstance(opt, SimpleNamedOptCheckTypes)), \
