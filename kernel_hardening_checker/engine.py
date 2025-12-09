@@ -328,7 +328,7 @@ class AND(ComplexOptCheck):
                            f'unexpected VersionCheck result {opt.result}'
                     self.result = opt.result  # VersionCheck provides enough info
                 else:
-                    if opt.result.startswith('FAIL: \"') or opt.result == 'FAIL: is not found':
+                    if opt.result.startswith('FAIL: "') or opt.result == 'FAIL: is not found':
                         self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
                     elif opt.result.startswith('FAIL: not in '):
                         self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'

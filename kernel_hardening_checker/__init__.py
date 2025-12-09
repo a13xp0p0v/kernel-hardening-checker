@@ -105,7 +105,7 @@ def detect_arch_by_kconfig(fname: str) -> tuple[StrOrNone, str]:
 
     with _open(fname) as f:
         for line in f.readlines():
-            if m := re.match("CONFIG_([A-Z0-9_]+)=y$", line):
+            if m := re.match('CONFIG_([A-Z0-9_]+)=y$', line):
                 option = m.group(1)
                 if option not in SUPPORTED_ARCHS:
                     continue
@@ -141,7 +141,7 @@ def detect_arch_by_sysctl(fname: str) -> tuple[StrOrNone, str]:
 
 def detect_kernel_version(fname: str) -> tuple[TupleOrNone, str]:
     with _open(fname) as f:
-        ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
+        ver_pattern = re.compile(r'^# Linux/.+ Kernel Configuration$|^Linux version .+')
         for l in f.readlines():
             if ver_pattern.match(l):
                 line = l.strip()
@@ -229,8 +229,8 @@ def print_checklist(mode: StrOrNone, checklist: list[ChecklistObjType], with_res
 
 def parse_kconfig_file(_mode: StrOrNone, parsed_options: dict[str, str], fname: str) -> None:
     with _open(fname) as f:
-        opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.*$")
-        opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
+        opt_is_on = re.compile(r'CONFIG_[a-zA-Z0-9_]+=.*$')
+        opt_is_off = re.compile(r'# CONFIG_[a-zA-Z0-9_]+ is not set$')
 
         for l in f.readlines():
             line = l.strip()
@@ -288,7 +288,7 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
         if os.stat(fname).st_size == 0:
             sys.exit(f'[-] ERROR: empty sysctl file "{fname}"')
 
-        sysctl_pattern = re.compile(r"[a-zA-Z0-9/*._-]+ ?=.*$")
+        sysctl_pattern = re.compile(r'[a-zA-Z0-9/*._-]+ ?=.*$')
         sysctl_eperm_pattern = re.compile(r"sysctl: permission denied on key '([a-zA-Z0-9/*._-]+)'")
         for l in f.readlines():
             line = l.strip()
