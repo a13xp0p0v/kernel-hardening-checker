@@ -8,6 +8,76 @@ where = ["."]
 [tool.setuptools.dynamic]
 version = {attr = "kernel_hardening_checker.__version__"}
 
+[tool.ruff]
+lint.select = [
+    "E",    # pycodestyle
+    "W",    # pycodestyle
+    "F",    # Pyflakes
+    "PL",   # pylint
+    "I",    # isort
+    "A",    # flake8-builtins
+    "Q",    # flake8-quotes
+    "SIM",  # flake8-simplify (better to use only manually)
+    "RUF",  # Ruff-specific rules
+    "N",    # pep8-naming
+    "B",    # flake8-bugbear
+    "S",    # flake8-bandit
+    "COM",  # flake8-commas
+    "EXE",  # flake8-implicit-str-concat
+    "ISC",  # flake8-implicit-str-concat
+    "UP",   # pyupgrade
+]
+
+lint.ignore = [
+    "E114", # used for comment alignment
+    "E116", # used for comment alignment 
+    "E741", # used for short variables
+    "Q003", # sometimes escape is better than changing quotes
+    "PLR2004", # TODO: This requirement is excessive; however, I recommend removing the exception, and check for some refactoring.
+    "S101", # used for asserts
+    "S404", # used for subprocess
+    "S603", # used for subprocess
+]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+max-doc-length = 150 # docstring are less valuable
+
+[tool.ruff.lint.pylint]
+max-args = 6
+max-branches = 15
+max-statements = 100
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.per-file-ignores]
+
+# File-specific rule exceptions:
+# kernel_hardening_checker/__init__.py:
+#   PLR0912 — many branches are required due to many parse options, though may be changed later.
+
+# kernel_hardening_checker/test_engine.py:
+#   E501 — long lines are intentional in tests for clarity.
+#   E202, E502 — test code uses patterns that formally break style rules
+#                but are needed for precise behavior checks.
+
+# kernel_hardening_checker/engine.py:
+#   PLR5501 — branching readability rule conflicts with the module’s
+#             flat decision-flow structure.
+#   PLR0912 — high branch count is used in the engine’s complex check logic.
+
+# kernel_hardening_checker/checks.py:
+#   E501 — long strings and patterns are common in checks.
+#   PLR0912 — many branches are required due to numerous checks.
+#   PLR0914 — many local variables are unavoidable for separate checks.
+#   PLR0915 — nested/long logic is inherent to complex check scenarios.
+
+"kernel_hardening_checker/__init__.py" = ["PLR0912"]
+"kernel_hardening_checker/test_engine.py" = ["E501", "E202", "E502"]
+"kernel_hardening_checker/engine.py" = ["PLR5501" , "PLR0912"]
+"kernel_hardening_checker/checks.py" = ["E501", "PLR0912", "PLR0914", "PLR0915"]
+
 [project]
 name = "kernel-hardening-checker"
 requires-python = ">= 3.9"
