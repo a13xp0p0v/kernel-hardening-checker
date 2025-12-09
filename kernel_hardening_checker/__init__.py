@@ -125,7 +125,7 @@ def detect_arch_by_sysctl(fname: str) -> tuple[StrOrNone, str]:
         'ARM': r'^armv[3-7]',
         'RISCV': r'^riscv32|riscv64',
         'X86_32': r'^i[3-6]?86',
-        'X86_64': r'^x86_64'
+        'X86_64': r'^x86_64',
     }
     with _open(fname) as f:
         for line in f.readlines():

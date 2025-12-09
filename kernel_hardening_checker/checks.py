@@ -868,7 +868,7 @@ no_kstrtobool_options = [
     'efi',  # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
     'hash_pointers',  # see hash_pointers_mode_parse() in lib/vsprintf.c
     'ipv6.disable',  # see the disable_ipv6_mod parameter in net/ipv6/af_inet6.c
-    'proc_mem.force_override'  # see early_proc_mem_force_override() in fs/proc/base.c
+    'proc_mem.force_override',  # see early_proc_mem_force_override() in fs/proc/base.c
 ]
 
 

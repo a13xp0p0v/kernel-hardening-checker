@@ -178,7 +178,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': '*expected_11*', 'check_result': 'OK: in "expected_11,something,UNexpected2"', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_12', 'type': 'kconfig', 'reason': 'reason_12', 'decision': 'decision_12', 'desired_val': '*expected_12*', 'check_result': 'FAIL: not in UNexpected_12,something', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_13', 'type': 'kconfig', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': '*expected_13*', 'check_result': 'FAIL: is not found', 'check_result_bool': False}]
+                 {'option_name': 'CONFIG_NAME_13', 'type': 'kconfig', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': '*expected_13*', 'check_result': 'FAIL: is not found', 'check_result_bool': False}],
         )
 
     def test_simple_cmdline(self) -> None:
@@ -221,7 +221,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'name_7', 'type': 'cmdline', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'is not off', 'check_result': 'OK: is not off, ""', 'check_result_bool': True},
                  {'option_name': 'name_8', 'type': 'cmdline', 'reason': 'reason_8', 'decision': 'decision_8', 'desired_val': 'is not off', 'check_result': 'FAIL: is off', 'check_result_bool': False},
                  {'option_name': 'name_9', 'type': 'cmdline', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, "0"', 'check_result_bool': False},
-                 {'option_name': 'name_10', 'type': 'cmdline', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}]
+                 {'option_name': 'name_10', 'type': 'cmdline', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}],
         )
 
     def test_simple_sysctl(self) -> None:
@@ -264,7 +264,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'name_7', 'type': 'sysctl', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'is not off', 'check_result': 'OK: is not off, ""', 'check_result_bool': True},
                  {'option_name': 'name_8', 'type': 'sysctl', 'reason': 'reason_8', 'decision': 'decision_8', 'desired_val': 'is not off', 'check_result': 'FAIL: is off', 'check_result_bool': False},
                  {'option_name': 'name_9', 'type': 'sysctl', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, "0"', 'check_result_bool': False},
-                 {'option_name': 'name_10', 'type': 'sysctl', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}]
+                 {'option_name': 'name_10', 'type': 'sysctl', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}],
         )
 
     def test_complex_or(self) -> None:
@@ -317,7 +317,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_9', 'type': 'kconfig', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'expected_9', 'check_result': 'OK: CONFIG_NAME_10 is present', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': 'expected_11', 'check_result': 'OK: CONFIG_NAME_12 is not off', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_13', 'type': 'kconfig', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': 'expected_13', 'check_result': 'OK: "expected_14" is in CONFIG_NAME_14', 'check_result_bool': True},
-                 {'option_name': 'CONFIG_NAME_15', 'type': 'kconfig', 'reason': 'reason_15', 'decision': 'decision_15', 'desired_val': 'expected_15', 'check_result': 'OK: "expected_16" is in CONFIG_NAME_16', 'check_result_bool': True}]
+                 {'option_name': 'CONFIG_NAME_15', 'type': 'kconfig', 'reason': 'reason_15', 'decision': 'decision_15', 'desired_val': 'expected_15', 'check_result': 'OK: "expected_16" is in CONFIG_NAME_16', 'check_result_bool': True}],
         )
 
     def test_complex_and(self) -> None:
@@ -372,7 +372,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_9', 'type': 'kconfig', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'expected_9', 'check_result': 'FAIL: CONFIG_NAME_10 is off', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': 'expected_11', 'check_result': 'FAIL: CONFIG_NAME_12 is off, not found', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_13', 'type': 'kconfig', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': 'expected_13', 'check_result': 'FAIL: "expected_14" is not in CONFIG_NAME_14', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_15', 'type': 'kconfig', 'reason': 'reason_15', 'decision': 'decision_15', 'desired_val': 'expected_15', 'check_result': 'FAIL: "expected_16" is not in CONFIG_NAME_16', 'check_result_bool': False}]
+                 {'option_name': 'CONFIG_NAME_15', 'type': 'kconfig', 'reason': 'reason_15', 'decision': 'decision_15', 'desired_val': 'expected_15', 'check_result': 'FAIL: "expected_16" is not in CONFIG_NAME_16', 'check_result_bool': False}],
         )
 
     def test_complex_nested(self) -> None:
@@ -417,7 +417,7 @@ class TestEngine(unittest.TestCase):
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1', 'check_result': 'OK', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_4', 'type': 'kconfig', 'reason': 'reason_4', 'decision': 'decision_4', 'desired_val': 'expected_4', 'check_result': 'FAIL: CONFIG_NAME_5 is not "expected_5"', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_7', 'type': 'kconfig', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'expected_7', 'check_result': 'OK: CONFIG_NAME_8 is "expected_8"', 'check_result_bool': True},
-                 {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'expected_10', 'check_result': 'FAIL: "UNexpected_10"', 'check_result_bool': False}]
+                 {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'expected_10', 'check_result': 'FAIL: "UNexpected_10"', 'check_result_bool': False}],
         )
 
     def test_version(self) -> None:
@@ -458,7 +458,7 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_3', 'type': 'kconfig', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'OK: version >= (42, 42, 101)', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_4', 'type': 'kconfig', 'reason': 'reason_4', 'decision': 'decision_4', 'desired_val': 'expected_4', 'check_result': 'FAIL: version < (42, 44, 1)', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_5', 'type': 'kconfig', 'reason': 'reason_5', 'decision': 'decision_5', 'desired_val': 'expected_5', 'check_result': 'OK: version >= (42, 43, 44)', 'check_result_bool': True},
-                 {'option_name': 'CONFIG_NAME_6', 'type': 'kconfig', 'reason': 'reason_6', 'decision': 'decision_6', 'desired_val': 'expected_6', 'check_result': 'FAIL: version < (42, 43, 45)', 'check_result_bool': False}]
+                 {'option_name': 'CONFIG_NAME_6', 'type': 'kconfig', 'reason': 'reason_6', 'decision': 'decision_6', 'desired_val': 'expected_6', 'check_result': 'FAIL: version < (42, 43, 45)', 'check_result_bool': False}],
         )
 
     def test_stdout(self) -> None:
@@ -499,7 +499,7 @@ class TestEngine(unittest.TestCase):
                 json_result,
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1', 'check_result': 'OK: name_2 is "expected_2"', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_4', 'type': 'kconfig', 'reason': 'reason_4', 'decision': 'decision_4', 'desired_val': 'expected_4', 'check_result': 'FAIL: name_5 is not "expected_5"', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_7', 'type': 'kconfig', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'expected_7', 'check_result': 'FAIL: version < (42, 43, 44)', 'check_result_bool': False}]
+                 {'option_name': 'CONFIG_NAME_7', 'type': 'kconfig', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'expected_7', 'check_result': 'FAIL: version < (42, 43, 44)', 'check_result_bool': False}],
         )
 
         stdout_result = []  # type: ResultType
@@ -511,7 +511,7 @@ class TestEngine(unittest.TestCase):
 CONFIG_NAME_1                         |kconfig|     reason_1     |decision_1| expected_1 | OK: name_2 is "expected_2"\
 CONFIG_NAME_4                         |kconfig|     reason_4     |decision_4| expected_4 | FAIL: name_5 is not "expected_5"\
 CONFIG_NAME_7                         |kconfig|     reason_7     |decision_7| expected_7 | FAIL: version < (42, 43, 44)\
-'               ]
+'               ],
         )
 
         stdout_result = []
@@ -535,7 +535,7 @@ name_6                                |sysctl |     reason_6     |decision_6| ex
     <<< AND >>>                                                                          | FAIL: version < (42, 43, 44)\n\
 CONFIG_NAME_7                         |kconfig|     reason_7     |decision_7| expected_7 | None\n\
 kernel version >= (42, 43, 44)                                                           | FAIL: version < (42, 43, 44)\
-'               ]
+'               ],
         )
 
     def test_simple_value_overriding(self) -> None:
@@ -567,7 +567,7 @@ kernel version >= (42, 43, 44)                                                  
                 result,
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1', 'check_result': 'FAIL: "expected_1_new"', 'check_result_bool': False},
                  {'option_name': 'name_2', 'type': 'cmdline', 'reason': 'reason_2', 'decision': 'decision_2', 'desired_val': 'expected_2', 'check_result': 'FAIL: "expected_2_new"', 'check_result_bool': False},
-                 {'option_name': 'name_3', 'type': 'sysctl', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}]
+                 {'option_name': 'name_3', 'type': 'sysctl', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}],
         )
 
         # 7. override expected value and perform the checks again
@@ -581,7 +581,7 @@ kernel version >= (42, 43, 44)                                                  
                 result,
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1_new', 'check_result': 'OK', 'check_result_bool': True},
                  {'option_name': 'name_2', 'type': 'cmdline', 'reason': 'reason_2', 'decision': 'decision_2', 'desired_val': 'expected_2', 'check_result': 'FAIL: "expected_2_new"', 'check_result_bool': False},
-                 {'option_name': 'name_3', 'type': 'sysctl', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}]
+                 {'option_name': 'name_3', 'type': 'sysctl', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}],
         )
 
         # 9. override expected value and perform the checks again
@@ -595,7 +595,7 @@ kernel version >= (42, 43, 44)                                                  
                 result,
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1_new', 'check_result': 'OK', 'check_result_bool': True},
                  {'option_name': 'name_2', 'type': 'cmdline', 'reason': 'reason_2', 'decision': 'decision_2', 'desired_val': 'expected_2_new', 'check_result': 'OK', 'check_result_bool': True},
-                 {'option_name': 'name_3', 'type': 'sysctl', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}]
+                 {'option_name': 'name_3', 'type': 'sysctl', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}],
         )
 
         # 11. override expected value and perform the checks again
@@ -609,7 +609,7 @@ kernel version >= (42, 43, 44)                                                  
                 result,
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1_new', 'check_result': 'OK', 'check_result_bool': True},
                  {'option_name': 'name_2', 'type': 'cmdline', 'reason': 'reason_2', 'decision': 'decision_2', 'desired_val': 'expected_2_new', 'check_result': 'OK', 'check_result_bool': True},
-                 {'option_name': 'name_3', 'type': 'sysctl', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3_new', 'check_result': 'OK', 'check_result_bool': True}]
+                 {'option_name': 'name_3', 'type': 'sysctl', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3_new', 'check_result': 'OK', 'check_result_bool': True}],
         )
 
     def test_complex_value_overriding(self) -> None:
@@ -638,7 +638,7 @@ kernel version >= (42, 43, 44)                                                  
         self.assertEqual(
                 result,
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1', 'check_result': 'FAIL: "expected_1_new"', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_3', 'type': 'kconfig', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}]
+                 {'option_name': 'CONFIG_NAME_3', 'type': 'kconfig', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3', 'check_result': 'FAIL: "expected_3_new"', 'check_result_bool': False}],
         )
 
         # 6. override expected value and perform the checks again
@@ -652,7 +652,7 @@ kernel version >= (42, 43, 44)                                                  
         self.assertEqual(
                 result,
                 [{'option_name': 'CONFIG_NAME_1', 'type': 'kconfig', 'reason': 'reason_1', 'decision': 'decision_1', 'desired_val': 'expected_1_new', 'check_result': 'OK', 'check_result_bool': True},
-                 {'option_name': 'CONFIG_NAME_3', 'type': 'kconfig', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3_new', 'check_result': 'OK', 'check_result_bool': True}]
+                 {'option_name': 'CONFIG_NAME_3', 'type': 'kconfig', 'reason': 'reason_3', 'decision': 'decision_3', 'desired_val': 'expected_3_new', 'check_result': 'OK', 'check_result_bool': True}],
         )
 
     def test_print_unknown_options_simple(self) -> None:
