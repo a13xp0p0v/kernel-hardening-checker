@@ -135,7 +135,7 @@ class TestEngine(unittest.TestCase):
         config_checklist += [KconfigCheck('reason_13', 'decision_13', 'NAME_13', '*expected_13*')]
 
         # 2. prepare the parsed kconfig options
-        parsed_kconfig_options  = {}
+        parsed_kconfig_options = {}
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
         parsed_kconfig_options['CONFIG_NAME_2'] = 'UNexpected_2'
         parsed_kconfig_options['CONFIG_NAME_5'] = 'UNexpected_5'
@@ -183,7 +183,7 @@ class TestEngine(unittest.TestCase):
         config_checklist += [CmdlineCheck('reason_10', 'decision_10', 'name_10', 'is not off')]
 
         # 2. prepare the parsed cmdline options
-        parsed_cmdline_options  = {}
+        parsed_cmdline_options = {}
         parsed_cmdline_options['name_1'] = 'expected_1'
         parsed_cmdline_options['name_2'] = 'UNexpected_2'
         parsed_cmdline_options['name_5'] = ''
@@ -226,7 +226,7 @@ class TestEngine(unittest.TestCase):
         config_checklist += [SysctlCheck('reason_10', 'decision_10', 'name_10', 'is not off')]
 
         # 2. prepare the parsed sysctl options
-        parsed_sysctl_options  = {}
+        parsed_sysctl_options = {}
         parsed_sysctl_options['name_1'] = 'expected_1'
         parsed_sysctl_options['name_2'] = 'UNexpected_2'
         parsed_sysctl_options['name_5'] = ''
@@ -275,7 +275,7 @@ class TestEngine(unittest.TestCase):
                                 KconfigCheck('reason_16', 'decision_16', 'NAME_16', '*expected_16*'))]
 
         # 2. prepare the parsed kconfig options
-        parsed_kconfig_options  = {}
+        parsed_kconfig_options = {}
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
         parsed_kconfig_options['CONFIG_NAME_2'] = 'UNexpected_2'
         parsed_kconfig_options['CONFIG_NAME_3'] = 'UNexpected_3'
@@ -328,7 +328,7 @@ class TestEngine(unittest.TestCase):
                                  KconfigCheck('reason_16', 'decision_16', 'NAME_16', '*expected_16*'))]
 
         # 2. prepare the parsed kconfig options
-        parsed_kconfig_options  = {}
+        parsed_kconfig_options = {}
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
         parsed_kconfig_options['CONFIG_NAME_2'] = 'expected_2'
         parsed_kconfig_options['CONFIG_NAME_3'] = 'expected_3'
@@ -379,7 +379,7 @@ class TestEngine(unittest.TestCase):
                                      KconfigCheck('reason_12', 'decision_12', 'NAME_12', 'expected_12')))]
 
         # 2. prepare the parsed kconfig options
-        parsed_kconfig_options  = {}
+        parsed_kconfig_options = {}
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
         parsed_kconfig_options['CONFIG_NAME_2'] = 'UNexpected_2'
         parsed_kconfig_options['CONFIG_NAME_3'] = 'expected_3'
@@ -424,7 +424,7 @@ class TestEngine(unittest.TestCase):
                                  VersionCheck((42, 43, 45)))]
 
         # 2. prepare the parsed kconfig options
-        parsed_kconfig_options  = {}
+        parsed_kconfig_options = {}
         parsed_kconfig_options['CONFIG_NAME_2'] = 'expected_2'
         parsed_kconfig_options['CONFIG_NAME_4'] = 'expected_4'
         parsed_kconfig_options['CONFIG_NAME_6'] = 'expected_6'
@@ -461,16 +461,16 @@ class TestEngine(unittest.TestCase):
                                  VersionCheck((42, 43, 44)))]
 
         # 2. prepare the parsed kconfig options
-        parsed_kconfig_options  = {}
+        parsed_kconfig_options = {}
         parsed_kconfig_options['CONFIG_NAME_1'] = 'UNexpected_1'
 
         # 3. prepare the parsed cmdline options
-        parsed_cmdline_options  = {}
+        parsed_cmdline_options = {}
         parsed_cmdline_options['name_2'] = 'expected_2'
         parsed_cmdline_options['name_5'] = 'UNexpected_5'
 
         # 4. prepare the parsed sysctl options
-        parsed_sysctl_options  = {}
+        parsed_sysctl_options = {}
         parsed_sysctl_options['name_6'] = 'expected_6'
 
         # 5. prepare the kernel version
@@ -533,15 +533,15 @@ kernel version >= (42, 43, 44)                                                  
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
 
         # 2. prepare the parsed kconfig options
-        parsed_kconfig_options  = {}
+        parsed_kconfig_options = {}
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1_new'
 
         # 3. prepare the parsed cmdline options
-        parsed_cmdline_options  = {}
+        parsed_cmdline_options = {}
         parsed_cmdline_options['name_2'] = 'expected_2_new'
 
         # 4. prepare the parsed sysctl options
-        parsed_sysctl_options  = {}
+        parsed_sysctl_options = {}
         parsed_sysctl_options['name_3'] = 'expected_3_new'
 
         # 5. run the engine
@@ -608,7 +608,7 @@ kernel version >= (42, 43, 44)                                                  
                                  KconfigCheck('reason_4', 'decision_4', 'NAME_4', 'expected_4'))]
 
         # 2. prepare the parsed kconfig OR options
-        parsed_kconfig_options  = {}
+        parsed_kconfig_options = {}
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1_new'
         parsed_kconfig_options['CONFIG_NAME_2'] = 'UNexpected_2'
 
@@ -650,9 +650,9 @@ kernel version >= (42, 43, 44)                                                  
         config_checklist += [SysctlCheck('reason_3', 'decision_3', 'name_3', 'expected_3')]
 
         # 2. prepare parsed options
-        parsed_kconfig_options  = {}
-        parsed_cmdline_options  = {}
-        parsed_sysctl_options  = {}
+        parsed_kconfig_options = {}
+        parsed_cmdline_options = {}
+        parsed_sysctl_options = {}
 
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
         parsed_kconfig_options['CONFIG_NOCHECK_NAME_1'] = 'expected_1'
@@ -685,9 +685,9 @@ kernel version >= (42, 43, 44)                                                  
                                 KconfigCheck('reason_6', 'decision_6', 'NAME_6', 'expected_6'))]
 
         # 2. prepare parsed options
-        parsed_kconfig_options  = {}
-        parsed_cmdline_options  = {}
-        parsed_sysctl_options  = {}
+        parsed_kconfig_options = {}
+        parsed_cmdline_options = {}
+        parsed_sysctl_options = {}
 
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
         parsed_kconfig_options['CONFIG_NOCHECK_NAME_1'] = 'expected_1'
@@ -732,9 +732,9 @@ kernel version >= (42, 43, 44)                                                  
                                     KconfigCheck('reason_8', 'decision_8', 'NAME_8', 'expected_8')))]
 
         # 2. prepare parsed options
-        parsed_kconfig_options  = {}
-        parsed_cmdline_options  = {}
-        parsed_sysctl_options  = {}
+        parsed_kconfig_options = {}
+        parsed_cmdline_options = {}
+        parsed_sysctl_options = {}
 
         parsed_kconfig_options['CONFIG_NAME_1'] = 'expected_1'
         parsed_kconfig_options['CONFIG_NOCHECK_NAME_1'] = 'expected_1'
