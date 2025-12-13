@@ -75,6 +75,7 @@ ignore = [
     "E114", # we align comments
     "E116", # ditto, we align comments
     "E741", # we use short variable names
+    "PLR0912", # we parse many arguments and perform many checks, skip this restriction
     "Q003", # don't change outer quotes to avoid escaping inner quotes
     "S101", # we use the assert keyword
     "S404", # we use subprocess
@@ -94,10 +95,6 @@ inline-quotes = "single"
 notice-rgx = "SPDX-FileCopyrightText"
 
 [tool.ruff.lint.per-file-ignores]
-# File-specific rule exceptions:
-# kernel_hardening_checker/__init__.py:
-#   PLR0912 — many branches are required due to many parse options, though may be changed later.
-
 # kernel_hardening_checker/test_engine.py:
 #   E501 — long lines are intentional in tests for clarity.
 #   E202, E502 — test code uses patterns that formally break style rules
@@ -106,14 +103,11 @@ notice-rgx = "SPDX-FileCopyrightText"
 # kernel_hardening_checker/engine.py:
 #   PLR5501 — branching readability rule conflicts with the module’s
 #             flat decision-flow structure.
-#   PLR0912 — high branch count is used in the engine’s complex check logic.
 
 # kernel_hardening_checker/checks.py:
-#   PLR0912 — many branches are required due to numerous checks.
 #   PLR0914 — many local variables are unavoidable for separate checks.
 #   PLR0915 — nested/long logic is inherent to complex check scenarios.
 
-"kernel_hardening_checker/__init__.py" = ["PLR0912"]
 "kernel_hardening_checker/test_engine.py" = ["E501", "E202", "E502"]
-"kernel_hardening_checker/engine.py" = ["PLR5501" , "PLR0912"]
-"kernel_hardening_checker/checks.py" = ["PLR0912", "PLR0914", "PLR0915"]
+"kernel_hardening_checker/engine.py" = ["PLR5501"]
+"kernel_hardening_checker/checks.py" = ["PLR0914", "PLR0915"]
