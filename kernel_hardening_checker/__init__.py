@@ -452,6 +452,32 @@ def check_autodetected_configuration(mode: StrOrNone) -> None:
     os.remove(sysctl_file)
 
 
+def check_configuration(mode: StrOrNone,
+                        kconfig_file: StrOrNone,
+                        cmdline_file: StrOrNone,
+                        sysctl_file: StrOrNone,
+                        kernel_version_file: StrOrNone) -> None:
+    if kconfig_file:
+        if kernel_version_file:
+            kernel_version, msg = detect_kernel_version(kernel_version_file)
+        else:
+            kernel_version, msg = detect_kernel_version(kconfig_file)
+        if kernel_version is None:
+            if kernel_version_file is None:
+                print('[!] HINT: you can provide the kernel version file through --kernel-version option')
+            sys.exit(f'[-] ERROR: {msg}')
+        mprint(mode, f'[+] Detected kernel version: {kernel_version}')
+        perform_checking(mode, kernel_version, kconfig_file, cmdline_file, sysctl_file)
+        return
+
+    if cmdline_file:
+        sys.exit('[-] ERROR: checking cmdline depends on checking Kconfig')
+
+    # separate sysctl checking (without kconfig)
+    assert (sysctl_file), 'unexpected configuration'
+    perform_checking(mode, None, None, None, sysctl_file)
+
+
 def main() -> None:
     # Report modes:
     #   * verbose mode for
@@ -499,44 +525,26 @@ def main() -> None:
         check_autodetected_configuration(mode)
         sys.exit(0)
 
-    if args.config:
-        mprint(mode, f'[+] Kconfig file to check: {args.config}')
-    if args.cmdline:
-        mprint(mode, f'[+] Kernel cmdline file to check: {args.cmdline}')
-    if args.sysctl:
-        mprint(mode, f'[+] Sysctl output file to check: {args.sysctl}')
-
-    if args.config:
-        assert (not args.autodetect), 'unexpected args'
-        if args.print:
-            sys.exit('[-] ERROR: --config and --print can\'t be used together')
-        if args.generate:
-            sys.exit('[-] ERROR: --config and --generate can\'t be used together')
-
-        if args.kernel_version:
-            kernel_version, msg = detect_kernel_version(args.kernel_version)
-        else:
-            kernel_version, msg = detect_kernel_version(args.config)
-        if kernel_version is None:
-            if args.kernel_version is None:
-                print('[!] HINT: you can provide the kernel version file through --kernel-version option')
-            sys.exit(f'[-] ERROR: {msg}')
-        mprint(mode, f'[+] Detected kernel version: {kernel_version}')
-
-        perform_checking(mode, kernel_version, args.config, args.cmdline, args.sysctl)
-        sys.exit(0)
-    elif args.cmdline:
-        sys.exit('[-] ERROR: checking cmdline depends on checking Kconfig')
-    elif args.sysctl:
-        # separate sysctl checking (without kconfig)
-        assert (not args.autodetect), 'unexpected args'
-        if args.kernel_version:
-            sys.exit('[-] ERROR: --kernel-version is not needed for --sysctl')
-        if args.print:
-            sys.exit('[-] ERROR: --sysctl and --print can\'t be used together')
-        if args.generate:
-            sys.exit('[-] ERROR: --sysctl and --generate can\'t be used together')
-        perform_checking(mode, None, None, None, args.sysctl)
+    if args.config or args.cmdline or args.sysctl:
+        if args.config:
+            assert (not args.autodetect), 'unexpected args'
+            if args.print:
+                sys.exit('[-] ERROR: --config and --print can\'t be used together')
+            if args.generate:
+                sys.exit('[-] ERROR: --config and --generate can\'t be used together')
+            mprint(mode, f'[+] Kconfig file to check: {args.config}')
+        if args.cmdline:
+            mprint(mode, f'[+] Kernel cmdline file to check: {args.cmdline}')
+        if args.sysctl:
+            assert (not args.autodetect), 'unexpected args'
+            if args.kernel_version:
+                sys.exit('[-] ERROR: --kernel-version is not needed for --sysctl')
+            if args.print:
+                sys.exit('[-] ERROR: --sysctl and --print can\'t be used together')
+            if args.generate:
+                sys.exit('[-] ERROR: --sysctl and --generate can\'t be used together')
+            mprint(mode, f'[+] Sysctl output file to check: {args.sysctl}')
+        check_configuration(mode, args.config, args.cmdline, args.sysctl, args.kernel_version)
         sys.exit(0)
 
     if args.print:
