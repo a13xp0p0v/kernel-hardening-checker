@@ -9,8 +9,7 @@ SPDX-License-Identifier: GPL-3.0-only
 This module contains knowledge for checks.
 """
 
-# pylint: disable=missing-function-docstring,too-many-lines
-# pylint: disable=too-many-branches,too-many-statements,too-many-locals
+# pylint: disable=missing-function-docstring,too-many-lines,too-many-branches,too-many-statements,too-many-locals
 
 from .engine import (
     AND,
