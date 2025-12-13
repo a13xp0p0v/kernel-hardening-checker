@@ -8,6 +8,36 @@ where = ["."]
 [tool.setuptools.dynamic]
 version = {attr = "kernel_hardening_checker.__version__"}
 
+[project]
+name = "kernel-hardening-checker"
+requires-python = ">= 3.9"
+dynamic = ["version"]
+description = "A tool for checking the security hardening options of the Linux kernel"
+readme = "README.md"
+authors = [
+  {name = "Alexander Popov", email = "alex.popov@linux.com"}
+]
+maintainers = [
+  {name = "Alexander Popov", email = "alex.popov@linux.com"}
+]
+license = "GPL-3.0-only"
+license-files = ["LICENSE.txt"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Security",
+    "Operating System :: POSIX :: Linux",
+    "Environment :: Console",
+    "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+kernel-hardening-checker = "kernel_hardening_checker:main"
+
+[project.urls]
+homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
+repository = "https://github.com/a13xp0p0v/kernel-hardening-checker.git"
+bugtracker = "https://github.com/a13xp0p0v/kernel-hardening-checker/issues"
+
 [tool.ruff]
 lint.select = [
     "E",    # pycodestyle
@@ -30,7 +60,7 @@ lint.select = [
 
 lint.ignore = [
     "E114", # used for comment alignment
-    "E116", # used for comment alignment 
+    "E116", # used for comment alignment
     "E741", # used for short variables
     "Q003", # sometimes escape is better than changing quotes
     "PLR2004", # TODO: This requirement is excessive; however, I recommend removing the exception, and check for some refactoring.
@@ -77,33 +107,3 @@ inline-quotes = "single"
 "kernel_hardening_checker/test_engine.py" = ["E501", "E202", "E502"]
 "kernel_hardening_checker/engine.py" = ["PLR5501" , "PLR0912"]
 "kernel_hardening_checker/checks.py" = ["E501", "PLR0912", "PLR0914", "PLR0915"]
-
-[project]
-name = "kernel-hardening-checker"
-requires-python = ">= 3.9"
-dynamic = ["version"]
-description = "A tool for checking the security hardening options of the Linux kernel"
-readme = "README.md"
-authors = [
-  {name = "Alexander Popov", email = "alex.popov@linux.com"}
-]
-maintainers = [
-  {name = "Alexander Popov", email = "alex.popov@linux.com"}
-]
-license = "GPL-3.0-only"
-license-files = ["LICENSE.txt"]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Topic :: Security",
-    "Operating System :: POSIX :: Linux",
-    "Environment :: Console",
-    "Programming Language :: Python :: 3",
-]
-
-[project.scripts]
-kernel-hardening-checker = "kernel_hardening_checker:main"
-
-[project.urls]
-homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
-repository = "https://github.com/a13xp0p0v/kernel-hardening-checker.git"
-bugtracker = "https://github.com/a13xp0p0v/kernel-hardening-checker/issues"
