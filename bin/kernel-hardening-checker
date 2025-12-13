@@ -9,6 +9,8 @@ SPDX-License-Identifier: GPL-3.0-only
 This file is for using the tool without installation via setuptools.
 """
 
+# pylint: disable=invalid-name,import-error,wrong-import-position
+
 import inspect
 import os
 import sys

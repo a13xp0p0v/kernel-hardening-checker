@@ -39,7 +39,7 @@ jobs:
     - name: Check the code with pylint
       run: |
         python3 -m pip install pylint
-        pylint --recursive=y kernel_hardening_checker
+        pylint --verbose --recursive=y bin/kernel-hardening-checker kernel_hardening_checker/
 
     - name: Check the code with ruff
       run: |
