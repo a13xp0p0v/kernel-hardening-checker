@@ -85,8 +85,6 @@ ignore = [
 max-line-length = 120
 
 [tool.ruff.lint.pylint]
-max-args = 6
-max-branches = 15
 max-statements = 100
 
 [tool.ruff.lint.flake8-quotes]
