@@ -83,10 +83,9 @@ def get_local_kconfig_file(version_fname: str) -> tuple[StrOrNone, str]:
 
 def get_local_sysctl_file() -> tuple[StrOrNone, str]:
     sysctl_bin = shutil.which('sysctl')
-    if not sysctl_bin:
+    if not sysctl_bin and os.path.isfile('/sbin/sysctl'):
         # fix for Debian
-        if os.path.isfile('/sbin/sysctl'):
-            sysctl_bin = '/sbin/sysctl'
+        sysctl_bin = '/sbin/sysctl'
     if not sysctl_bin:
         return None, 'sysctl command is not found on this machine'
 
