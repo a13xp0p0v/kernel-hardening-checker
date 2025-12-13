@@ -487,6 +487,21 @@ def print_recommendations(mode: StrOrNone, arch: str) -> None:
     print_checklist(mode, config_checklist, False)
 
 
+def generate_kconfig_fragment(arch: str) -> None:
+    config_checklist = []  # type: list[ChecklistObjType]
+    add_kconfig_checks(config_checklist, arch)
+    print(f'CONFIG_{arch}=y')  # the Kconfig fragment should describe the architecture
+    for opt in config_checklist:
+        if opt.name in {'CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_LSM'}:
+            continue  # don't add Kconfig options with a value that needs refinement
+        if opt.expected == 'is not off':
+            continue  # don't add Kconfig options without explicitly recommended values
+        if opt.expected == 'is not set':
+            print(f'# {opt.name} is not set')
+        else:
+            print(f'{opt.name}={opt.expected}')
+
+
 def main() -> None:
     # Report modes:
     #   * verbose mode for
@@ -585,18 +600,7 @@ def main() -> None:
         if args.kernel_version:
             sys.exit('[-] ERROR: --kernel-version is not needed for --generate')
         arch = args.generate
-        config_checklist = []
-        add_kconfig_checks(config_checklist, arch)
-        print(f'CONFIG_{arch}=y')  # the Kconfig fragment should describe the architecture
-        for opt in config_checklist:
-            if opt.name in {'CONFIG_ARCH_MMAP_RND_BITS', 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS', 'CONFIG_LSM'}:
-                continue  # don't add Kconfig options with a value that needs refinement
-            if opt.expected == 'is not off':
-                continue  # don't add Kconfig options without explicitly recommended values
-            if opt.expected == 'is not set':
-                print(f'# {opt.name} is not set')
-            else:
-                print(f'{opt.name}={opt.expected}')
+        generate_kconfig_fragment(arch)
         sys.exit(0)
 
     parser.print_help()
