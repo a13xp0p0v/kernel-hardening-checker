@@ -478,6 +478,15 @@ def check_configuration(mode: StrOrNone,
     perform_checking(mode, None, None, None, sysctl_file)
 
 
+def print_recommendations(mode: StrOrNone, arch: str) -> None:
+    config_checklist = []  # type: list[ChecklistObjType]
+    add_kconfig_checks(config_checklist, arch)
+    add_cmdline_checks(config_checklist, arch)
+    add_sysctl_checks(config_checklist, arch)
+    mprint(mode, f'[+] Printing kernel security hardening options for {arch}...')
+    print_checklist(mode, config_checklist, False)
+
+
 def main() -> None:
     # Report modes:
     #   * verbose mode for
@@ -561,12 +570,7 @@ def main() -> None:
             sys.exit(f'[-] ERROR: wrong mode "{mode}" for --print')
         arch = args.print
         assert (arch), 'unexpected empty arch from ArgumentParser'
-        config_checklist = []  # type: list[ChecklistObjType]
-        add_kconfig_checks(config_checklist, arch)
-        add_cmdline_checks(config_checklist, arch)
-        add_sysctl_checks(config_checklist, arch)
-        mprint(mode, f'[+] Printing kernel security hardening options for {arch}...')
-        print_checklist(mode, config_checklist, False)
+        print_recommendations(mode, arch)
         sys.exit(0)
 
     if args.generate:
