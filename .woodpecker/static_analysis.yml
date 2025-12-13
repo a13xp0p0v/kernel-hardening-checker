@@ -22,3 +22,14 @@ steps:
       - python3 -m pip install pylint
       - echo "Run pylint..."
       - pylint --recursive=y kernel_hardening_checker
+  - name: ruff-checking
+    image: python:3
+    when:
+      - event: [push, tag, manual]
+    commands:
+      - ls -la
+      - python3 --version
+      - python3 -m pip install --upgrade pip
+      - python3 -m pip install ruff
+      - echo "Run ruff..."
+      - ruff check -v --preview bin/kernel-hardening-checker kernel_hardening_checker/

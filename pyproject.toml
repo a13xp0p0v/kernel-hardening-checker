@@ -37,3 +37,70 @@ kernel-hardening-checker = "kernel_hardening_checker:main"
 homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
 repository = "https://github.com/a13xp0p0v/kernel-hardening-checker.git"
 bugtracker = "https://github.com/a13xp0p0v/kernel-hardening-checker/issues"
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "S",    # flake8-bandit
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "COM",  # flake8-commas
+    "C4",   # flake8-comprehensions
+    "CPY",  # flake8-copyright
+    "EXE",  # flake8-implicit-str-concat
+    "FIX",  # flake8-fixme
+    "INT",  # flake8-gettext
+    "ISC",  # flake8-implicit-str-concat
+    "PIE",  # flake8-pie
+    "Q",    # flake8-quotes
+    "RET",  # flake8-return
+    "SLF",  # flake8-self
+    "SIM",  # flake8-simplify (please fix issues manually)
+    "ARG",  # flake8-unused-arguments
+    "FLY",  # flynt
+    "I",    # isort
+    "N",    # pep8-naming
+    "PERF", # Perflint
+    "E",    # pycodestyle error
+    "W",    # pycodestyle warning
+    "F",    # Pyflakes
+    "PL",   # pylint
+    "UP",   # pyupgrade
+    "RUF",  # Ruff-specific rules
+]
+ignore = [
+    "E114", # we align comments
+    "E116", # ditto, we align comments
+    "E741", # we use short variable names
+    "PLR0912", # we parse many arguments and perform many checks, skip this restriction
+    "Q003", # don't change outer quotes to avoid escaping inner quotes
+    "S101", # we use the assert keyword
+    "S404", # we use subprocess
+    "S603", # ditto, we use subprocess
+]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+
+[tool.ruff.lint.pylint]
+max-statements = 100
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = "SPDX-FileCopyrightText"
+
+[tool.ruff.lint.per-file-ignores]
+"kernel_hardening_checker/test_engine.py" = [
+    "E501", # long lines simplify reading the test results
+]
+"kernel_hardening_checker/checks.py" = [
+    "PLR0914", # we have many local variables in the recommendations
+    "PLR0915", # we have a lot of statements in the recommendations
+]
+"bin/kernel-hardening-checker" = [
+    "E402", # we need to insert the path before importing
+]

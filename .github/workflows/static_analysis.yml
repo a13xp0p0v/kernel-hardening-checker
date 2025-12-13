@@ -36,7 +36,12 @@ jobs:
         python3 -m pip install mypy
         mypy kernel_hardening_checker/ --show-error-context --pretty --no-incremental --check-untyped-defs --disallow-untyped-defs --strict-equality
 
-    - name: Check code with pylint
+    - name: Check the code with pylint
       run: |
         python3 -m pip install pylint
         pylint --recursive=y kernel_hardening_checker
+
+    - name: Check the code with ruff
+      run: |
+        python3 -m pip install ruff
+        ruff check -v --preview bin/kernel-hardening-checker kernel_hardening_checker/
