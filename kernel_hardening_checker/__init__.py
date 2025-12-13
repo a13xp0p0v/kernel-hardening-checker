@@ -176,9 +176,7 @@ def detect_compiler(fname: str) -> tuple[StrOrNone, str]:
 
 def print_checklist(mode: StrOrNone, checklist: list[ChecklistObjType], with_results: bool) -> None:
     if mode == 'json':
-        output = []
-        for opt in checklist:
-            output.append(opt.json_dump(with_results))
+        output = [opt.json_dump(with_results) for opt in checklist]
         print(json.dumps(output))
         return
 
