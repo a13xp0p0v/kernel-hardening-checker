@@ -324,7 +324,7 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
 
 def refine_check(mode: StrOrNone, checklist: list[ChecklistObjType], parsed_options: dict[str, str],
                  target: str, source: str) -> None:
-    source_val = parsed_options.get(source, None)
+    source_val = parsed_options.get(source)
     if source_val:
         override_expected_value(checklist, target, source_val)
     else:
