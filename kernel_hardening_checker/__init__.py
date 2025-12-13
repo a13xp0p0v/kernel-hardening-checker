@@ -9,7 +9,7 @@ SPDX-License-Identifier: GPL-3.0-only
 This module performs input/output.
 """
 
-# pylint: disable=missing-function-docstring,line-too-long,too-many-branches,too-many-statements
+# pylint: disable=missing-function-docstring,too-many-branches,too-many-statements
 
 import os
 import gzip

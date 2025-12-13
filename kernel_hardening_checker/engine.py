@@ -9,8 +9,7 @@ SPDX-License-Identifier: GPL-3.0-only
 This module is the engine of checks.
 """
 
-# pylint: disable=missing-class-docstring,missing-function-docstring
-# pylint: disable=line-too-long,too-many-branches
+# pylint: disable=missing-class-docstring,missing-function-docstring,too-many-branches
 
 from __future__ import annotations
 import sys

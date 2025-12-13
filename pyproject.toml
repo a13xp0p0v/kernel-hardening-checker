@@ -38,6 +38,9 @@ homepage = "https://github.com/a13xp0p0v/kernel-hardening-checker"
 repository = "https://github.com/a13xp0p0v/kernel-hardening-checker.git"
 bugtracker = "https://github.com/a13xp0p0v/kernel-hardening-checker/issues"
 
+[tool.pylint.format]
+max-line-length = 120
+
 [tool.ruff.lint]
 select = [
     "S",    # flake8-bandit
