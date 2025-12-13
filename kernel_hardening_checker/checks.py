@@ -901,9 +901,10 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
 
     # 'security_policy'
-    l += [SysctlCheck('security_policy', 'ubuntu', 'kernel.apparmor_restrict_unprivileged_unconfined', '1')]
-          # Forbid unprivileged and unconfined processes to change their AppArmor profiles
-          # https://discourse.ubuntu.com/t/understanding-apparmor-user-namespace-restriction/58007
+    l += [OR(SysctlCheck('security_policy', 'ubuntu', 'kernel.apparmor_restrict_unprivileged_unconfined', '1'),
+             SysctlCheck('-', '-', 'kernel.apparmor_restrict_unprivileged_unconfined', 'is not set'))]
+             # Forbid unprivileged and unconfined processes to change their AppArmor profiles
+             # https://discourse.ubuntu.com/t/understanding-apparmor-user-namespace-restriction/58007
 
     # 'cut_attack_surface', 'kspp'
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
