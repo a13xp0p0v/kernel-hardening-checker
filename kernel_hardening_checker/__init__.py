@@ -423,6 +423,35 @@ def perform_checking(mode: StrOrNone, version: TupleOrNone,
     print_checklist(mode, config_checklist, True)
 
 
+def check_autodetected_configuration(mode: StrOrNone) -> None:
+    mprint(mode, '[+] Going to autodetect and check the security hardening options of the running kernel')
+
+    version_file = '/proc/version'
+    kernel_version, msg = detect_kernel_version(version_file)
+    if kernel_version is None:
+        sys.exit(f'[-] ERROR: parsing {version_file} failed: {msg}')
+    mprint(mode, f'[+] Detected version of the running kernel: {kernel_version}')
+
+    kconfig_file, msg = get_local_kconfig_file(version_file)
+    if kconfig_file is None:
+        sys.exit(f'[-] ERROR: detecting kconfig file failed: {msg}')
+    mprint(mode, f'[+] Detected kconfig file of the running kernel: {kconfig_file}')
+
+    cmdline_file = '/proc/cmdline'
+    if not os.path.isfile(cmdline_file):
+        sys.exit(f'[-] ERROR: no kernel cmdline file {cmdline_file}')
+    mprint(mode, f'[+] Detected cmdline parameters of the running kernel: {cmdline_file}')
+
+    sysctl_file, msg = get_local_sysctl_file()
+    if sysctl_file is None:
+        sys.exit(f'[-] ERROR: failed to get sysctls: {msg}')
+    mprint(mode, f'[+] Saved sysctls to a temporary file {sysctl_file}')
+
+    perform_checking(mode, kernel_version, kconfig_file, cmdline_file, sysctl_file)
+
+    os.remove(sysctl_file)
+
+
 def main() -> None:
     # Report modes:
     #   * verbose mode for
@@ -461,39 +490,13 @@ def main() -> None:
         mprint(mode, f'[+] Special report mode: {mode}')
 
     if args.autodetect:
-        if args.config or args.kernel_version or args.cmdline or args.sysctl:
+        if args.config or args.cmdline or args.sysctl or args.kernel_version:
             sys.exit('[-] ERROR: --autodetect should find the configuration, no other arguments are needed')
         if args.print:
             sys.exit('[-] ERROR: --autodetect and --print can\'t be used together')
         if args.generate:
             sys.exit('[-] ERROR: --autodetect and --generate can\'t be used together')
-
-        mprint(mode, '[+] Going to autodetect and check the security hardening options of the running kernel')
-
-        version_file = '/proc/version'
-        kernel_version, msg = detect_kernel_version(version_file)
-        if kernel_version is None:
-            sys.exit(f'[-] ERROR: parsing {version_file} failed: {msg}')
-        mprint(mode, f'[+] Detected version of the running kernel: {kernel_version}')
-
-        kconfig_file, msg = get_local_kconfig_file(version_file)
-        if kconfig_file is None:
-            sys.exit(f'[-] ERROR: detecting kconfig file failed: {msg}')
-        mprint(mode, f'[+] Detected kconfig file of the running kernel: {kconfig_file}')
-
-        cmdline_file = '/proc/cmdline'
-        if not os.path.isfile(cmdline_file):
-            sys.exit(f'[-] ERROR: no kernel cmdline file {cmdline_file}')
-        mprint(mode, f'[+] Detected cmdline parameters of the running kernel: {cmdline_file}')
-
-        sysctl_file, msg = get_local_sysctl_file()
-        if sysctl_file is None:
-            sys.exit(f'[-] ERROR: failed to get sysctls: {msg}')
-        mprint(mode, f'[+] Saved sysctls to a temporary file {sysctl_file}')
-
-        perform_checking(mode, kernel_version, kconfig_file, cmdline_file, sysctl_file)
-
-        os.remove(sysctl_file)
+        check_autodetected_configuration(mode)
         sys.exit(0)
 
     if args.config:
