@@ -142,9 +142,9 @@ def detect_arch_by_sysctl(fname: str) -> tuple[StrOrNone, str]:
 def detect_kernel_version(fname: str) -> tuple[TupleOrNone, str]:
     with _open(fname) as f:
         ver_pattern = re.compile(r"^# Linux/.+ Kernel Configuration$|^Linux version .+")
-        for line in f.readlines():
-            if ver_pattern.match(line):
-                line = line.strip()
+        for l in f.readlines():
+            if ver_pattern.match(l):
+                line = l.strip()
                 parts = line.split()
                 ver_str = parts[2].replace('+', '-')
                 ver_numbers_str = ver_str.split('-', 1)[0]
@@ -232,8 +232,8 @@ def parse_kconfig_file(_mode: StrOrNone, parsed_options: dict[str, str], fname: 
         opt_is_on = re.compile(r"CONFIG_[a-zA-Z0-9_]+=.*$")
         opt_is_off = re.compile(r"# CONFIG_[a-zA-Z0-9_]+ is not set$")
 
-        for line in f.readlines():
-            line = line.strip()
+        for l in f.readlines():
+            line = l.strip()
             option = None
             value = None
 
@@ -290,8 +290,8 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
 
         sysctl_pattern = re.compile(r"[a-zA-Z0-9/*._-]+ ?=.*$")
         sysctl_eperm_pattern = re.compile(r"sysctl: permission denied on key '([a-zA-Z0-9/*._-]+)'")
-        for line in f.readlines():
-            line = line.strip()
+        for l in f.readlines():
+            line = l.strip()
             if not line or line.startswith('#'):
                 continue
             if line.startswith('sysctl: '):
