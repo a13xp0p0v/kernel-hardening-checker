@@ -900,11 +900,10 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
 
-    # 'security_policy', 'ubuntu'
+    # 'security_policy'
     l += [SysctlCheck('security_policy', 'ubuntu', 'kernel.apparmor_restrict_unprivileged_unconfined', '1')]
-          # Prevents an attacker from changing their own process's AppArmor profiles
-          # For example, it can be used to bypass user namespaces hardenings in Ubuntu
-          # https://u1f383.github.io/linux/2025/06/26/the-journey-of-bypassing-ubuntus-unprivileged-namespace-restriction.html
+          # Forbid unprivileged and unconfined processes to change their AppArmor profiles
+          # https://discourse.ubuntu.com/t/understanding-apparmor-user-namespace-restriction/58007
 
     # 'cut_attack_surface', 'kspp'
     l += [SysctlCheck('cut_attack_surface', 'kspp', 'kernel.dmesg_restrict', '1')]
@@ -920,7 +919,8 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
              SysctlCheck('cut_attack_surface', 'debian', 'kernel.unprivileged_userns_clone', '0'))]
              # 1) Debian-specific sysctl kernel.unprivileged_userns_clone is deprecated
              # 2) user.max_user_namespaces=0 may break the upower daemon in Ubuntu
-             # 3) kernel.apparmor_restrict_unprivileged_unconfined=1 may be compromise option for Ubuntu
+             # 3) AppArmor restriction of user namespaces in Ubuntu is vulnerable without setting
+             #    kernel.apparmor_restrict_unprivileged_unconfined=1
     l += [OR(SysctlCheck('cut_attack_surface', 'kspp', 'kernel.kexec_load_disabled', '1'),
              AND(KconfigCheck('-', '-', 'KEXEC_CORE', 'is not set'),
                  have_kconfig))]
