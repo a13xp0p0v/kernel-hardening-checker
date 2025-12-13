@@ -101,3 +101,6 @@ notice-rgx = "SPDX-FileCopyrightText"
     "PLR0914", # we have many local variables in the recommendations
     "PLR0915", # we have a lot of statements in the recommendations
 ]
+"bin/kernel-hardening-checker" = [
+    "E402", # we need to insert the path before importing
+]
