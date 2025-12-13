@@ -506,20 +506,18 @@ class TestEngine(unittest.TestCase):
         self.get_engine_result(config_checklist, stdout_result, 'stdout')
         self.assertEqual(
                 stdout_result,
-                [
-'\
+                ['\
 CONFIG_NAME_1                         |kconfig|     reason_1     |decision_1| expected_1 | OK: name_2 is "expected_2"\
 CONFIG_NAME_4                         |kconfig|     reason_4     |decision_4| expected_4 | FAIL: name_5 is not "expected_5"\
 CONFIG_NAME_7                         |kconfig|     reason_7     |decision_7| expected_7 | FAIL: version < (42, 43, 44)\
-'               ],
+'],
         )
 
         stdout_result = []
         self.get_engine_result(config_checklist, stdout_result, 'stdout_verbose')
         self.assertEqual(
                 stdout_result,
-                [
-'\
+                ['\
     <<< OR >>>                                                                           | OK: name_2 is "expected_2"\n\
 CONFIG_NAME_1                         |kconfig|     reason_1     |decision_1| expected_1 | FAIL: "UNexpected_1"\n\
 name_2                                |cmdline|     reason_2     |decision_2| expected_2 | OK\n\
@@ -535,7 +533,7 @@ name_6                                |sysctl |     reason_6     |decision_6| ex
     <<< AND >>>                                                                          | FAIL: version < (42, 43, 44)\n\
 CONFIG_NAME_7                         |kconfig|     reason_7     |decision_7| expected_7 | None\n\
 kernel version >= (42, 43, 44)                                                           | FAIL: version < (42, 43, 44)\
-'               ],
+'],
         )
 
     def test_simple_value_overriding(self) -> None:
