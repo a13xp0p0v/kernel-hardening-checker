@@ -81,7 +81,6 @@ ignore = [
 
 [tool.ruff.lint.pycodestyle]
 max-line-length = 120
-max-doc-length = 150 # docstring are less valuable
 
 [tool.ruff.lint.pylint]
 max-args = 6
@@ -92,7 +91,6 @@ max-statements = 100
 inline-quotes = "single"
 
 [tool.ruff.lint.per-file-ignores]
-
 # File-specific rule exceptions:
 # kernel_hardening_checker/__init__.py:
 #   PLR0912 — many branches are required due to many parse options, though may be changed later.
@@ -108,7 +106,6 @@ inline-quotes = "single"
 #   PLR0912 — high branch count is used in the engine’s complex check logic.
 
 # kernel_hardening_checker/checks.py:
-#   E501 — long strings and patterns are common in checks.
 #   PLR0912 — many branches are required due to numerous checks.
 #   PLR0914 — many local variables are unavoidable for separate checks.
 #   PLR0915 — nested/long logic is inherent to complex check scenarios.
@@ -116,4 +113,4 @@ inline-quotes = "single"
 "kernel_hardening_checker/__init__.py" = ["PLR0912"]
 "kernel_hardening_checker/test_engine.py" = ["E501", "E202", "E502"]
 "kernel_hardening_checker/engine.py" = ["PLR5501" , "PLR0912"]
-"kernel_hardening_checker/checks.py" = ["E501", "PLR0912", "PLR0914", "PLR0915"]
+"kernel_hardening_checker/checks.py" = ["PLR0912", "PLR0914", "PLR0915"]

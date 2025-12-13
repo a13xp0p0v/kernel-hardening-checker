@@ -212,7 +212,7 @@ def print_checklist(mode: StrOrNone, checklist: list[ChecklistObjType], with_res
             fail_suppressed = ' (suppressed in output)'
         if mode == 'show_fail':
             ok_suppressed = ' (suppressed in output)'
-        print(f'[+] Config check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
+        print(f'[+] Check is finished: \'OK\' - {ok_count}{ok_suppressed} / \'FAIL\' - {fail_count}{fail_suppressed}')
 
 
 def parse_kconfig_file(_mode: StrOrNone, parsed_options: dict[str, str], fname: str) -> None:
@@ -299,15 +299,15 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
     # let's check the presence of some ancient sysctl option
     # to ensure that we are parsing the output of "sudo sysctl -a > file"
     if 'kernel.printk' not in parsed_options and mode != 'json':
-        print(f'[!] WARNING: ancient sysctl options are not found in {fname}, try checking the output of "sudo sysctl -a"')
+        print(f'[!] WARNING: ancient sysctl options are not found in {fname}, check the output of "sudo sysctl -a"')
 
     # let's check the presence of a sysctl option available for root
     if 'kernel.cad_pid' not in parsed_options and mode != 'json':
-        print(f'[!] WARNING: sysctl options available for root are not found in {fname}, try checking the output of "sudo sysctl -a"')
+        print(f'[!] WARNING: sysctls available for root are not found in {fname}, check the output of "sudo sysctl -a"')
 
     # also warn about an explicit "permission denied" error for sysctl options available for root
     if 'permission denied' in parsed_options.values() and mode != 'json':
-        print('[!] WARNING: got "permission denied" for some of sysctl options, try checking the output of "sudo sysctl -a" manually')
+        print('[!] WARNING: got "permission denied" for some sysctls, check the output of "sudo sysctl -a" manually')
 
 
 def refine_check(mode: StrOrNone, checklist: list[ChecklistObjType], parsed_options: dict[str, str],
@@ -429,15 +429,19 @@ def main() -> None:
     parser.add_argument('-c', '--config',
                         help='check the security hardening options in a Kconfig file (also supports *.gz files)')
     parser.add_argument('-v', '--kernel-version',
-                        help='extract the kernel version from a version file (such as /proc/version) instead of using a Kconfig file')
+                        help='extract the kernel version from a version file (such as /proc/version) '
+                             'instead of using a Kconfig file')
     parser.add_argument('-l', '--cmdline',
-                        help='check the security hardening options in a kernel command line file (such as /proc/cmdline)')
+                        help='check the security hardening options in a kernel command line file '
+                             '(such as /proc/cmdline)')
     parser.add_argument('-s', '--sysctl',
-                        help='check the security hardening options in a sysctl output file (the result of "sudo sysctl -a > file")')
+                        help='check the security hardening options in a sysctl output file (the result of '
+                             '"sudo sysctl -a > file")')
     parser.add_argument('-p', '--print', choices=SUPPORTED_ARCHS,
                         help='print security hardening recommendations for the selected architecture')
     parser.add_argument('-g', '--generate', choices=SUPPORTED_ARCHS,
-                        help='generate a Kconfig fragment containing the security hardening options for the selected architecture')
+                        help='generate a Kconfig fragment containing the security hardening options '
+                             'for the selected architecture')
     args = parser.parse_args()
 
     mode = None

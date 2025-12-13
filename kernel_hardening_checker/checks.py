@@ -31,9 +31,11 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         cpu_sup_amd_not_set = KconfigCheck('-', '-', 'CPU_SUP_AMD', 'is not set')
         cpu_sup_intel_not_set = KconfigCheck('-', '-', 'CPU_SUP_INTEL', 'is not set')
 
-    modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')  # radical, but may be useful in some cases
+    modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')
+                      # radical, but may be useful in some cases
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set')  # refers to LOCKDOWN
-    bpf_syscall_not_set = KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')  # refers to LOCKDOWN
+    bpf_syscall_not_set = KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')
+                          # refers to LOCKDOWN
 
     # 'self_protection', 'defconfig'
     l += [KconfigCheck('self_protection', 'defconfig', 'BUG', 'y')]
@@ -303,7 +305,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         l += [KconfigCheck('self_protection', 'kspp', 'DEBUG_WX', 'y')]
     if arch == 'X86_64':
         l += [AND(KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is not set'),
-                  KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is present'))]  # consequence of 'cfi=kcfi' by kspp
+                  KconfigCheck('self_protection', 'kspp', 'CFI_AUTO_DEFAULT', 'is present'))]
+                  # consequence of 'cfi=kcfi' by kspp
         l += [OR(KconfigCheck('self_protection', 'kspp', 'MITIGATION_SLS', 'y'),
                  KconfigCheck('self_protection', 'kspp', 'SLS', 'y'))]
                  # this feature protects against CVE-2021-26341 in Straight-Line-Speculation
@@ -363,7 +366,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DISABLE', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_BOOTPARAM', 'is not set')]
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEVELOP', 'is not set')]
-    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')]  # refers to SECURITY_SELINUX_DISABLE
+    l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_WRITABLE_HOOKS', 'is not set')]
+          # refers to SECURITY_SELINUX_DISABLE
     l += [KconfigCheck('security_policy', 'kspp', 'SECURITY_SELINUX_DEBUG', 'is not set')]
     l += [OR(KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_SELINUX', 'y'),
              KconfigCheck('security_policy', 'a13xp0p0v', 'SECURITY_APPARMOR', 'y'),
@@ -499,7 +503,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'PTDUMP_DEBUGFS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'X86_PTDUMP', 'is not set')]  # the old name of PTDUMP_DEBUGFS
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_CLOSURES', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BCACHE_CLOSURES_DEBUG', 'is not set')]  # the old name of DEBUG_CLOSURES
+    l += [KconfigCheck('cut_attack_surface', 'grsec', 'BCACHE_CLOSURES_DEBUG', 'is not set')]
+          # the old name of DEBUG_CLOSURES
 
     # 'cut_attack_surface', 'clipos'
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'STAGING', 'is not set')]
@@ -513,7 +518,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'ACPI_TABLE_UPGRADE', 'is not set')]  # refers to LOCKDOWN
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'EFI_CUSTOM_SSDT_OVERLAYS', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'AIO', 'is not set')]
-#   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')] # no, IKCONFIG is needed for this check :)
+#   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')]
+          # no, IKCONFIG is needed for this check :)
     l += [OR(KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set'),
              KconfigCheck('cut_attack_surface', 'grapheneos', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
@@ -540,7 +546,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
           # see the comment about bdev_allow_write_mounted below
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'FAULT_INJECTION', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP_DEBUGFS', 'is not set')]
-    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP', 'is not set')]  # the old name of ARM_PTDUMP_DEBUGFS
+    l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'ARM_PTDUMP', 'is not set')]
+          # the old name of ARM_PTDUMP_DEBUGFS
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'SECCOMP_CACHE_DEBUG', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'CRASH_DM_CRYPT', 'is not set')]
     l += [KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'LKDTM', 'is not set')]
