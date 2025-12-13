@@ -70,7 +70,6 @@ select = [
     "UP",   # pyupgrade
     "RUF",  # Ruff-specific rules
 ]
-
 ignore = [
     "E114", # we align comments
     "E116", # ditto, we align comments
@@ -95,12 +94,10 @@ inline-quotes = "single"
 notice-rgx = "SPDX-FileCopyrightText"
 
 [tool.ruff.lint.per-file-ignores]
-# kernel_hardening_checker/test_engine.py:
-#   E501 — long lines are intentional in tests for clarity.
-
-# kernel_hardening_checker/checks.py:
-#   PLR0914 — many local variables are unavoidable for separate checks.
-#   PLR0915 — nested/long logic is inherent to complex check scenarios.
-
-"kernel_hardening_checker/test_engine.py" = ["E501"]
-"kernel_hardening_checker/checks.py" = ["PLR0914", "PLR0915"]
+"kernel_hardening_checker/test_engine.py" = [
+    "E501", # long lines simplify reading the test results
+]
+"kernel_hardening_checker/checks.py" = [
+    "PLR0914", # we have many local variables in the recommendations
+    "PLR0915", # we have a lot of statements in the recommendations
+]
