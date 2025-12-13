@@ -93,6 +93,9 @@ max-statements = 100
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = "single"
 
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = "SPDX-FileCopyrightText"
+
 [tool.ruff.lint.per-file-ignores]
 # File-specific rule exceptions:
 # kernel_hardening_checker/__init__.py:
