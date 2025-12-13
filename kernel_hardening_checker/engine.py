@@ -286,19 +286,18 @@ class OR(ComplexOptCheck):
                         assert (opt.result.startswith('OK: version')), \
                                f'unexpected VersionCheck result {opt.result}'
                         # VersionCheck provides enough info, nothing to add
+                    elif opt.result == 'OK':
+                        self.result = f'OK: {opt.name} is "{opt.expected}"'
+                    elif opt.result.startswith('OK: in '):
+                        self.result = f'OK: "{opt.expected.strip("*")}" is in {opt.name}'
+                    elif opt.result == 'OK: is not found':
+                        self.result = f'OK: {opt.name} is not found'
+                    elif opt.result == 'OK: is present':
+                        self.result = f'OK: {opt.name} is present'
                     else:
-                        if opt.result == 'OK':
-                            self.result = f'OK: {opt.name} is "{opt.expected}"'
-                        elif opt.result.startswith('OK: in '):
-                            self.result = f'OK: "{opt.expected.strip("*")}" is in {opt.name}'
-                        elif opt.result == 'OK: is not found':
-                            self.result = f'OK: {opt.name} is not found'
-                        elif opt.result == 'OK: is present':
-                            self.result = f'OK: {opt.name} is present'
-                        else:
-                            assert (opt.result.startswith('OK: is not off')), \
-                                   f'unexpected OK description "{opt.result}"'
-                            self.result = f'OK: {opt.name} is not off'
+                        assert (opt.result.startswith('OK: is not off')), \
+                               f'unexpected OK description "{opt.result}"'
+                        self.result = f'OK: {opt.name} is not off'
                 return
         self.result = self.opts[0].result
 
@@ -324,19 +323,18 @@ class AND(ComplexOptCheck):
                     assert (opt.result.startswith('FAIL: version')), \
                            f'unexpected VersionCheck result {opt.result}'
                     self.result = opt.result  # VersionCheck provides enough info
+                elif opt.result.startswith('FAIL: "') or opt.result == 'FAIL: is not found':
+                    self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
+                elif opt.result.startswith('FAIL: not in '):
+                    self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'
+                elif opt.result == 'FAIL: is not present':
+                    self.result = f'FAIL: {opt.name} is not present'
+                elif opt.result in {'FAIL: is off', 'FAIL: is off, "0"', 'FAIL: is off, "is not set"'}:
+                    self.result = f'FAIL: {opt.name} is off'
                 else:
-                    if opt.result.startswith('FAIL: "') or opt.result == 'FAIL: is not found':
-                        self.result = f'FAIL: {opt.name} is not "{opt.expected}"'
-                    elif opt.result.startswith('FAIL: not in '):
-                        self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'
-                    elif opt.result == 'FAIL: is not present':
-                        self.result = f'FAIL: {opt.name} is not present'
-                    elif opt.result in {'FAIL: is off', 'FAIL: is off, "0"', 'FAIL: is off, "is not set"'}:
-                        self.result = f'FAIL: {opt.name} is off'
-                    else:
-                        assert (opt.result == 'FAIL: is off, not found'), \
-                               f'unexpected FAIL description "{opt.result}"'
-                        self.result = f'FAIL: {opt.name} is off, not found'
+                    assert (opt.result == 'FAIL: is off, not found'), \
+                           f'unexpected FAIL description "{opt.result}"'
+                    self.result = f'FAIL: {opt.name} is off, not found'
                 return
 
 
