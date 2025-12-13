@@ -25,6 +25,9 @@ GREEN_COLOR = '\x1b[32m'
 RED_COLOR = '\x1b[31m'
 COLOR_END = '\x1b[0m'
 
+NUMBERS_IN_KVERSION = 3
+MIN_MAJOR_KVERSION = 2
+
 
 def colorize_result(input_text: StrOrNone) -> StrOrNone:
     if input_text is None or not sys.stdout.isatty():
@@ -57,15 +60,9 @@ class OptCheck:
         assert (expected and isinstance(expected, str) and expected == expected.strip()), \
                f'invalid expected value "{expected}" for "{name}" check (1)'
         val_len = len(expected.split())
-        if val_len == 3:
-            assert (expected in {'is not set', 'is not off'}), \
+        if val_len != 1:
+            assert (expected in {'is not set', 'is not off', 'is present'}), \
                    f'invalid expected value "{expected}" for "{name}" check (2)'
-        elif val_len == 2:
-            assert (expected == 'is present'), \
-                   f'invalid expected value "{expected}" for "{name}" check (3)'
-        else:
-            assert (val_len == 1), \
-                   f'invalid expected value "{expected}" for "{name}" check (4)'
         self.expected = expected
 
         self.state = None  # type: str | None
@@ -171,7 +168,7 @@ class SysctlCheck(OptCheck):
 
 class VersionCheck:
     def __init__(self, ver_expected: tuple[int, int, int]) -> None:
-        assert (ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == 3), \
+        assert (ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == NUMBERS_IN_KVERSION), \
                f'invalid expected version "{ver_expected}" for VersionCheck (1)'
         assert (all(map(lambda x: isinstance(x, int), ver_expected))), \
                f'invalid expected version "{ver_expected}" for VersionCheck (2)'
@@ -184,14 +181,14 @@ class VersionCheck:
         return 'version'
 
     def set_state(self, data: tuple[int, ...]) -> None:
-        assert (data and isinstance(data, tuple) and len(data) >= 3), \
+        assert (data and isinstance(data, tuple) and len(data) >= NUMBERS_IN_KVERSION), \
                f'invalid version "{data}" for VersionCheck (1)'
         assert (all(map(lambda x: isinstance(x, int), data))), \
                f'invalid version "{data}" for VersionCheck (2)'
-        self.ver = data[:3]
+        self.ver = data[:NUMBERS_IN_KVERSION]
 
     def check(self) -> None:
-        assert (self.ver[0] >= 2), 'not initialized kernel version'
+        assert (self.ver[0] >= MIN_MAJOR_KVERSION), 'not initialized kernel version'
         if self.ver[0] > self.ver_expected[0]:
             self.result = f'OK: version >= {self.ver_expected}'
             return

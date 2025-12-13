@@ -42,6 +42,7 @@ from .engine import (
 #   'major.linux_kernel_version.minor'
 __version__ = '0.6.17.1'
 
+NUMBERS_IN_KVERSION = 3
 SUPPORTED_ARCHS = ['X86_64', 'X86_32', 'ARM64', 'ARM', 'RISCV']
 
 
@@ -149,9 +150,8 @@ def detect_kernel_version(fname: str) -> tuple[TupleOrNone, str]:
                 ver_str = parts[2].replace('+', '-')
                 ver_numbers_str = ver_str.split('-', 1)[0]
                 ver_numbers = ver_numbers_str.split('.')
-                if len(ver_numbers) >= 3:
-                    if all(map(lambda x: x.isdecimal(), ver_numbers)):
-                        return tuple(map(int, ver_numbers)), 'OK'
+                if len(ver_numbers) >= NUMBERS_IN_KVERSION and all(map(lambda x: x.isdecimal(), ver_numbers)):
+                    return tuple(map(int, ver_numbers)), 'OK'
                 msg = f'failed to parse the version "{parts[2]}"'
                 return None, msg
         return None, 'no kernel version detected'
