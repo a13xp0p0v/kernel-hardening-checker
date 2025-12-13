@@ -97,8 +97,6 @@ notice-rgx = "SPDX-FileCopyrightText"
 [tool.ruff.lint.per-file-ignores]
 # kernel_hardening_checker/test_engine.py:
 #   E501 — long lines are intentional in tests for clarity.
-#   E202, E502 — test code uses patterns that formally break style rules
-#                but are needed for precise behavior checks.
 
 # kernel_hardening_checker/engine.py:
 #   PLR5501 — branching readability rule conflicts with the module’s
@@ -108,6 +106,6 @@ notice-rgx = "SPDX-FileCopyrightText"
 #   PLR0914 — many local variables are unavoidable for separate checks.
 #   PLR0915 — nested/long logic is inherent to complex check scenarios.
 
-"kernel_hardening_checker/test_engine.py" = ["E501", "E202", "E502"]
+"kernel_hardening_checker/test_engine.py" = ["E501"]
 "kernel_hardening_checker/engine.py" = ["PLR5501"]
 "kernel_hardening_checker/checks.py" = ["PLR0914", "PLR0915"]
