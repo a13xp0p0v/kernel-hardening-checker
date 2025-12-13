@@ -170,7 +170,7 @@ class VersionCheck:
     def __init__(self, ver_expected: tuple[int, int, int]) -> None:
         assert (ver_expected and isinstance(ver_expected, tuple) and len(ver_expected) == NUMBERS_IN_KVERSION), \
                f'invalid expected version "{ver_expected}" for VersionCheck (1)'
-        assert (all(map(lambda x: isinstance(x, int), ver_expected))), \
+        assert (all(isinstance(x, int) for x in ver_expected)), \
                f'invalid expected version "{ver_expected}" for VersionCheck (2)'
         self.ver_expected = ver_expected
         self.ver = (0, 0, 0)  # type: tuple[int, ...]
@@ -183,7 +183,7 @@ class VersionCheck:
     def set_state(self, data: tuple[int, ...]) -> None:
         assert (data and isinstance(data, tuple) and len(data) >= NUMBERS_IN_KVERSION), \
                f'invalid version "{data}" for VersionCheck (1)'
-        assert (all(map(lambda x: isinstance(x, int), data))), \
+        assert (all(isinstance(x, int) for x in data)), \
                f'invalid version "{data}" for VersionCheck (2)'
         self.ver = data[:NUMBERS_IN_KVERSION]
 
