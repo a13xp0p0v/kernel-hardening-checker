@@ -72,14 +72,14 @@ select = [
 ]
 
 ignore = [
-    "E114", # used for comment alignment
-    "E116", # used for comment alignment
-    "E741", # used for short variables
-    "Q003", # sometimes escape is better than changing quotes
+    "E114", # we align comments
+    "E116", # ditto, we align comments
+    "E741", # we use short variable names
     "PLR2004", # TODO: This requirement is excessive; however, I recommend removing the exception, and check for some refactoring.
-    "S101", # used for asserts
-    "S404", # used for subprocess
-    "S603", # used for subprocess
+    "Q003", # don't change outer quotes to avoid escaping inner quotes
+    "S101", # we use the assert keyword
+    "S404", # we use subprocess
+    "S603", # ditto, we use subprocess
 ]
 
 [tool.ruff.lint.pycodestyle]
