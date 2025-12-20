@@ -675,9 +675,10 @@ kernel version >= (42, 43, 44)                                                  
         # 4. check that the results are correct
         self.assertEqual(
             result,
-            ['[?] No check for kconfig option CONFIG_NOCHECK_NAME_1 (expected_1)\n'
-             '[?] No check for cmdline option NOCHECK_name_2 (expected_2)\n'
-             '[?] No check for sysctl option NOCHECK_name_3 (expected_3)\n'])
+            ['\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_1 (expected_1)\n\
+[?] No check for cmdline option NOCHECK_name_2 (expected_2)\n\
+[?] No check for sysctl option NOCHECK_name_3 (expected_3)\n'])
 
     def test_print_unknown_options_complex(self) -> None:
         # 1. prepare partially complex checklist
@@ -716,12 +717,13 @@ kernel version >= (42, 43, 44)                                                  
         # 4. check that the results are correct
         self.assertEqual(
             result,
-            ['[?] No check for kconfig option CONFIG_NOCHECK_NAME_1 (expected_1)\n'
-             '[?] No check for kconfig option CONFIG_NOCHECK_NAME_2 (expected_2)\n'
-             '[?] No check for kconfig option CONFIG_NOCHECK_NAME_4 (expected_4)\n'
-             '[?] No check for kconfig option CONFIG_NOCHECK_NAME_6 (expected_6)\n'
-             '[?] No check for cmdline option NOCHECK_name_3 (expected_3)\n'
-             '[?] No check for sysctl option NOCHECK_name_5 (expected_5)\n'])
+            ['\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_1 (expected_1)\n\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_2 (expected_2)\n\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_4 (expected_4)\n\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_6 (expected_6)\n\
+[?] No check for cmdline option NOCHECK_name_3 (expected_3)\n\
+[?] No check for sysctl option NOCHECK_name_5 (expected_5)\n'])
 
     def test_print_unknown_options_complex_nested(self) -> None:
         # 1. prepare partially complex checklist
@@ -767,14 +769,15 @@ kernel version >= (42, 43, 44)                                                  
         # 4. check that the results are correct
         self.assertEqual(
             result,
-            ['[?] No check for kconfig option CONFIG_NOCHECK_NAME_1 (expected_1)\n'
-             '[?] No check for kconfig option CONFIG_NOCHECK_NAME_2 (expected_2)\n'
-             '[?] No check for kconfig option CONFIG_NOCHECK_NAME_3 (expected_3)\n'
-             '[?] No check for kconfig option CONFIG_NOCHECK_NAME_4 (expected_4)\n'
-             '[?] No check for kconfig option CONFIG_NOCHECK_NAME_5 (expected_5)\n'
-             '[?] No check for kconfig option CONFIG_NOCHECK_NAME_8 (expected_8)\n'
-             '[?] No check for cmdline option NOCHECK_name_6 (expected_6)\n'
-             '[?] No check for sysctl option NOCHECK_name_7 (expected_7)\n'])
+            ['\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_1 (expected_1)\n\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_2 (expected_2)\n\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_3 (expected_3)\n\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_4 (expected_4)\n\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_5 (expected_5)\n\
+[?] No check for kconfig option CONFIG_NOCHECK_NAME_8 (expected_8)\n\
+[?] No check for cmdline option NOCHECK_name_6 (expected_6)\n\
+[?] No check for sysctl option NOCHECK_name_7 (expected_7)\n'])
 
     def test_colorize_result(self) -> None:
         # 1. prepare the checklists
