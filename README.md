@@ -23,7 +23,7 @@ License: GPL-3.0.
 
  - At GitHub <https://github.com/a13xp0p0v/kernel-hardening-checker>
  - At Codeberg: <https://codeberg.org/a13xp0p0v/kernel-hardening-checker> (go there if something goes wrong with GitHub)
- - At GitFlic: <https://gitflic.ru/project/a13xp0p0v/kernel-hardening-checker>
+ - At SourceCraft: <https://sourcecraft.dev/a13xp0p0v/kernel-hardening-checker>
 
 ## Features
 
