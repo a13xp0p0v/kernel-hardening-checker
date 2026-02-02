@@ -79,6 +79,7 @@ ignore = [
     "S101", # we use the assert keyword
     "S404", # we use subprocess
     "S603", # ditto, we use subprocess
+    "RUF067" # keep __init__ as is
 ]
 
 [tool.ruff.lint.pycodestyle]
