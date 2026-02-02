@@ -77,6 +77,9 @@ def get_local_kconfig_file(version_fname: str) -> tuple[StrOrNone, str]:
         kconfig_2 += ver_str
     if os.path.isfile(kconfig_2):
         return kconfig_2, 'OK'
+    kconfig_3 = f'/usr/lib/modules/{ver_str}/config'
+    if os.path.isfile(kconfig_3):
+        return kconfig_3, 'OK'
 
     return None, f'didn\'t find {kconfig_1} or {kconfig_2}'
 
