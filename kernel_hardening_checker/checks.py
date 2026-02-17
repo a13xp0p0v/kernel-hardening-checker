@@ -915,6 +915,12 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.oops_limit', '100')]
     l += [SysctlCheck('self_protection', 'a13xp0p0v', 'kernel.warn_limit', '100')]
 
+    # WARN() and friends are intended for assertions. As such, the likelyhood of a panic—although
+    # slightly increased—still remains slim. See also:
+    # https://docs.kernel.org/process/coding-style.html#do-not-warn-lightly
+    # https://docs.kernel.org/process/coding-style.html#do-not-worry-about-panic-on-warn-users
+    l += [SysctlCheck('self_protection', 'nvraxn', 'kernel.panic_on_warn', '1')]
+
     # 'security_policy'
     l += [OR(SysctlCheck('security_policy', 'ubuntu', 'kernel.apparmor_restrict_unprivileged_unconfined', '1'),
              SysctlCheck('-', '-', 'kernel.apparmor_restrict_unprivileged_unconfined', 'is not set'))]
