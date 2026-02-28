@@ -67,21 +67,22 @@ def get_local_kconfig_file(version_fname: str) -> tuple[StrOrNone, str]:
     if os.path.isfile(kconfig_1):
         return kconfig_1, 'OK'
 
-    kconfig_2 = '/boot/config-'
     with _open(version_fname) as f:
         line = f.readline()
         assert (line), f'empty {version_fname}'
         assert (line.startswith('Linux version ')), f'unexpected contents of {version_fname}'
         parts = line.split()
         ver_str = parts[2]
-        kconfig_2 += ver_str
+
+    kconfig_2 = f'/boot/config-{ver_str}'
     if os.path.isfile(kconfig_2):
         return kconfig_2, 'OK'
+
     kconfig_3 = f'/usr/lib/modules/{ver_str}/config'
     if os.path.isfile(kconfig_3):
         return kconfig_3, 'OK'
 
-    return None, f'didn\'t find {kconfig_1} or {kconfig_2}'
+    return None, f'didn\'t find "{kconfig_1}" or "{kconfig_2}" or "{kconfig_3}"'
 
 
 def get_local_sysctl_file() -> tuple[StrOrNone, str]:
