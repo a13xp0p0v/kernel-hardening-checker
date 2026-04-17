@@ -221,10 +221,19 @@ class ComplexOptCheck:
         self.opts = opts
         assert (self.opts), \
                f'empty {self.__class__.__name__} check'
-        assert (len(self.opts) != 1), \
-               f'useless {self.__class__.__name__} check: {opts}'
-        assert (isinstance(self.opts[0], SimpleNamedOptCheckTypes)), \
-               f'invalid {self.__class__.__name__} check: {opts}'
+        assert (len(self.opts) != 1), (
+            f'useless {self.__class__.__name__} check: '
+            f'{getattr(self.opts[0], "name", self.opts[0].__class__.__name__)}'
+        )
+        assert (not isinstance(self.opts[0], tuple)), (
+            f'invalid {self.__class__.__name__} check: '
+            f'extra parentheses near '
+            f'{getattr(self.opts[0][0], "name", self.opts[0][0].__class__.__name__)}'
+        )
+        assert (isinstance(self.opts[0], SimpleNamedOptCheckTypes)), (
+            f'invalid {self.__class__.__name__} check: '
+            f'{getattr(self.opts[0], "name", self.opts[0].__class__.__name__)}'
+        )
         self.result = None  # type: str | None
 
     @property
