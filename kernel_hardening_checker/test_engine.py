@@ -158,7 +158,7 @@ class TestEngine(unittest.TestCase):
         parsed_kconfig_options['CONFIG_NAME_8'] = 'off'
         parsed_kconfig_options['CONFIG_NAME_9'] = '0'
         parsed_kconfig_options['CONFIG_NAME_11'] = '"something,off"'
-        parsed_kconfig_options['CONFIG_NAME_12'] = '"really_not_off,something"'
+        parsed_kconfig_options['CONFIG_NAME_12'] = 'really_not_off,something'
         parsed_kconfig_options['CONFIG_NAME_13'] = '"expected_13,something,UNexpected2"'
         parsed_kconfig_options['CONFIG_NAME_14'] = 'UNexpected_14,something'
 
@@ -176,12 +176,12 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'CONFIG_NAME_4', 'type': 'kconfig', 'reason': 'reason_4', 'decision': 'decision_4', 'desired_val': 'is not set', 'check_result': 'OK: is not found', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_5', 'type': 'kconfig', 'reason': 'reason_5', 'decision': 'decision_5', 'desired_val': 'is present', 'check_result': 'OK: is present', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_6', 'type': 'kconfig', 'reason': 'reason_6', 'decision': 'decision_6', 'desired_val': 'is present', 'check_result': 'FAIL: is not present', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_7', 'type': 'kconfig', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'is not off', 'check_result': 'OK: is not off, "really_not_off"', 'check_result_bool': True},
+                 {'option_name': 'CONFIG_NAME_7', 'type': 'kconfig', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'is not off', 'check_result': 'OK: is not off (really_not_off)', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_8', 'type': 'kconfig', 'reason': 'reason_8', 'decision': 'decision_8', 'desired_val': 'is not off', 'check_result': 'FAIL: is off', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_9', 'type': 'kconfig', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, "0"', 'check_result_bool': False},
+                 {'option_name': 'CONFIG_NAME_9', 'type': 'kconfig', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off (0)', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_10', 'type': 'kconfig', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': 'is not off', 'check_result': 'FAIL: is off', 'check_result_bool': False},
-                 {'option_name': 'CONFIG_NAME_12', 'type': 'kconfig', 'reason': 'reason_12', 'decision': 'decision_12', 'desired_val': 'is not off', 'check_result': 'OK: is not off, ""really_not_off,something""', 'check_result_bool': True},
+                 {'option_name': 'CONFIG_NAME_11', 'type': 'kconfig', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': 'is not off', 'check_result': 'FAIL: is off ("something,off")', 'check_result_bool': False},
+                 {'option_name': 'CONFIG_NAME_12', 'type': 'kconfig', 'reason': 'reason_12', 'decision': 'decision_12', 'desired_val': 'is not off', 'check_result': 'OK: is not off (really_not_off,something)', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_13', 'type': 'kconfig', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': '*expected_13*', 'check_result': 'OK: in "expected_13,something,UNexpected2"', 'check_result_bool': True},
                  {'option_name': 'CONFIG_NAME_14', 'type': 'kconfig', 'reason': 'reason_14', 'decision': 'decision_14', 'desired_val': '*expected_14*', 'check_result': 'FAIL: not in UNexpected_14,something', 'check_result_bool': False},
                  {'option_name': 'CONFIG_NAME_15', 'type': 'kconfig', 'reason': 'reason_15', 'decision': 'decision_15', 'desired_val': '*expected_15*', 'check_result': 'FAIL: is not found', 'check_result_bool': False}],
@@ -213,9 +213,9 @@ class TestEngine(unittest.TestCase):
         parsed_cmdline_options['name_7'] = ''
         parsed_cmdline_options['name_8'] = 'off'
         parsed_cmdline_options['name_9'] = '0'
-        parsed_cmdline_options['name_11'] = 'something,off'
+        parsed_cmdline_options['name_11'] = '"something,off"'
         parsed_cmdline_options['name_12'] = 'really_not_off,something'
-        parsed_cmdline_options['name_13'] = 'expected_13,something'
+        parsed_cmdline_options['name_13'] = '"expected_13,something,UNexpected2"'
         parsed_cmdline_options['name_14'] = 'UNexpected_14,something'
 
         # 3. run the engine
@@ -232,13 +232,13 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'name_4', 'type': 'cmdline', 'reason': 'reason_4', 'decision': 'decision_4', 'desired_val': 'is not set', 'check_result': 'OK: is not found', 'check_result_bool': True},
                  {'option_name': 'name_5', 'type': 'cmdline', 'reason': 'reason_5', 'decision': 'decision_5', 'desired_val': 'is present', 'check_result': 'OK: is present', 'check_result_bool': True},
                  {'option_name': 'name_6', 'type': 'cmdline', 'reason': 'reason_6', 'decision': 'decision_6', 'desired_val': 'is present', 'check_result': 'FAIL: is not present', 'check_result_bool': False},
-                 {'option_name': 'name_7', 'type': 'cmdline', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'is not off', 'check_result': 'OK: is not off, ""', 'check_result_bool': True},
+                 {'option_name': 'name_7', 'type': 'cmdline', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'is not off', 'check_result': 'OK: is not off ()', 'check_result_bool': True},
                  {'option_name': 'name_8', 'type': 'cmdline', 'reason': 'reason_8', 'decision': 'decision_8', 'desired_val': 'is not off', 'check_result': 'FAIL: is off', 'check_result_bool': False},
-                 {'option_name': 'name_9', 'type': 'cmdline', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, "0"', 'check_result_bool': False},
+                 {'option_name': 'name_9', 'type': 'cmdline', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off (0)', 'check_result_bool': False},
                  {'option_name': 'name_10', 'type': 'cmdline', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False},
-                 {'option_name': 'name_11', 'type': 'cmdline', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': 'is not off', 'check_result': 'FAIL: is off', 'check_result_bool': False},
-                 {'option_name': 'name_12', 'type': 'cmdline', 'reason': 'reason_12', 'decision': 'decision_12', 'desired_val': 'is not off', 'check_result': 'OK: is not off, "really_not_off,something"', 'check_result_bool': True},
-                 {'option_name': 'name_13', 'type': 'cmdline', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': '*expected_13*', 'check_result': 'OK: in expected_13,something', 'check_result_bool': True},
+                 {'option_name': 'name_11', 'type': 'cmdline', 'reason': 'reason_11', 'decision': 'decision_11', 'desired_val': 'is not off', 'check_result': 'FAIL: is off ("something,off")', 'check_result_bool': False},
+                 {'option_name': 'name_12', 'type': 'cmdline', 'reason': 'reason_12', 'decision': 'decision_12', 'desired_val': 'is not off', 'check_result': 'OK: is not off (really_not_off,something)', 'check_result_bool': True},
+                 {'option_name': 'name_13', 'type': 'cmdline', 'reason': 'reason_13', 'decision': 'decision_13', 'desired_val': '*expected_13*', 'check_result': 'OK: in "expected_13,something,UNexpected2"', 'check_result_bool': True},
                  {'option_name': 'name_14', 'type': 'cmdline', 'reason': 'reason_14', 'decision': 'decision_14', 'desired_val': '*expected_14*', 'check_result': 'FAIL: not in UNexpected_14,something', 'check_result_bool': False}],
         )
 
@@ -279,9 +279,9 @@ class TestEngine(unittest.TestCase):
                  {'option_name': 'name_4', 'type': 'sysctl', 'reason': 'reason_4', 'decision': 'decision_4', 'desired_val': 'is not set', 'check_result': 'OK: is not found', 'check_result_bool': True},
                  {'option_name': 'name_5', 'type': 'sysctl', 'reason': 'reason_5', 'decision': 'decision_5', 'desired_val': 'is present', 'check_result': 'OK: is present', 'check_result_bool': True},
                  {'option_name': 'name_6', 'type': 'sysctl', 'reason': 'reason_6', 'decision': 'decision_6', 'desired_val': 'is present', 'check_result': 'FAIL: is not present', 'check_result_bool': False},
-                 {'option_name': 'name_7', 'type': 'sysctl', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'is not off', 'check_result': 'OK: is not off, ""', 'check_result_bool': True},
+                 {'option_name': 'name_7', 'type': 'sysctl', 'reason': 'reason_7', 'decision': 'decision_7', 'desired_val': 'is not off', 'check_result': 'OK: is not off ()', 'check_result_bool': True},
                  {'option_name': 'name_8', 'type': 'sysctl', 'reason': 'reason_8', 'decision': 'decision_8', 'desired_val': 'is not off', 'check_result': 'FAIL: is off', 'check_result_bool': False},
-                 {'option_name': 'name_9', 'type': 'sysctl', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, "0"', 'check_result_bool': False},
+                 {'option_name': 'name_9', 'type': 'sysctl', 'reason': 'reason_9', 'decision': 'decision_9', 'desired_val': 'is not off', 'check_result': 'FAIL: is off (0)', 'check_result_bool': False},
                  {'option_name': 'name_10', 'type': 'sysctl', 'reason': 'reason_10', 'decision': 'decision_10', 'desired_val': 'is not off', 'check_result': 'FAIL: is off, not found', 'check_result_bool': False}],
         )
 
