@@ -279,10 +279,7 @@ class OR(ComplexOptCheck):
     def check(self) -> None:
         for i, opt in enumerate(self.opts):
             if i != 0:
-                assert not isinstance(opt, OR), (
-                    f'redundant nested OR; flatten into a single OR(...)'
-                    f'\nopts: {", ".join("VersionCheck" if isinstance(o, VersionCheck) else o.name for o in self.opts)}'
-                )
+                assert (not isinstance(opt, OR)), f'redundant nested OR in the "{self.name}" check'
             opt.check()
             assert (opt.result), 'unexpected empty result of the OR sub-check'
             if opt.result.startswith('OK'):
@@ -318,10 +315,7 @@ class AND(ComplexOptCheck):
     def check(self) -> None:
         for i, opt in reversed(list(enumerate(self.opts))):
             if i != 0:
-                assert not isinstance(opt, AND), (
-                    f'redundant nested AND; flatten into a single AND(...)'
-                    f'\nopts: {", ".join("VersionCheck" if isinstance(o, VersionCheck) else o.name for o in self.opts)}'
-                )
+                assert (not isinstance(opt, AND)), f'redundant nested AND in the "{self.name}" check'
             opt.check()
             assert (opt.result), 'unexpected empty result of the AND sub-check'
             if i == 0:
