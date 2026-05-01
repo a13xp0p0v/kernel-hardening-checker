@@ -107,11 +107,11 @@ class OptCheck:
             elif self.state == 'off':
                 self.result = 'FAIL: is off'
             elif 'off' in self.state.strip('"').split(','):
-                self.result = f'FAIL: is off, "{self.state}"'
+                self.result = f'FAIL: is off ({self.state})'
             elif self.state in {'0', 'is not set'}:
-                self.result = f'FAIL: is off, "{self.state}"'
+                self.result = f'FAIL: is off ({self.state})'
             else:
-                self.result = f'OK: is not off, "{self.state}"'
+                self.result = f'OK: is not off ({self.state})'
             return
 
         # handle the option value check
@@ -331,7 +331,9 @@ class AND(ComplexOptCheck):
                     self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'
                 elif opt.result == 'FAIL: is not present':
                     self.result = f'FAIL: {opt.name} is not present'
-                elif opt.result in {'FAIL: is off', 'FAIL: is off, "0"', 'FAIL: is off, "is not set"'}:
+                elif opt.result == 'FAIL: is off':
+                    self.result = f'FAIL: {opt.name} is off'
+                elif opt.result.startswith('FAIL: is off ('):
                     self.result = f'FAIL: {opt.name} is off'
                 else:
                     assert (opt.result == 'FAIL: is off, not found'), \
