@@ -102,12 +102,13 @@ class OptCheck:
 
         # handle the 'is not off' option check
         if self.expected == 'is not off':
-            if self.state == 'off':
-                self.result = 'FAIL: is off'
+            if self.state is None:
+                self.result = 'FAIL: is off, not found'
             elif self.state in {'0', 'is not set'}:
                 self.result = f'FAIL: is off, "{self.state}"'
-            elif self.state is None:
-                self.result = 'FAIL: is off, not found'
+            # split(',') works for both lists and single strings
+            elif 'off' in self.state.strip('"').split(','):
+                self.result = 'FAIL: is off'
             else:
                 self.result = f'OK: is not off, "{self.state}"'
             return
@@ -220,10 +221,19 @@ class ComplexOptCheck:
         self.opts = opts
         assert (self.opts), \
                f'empty {self.__class__.__name__} check'
-        assert (len(self.opts) != 1), \
-               f'useless {self.__class__.__name__} check: {opts}'
-        assert (isinstance(self.opts[0], SimpleNamedOptCheckTypes)), \
-               f'invalid {self.__class__.__name__} check: {opts}'
+        assert (len(self.opts) != 1), (
+            f'useless {self.__class__.__name__} check: '
+            f'{getattr(self.opts[0], "name", self.opts[0].__class__.__name__)}'
+        )
+        assert (not isinstance(self.opts[0], tuple)), (
+            f'invalid {self.__class__.__name__} check: '
+            f'extra parentheses near '
+            f'{getattr(self.opts[0][0], "name", self.opts[0][0].__class__.__name__)}'
+        )
+        assert (isinstance(self.opts[0], SimpleNamedOptCheckTypes)), (
+            f'invalid {self.__class__.__name__} check: '
+            f'{getattr(self.opts[0], "name", self.opts[0].__class__.__name__)}'
+        )
         self.result = None  # type: str | None
 
     @property
@@ -276,6 +286,11 @@ class OR(ComplexOptCheck):
     #     OR(<X_is_hardened>, <old_X_is_hardened>)
     def check(self) -> None:
         for i, opt in enumerate(self.opts):
+            if i != 0:
+                assert not isinstance(opt, OR), (
+                    f'redundant nested OR; flatten into a single OR(...)'
+                    f'\nopts: {", ".join("VersionCheck" if isinstance(o, VersionCheck) else o.name for o in self.opts)}'
+                )
             opt.check()
             assert (opt.result), 'unexpected empty result of the OR sub-check'
             if opt.result.startswith('OK'):
@@ -310,6 +325,11 @@ class AND(ComplexOptCheck):
     #     AND(<X_is_disabled>, <old_X_is_disabled>)
     def check(self) -> None:
         for i, opt in reversed(list(enumerate(self.opts))):
+            if i != 0:
+                assert not isinstance(opt, AND), (
+                    f'redundant nested AND; flatten into a single AND(...)'
+                    f'\nopts: {", ".join("VersionCheck" if isinstance(o, VersionCheck) else o.name for o in self.opts)}'
+                )
             opt.check()
             assert (opt.result), 'unexpected empty result of the AND sub-check'
             if i == 0:
