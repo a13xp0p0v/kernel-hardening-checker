@@ -104,11 +104,12 @@ class OptCheck:
         if self.expected == 'is not off':
             if self.state is None:
                 self.result = 'FAIL: is off, not found'
+            elif self.state == 'off':
+                self.result = 'FAIL: is off'
+            elif 'off' in self.state.strip('"').split(','):
+                self.result = f'FAIL: is off, "{self.state}"'
             elif self.state in {'0', 'is not set'}:
                 self.result = f'FAIL: is off, "{self.state}"'
-            # split(',') works for both lists and single strings
-            elif 'off' in self.state.strip('"').split(','):
-                self.result = 'FAIL: is off'
             else:
                 self.result = f'OK: is not off, "{self.state}"'
             return
