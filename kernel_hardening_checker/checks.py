@@ -457,6 +457,15 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
           # recommended by Dave Airlie in kernel commit b30a43ac7132cdda
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'N_GSM', 'is not set')]
           # recommended by Greg KH at https://www.openwall.com/lists/oss-security/2024/04/17/1
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'CRYPTO_USER_API', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'CRYPTO_USER_API_ENABLE_OBSOLETE', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'CRYPTO_USER_API_AEAD', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'CRYPTO_USER_API_HASH', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'CRYPTO_USER_API_RNG', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'CRYPTO_USER_API_RNG_CAVP', 'is not set')]
+    l += [KconfigCheck('cut_attack_surface', 'maintainer', 'CRYPTO_USER_API_SKCIPHER', 'is not set')]
+          # all recommended by Eric Biggers at https://news.ycombinator.com/item?id=47956312,
+          # related to CVE-2026-31431 (Copy Fail)
 
     # 'cut_attack_surface', 'grsec'
     l += [KconfigCheck('cut_attack_surface', 'grsec', 'ZSMALLOC_STAT', 'is not set')]
