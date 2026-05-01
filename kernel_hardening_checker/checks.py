@@ -130,9 +130,9 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'MITIGATION_VMSCAPE', 'y'),
                  KconfigCheck('-', '-', 'KVM', 'is not set'))]
     if arch in {'ARM64', 'ARM', 'RISCV'}:
+        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_LAZY', 'is not set')]
               # mutually exclusive with IOMMU_DEFAULT_DMA_STRICT
-        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch in {'ARM64', 'ARM'}:
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
@@ -308,9 +308,9 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
                   cfi_clang_is_set,
                   cc_is_clang)]
     if arch in {'X86_64', 'X86_32'}:
+        l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_LAZY', 'is not set')]
               # mutually exclusive with IOMMU_DEFAULT_DMA_STRICT
-        l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                   iommu_support_is_set)]
     if arch in {'ARM64', 'RISCV'}:
