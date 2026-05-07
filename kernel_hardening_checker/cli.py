@@ -290,16 +290,17 @@ def parse_sysctl_file(mode: StrOrNone, parsed_options: dict[str, str], fname: st
             sys.exit(f'[-] ERROR: empty sysctl file "{fname}"')
 
         sysctl_pattern = re.compile(r'[a-zA-Z0-9/*._-]+ ?=.*$')
-        sysctl_eperm_pattern = re.compile(r"sysctl: permission denied on key '([a-zA-Z0-9/*._-]+)'")
+        sysctl_eperm_pattern = re.compile(r"^[a-z0-9.]+: permission denied on key '([a-zA-Z0-9/*._-]+)'")
         for l in f.readlines():
             line = l.strip()
             if not line or line.startswith('#'):
                 continue
             if line.startswith('sysctl: '):
                 # this line came from stderr
-                if m := sysctl_eperm_pattern.match(line):
-                    option = m.group(1)
-                    parsed_options[option] = 'permission denied'
+                continue
+            if m := sysctl_eperm_pattern.match(line):
+                option = m.group(1)
+                parsed_options[option] = 'permission denied'
                 continue
             if not sysctl_pattern.match(line):
                 sys.exit(f'[-] ERROR: unexpected line in sysctl file: "{line}"')
