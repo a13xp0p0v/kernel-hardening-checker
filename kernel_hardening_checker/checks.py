@@ -131,6 +131,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
                  KconfigCheck('-', '-', 'KVM', 'is not set'))]
     if arch in {'ARM64', 'ARM', 'RISCV'}:
         l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
+        l += [KconfigCheck('self_protection', 'defconfig', 'IOMMU_DEFAULT_DMA_LAZY', 'is not set')]
+              # mutually exclusive with IOMMU_DEFAULT_DMA_STRICT
         l += [KconfigCheck('self_protection', 'defconfig', 'STACKPROTECTOR_PER_TASK', 'y')]
     if arch in {'ARM64', 'ARM'}:
         l += [KconfigCheck('self_protection', 'defconfig', 'HW_RANDOM_TPM', 'y')]
@@ -307,6 +309,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
                   cc_is_clang)]
     if arch in {'X86_64', 'X86_32'}:
         l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_STRICT', 'y')]
+        l += [KconfigCheck('self_protection', 'kspp', 'IOMMU_DEFAULT_DMA_LAZY', 'is not set')]
+              # mutually exclusive with IOMMU_DEFAULT_DMA_STRICT
         l += [AND(KconfigCheck('self_protection', 'kspp', 'INTEL_IOMMU_DEFAULT_ON', 'y'),
                   iommu_support_is_set)]
     if arch in {'ARM64', 'RISCV'}:
@@ -697,6 +701,9 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'vmscape', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'kspp', 'mitigations', 'auto,nosmt'),
                      CmdlineCheck('-', '-', 'vmscape', 'is not set')))]
+    if arch == 'X86_64':
+        l += [OR(CmdlineCheck('self_protection', 'defconfig', 'amd_iommu', 'is not off'),
+                 CmdlineCheck('self_protection', 'defconfig', 'amd_iommu', 'is not set'))]
     if arch == 'ARM64':
         l += [OR(CmdlineCheck('self_protection', 'defconfig', 'kpti', 'is not off'),
                  AND(CmdlineCheck('self_protection', 'defconfig', 'mitigations', 'auto'),
@@ -873,6 +880,7 @@ no_kstrtobool_options = [
     'tsx',  # see tsx_init() in arch/x86/kernel/cpu/tsx.c
     'lockdown',  # see lockdown_param() in security/lockdown/lockdown.c
     'intel_iommu',  # see intel_iommu_setup() in drivers/iommu/intel/iommu.c
+    'amd_iommu',  # see parse_amd_iommu_options() in drivers/iommu/amd/init.c
     'efi',  # see efi_parse_options() in drivers/firmware/efi/libstub/efi-stub-helper.c
     'hash_pointers',  # see hash_pointers_mode_parse() in lib/vsprintf.c
     'ipv6.disable',  # see the disable_ipv6_mod parameter in net/ipv6/af_inet6.c

@@ -102,14 +102,16 @@ class OptCheck:
 
         # handle the 'is not off' option check
         if self.expected == 'is not off':
-            if self.state == 'off':
-                self.result = 'FAIL: is off'
-            elif self.state in {'0', 'is not set'}:
-                self.result = f'FAIL: is off, "{self.state}"'
-            elif self.state is None:
+            if self.state is None:
                 self.result = 'FAIL: is off, not found'
+            elif self.state == 'off':
+                self.result = 'FAIL: is off'
+            elif 'off' in self.state.strip('"').split(','):  # noqa: SIM114
+                self.result = f'FAIL: is off ({self.state})'
+            elif self.state in {'0', 'is not set'}:
+                self.result = f'FAIL: is off ({self.state})'
             else:
-                self.result = f'OK: is not off, "{self.state}"'
+                self.result = f'OK: is not off ({self.state})'
             return
 
         # handle the option value check
@@ -220,10 +222,10 @@ class ComplexOptCheck:
         self.opts = opts
         assert (self.opts), \
                f'empty {self.__class__.__name__} check'
-        assert (len(self.opts) != 1), \
-               f'useless {self.__class__.__name__} check: {opts}'
         assert (isinstance(self.opts[0], SimpleNamedOptCheckTypes)), \
-               f'invalid {self.__class__.__name__} check: {opts}'
+               f'invalid {self.__class__.__name__} check starting from {self.opts[0].__class__.__name__}'
+        assert (len(self.opts) != 1), \
+               f'useless {self.__class__.__name__} in the "{self.name}" check'
         self.result = None  # type: str | None
 
     @property
@@ -276,6 +278,8 @@ class OR(ComplexOptCheck):
     #     OR(<X_is_hardened>, <old_X_is_hardened>)
     def check(self) -> None:
         for i, opt in enumerate(self.opts):
+            if i != 0:
+                assert (not isinstance(opt, OR)), f'redundant nested OR in the "{self.name}" check'
             opt.check()
             assert (opt.result), 'unexpected empty result of the OR sub-check'
             if opt.result.startswith('OK'):
@@ -310,6 +314,8 @@ class AND(ComplexOptCheck):
     #     AND(<X_is_disabled>, <old_X_is_disabled>)
     def check(self) -> None:
         for i, opt in reversed(list(enumerate(self.opts))):
+            if i != 0:
+                assert (not isinstance(opt, AND)), f'redundant nested AND in the "{self.name}" check'
             opt.check()
             assert (opt.result), 'unexpected empty result of the AND sub-check'
             if i == 0:
@@ -329,7 +335,9 @@ class AND(ComplexOptCheck):
                     self.result = f'FAIL: "{opt.expected.strip("*")}" is not in {opt.name}'
                 elif opt.result == 'FAIL: is not present':
                     self.result = f'FAIL: {opt.name} is not present'
-                elif opt.result in {'FAIL: is off', 'FAIL: is off, "0"', 'FAIL: is off, "is not set"'}:
+                elif opt.result == 'FAIL: is off':  # noqa: SIM114
+                    self.result = f'FAIL: {opt.name} is off'
+                elif opt.result.startswith('FAIL: is off ('):
                     self.result = f'FAIL: {opt.name} is off'
                 else:
                     assert (opt.result == 'FAIL: is off, not found'), \
