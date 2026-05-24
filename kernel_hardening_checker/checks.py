@@ -192,6 +192,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
 
     # 'self_protection', 'kspp'
     l += [KconfigCheck('self_protection', 'kspp', 'RANDOM_KMALLOC_CACHES', 'y')]
+    l += [KconfigCheck('self_protection', 'kspp', 'SLAB_BUCKETS', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_MERGE_DEFAULT', 'is not set')]
     l += [KconfigCheck('self_protection', 'kspp', 'BUG_ON_DATA_CORRUPTION', 'y')]
     l += [KconfigCheck('self_protection', 'kspp', 'SLAB_FREELIST_HARDENED', 'y')]
