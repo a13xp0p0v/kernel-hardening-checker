@@ -179,6 +179,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         l += [OR(KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y'),
                  VersionCheck((5, 10, 0)))]  # HARDEN_BRANCH_PREDICTOR is enabled by default since v5.10
     if arch == 'ARM':
+        l += [KconfigCheck('self_protection', 'defconfig', 'ARM_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'CPU_SW_DOMAIN_PAN', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_PREDICTOR', 'y')]
         l += [KconfigCheck('self_protection', 'defconfig', 'HARDEN_BRANCH_HISTORY', 'y')]
