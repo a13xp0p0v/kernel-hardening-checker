@@ -61,7 +61,7 @@ class OptCheck:
                f'invalid expected value "{expected}" for "{name}" check (1)'
         val_len = len(expected.split())
         if val_len != 1:
-            assert (expected in {'is not set', 'is not off', 'is present'}), \
+            assert (expected in {'is not set', 'is not off', 'is present', 'is empty'}), \
                    f'invalid expected value "{expected}" for "{name}" check (2)'
         self.expected = expected
 
@@ -98,6 +98,16 @@ class OptCheck:
                 self.result = 'FAIL: is not present'
             else:
                 self.result = 'OK: is present'
+            return
+
+        # handle the 'is empty' check
+        if self.expected == 'is empty':
+            if self.state is None:
+                self.result = 'FAIL: is not found'
+            elif self.state == '':  # noqa: PLC1901
+                self.result = 'OK: is empty'
+            else:
+                self.result = f'FAIL: "{self.state}"'
             return
 
         # handle the 'is not off' option check
@@ -298,6 +308,8 @@ class OR(ComplexOptCheck):
                         self.result = f'OK: {opt.name} is not found'
                     elif opt.result == 'OK: is present':
                         self.result = f'OK: {opt.name} is present'
+                    elif opt.result == 'OK: is empty':
+                        self.result = f'OK: {opt.name} is empty'
                     else:
                         assert (opt.result.startswith('OK: is not off')), \
                                f'unexpected OK description "{opt.result}"'
