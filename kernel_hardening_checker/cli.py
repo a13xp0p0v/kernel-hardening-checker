@@ -94,13 +94,20 @@ def get_local_sysctl_file() -> tuple[StrOrNone, str]:
         return None, 'sysctl command is not found on this machine'
 
     _, sysctl_tmpfile = tempfile.mkstemp(prefix='sysctl-')
-    with open(sysctl_tmpfile, 'w', encoding='utf-8') as f:
-        ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f,
-                             stderr=subprocess.STDOUT, shell=False).returncode
+    _, sysctl_err_tmpfile = tempfile.mkstemp(prefix='sysctl-err-')
+
+    with open(sysctl_tmpfile, 'w', encoding='utf-8') as f, open(sysctl_err_tmpfile, 'w', encoding='utf-8') as ef:
+        ret = subprocess.run([sysctl_bin, '-a'], check=False, stdout=f, stderr=ef, shell=False).returncode
         if ret != 0:
             print(f'[!] WARNING: sysctl command returned {ret}')
         if os.stat(sysctl_tmpfile).st_size == 0:
             return None, f'sysctl command returned {ret}, stdout is empty'
+
+    with open(sysctl_tmpfile, 'a', encoding='utf-8') as f, open(sysctl_err_tmpfile, 'r', encoding='utf-8') as ef:
+        shutil.copyfileobj(ef, f)
+
+    os.remove(sysctl_err_tmpfile)
+
     return sysctl_tmpfile, 'OK'
 
 
