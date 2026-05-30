@@ -103,7 +103,7 @@ def get_local_sysctl_file() -> tuple[StrOrNone, str]:
         if os.stat(sysctl_tmpfile).st_size == 0:
             return None, f'sysctl command returned {ret}, stdout is empty'
 
-    with open(sysctl_tmpfile, 'a', encoding='utf-8') as f, open(sysctl_err_tmpfile, 'r', encoding='utf-8') as ef:
+    with open(sysctl_tmpfile, 'a', encoding='utf-8') as f, open(sysctl_err_tmpfile, encoding='utf-8') as ef:
         shutil.copyfileobj(ef, f)
 
     os.remove(sysctl_err_tmpfile)
