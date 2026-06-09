@@ -568,12 +568,15 @@ Tycho Andersen [@tych0][12].
 
 <br />
 
-__Q:__ What about performance impact of these security hardening options?
+__Q:__ What about performance impact of these security hardening features?
 
-__A:__ Ike Devolder [@BlackIkeEagle][7] made some performance tests and described the results in [this article][8].
-Fabian Rauscher, Benedict Herzog, Timo Hönig, and Daniel Gruss published an article ["Systematic Analysis of Kernel Security Performance and Energy Costs"][28]
-that describes energy and run-time overhead of the hardware vulnerability mitigations (CONFIG_CPU_MITIGATIONS).
-A detailed evaluation of the performance impact is also in the TODO list (the issue [#66][21]).
+__A:__ That is not an easy question, since performance impact depends on the system workload.
+A detailed evaluation of the performance impact of Linux security hardening features is
+in TODO (the issue [#66][21]). There are some interesting works in this area:
+  - Ike Devolder [@BlackIkeEagle][7] made some performance tests and described the results in [this article][8].
+  - Fabian Rauscher, Benedict Herzog, Timo Hönig, and Daniel Gruss published an article
+    ["Systematic Analysis of Kernel Security Performance and Energy Costs"][28] that describes
+    energy and run-time overhead of the hardware vulnerability mitigations (CONFIG_CPU_MITIGATIONS).
 
 <br />
 
