@@ -571,14 +571,9 @@ Tycho Andersen [@tych0][12].
 __Q:__ What about performance impact of these security hardening options?
 
 __A:__ Ike Devolder [@BlackIkeEagle][7] made some performance tests and described the results in [this article][8].
-A more detailed evaluation is in the TODO list (the issue [#66][21]).
-
-<br />
-
-__Q:__ Can I easily check which kernel versions support some Kconfig option?
-
-__A:__ Yes. See the [LKDDb][18] project (Linux Kernel Driver Database) by Giacomo Catenazzi [@cateee][19].
-You can use it for the `mainline` or `stable` tree from [kernel.org][20] or for your custom kernel sources.
+Fabian Rauscher, Benedict Herzog, Timo Hönig, and Daniel Gruss published an article ["Systematic Analysis of Kernel Security Performance and Energy Costs"][28]
+that describes energy and run-time overhead of the hardware vulnerability mitigations (CONFIG_CPU_MITIGATIONS).
+A detailed evaluation of the performance impact is also in the TODO list (the issue [#66][21]).
 
 <br />
 
@@ -586,6 +581,13 @@ __Q:__ Does my kernel have all those mitigations of Transient Execution Vulnerab
 
 __A:__ Checking the kernel config is not enough to answer this question.
 I highly recommend using [spectre-meltdown-checker][13] tool maintained by Stéphane Lesimple [@speed47][14].
+
+<br />
+
+__Q:__ Can I easily check which kernel versions support some Kconfig option?
+
+__A:__ Yes. See the [LKDDb][18] project (Linux Kernel Driver Database) by Giacomo Catenazzi [@cateee][19].
+You can use it for the `mainline` or `stable` tree from [kernel.org][20] or for your custom kernel sources.
 
 <br />
 
@@ -622,3 +624,4 @@ try to install `gcc-14-plugin-dev` package, it should help.
 [25]: https://grapheneos.org/features
 [26]: https://github.com/a13xp0p0v/kernel-hardening-checker/graphs/contributors
 [27]: https://learn.cisecurity.org/benchmarks
+[28]: https://dl.acm.org/doi/epdf/10.1145/3708821.3736197
