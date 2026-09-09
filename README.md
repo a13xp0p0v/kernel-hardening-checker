@@ -579,6 +579,7 @@ However, it's not easy to do that without breaking the needed functionality 😉
     $ sudo systemctl enable set-modules-disabled.service
     ```
     If you need some time after booting for manual actions that cause loading kernel modules, then uncomment `ExecStartPre`. It's a nice hack 😊.
+    There is another approach: if you know which kernel modules you need beforehand, you can simply call `modprobe` for them before locking `modules_disabled`.
 
   4. Write an empty value to the `kernel.modprobe` sysctl parameter. This is the weakest option, which only disables kernel module autoloading.
      Moreover, writing the original value `/usr/bin/modprobe` back to this sysctl parameter re-enables this dangerous feature.
