@@ -561,8 +561,7 @@ However, it's not easy to do that without breaking the needed functionality 😉
     $ cat /etc/systemd/system/set-modules-disabled.service
     [Unit]
     Description=Disable kernel module loading after boot
-    After=network-online.target
-    Wants=network-online.target
+    After=multi-user.target
 
     [Service]
     Type=oneshot
