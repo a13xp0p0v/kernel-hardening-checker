@@ -542,6 +542,8 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'clipos', 'AIO', 'is not set')]
 #   l += [KconfigCheck('cut_attack_surface', 'clipos', 'IKCONFIG', 'is not set')]
           # no, IKCONFIG is needed for this check :)
+    l += [OR(KconfigCheck('cut_attack_surface', 'clipos', 'BPF_JIT_ALWAYS_ON', 'y'),
+             bpf_syscall_not_set)]
     l += [OR(KconfigCheck('cut_attack_surface', 'clipos', 'MAGIC_SYSRQ', 'is not set'),
              KconfigCheck('cut_attack_surface', 'grapheneos', 'MAGIC_SYSRQ_DEFAULT_ENABLE', '0x0'))]
 
