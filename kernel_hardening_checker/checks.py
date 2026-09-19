@@ -40,7 +40,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
         cpu_sup_intel_not_set = KconfigCheck('-', '-', 'CPU_SUP_INTEL', 'is not set')
 
     modules_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set')
-                      # radical, but may be useful in some cases
+                      # see the README.md: How can I disable loading of vulnerable Linux kernel modules?
     devmem_not_set = KconfigCheck('cut_attack_surface', 'kspp', 'DEVMEM', 'is not set')  # refers to LOCKDOWN
     bpf_syscall_not_set = KconfigCheck('cut_attack_surface', 'lockdown', 'BPF_SYSCALL', 'is not set')
                           # refers to LOCKDOWN
@@ -453,7 +453,7 @@ def add_kconfig_checks(l: list[ChecklistObjType], arch: str) -> None:
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'FB', 'is not set')]
           # recommended by Daniel Vetter in /issues/38
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'VT', 'is not set')]
-          # recommended by Daniel Vetter in /issues/38
+          # recommended by Daniel Vetter in /issues/38, requires the adaptation in the userspace (getty)
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD', 'is not set')]
           # recommended by Denis Efremov in /pull/54
     l += [KconfigCheck('cut_attack_surface', 'maintainer', 'BLK_DEV_FD_RAWCMD', 'is not set')]
@@ -829,9 +829,10 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
                  # the vdso and vdso32 parameters must not be 2
 
     # 'cut_attack_surface', 'grsec'
-    # The cmdline checks compatible with the kconfig options disabled by grsecurity...
     l += [OR(CmdlineCheck('cut_attack_surface', 'grsec', 'debugfs', 'off'),
-             KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set'))]  # ... the end
+             KconfigCheck('cut_attack_surface', 'grsec', 'DEBUG_FS', 'is not set'))]
+             # the cmdline check is compatible with the 'DEBUG_FS' kconfig check by grsecurity;
+             # it may disturb the `powertop` utility
 
     # 'cut_attack_surface', 'grapheneos'
     l += [CmdlineCheck('cut_attack_surface', 'grapheneos', 'sysrq_always_enabled', 'is not set')]
@@ -839,6 +840,7 @@ def add_cmdline_checks(l: list[ChecklistObjType], arch: str) -> None:
     # 'cut_attack_surface', 'a13xp0p0v'
     l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'nomodule', 'is present'),
              KconfigCheck('cut_attack_surface', 'kspp', 'MODULES', 'is not set'))]
+             # see the README.md: How can I disable loading of vulnerable Linux kernel modules?
     l += [OR(CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'bdev_allow_write_mounted', '0'),
              AND(KconfigCheck('cut_attack_surface', 'a13xp0p0v', 'BLK_DEV_WRITE_MOUNTED', 'is not set'),
                  CmdlineCheck('-', '-', 'bdev_allow_write_mounted', 'is not set')))]
@@ -976,9 +978,10 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
                  have_kconfig))]
              # block loading kernel modules:
              #  - set kernel.modules_disabled=1 (e.g. with systemd) after
-             #    the kernel startup, when the needed modules have been loaded
+             #    the kernel startup, when the needed modules have been loaded;
              #  - or set the nomodule cmdline parameter (it uses the same
-             #    modules_disabled flag)
+             #    modules_disabled flag).
+             # See the README.md: How can I disable loading of vulnerable Linux kernel modules?
     l += [OR(SysctlCheck('cut_attack_surface', 'a13xp0p0v', 'kernel.modprobe', ''),
              SysctlCheck('cut_attack_surface', 'kspp', 'kernel.modules_disabled', '1'),
              CmdlineCheck('cut_attack_surface', 'a13xp0p0v', 'nomodule', 'is present'),
@@ -987,7 +990,8 @@ def add_sysctl_checks(l: list[ChecklistObjType], arch: StrOrNone) -> None:
              # disable kernel-requested module autoloading: an empty kernel.modprobe
              # makes __request_module() bail out before the usermode helper, but it
              # doesn't prevent explicit modprobe/insmod; the stronger
-             # modules_disabled=1 / nomodule / MODULES=n disable all module loading
+             # modules_disabled=1 / nomodule / MODULES=n disable all module loading.
+             # See the README.md: How can I disable loading of vulnerable Linux kernel modules?
 
     # 'cut_attack_surface', 'grsec'
     l += [OR(SysctlCheck('cut_attack_surface', 'grsec', 'kernel.io_uring_disabled', '2'),
